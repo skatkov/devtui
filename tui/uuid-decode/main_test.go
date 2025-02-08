@@ -50,6 +50,17 @@ func TestExtractUUIDData(t *testing.T) {
 			},
 		},
 		{
+			name: "UUID v3",
+			uuid: uuid.MustParse("bd278ea4-0b40-366b-b7b1-f067a7817f35"),
+			expected: [][]string{
+				{"Standard String Format", "bd278ea4-0b40-366b-b7b1-f067a7817f35"},
+				{"Single Integer Value", "251429483879896292488202237579433705269"},
+				{"Version", "3"},
+				{"Variant", "DCE 1.1, ISO/IEC 11578:1996"},
+				{"Contents", "BD:27:8E:A4:0B:40:36:6B:B7:B1:F0:67:A7:81:7F:35"},
+			},
+		},
+		{
 			name:     "Nil UUID",
 			uuid:     uuid.Nil,
 			expected: [][]string{},

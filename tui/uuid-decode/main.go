@@ -63,8 +63,8 @@ func extractUUIDData(id uuid.UUID) [][]string {
 		{"Version", fmt.Sprintf("%d", id.Version())},
 		{"Variant", fmt.Sprintf("%s", mapVariant(id.Variant()))},
 	}
-
-	if id.Version() == uuid.Version(1) {
+	switch id.Version() {
+	case uuid.Version(1):
 		t := id.Time()
 		sec, nsec := t.UnixTime()
 		timeStamp := time.Unix(sec, nsec)
@@ -74,9 +74,8 @@ func extractUUIDData(id uuid.UUID) [][]string {
 		result = append(result, []string{"Contents - Time", timeStamp.UTC().Format("2006-01-02 15:04:05.999999999 UTC")})
 		result = append(result, []string{"Contents - Clock", fmt.Sprintf("%d", clockSeq)})
 		result = append(result, []string{"Contents - Node", fmt.Sprintf("%02x:%02x:%02x:%02x:%02x:%02x", node[0], node[1], node[2], node[3], node[4], node[5])})
-	}
 
-	if id.Version() == uuid.Version(2) || id.Version() == uuid.Version(4) {
+	default:
 		formatted := strings.ToUpper(strings.ReplaceAll(id.String(), "-", ""))
 		var pairs []string
 		for i := 0; i < len(formatted); i += 2 {
