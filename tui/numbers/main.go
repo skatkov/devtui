@@ -13,57 +13,51 @@ import (
 
 type Number struct {
 	Value int64
-	Type  NumberType
+	Type  NumberBase
 }
 
-type NumberType string
-
-const (
-	purple    = lipgloss.Color("99")
-	gray      = lipgloss.Color("245")
-	lightGray = lipgloss.Color("241")
-)
-const (
-	Base2  NumberType = "Base 2 (binary)"
-	Base8  NumberType = "Base 8 (octal)"
-	Base10 NumberType = "Base 10 (decimal)"
-	Base16 NumberType = "Base 16 (hexadecimal)"
-)
+type NumberBase struct {
+	title string
+	base  int
+}
 
 var (
-	re = lipgloss.NewRenderer(os.Stdout)
-	// HeaderStyle is the lipgloss style used for the table headers.
-	HeaderStyle = re.NewStyle().Foreground(purple).Bold(true).Align(lipgloss.Center)
-	// CellStyle is the base lipgloss style used for the table rows.
-	CellStyle = re.NewStyle().Padding(0, 1).Width(14)
-	// OddRowStyle is the lipgloss style used for odd-numbered table rows.
-	OddRowStyle = CellStyle.Foreground(gray)
-	// EvenRowStyle is the lipgloss style used for even-numbered table rows.
-	EvenRowStyle = CellStyle.Foreground(lightGray)
-	// BorderStyle is the lipgloss style used for the table border.
-	BorderStyle = lipgloss.NewStyle().Foreground(purple)
+	Base2    = NumberBase{title: "Base 2 (binary)", base: 2}
+	Base8    = NumberBase{title: "Base 8 (octal)", base: 8}
+	Base10   = NumberBase{title: "Base 10 (decimal)", base: 10}
+	Base16   = NumberBase{title: "Base 16 (hexadecimal)", base: 16}
+	BaseList = []NumberBase{Base2, Base8, Base10, Base16}
 )
 
 func main() {
-	number := Number{Type: Base10}
+	number := Number{}
 
 	form := huh.NewForm(
 		huh.NewGroup(
+			huh.NewSelect[NumberBase]().
+				Options(
+					huh.NewOption(Base2.title, Base2),
+					huh.NewOption(Base8.title, Base8),
+					huh.NewOption(Base10.title, Base10),
+					huh.NewOption(Base16.title, Base16),
+				).
+				Title("Select Base").Value(&number.Type),
 			huh.NewInput().
-				Placeholder("Enter a number").
+				Placeholder(fmt.Sprintf("Enter a %s number", number.Type.title)).
+				Title("Enter a number").
 				Validate(func(s string) error {
 					if len(s) == 0 {
 						return errors.New("number cannot be empty")
 					}
-					val, err := strconv.ParseInt(s, 10, 64)
+					val, err := strconv.ParseInt(s, number.Type.base, 64)
 					if err != nil {
-						return errors.New("please enter a valid integer")
+						return errors.New(fmt.Sprintf("please enter a valid %s number", number.Type.title))
 					}
 					number.Value = val
 					return nil
 				}).Value(new(string)),
 		),
-	)
+	).WithTheme(huh.ThemeCharm())
 
 	err := form.Run()
 
@@ -71,27 +65,16 @@ func main() {
 		fmt.Println("Uh oh:", err)
 		os.Exit(1)
 	}
-
-	rows := [][]string{
-		{string(number.Type), strconv.FormatInt(number.Value, 10)},
-		{string(Base2), strconv.FormatInt(number.Value, 2)},
-		{string(Base8), strconv.FormatInt(number.Value, 8)},
-		{string(Base16), strconv.FormatInt(number.Value, 16)},
+	rows := make([][]string, len(BaseList))
+	for i, numberBase := range BaseList {
+		rows[i] = []string{
+			numberBase.title,
+			strconv.FormatInt(number.Value, numberBase.base),
+		}
 	}
 	t := table.New().
 		Border(lipgloss.RoundedBorder()).
-		BorderStyle(BorderStyle).
 		Width(120).
-		StyleFunc(func(row, col int) lipgloss.Style {
-			switch {
-			case row == table.HeaderRow:
-				return HeaderStyle
-			case row%2 == 0:
-				return EvenRowStyle
-			default:
-				return OddRowStyle
-			}
-		}).
 		Headers("Base", "Value").
 		Rows(rows...)
 
