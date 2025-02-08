@@ -2,7 +2,10 @@ package main
 
 import (
 	"fmt"
+	"math/big"
 	"os"
+	"strings"
+	"time"
 
 	"github.com/charmbracelet/huh"
 	"github.com/charmbracelet/lipgloss"
@@ -49,13 +52,31 @@ func extractUUIDData(id uuid.UUID) [][]string {
 	if id == uuid.Nil {
 		return [][]string{}
 	}
+	var i big.Int
+	i.SetString(strings.Replace(id.String(), "-", "", 4), 16)
 
-	return [][]string{
+	var result [][]string
+
+	result = [][]string{
 		{"Standard String Format", id.String()},
-		{"Raw Content", fmt.Sprintf("%x", id[:])},
+		{"Single Integer Value", i.String()},
 		{"Version", fmt.Sprintf("%d", id.Version())},
 		{"Variant", fmt.Sprintf("%s", mapVariant(id.Variant()))},
 	}
+
+	if id.Version() == uuid.Version(1) {
+		t := id.Time()
+		sec, nsec := t.UnixTime()
+		timeStamp := time.Unix(sec, nsec)
+		node := id.NodeID()
+		clockSeq := id.ClockSequence()
+
+		result = append(result, []string{"Contents - Time", timeStamp.UTC().Format("2006-01-02 15:04:05.999999999 UTC")})
+		result = append(result, []string{"Contents - Clock", fmt.Sprintf("%d", clockSeq)})
+		result = append(result, []string{"Contents - Node", fmt.Sprintf("%02x:%02x:%02x:%02x:%02x:%02x", node[0], node[1], node[2], node[3], node[4], node[5])})
+	}
+
+	return result
 }
 
 func mapVariant(v uuid.Variant) string {

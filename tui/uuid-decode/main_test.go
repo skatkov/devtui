@@ -16,27 +16,28 @@ func TestExtractUUIDData(t *testing.T) {
 	}{
 		{
 			name: "Valid UUID v4",
-			uuid: uuid.MustParse("123e4567-e89b-12d3-a456-426614174000"),
+			uuid: uuid.MustParse("4326ff5f-774d-4506-a18c-4bc50c761863"),
 			expected: [][]string{
 				{"Standard String Format", "123e4567-e89b-12d3-a456-426614174000"},
-				{"Raw Content", "123e4567e89b12d3a456426614174000"},
-				{"Version", "1"},
+				{"Single Integer Value", "89260762576260186387968344354060638307"},
+				{"Version", "4"},
 				{"Variant", "DCE 1.1, ISO/IEC 11578:1996"},
+				{"Contents", "43:26:FF:5F:77:4D:05:06:21:8C:4B:C5:0C:76:18:63"},
 			},
 		},
-		// {
-		// 	name: "UUID v1",
-		// 	uuid: uuid.MustParse("550e8400-e29b-11d4-a716-446655440000"),
-		// 	expected: [][]string{
-		// 		{"Standard String Format", "550e8400-e29b-11d4-a716-446655440000"},
-		// 		{"Single Integer Value", "113059749145936098728763079434011148288"},
-		// 		{"Version", "1"},
-		// 		{"Variant", "DCE 1.1, ISO/IEC 11578:1996"},
-		// 		{"Contents - Time", "2001-01-04 23:43:07.540992.0 UTC"},
-		// 		{"Contents - Clock", "10006"},
-		// 		{"Contents - Node", "	44:66:55:44:00:00 "},
-		// 	},
-		// },
+		{
+			name: "Valid UUID v1",
+			uuid: uuid.MustParse("550e8400-e29b-11d4-a716-446655440000"),
+			expected: [][]string{
+				{"Standard String Format", "550e8400-e29b-11d4-a716-446655440000"},
+				{"Single Integer Value", "113059749145936098728763079434011148288"},
+				{"Version", "1"},
+				{"Variant", "DCE 1.1, ISO/IEC 11578:1996"},
+				{"Contents - Time", "2001-01-04 23:43:07.540992 UTC"},
+				{"Contents - Clock", "10006"},
+				{"Contents - Node", "44:66:55:44:00:00"},
+			},
+		},
 		// {
 		// 	name: "UUID v2",
 		// 	uuid: uuid.MustParse("000003e8-e64c-21ef-ac00-325096b39f47"),
