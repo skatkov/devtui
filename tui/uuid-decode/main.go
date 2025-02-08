@@ -76,6 +76,17 @@ func extractUUIDData(id uuid.UUID) [][]string {
 		result = append(result, []string{"Contents - Node", fmt.Sprintf("%02x:%02x:%02x:%02x:%02x:%02x", node[0], node[1], node[2], node[3], node[4], node[5])})
 	}
 
+	if id.Version() == uuid.Version(2) || id.Version() == uuid.Version(4) {
+		formatted := strings.ToUpper(strings.ReplaceAll(id.String(), "-", ""))
+		var pairs []string
+		for i := 0; i < len(formatted); i += 2 {
+			if i < len(formatted)-1 {
+				pairs = append(pairs, formatted[i:i+2])
+			}
+		}
+		result = append(result, []string{"Contents", strings.Join(pairs, ":")})
+	}
+
 	return result
 }
 
