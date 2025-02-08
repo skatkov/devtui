@@ -22,15 +22,18 @@ type NumberBase struct {
 }
 
 var (
-	Base2    = NumberBase{title: "Base 2 (binary)", base: 2}
-	Base8    = NumberBase{title: "Base 8 (octal)", base: 8}
-	Base10   = NumberBase{title: "Base 10 (decimal)", base: 10}
-	Base16   = NumberBase{title: "Base 16 (hexadecimal)", base: 16}
-	BaseList = []NumberBase{Base2, Base8, Base10, Base16}
+	Base2            = NumberBase{title: "Base 2 (binary)", base: 2}
+	Base8            = NumberBase{title: "Base 8 (octal)", base: 8}
+	Base10           = NumberBase{title: "Base 10 (decimal)", base: 10}
+	Base16           = NumberBase{title: "Base 16 (hexadecimal)", base: 16}
+	ReturnedBaseList = []NumberBase{Base2, Base8, Base10, Base16}
 )
 
 func main() {
 	number := Number{}
+
+	// Should we run in accessible mode?
+	accessible, _ := strconv.ParseBool(os.Getenv("ACCESSIBLE"))
 
 	form := huh.NewForm(
 		huh.NewGroup(
@@ -38,7 +41,7 @@ func main() {
 				Options(
 					huh.NewOption(Base2.title, Base2),
 					huh.NewOption(Base8.title, Base8),
-					huh.NewOption(Base10.title, Base10),
+					huh.NewOption(Base10.title, Base10).Selected(true),
 					huh.NewOption(Base16.title, Base16),
 				).
 				Title("Select Base").Value(&number.Type),
@@ -57,7 +60,7 @@ func main() {
 					return nil
 				}).Value(new(string)),
 		),
-	).WithTheme(huh.ThemeCharm())
+	).WithTheme(huh.ThemeCharm()).WithAccessible(accessible)
 
 	err := form.Run()
 
@@ -65,8 +68,8 @@ func main() {
 		fmt.Println("Uh oh:", err)
 		os.Exit(1)
 	}
-	rows := make([][]string, len(BaseList))
-	for i, numberBase := range BaseList {
+	rows := make([][]string, len(ReturnedBaseList))
+	for i, numberBase := range ReturnedBaseList {
 		rows[i] = []string{
 			numberBase.title,
 			strconv.FormatInt(number.Value, numberBase.base),
@@ -74,7 +77,7 @@ func main() {
 	}
 	t := table.New().
 		Border(lipgloss.RoundedBorder()).
-		Width(120).
+		Width(100).
 		Headers("Base", "Value").
 		Rows(rows...)
 
