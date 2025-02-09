@@ -48,10 +48,29 @@ func (d itemDelegate) Render(w io.Writer, m list.Model, index int, listItem list
 	fmt.Fprint(w, fn(str))
 }
 
+func newListModel() *listModel {
+	items := []list.Item{
+		item("UUID Decode"),
+		item("Number Base Converter"),
+		item("UUID Generate"),
+	}
+
+	delegate := itemDelegate{}
+	l := list.New(items, delegate, 20, listHeight)
+	l.Title = "Choose your weapon!"
+	l.SetShowStatusBar(false)
+	l.SetFilteringEnabled(false)
+	l.Styles.Title = titleStyle
+	l.Styles.PaginationStyle = paginationStyle
+	l.Styles.HelpStyle = helpStyle
+
+	return &listModel{
+		list: l,
+	}
+}
+
 type listModel struct {
-	list     list.Model
-	choice   string
-	quitting bool
+	list list.Model
 }
 
 func (m listModel) Init() tea.Cmd {
@@ -67,15 +86,11 @@ func (m listModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	case tea.KeyMsg:
 		switch keypress := msg.String(); keypress {
 		case "q", "ctrl+c":
-			m.quitting = true
 			return m, tea.Quit
 
 		case "enter":
-			i, ok := m.list.SelectedItem().(item)
-			if ok {
-				m.choice = string(i)
-			}
-			return m, tea.Quit
+			screenTwo := screenTwo{}
+			return screenTwo, screenTwo.Init()
 		}
 	}
 
@@ -85,9 +100,5 @@ func (m listModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 }
 
 func (m listModel) View() string {
-	if m.choice != "" {
-		return quitTextStyle.Render(fmt.Sprintf("%s? Sounds good to me.", m.choice))
-	}
-
 	return "\n" + m.list.View()
 }
