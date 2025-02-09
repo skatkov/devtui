@@ -1,4 +1,4 @@
-module devtui
+module github.com/skatkov/devtui
 
 go 1.23.5
 

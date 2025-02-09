@@ -1,6 +1,6 @@
 package main
 
-import "devtui/cmd"
+import "github.com/skatkov/devtui/cmd"
 
 func main() {
 	cmd.Execute()
