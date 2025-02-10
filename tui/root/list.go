@@ -8,6 +8,7 @@ import (
 	"github.com/charmbracelet/bubbles/list"
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/lipgloss"
+	"github.com/skatkov/devtui/tui/numbers"
 )
 
 const listHeight = 15
@@ -89,8 +90,8 @@ func (m listModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			return m, tea.Quit
 
 		case "enter":
-			screenTwo := screenTwo{}
-			return screenTwo, screenTwo.Init()
+			newScreen := numbers.NewNumberModel()
+			return newScreen, newScreen.Init()
 		}
 	}
 
