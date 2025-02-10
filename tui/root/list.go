@@ -8,6 +8,7 @@ import (
 	"github.com/charmbracelet/bubbles/list"
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/lipgloss"
+	"github.com/skatkov/devtui/tui/numbers"
 )
 
 const listHeight = 15
@@ -23,7 +24,7 @@ var (
 
 type item string
 
-func (i item) FilterValue() string { return "" }
+func (i item) FilterValue() string { return string(i) }
 
 type itemDelegate struct{}
 
@@ -71,6 +72,7 @@ func newListModel() *listModel {
 
 type listModel struct {
 	list list.Model
+	err  string
 }
 
 func (m listModel) Init() tea.Cmd {
@@ -89,8 +91,15 @@ func (m listModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			return m, tea.Quit
 
 		case "enter":
-			screenTwo := screenTwo{}
-			return screenTwo, screenTwo.Init()
+			i, ok := m.list.SelectedItem().(item)
+			if ok {
+				if string(i) == "Number Base Converter" {
+					newScreen := numbers.NewNumberModel()
+					return newScreen, newScreen.Init()
+				} else {
+					m.err = fmt.Sprintf("%s app is not available", string(i))
+				}
+			}
 		}
 	}
 
@@ -100,5 +109,8 @@ func (m listModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 }
 
 func (m listModel) View() string {
+	if m.err != "" {
+		return lipgloss.NewStyle().Padding(2).Render(m.err)
+	}
 	return "\n" + m.list.View()
 }

@@ -1,4 +1,4 @@
-package main
+package numbers
 
 import (
 	"errors"
@@ -9,11 +9,15 @@ import (
 	"github.com/charmbracelet/huh"
 	"github.com/charmbracelet/lipgloss"
 	"github.com/charmbracelet/lipgloss/table"
+
+	tea "github.com/charmbracelet/bubbletea"
 )
 
-type Number struct {
-	Value int64
-	Type  NumberBase
+type NumbersModel struct {
+	form  *huh.Form
+	value int64
+	base  NumberBase
+	input string
 }
 
 type NumberBase struct {
@@ -29,57 +33,93 @@ var (
 	ReturnedBaseList = []NumberBase{Base2, Base8, Base10, Base16}
 )
 
-func main() {
-	number := Number{}
-
-	// Should we run in accessible mode?
+func NewNumberModel() NumbersModel {
+	m := NumbersModel{}
 	accessible, _ := strconv.ParseBool(os.Getenv("ACCESSIBLE"))
 
-	form := huh.NewForm(
+	m.form = huh.NewForm(
 		huh.NewGroup(
 			huh.NewSelect[NumberBase]().
+				Key("base").
 				Options(
 					huh.NewOption(Base2.title, Base2),
 					huh.NewOption(Base8.title, Base8),
 					huh.NewOption(Base10.title, Base10).Selected(true),
 					huh.NewOption(Base16.title, Base16),
 				).
-				Title("Select Base").Value(&number.Type),
+				Title("Select Base").Value(&m.base),
 			huh.NewInput().
-				Placeholder(fmt.Sprintf("Enter a %s number", number.Type.title)).
+				Key("input").
+				Placeholder(fmt.Sprintf("Enter a %s number", m.base.title)).
 				Title("Enter a number").
 				Validate(func(s string) error {
 					if len(s) == 0 {
 						return errors.New("number cannot be empty")
 					}
-					val, err := strconv.ParseInt(s, number.Type.base, 64)
+					_, err := strconv.ParseInt(s, m.base.base, 64)
 					if err != nil {
-						return errors.New(fmt.Sprintf("please enter a valid %s number", number.Type.title))
+						return errors.New(fmt.Sprintf("please enter a valid %s number", m.base.title))
 					}
-					number.Value = val
 					return nil
-				}).Value(new(string)),
+				}).Value(&m.input),
 		),
 	).WithTheme(huh.ThemeCharm()).WithAccessible(accessible)
 
-	err := form.Run()
+	return m
+}
 
-	if err != nil {
-		fmt.Println("Uh oh:", err)
-		os.Exit(1)
-	}
-	rows := make([][]string, len(ReturnedBaseList))
-	for i, numberBase := range ReturnedBaseList {
-		rows[i] = []string{
-			numberBase.title,
-			strconv.FormatInt(number.Value, numberBase.base),
+func (m NumbersModel) Init() tea.Cmd {
+	return m.form.Init()
+}
+
+func (m NumbersModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
+	switch msg := msg.(type) {
+	case tea.KeyMsg:
+		switch msg.String() {
+		case "ctrl+c":
+			return m, tea.Interrupt
+		case "esc", "q":
+			return m, tea.Quit
 		}
 	}
-	t := table.New().
-		Border(lipgloss.RoundedBorder()).
-		Width(100).
-		Headers("Base", "Value").
-		Rows(rows...)
 
-	fmt.Println(t)
+	var cmds []tea.Cmd
+
+	// Process the form
+	form, cmd := m.form.Update(msg)
+	if f, ok := form.(*huh.Form); ok {
+		m.form = f
+
+		// If the form is completed, parse the input value
+		if m.form.State == huh.StateCompleted {
+			if val, err := strconv.ParseInt(m.form.GetString("input"), m.base.base, 64); err == nil {
+				m.value = val
+			}
+		}
+
+		cmds = append(cmds, cmd)
+	}
+
+	return m, tea.Batch(cmds...)
+}
+
+func (m NumbersModel) View() string {
+	switch m.form.State {
+	case huh.StateCompleted:
+		rows := make([][]string, len(ReturnedBaseList))
+		for i, numberBase := range ReturnedBaseList {
+			rows[i] = []string{
+				numberBase.title,
+				strconv.FormatInt(m.value, numberBase.base),
+			}
+		}
+		t := table.New().
+			Border(lipgloss.RoundedBorder()).
+			Width(100).
+			Headers("Base", "Value").
+			Rows(rows...)
+		return lipgloss.NewStyle().Padding(2).PaddingTop(1).Render(t.String())
+	default:
+		return lipgloss.NewStyle().Padding(2).Render(m.form.View())
+	}
 }
