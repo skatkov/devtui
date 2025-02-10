@@ -54,7 +54,7 @@ release:
     owner: skatkov
     name: homebrew-tap
 brews:
-  - description: "Swiss army knife for developers"
+  - description: "A Swiss Army knife for developers"
     name: devtui
     repository:
       owner: skatkov
