@@ -11,15 +11,23 @@ import (
 
 var rootCmd = &cobra.Command{
 	Use:   "devtui",
-	Short: "Swiss army knife for developers",
+	Short: "A Swiss Army knife for developers",
 	Long: `devtui is a collection of small developer apps that help with day to day work.
 	It includes tools like hash generator, unix timestamp converter, and number base converter and multiple others.`,
+	RunE: func(cmd *cobra.Command, args []string) error {
+		p := tea.NewProgram(root.RootScreen())
+		if _, err := p.Run(); err != nil {
+			fmt.Printf("Error starting program: %v", err)
+			os.Exit(1)
+		}
+		return nil
+	},
 }
 
 func Execute() {
-	p := tea.NewProgram(root.RootScreen())
-	if _, err := p.Run(); err != nil {
-		fmt.Printf("Error starting program: %v", err)
+	err := rootCmd.Execute()
+	if err != nil {
+		fmt.Println(err.Error())
 		os.Exit(1)
 	}
 }
