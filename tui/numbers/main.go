@@ -17,6 +17,7 @@ type NumbersModel struct {
 	form  *huh.Form
 	value int64
 	base  NumberBase
+	input string
 }
 
 type NumberBase struct {
@@ -39,6 +40,7 @@ func NewNumberModel() NumbersModel {
 	m.form = huh.NewForm(
 		huh.NewGroup(
 			huh.NewSelect[NumberBase]().
+				Key("base").
 				Options(
 					huh.NewOption(Base2.title, Base2),
 					huh.NewOption(Base8.title, Base8),
@@ -47,19 +49,19 @@ func NewNumberModel() NumbersModel {
 				).
 				Title("Select Base").Value(&m.base),
 			huh.NewInput().
+				Key("input").
 				Placeholder(fmt.Sprintf("Enter a %s number", m.base.title)).
 				Title("Enter a number").
 				Validate(func(s string) error {
 					if len(s) == 0 {
 						return errors.New("number cannot be empty")
 					}
-					val, err := strconv.ParseInt(s, m.base.base, 64)
+					_, err := strconv.ParseInt(s, m.base.base, 64)
 					if err != nil {
 						return errors.New(fmt.Sprintf("please enter a valid %s number", m.base.title))
 					}
-					m.value = val
 					return nil
-				}).Value(new(string)),
+				}).Value(&m.input),
 		),
 	).WithTheme(huh.ThemeCharm()).WithAccessible(accessible)
 
@@ -87,6 +89,14 @@ func (m NumbersModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	form, cmd := m.form.Update(msg)
 	if f, ok := form.(*huh.Form); ok {
 		m.form = f
+
+		// If the form is completed, parse the input value
+		if m.form.State == huh.StateCompleted {
+			if val, err := strconv.ParseInt(m.form.GetString("input"), m.base.base, 64); err == nil {
+				m.value = val
+			}
+		}
+
 		cmds = append(cmds, cmd)
 	}
 
@@ -100,7 +110,7 @@ func (m NumbersModel) View() string {
 		for i, numberBase := range ReturnedBaseList {
 			rows[i] = []string{
 				numberBase.title,
-				strconv.FormatInt(m.number.Value, numberBase.base),
+				strconv.FormatInt(m.value, numberBase.base),
 			}
 		}
 		t := table.New().
@@ -108,8 +118,8 @@ func (m NumbersModel) View() string {
 			Width(100).
 			Headers("Base", "Value").
 			Rows(rows...)
-		return t.String()
+		return lipgloss.NewStyle().Padding(2).PaddingTop(1).Render(t.String())
 	default:
-		return m.form.View()
+		return lipgloss.NewStyle().Padding(2).Render(m.form.View())
 	}
 }
