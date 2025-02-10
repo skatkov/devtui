@@ -19,7 +19,7 @@ builds:
     goos:
       - linux
       - darwin
-    binary: posh
+    binary: devtui
 
 archives:
   - format: tar.gz
