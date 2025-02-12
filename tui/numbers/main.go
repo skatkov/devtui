@@ -92,8 +92,10 @@ func (m NumbersModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 		// If the form is completed, parse the input value
 		if m.form.State == huh.StateCompleted {
-			if val, err := strconv.ParseInt(m.form.GetString("input"), m.base.base, 64); err == nil {
-				m.value = val
+			if base, ok := m.form.Get("base").(NumberBase); ok {
+				if val, err := strconv.ParseInt(m.form.GetString("input"), base.base, 64); err == nil {
+					m.value = val
+				}
 			}
 		}
 
