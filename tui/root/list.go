@@ -9,6 +9,7 @@ import (
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/lipgloss"
 	"github.com/skatkov/devtui/tui/numbers"
+	uuiddecode "github.com/skatkov/devtui/tui/uuid-decode"
 )
 
 const listHeight = 15
@@ -93,10 +94,14 @@ func (m listModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		case "enter":
 			i, ok := m.list.SelectedItem().(item)
 			if ok {
-				if string(i) == "Number Base Converter" {
+				switch string(i) {
+				case "Number Base Converter":
 					newScreen := numbers.NewNumberModel()
 					return newScreen, newScreen.Init()
-				} else {
+				case "UUID Decode":
+					newScreen := uuiddecode.NewUUIDDecodeModel()
+					return newScreen, newScreen.Init()
+				default:
 					m.err = fmt.Sprintf("%s app is not available", string(i))
 				}
 			}

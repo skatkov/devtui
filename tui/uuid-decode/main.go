@@ -1,9 +1,10 @@
-package main
+package uuiddecode
 
 import (
 	"fmt"
 	"math/big"
 	"os"
+	"strconv"
 	"strings"
 	"time"
 
@@ -11,12 +12,20 @@ import (
 	"github.com/charmbracelet/lipgloss"
 	"github.com/charmbracelet/lipgloss/table"
 	"github.com/google/uuid"
+
+	tea "github.com/charmbracelet/bubbletea"
 )
 
-func main() {
-	var parsedUUID string
+type UUIDDecode struct {
+	form *huh.Form
+	uuid string
+}
 
-	form := huh.NewForm(
+func NewUUIDDecodeModel() *UUIDDecode {
+	m := UUIDDecode{}
+	accessible, _ := strconv.ParseBool(os.Getenv("ACCESSIBLE"))
+
+	m.form = huh.NewForm(
 		huh.NewGroup(
 			huh.NewInput().
 				Title("UUID").
@@ -24,28 +33,49 @@ func main() {
 				Validate(func(value string) error {
 					_, err := uuid.Parse(value)
 					return err
-				}).Value(&parsedUUID),
+				}).Value(&m.uuid),
 		),
-	)
+	).WithTheme(huh.ThemeCharm()).WithAccessible(accessible)
 
-	err := form.Run()
+	return &m
+}
 
-	if err != nil {
-		fmt.Println("Uh oh:", err)
-		os.Exit(1)
+func (m *UUIDDecode) Init() tea.Cmd {
+	return m.form.Init()
+}
+
+func (m *UUIDDecode) View() string {
+	switch m.form.State {
+	case huh.StateCompleted:
+		result, _ := uuid.Parse(m.uuid)
+
+		tableOutput := table.New().
+			Border(lipgloss.RoundedBorder()).
+			Width(100).
+			Rows(extractUUIDData(result)...)
+
+		return lipgloss.NewStyle().Padding(2).PaddingTop(1).Render(tableOutput.String())
+	default:
+		return lipgloss.NewStyle().Padding(2).Render(m.form.View())
+	}
+}
+
+func (m *UUIDDecode) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
+	switch msg := msg.(type) {
+	case tea.KeyMsg:
+		switch msg.String() {
+		case "ctrl+c":
+			return m, tea.Interrupt
+		case "q", "esc":
+			return m, tea.Quit
+		}
 	}
 
-	result, _ := uuid.Parse(parsedUUID)
-	//t := result.Time()
-	// sec, nsec := t.UnixTime()
-	//timeStamp := time.Unix(sec, nsec)
-
-	tableOutput := table.New().
-		Border(lipgloss.RoundedBorder()).
-		Width(100).
-		Rows(extractUUIDData(result)...)
-
-	fmt.Println(tableOutput)
+	form, cmd := m.form.Update(msg)
+	if f, ok := form.(*huh.Form); ok {
+		m.form = f
+	}
+	return m, cmd
 }
 
 func extractUUIDData(id uuid.UUID) [][]string {
