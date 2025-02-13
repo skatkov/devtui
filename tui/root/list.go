@@ -10,6 +10,7 @@ import (
 	"github.com/charmbracelet/lipgloss"
 	"github.com/skatkov/devtui/tui/numbers"
 	uuiddecode "github.com/skatkov/devtui/tui/uuid-decode"
+	uuidgenerate "github.com/skatkov/devtui/tui/uuid-generate"
 )
 
 const listHeight = 15
@@ -100,6 +101,9 @@ func (m listModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 					return newScreen, newScreen.Init()
 				case "UUID Decode":
 					newScreen := uuiddecode.NewUUIDDecodeModel()
+					return newScreen, newScreen.Init()
+				case "UUID Generate":
+					newScreen := uuidgenerate.NewUUIDGenerateModel()
 					return newScreen, newScreen.Init()
 				default:
 					m.err = fmt.Sprintf("%s app is not available", string(i))

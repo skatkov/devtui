@@ -1,53 +1,116 @@
-package main
+package uuidgenerate
 
 import (
 	"fmt"
-	"log"
+	"os"
+	"strconv"
 
+	"github.com/charmbracelet/huh"
+	"github.com/charmbracelet/lipgloss"
+	"github.com/charmbracelet/lipgloss/table"
 	"github.com/google/uuid"
+
+	tea "github.com/charmbracelet/bubbletea"
 )
 
-func main() {
-	// version 1 uuid
-	v1, err := uuid.NewUUID()
-	if err != nil {
-		log.Fatal("cannot generate v1 uuid")
+type UUIDGenerate struct {
+	form          *huh.Form
+	version       int
+	namespace     string
+	generatedUUID uuid.UUID
+}
+
+func NewUUIDGenerateModel() *UUIDGenerate {
+	m := UUIDGenerate{}
+	accessible, _ := strconv.ParseBool(os.Getenv("ACCESSIBLE"))
+
+	m.form = huh.NewForm(
+		huh.NewGroup(
+			huh.NewSelect[int]().
+				Title("UUID Version").
+				Options(
+					huh.NewOption("Version 1 (Time-based)", 1),
+					huh.NewOption("Version 3 (MD5 hash-based)", 3),
+					huh.NewOption("Version 4 (Random)", 4),
+					huh.NewOption("Version 5 (SHA1 hash-based)", 5),
+					huh.NewOption("Version 6 (Time-based)", 6),
+					huh.NewOption("Version 7 (Time-based)", 7),
+				).
+				Value(&m.version),
+		),
+		huh.NewGroup(
+			huh.NewInput().
+				Title("Namespace").
+				Value(&m.namespace),
+		).WithHide(m.version == 3 || m.version == 5),
+	).WithTheme(huh.ThemeCharm()).WithAccessible(accessible)
+
+	return &m
+}
+
+func (m *UUIDGenerate) Init() tea.Cmd {
+	return m.form.Init()
+}
+
+func (m *UUIDGenerate) View() string {
+	switch m.form.State {
+	case huh.StateCompleted:
+		tableOutput := table.New().
+			Border(lipgloss.RoundedBorder()).
+			Width(100).
+			Rows(
+				[]string{"Version", fmt.Sprintf("%d", m.version)},
+				[]string{"Generated UUID", m.generatedUUID.String()},
+			)
+
+		return lipgloss.NewStyle().Padding(2).PaddingTop(1).Render(tableOutput.String())
+	default:
+		return lipgloss.NewStyle().Padding(2).Render(m.form.View())
 	}
-	fmt.Printf("v1 uuid: %v\n", v1)
+}
 
-	// version 2 uuid
-	v2, err := uuid.NewDCEGroup()
-	if err != nil {
-		log.Fatal("cannot generate v2 uuid")
+func (m *UUIDGenerate) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
+	switch msg := msg.(type) {
+	case tea.KeyMsg:
+		switch msg.String() {
+		case "ctrl+c":
+			return m, tea.Interrupt
+		case "q", "esc":
+			return m, tea.Quit
+		}
 	}
-	fmt.Printf("v2 uuid: %v\n", v2)
 
-	// version 3 uuid
-	v3 := uuid.NewMD5(uuid.NameSpaceURL, []byte("https://example.com"))
-	fmt.Printf("v3 uuid: %v\n", v3)
+	form, cmd := m.form.Update(msg)
+	if f, ok := form.(*huh.Form); ok {
+		m.form = f
 
-	// version 4 uuid
-	v4, err := uuid.NewRandom()
-	if err != nil {
-		log.Fatal("cannot generate v4 uuid")
+		if m.form.State == huh.StateCompleted {
+			var err error
+			m.generatedUUID, err = m.generateUUID()
+			if err != nil {
+				// Handle error appropriately
+				fmt.Println("Error generating UUID:", err)
+			}
+		}
 	}
-	fmt.Printf("v4 uuid: %v\n", v4)
+	return m, cmd
+}
 
-	// version 5 uuid
-	v5 := uuid.NewSHA1(uuid.NameSpaceURL, []byte("https://example.com"))
-	fmt.Printf("v5 uuid: %v\n", v5)
-
-	// version 6 uuid
-	v6, err := uuid.NewV6()
-	if err != nil {
-		log.Fatal("cannot generate v6 uuid")
+func (m *UUIDGenerate) generateUUID() (uuid.UUID, error) {
+	switch m.version {
+	case 1:
+		return uuid.NewUUID()
+	case 3:
+		return uuid.NewMD5(uuid.NameSpaceURL, []byte(m.namespace)), nil
+	case 4:
+		return uuid.NewRandom()
+	case 5:
+		return uuid.NewSHA1(uuid.NameSpaceURL, []byte(m.namespace)), nil
+	case 6:
+		return uuid.NewV6()
+	case 7:
+		return uuid.NewV7()
+	default:
+		return uuid.Nil, fmt.Errorf("unsupported UUID version: %s", m.version)
 	}
-	fmt.Printf("v6 uuid: %v\n", v6)
-
-	// version 7 uuid
-	v7, err := uuid.NewV7()
-	if err != nil {
-		log.Fatal("cannot generate v7 uuid")
-	}
-	fmt.Printf("v7 uuid: %v\n", v7)
 }
