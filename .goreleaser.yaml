@@ -35,8 +35,6 @@ archives:
     # format_overrides:
     # - goos: windows
     #   format: zip
-checksum:
-  name_template: "checksums.txt"
 snapshot:
   name_template: "{{ incpatch .Version }}-next"
 changelog:
@@ -53,7 +51,6 @@ release:
   github:
     owner: skatkov
     name: homebrew-tap
-  replace_existing_artifacts: true
 brews:
   - description: "A Swiss Army knife for developers"
     name: devtui
