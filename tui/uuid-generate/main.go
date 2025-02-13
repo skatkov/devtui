@@ -129,6 +129,6 @@ func (m *UUIDGenerate) generateUUID() (uuid.UUID, error) {
 	case 7:
 		return uuid.NewV7()
 	default:
-		return uuid.Nil, fmt.Errorf("unsupported UUID version: %s", m.version)
+		return uuid.Nil, fmt.Errorf("unsupported UUID version: %d", m.version)
 	}
 }
