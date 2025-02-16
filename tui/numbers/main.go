@@ -58,7 +58,7 @@ func NewNumberModel() NumbersModel {
 					}
 					_, err := strconv.ParseInt(s, m.base.base, 64)
 					if err != nil {
-						return errors.New(fmt.Sprintf("please enter a valid %s number", m.base.title))
+						return fmt.Errorf("please enter a valid %s number", m.base.title)
 					}
 					return nil
 				}).Value(&m.input),

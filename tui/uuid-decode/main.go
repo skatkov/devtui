@@ -91,7 +91,7 @@ func extractUUIDData(id uuid.UUID) [][]string {
 		{"Standard String Format", id.String()},
 		{"Single Integer Value", i.String()},
 		{"Version", fmt.Sprintf("%d", id.Version())},
-		{"Variant", fmt.Sprintf("%s", mapVariant(id.Variant()))},
+		{"Variant", mapVariant(id.Variant())},
 	}
 	switch id.Version() {
 	case uuid.Version(1):

@@ -11,8 +11,8 @@ import (
 type model struct {
 	content  string
 	viewport viewport.Model
-	showHelp bool
-	ready    bool
+	// showHelp bool
+	ready bool
 }
 
 func (m model) Init() tea.Cmd {
@@ -58,12 +58,12 @@ func (m model) View() string {
 		return "\n  Initializing..."
 	}
 
-	return fmt.Sprintf("%s", m.viewport.View())
+	return m.viewport.View()
 }
 
 func main() {
 	p := tea.NewProgram(model{content: "Hello, World!"}, tea.WithAltScreen(), tea.WithMouseCellMotion())
-	if err := p.Start(); err != nil {
+	if _, err := p.Run(); err != nil {
 		fmt.Println("Error running program:", err)
 		os.Exit(1)
 	}

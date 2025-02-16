@@ -11,7 +11,6 @@ type rootScreenModel struct {
 func RootScreen() rootScreenModel {
 	m := newListModel()
 	return rootScreenModel{model: m}
-
 }
 
 func (m rootScreenModel) Init() tea.Cmd {

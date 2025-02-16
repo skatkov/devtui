@@ -45,7 +45,11 @@ func main() {
 		),
 	)
 
-	form.Run()
+	err := form.Run()
+	if err != nil {
+		fmt.Printf("Error running form: %v\n", err)
+		return
+	}
 
 	expr, err := cron.NewDescriptor(
 		cron.Use24HourTimeFormat(true),
