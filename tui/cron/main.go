@@ -18,7 +18,8 @@ func main() {
 	form := huh.NewForm(
 		huh.NewGroup(
 			huh.NewInput().
-				Title("Enter Cron Expression").
+				Title("Cron Expression").
+				Placeholder("* * * * *").
 				Value(&cronExpression).
 				Validate(func(str string) error {
 					// First validate with regexp
