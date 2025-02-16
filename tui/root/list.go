@@ -24,9 +24,13 @@ var (
 	quitTextStyle     = lipgloss.NewStyle().Margin(1, 0, 2, 4)
 )
 
-type item string
+type MenuOption struct {
+	title string
+	model func() tea.Model
+}
 
-func (i item) FilterValue() string { return string(i) }
+func (i MenuOption) FilterValue() string { return i.title }
+func (i MenuOption) Title() string       { return i.title }
 
 type itemDelegate struct{}
 
@@ -34,12 +38,12 @@ func (d itemDelegate) Height() int                             { return 1 }
 func (d itemDelegate) Spacing() int                            { return 0 }
 func (d itemDelegate) Update(_ tea.Msg, _ *list.Model) tea.Cmd { return nil }
 func (d itemDelegate) Render(w io.Writer, m list.Model, index int, listItem list.Item) {
-	i, ok := listItem.(item)
+	i, ok := listItem.(MenuOption)
 	if !ok {
 		return
 	}
 
-	str := fmt.Sprintf("%d. %s", index+1, i)
+	str := fmt.Sprintf("%d. %s", index+1, i.title)
 
 	fn := itemStyle.Render
 	if index == m.Index() {
@@ -53,9 +57,18 @@ func (d itemDelegate) Render(w io.Writer, m list.Model, index int, listItem list
 
 func newListModel() *listModel {
 	items := []list.Item{
-		item("UUID Decode"),
-		item("Number Base Converter"),
-		item("UUID Generate"),
+		MenuOption{
+			title: "UUID Decode",
+			model: func() tea.Model { return uuiddecode.NewUUIDDecodeModel() },
+		},
+		MenuOption{
+			title: "Number Base Converter",
+			model: func() tea.Model { return numbers.NewNumberModel() },
+		},
+		MenuOption{
+			title: "UUID Generate",
+			model: func() tea.Model { return uuidgenerate.NewUUIDGenerateModel() },
+		},
 	}
 
 	delegate := itemDelegate{}
@@ -93,21 +106,10 @@ func (m listModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			return m, tea.Quit
 
 		case "enter":
-			i, ok := m.list.SelectedItem().(item)
+			i, ok := m.list.SelectedItem().(MenuOption)
 			if ok {
-				switch string(i) {
-				case "Number Base Converter":
-					newScreen := numbers.NewNumberModel()
-					return newScreen, newScreen.Init()
-				case "UUID Decode":
-					newScreen := uuiddecode.NewUUIDDecodeModel()
-					return newScreen, newScreen.Init()
-				case "UUID Generate":
-					newScreen := uuidgenerate.NewUUIDGenerateModel()
-					return newScreen, newScreen.Init()
-				default:
-					m.err = fmt.Sprintf("%s app is not available", string(i))
-				}
+				newScreen := i.model()
+				return newScreen, newScreen.Init()
 			}
 		}
 	}
