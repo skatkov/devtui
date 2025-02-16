@@ -1,26 +1,37 @@
-package main
+package cron
 
 import (
 	"fmt"
+	"os"
 	"regexp"
+	"strconv"
 
 	"github.com/charmbracelet/huh"
+	"github.com/charmbracelet/lipgloss"
 	"github.com/lnquy/cron"
+
+	tea "github.com/charmbracelet/bubbletea"
 )
 
-func main() {
-	var cronExpression string
+type CronModel struct {
+	form           *huh.Form
+	cronExpression string
+}
+
+func NewCronModel() *CronModel {
+	m := &CronModel{}
+	accessible, _ := strconv.ParseBool(os.Getenv("ACCESSIBLE"))
 
 	// @see https://gist.github.com/Aterfax/401875eb3d45c9c114bbef69364dd045
 	// @see https://regexr.com/4jp54
 	cronRegex := `^((((\d+,)+\d+|(\d+(\/|-|#)\d+)|\d+L?|\*(\/\d+)?|L(-\d+)?|\?|[A-Z]{3}(-[A-Z]{3})?) ?){5,7})|(@(annually|yearly|monthly|weekly|daily|hourly|reboot))|(@every (\d+(ns|us|µs|ms|s|m|h))+)$`
 
-	form := huh.NewForm(
+	m.form = huh.NewForm(
 		huh.NewGroup(
 			huh.NewInput().
 				Title("Cron Expression").
 				Placeholder("* * * * *").
-				Value(&cronExpression).
+				Value(&m.cronExpression).
 				Validate(func(str string) error {
 					// First validate with regexp
 					matched, err := regexp.MatchString(cronRegex, str)
@@ -43,27 +54,67 @@ func main() {
 					return nil
 				}),
 		),
-	)
+	).WithTheme(huh.ThemeCharm()).WithAccessible(accessible)
 
-	err := form.Run()
-	if err != nil {
-		fmt.Printf("Error running form: %v\n", err)
-		return
+	return m
+}
+
+func (m *CronModel) Init() tea.Cmd {
+	return m.form.Init()
+}
+
+func (m *CronModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
+	switch msg := msg.(type) {
+	case tea.KeyMsg:
+		switch msg.String() {
+		case "ctrl+c":
+			return m, tea.Interrupt
+		case "esc", "q":
+			return m, tea.Quit
+		}
 	}
 
-	expr, err := cron.NewDescriptor(
-		cron.Use24HourTimeFormat(true),
-		cron.DayOfWeekStartsAtOne(true),
-	)
-	if err != nil {
-		fmt.Printf("Error parsing cron expression: %v\n", err)
-		return
+	form, cmd := m.form.Update(msg)
+	if f, ok := form.(*huh.Form); ok {
+		m.form = f
 	}
-	desc, err := expr.ToDescription(cronExpression, cron.Locale_en)
-	if err != nil {
-		fmt.Printf("Error parsing cron expression: %v\n", err)
-		return
-	}
+	return m, cmd
+}
 
-	fmt.Printf("%s => %s\n", cronExpression, desc)
+func (m *CronModel) View() string {
+	switch m.form.State {
+	case huh.StateCompleted:
+		expr, err := cron.NewDescriptor(
+			cron.Use24HourTimeFormat(true),
+			cron.DayOfWeekStartsAtOne(true),
+		)
+		if err != nil {
+			return lipgloss.NewStyle().Padding(2).
+				Render(fmt.Sprintf("Error parsing cron expression: %v", err))
+		}
+
+		desc, err := expr.ToDescription(m.cronExpression, cron.Locale_en)
+		if err != nil {
+			return lipgloss.NewStyle().Padding(2).
+				Render(fmt.Sprintf("Error parsing cron expression: %v", err))
+		}
+		titleStyle := lipgloss.NewStyle().
+			Foreground(lipgloss.Color("#FF69B4")).
+			Bold(true)
+
+		valueStyle := lipgloss.NewStyle().
+			Foreground(lipgloss.Color("#87CEEB"))
+
+		output := fmt.Sprintf("%s \n\n",
+			titleStyle.Render(m.cronExpression)) +
+			fmt.Sprintf("%s",
+				valueStyle.Render(desc))
+
+		return lipgloss.NewStyle().
+			Padding(2).
+			PaddingTop(1).
+			Render(output)
+	default:
+		return lipgloss.NewStyle().Padding(2).Render(m.form.View())
+	}
 }

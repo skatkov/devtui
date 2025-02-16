@@ -8,6 +8,7 @@ import (
 	"github.com/charmbracelet/bubbles/list"
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/lipgloss"
+	cron "github.com/skatkov/devtui/tui/cron"
 	"github.com/skatkov/devtui/tui/numbers"
 	uuiddecode "github.com/skatkov/devtui/tui/uuid-decode"
 	uuidgenerate "github.com/skatkov/devtui/tui/uuid-generate"
@@ -67,6 +68,10 @@ func newListModel() *listModel {
 		MenuOption{
 			title: "UUID Generate",
 			model: func() tea.Model { return uuidgenerate.NewUUIDGenerateModel() },
+		},
+		MenuOption{
+			title: "Cron Job Parser",
+			model: func() tea.Model { return cron.NewCronModel() },
 		},
 	}
 
