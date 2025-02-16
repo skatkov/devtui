@@ -17,5 +17,3 @@ jobs:
           go-version: stable
       - name: golangci-lint
         uses: golangci/golangci-lint-action@v6
-        with:
-          skip-go-installation: true
