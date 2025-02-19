@@ -3,16 +3,42 @@ package main
 import (
 	"fmt"
 	"os"
+	"strings"
 
 	"github.com/charmbracelet/bubbles/viewport"
 	tea "github.com/charmbracelet/bubbletea"
+	"github.com/charmbracelet/lipgloss"
+	"github.com/mattn/go-runewidth"
+	"golang.org/x/term"
+)
+
+var (
+	pagerHelpHeight int
+
+	statusBarNoteFg = lipgloss.AdaptiveColor{Light: "#656565", Dark: "#7D7D7D"}
+
+	helpViewStyle = lipgloss.NewStyle().
+			Foreground(statusBarNoteFg).
+			Background(lipgloss.AdaptiveColor{Light: "#f2f2f2", Dark: "#1B1B1B"}).
+			Render
+
+	statusBarHelpStyle = lipgloss.NewStyle().
+				Foreground(statusBarNoteFg).
+				Background(lipgloss.AdaptiveColor{Light: "#DCDCDC", Dark: "#323232"}).
+				Render
+)
+
+const (
+	statusBarHeight = 1
 )
 
 type model struct {
+	width    int
+	height   int
 	content  string
 	viewport viewport.Model
-	// showHelp bool
-	ready bool
+	showHelp bool
+	ready    bool
 }
 
 func (m model) Init() tea.Cmd {
@@ -29,20 +55,27 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		switch msg.String() {
 		case "ctrl+c", "q":
 			return m, tea.Quit
+		case "?":
+			m.toggleHelp()
+			if m.viewport.HighPerformanceRendering {
+				cmds = append(cmds, viewport.Sync(m.viewport))
+			}
 		}
 	case tea.WindowSizeMsg:
+		m.width = msg.Width
+		m.height = msg.Height
+
 		if !m.ready {
 			// Since this program is using the full size of the viewport we
 			// need to wait until we've received the window dimensions before
 			// we can initialize the viewport. The initial dimensions come in
 			// quickly, though asynchronously, which is why we wait for them
 			// here.
-			m.viewport = viewport.New(msg.Width, msg.Height)
+			m.viewport = viewport.New(msg.Width, msg.Height-statusBarHeight)
 			m.viewport.SetContent(m.content)
 			m.ready = true
 		} else {
-			m.viewport.Width = msg.Width
-			m.viewport.Height = msg.Height
+			m.setSize(msg.Width, msg.Height)
 		}
 	}
 
@@ -54,15 +87,113 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 }
 
 func (m model) View() string {
-	if !m.ready {
-		return "\n  Initializing..."
+	var b strings.Builder
+	fmt.Fprint(&b, m.viewport.View()+"\n")
+	// Footer
+	m.statusBarView(&b)
+
+	if m.showHelp {
+		fmt.Fprint(&b, "\n"+m.helpView())
 	}
 
-	return m.viewport.View()
+	return b.String()
+}
+
+func (m *model) setSize(w, h int) {
+	m.viewport.Width = w
+	m.viewport.Height = h - statusBarHeight
+
+	if m.showHelp {
+		if pagerHelpHeight == 0 {
+			pagerHelpHeight = strings.Count(m.helpView(), "\n")
+		}
+		m.viewport.Height -= (statusBarHeight + pagerHelpHeight)
+	}
+}
+
+func (m *model) toggleHelp() {
+	m.showHelp = !m.showHelp
+	m.setSize(m.width, m.height)
+
+	if m.viewport.PastBottom() {
+		m.viewport.GotoBottom()
+	}
+}
+
+func (m model) statusBarView(b *strings.Builder) {
+	if m.ready {
+		fmt.Fprint(b, "Ready")
+	} else {
+		fmt.Fprint(b, "Initializing...")
+	}
+}
+
+func (m model) helpView() (s string) {
+	col1 := []string{
+		"g/home  go to top",
+		"G/end   go to bottom",
+		"c       copy contents",
+		"e       edit this document",
+		"r       reload this document",
+		"esc     back to files",
+		"q       quit",
+	}
+
+	s += "\n"
+	s += "k/↑      up                  " + col1[0] + "\n"
+	s += "j/↓      down                " + col1[1] + "\n"
+	s += "b/pgup   page up             " + col1[2] + "\n"
+	s += "f/pgdn   page down           " + col1[3] + "\n"
+	s += "u        ½ page up           " + col1[4] + "\n"
+	s += "d        ½ page down         "
+
+	if len(col1) > 5 {
+		s += col1[5]
+	}
+
+	s = indent(s, 2)
+
+	// Fill up empty cells with spaces for background coloring
+	if m.width > 0 {
+		lines := strings.Split(s, "\n")
+		for i := 0; i < len(lines); i++ {
+			l := runewidth.StringWidth(lines[i])
+			n := max(m.width-l, 0)
+			lines[i] += strings.Repeat(" ", n)
+		}
+
+		s = strings.Join(lines, "\n")
+	}
+
+	return helpViewStyle(s)
+}
+
+func indent(s string, n int) string {
+	if n <= 0 || s == "" {
+		return s
+	}
+	l := strings.Split(s, "\n")
+	b := strings.Builder{}
+	i := strings.Repeat(" ", n)
+	for _, v := range l {
+		fmt.Fprintf(&b, "%s%s\n", i, v)
+	}
+	return b.String()
 }
 
 func main() {
-	p := tea.NewProgram(model{content: "Hello, World!"}, tea.WithAltScreen(), tea.WithMouseCellMotion())
+	w, h, err := term.GetSize(int(os.Stdout.Fd()))
+	if err != nil {
+		fmt.Println("Error getting terminal size:", err)
+		os.Exit(1)
+	}
+	viewport := viewport.New(w, h-statusBarHeight)
+	viewport.YPosition = 0
+	viewport.HighPerformanceRendering = true
+
+	m := model{content: "Hello, World!", viewport: viewport}
+
+	p := tea.NewProgram(m, tea.WithAltScreen(), tea.WithMouseCellMotion())
 	if _, err := p.Run(); err != nil {
 		fmt.Println("Error running program:", err)
 		os.Exit(1)
