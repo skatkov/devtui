@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"math"
 	"os"
 	"strings"
 
@@ -12,12 +13,14 @@ import (
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/lipgloss"
 	"github.com/mattn/go-runewidth"
+	"github.com/muesli/ansi"
+	"github.com/muesli/reflow/truncate"
 	"golang.org/x/term"
 )
 
 var (
 	pagerHelpHeight int
-
+	fuchsia         = lipgloss.AdaptiveColor{Light: "#EE6FF8", Dark: "#EE6FF8"}
 	statusBarNoteFg = lipgloss.AdaptiveColor{Light: "#656565", Dark: "#7D7D7D"}
 
 	helpViewStyle = lipgloss.NewStyle().
@@ -25,14 +28,30 @@ var (
 			Background(lipgloss.AdaptiveColor{Light: "#f2f2f2", Dark: "#1B1B1B"}).
 			Render
 
+	statusBarBg = lipgloss.AdaptiveColor{Light: "#E6E6E6", Dark: "#242424"}
+
+	statusBarNoteStyle = lipgloss.NewStyle().
+				Foreground(statusBarNoteFg).
+				Background(statusBarBg).Render
+
+	appNameStyle = lipgloss.NewStyle().
+			Foreground(lipgloss.Color("#ECFD65")).
+			Background(fuchsia).
+			Bold(true)
+
 	statusBarHelpStyle = lipgloss.NewStyle().
 				Foreground(statusBarNoteFg).
-				Background(lipgloss.AdaptiveColor{Light: "#DCDCDC", Dark: "#323232"}).
+				Background(lipgloss.AdaptiveColor{Light: "#DCDCDC", Dark: "#323232"})
+
+	statusBarScrollPosStyle = lipgloss.NewStyle().
+				Foreground(lipgloss.AdaptiveColor{Light: "#949494", Dark: "#5A5A5A"}).
+				Background(statusBarBg).
 				Render
 )
 
 const (
 	statusBarHeight = 1
+	ellipsis        = "…"
 )
 
 type model struct {
@@ -140,11 +159,55 @@ func (m *model) toggleHelp() {
 }
 
 func (m model) statusBarView(b *strings.Builder) {
-	if m.ready {
-		fmt.Fprint(b, "Ready")
-	} else {
-		fmt.Fprint(b, "Initializing...")
+	const (
+		minPercent               float64 = 0.0
+		maxPercent               float64 = 1.0
+		percentToStringMagnitude float64 = 100.0
+	)
+
+	appName := appNameStyle.Render(" JSON Formatter ")
+
+	// Scroll percent
+	scrollPercent := ""
+	if m.content != "" {
+		percent := math.Max(minPercent, math.Min(maxPercent, m.viewport.ScrollPercent()))
+		scrollPercent = fmt.Sprintf(" %3.f%% ", percent*percentToStringMagnitude)
+		scrollPercent = statusBarScrollPosStyle(scrollPercent)
 	}
+	helpNote := statusBarHelpStyle.Render(" ? Help ")
+	var note string
+	if m.content == "" {
+		note = "Press 'e' to edit"
+	}
+
+	note = truncate.StringWithTail(" "+note+" ", uint(max(0,
+		m.width-
+			ansi.PrintableRuneWidth(appName)-
+			ansi.PrintableRuneWidth(scrollPercent)-
+			ansi.PrintableRuneWidth(helpNote),
+	)), ellipsis)
+
+	note = statusBarNoteStyle(note)
+
+	// Empty space
+	padding := max(0,
+		m.width-
+			ansi.PrintableRuneWidth(appName)-
+			ansi.PrintableRuneWidth(note)-
+			ansi.PrintableRuneWidth(scrollPercent)-
+			ansi.PrintableRuneWidth(helpNote),
+	)
+	emptySpace := strings.Repeat(" ", padding)
+	emptySpace = statusBarNoteStyle(emptySpace)
+
+	fmt.Fprintf(b, "%s%s%s%s%s",
+		appName,
+		note,
+		emptySpace,
+		scrollPercent,
+		helpNote,
+	)
+
 }
 
 func (m model) helpView() (s string) {
