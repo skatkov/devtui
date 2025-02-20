@@ -1,10 +1,13 @@
 package main
 
 import (
+	"bytes"
+	"encoding/json"
 	"fmt"
 	"os"
 	"strings"
 
+	"github.com/alecthomas/chroma/quick"
 	"github.com/charmbracelet/bubbles/viewport"
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/lipgloss"
@@ -33,12 +36,13 @@ const (
 )
 
 type model struct {
-	width    int
-	height   int
-	content  string
-	viewport viewport.Model
-	showHelp bool
-	ready    bool
+	width             int
+	height            int
+	formatted_content string
+	content           string
+	viewport          viewport.Model
+	showHelp          bool
+	ready             bool
 }
 
 func (m model) Init() tea.Cmd {
@@ -53,6 +57,8 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	switch msg := msg.(type) {
 	case tea.KeyMsg:
 		switch msg.String() {
+		case "e":
+			return m, openEditor(m.content, "json")
 		case "ctrl+c", "q":
 			return m, tea.Quit
 		case "?":
@@ -61,6 +67,17 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				cmds = append(cmds, viewport.Sync(m.viewport))
 			}
 		}
+	case editorFinishedMsg:
+		if msg.err != nil {
+			// Handle error
+			return m, nil
+		}
+		m.content = msg.content
+		m.formatted_content = formatJSON(msg.content)
+		var buf bytes.Buffer
+		_ = quick.Highlight(&buf, m.formatted_content, "json", "terminal", "nord")
+		m.viewport.SetContent(buf.String())
+		return m, nil
 	case tea.WindowSizeMsg:
 		m.width = msg.Width
 		m.height = msg.Height
@@ -88,7 +105,9 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 func (m model) View() string {
 	var b strings.Builder
+
 	fmt.Fprint(&b, m.viewport.View()+"\n")
+
 	// Footer
 	m.statusBarView(&b)
 
@@ -191,11 +210,25 @@ func main() {
 	viewport.YPosition = 0
 	viewport.HighPerformanceRendering = true
 
-	m := model{content: "Hello, World!", viewport: viewport}
+	m := model{content: "", viewport: viewport}
 
 	p := tea.NewProgram(m, tea.WithAltScreen(), tea.WithMouseCellMotion())
 	if _, err := p.Run(); err != nil {
 		fmt.Println("Error running program:", err)
 		os.Exit(1)
 	}
+}
+
+func formatJSON(content string) string {
+	var data interface{}
+	if err := json.Unmarshal([]byte(content), &data); err != nil {
+		return content
+	}
+	var buf bytes.Buffer
+	enc := json.NewEncoder(&buf)
+	enc.SetIndent("", "  ")
+	if err := enc.Encode(data); err != nil {
+		return content
+	}
+	return buf.String()
 }
