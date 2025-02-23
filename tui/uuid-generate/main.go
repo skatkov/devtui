@@ -89,9 +89,8 @@ func (m *UUIDGenerate) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	switch msg := msg.(type) {
 	case tea.KeyMsg:
 		switch msg.String() {
-		case "ctrl+c":
-			return m, tea.Interrupt
-		case "q", "esc":
+		// TODO: "esc" should actually lead back to RootModel with list.
+		case "q", "ctrl+c", "esc":
 			return m, tea.Quit
 		}
 	}

@@ -9,6 +9,7 @@ import (
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/lipgloss"
 	cron "github.com/skatkov/devtui/tui/cron"
+	"github.com/skatkov/devtui/tui/json"
 	"github.com/skatkov/devtui/tui/numbers"
 	uuiddecode "github.com/skatkov/devtui/tui/uuid-decode"
 	uuidgenerate "github.com/skatkov/devtui/tui/uuid-generate"
@@ -72,6 +73,14 @@ func newListModel() *listModel {
 		MenuOption{
 			title: "Cron Job Parser",
 			model: func() tea.Model { return cron.NewCronModel() },
+		},
+		MenuOption{
+			title: "JSON Formatter",
+			model: func() tea.Model {
+				p := tea.NewProgram(json.NewJSONModel(), tea.WithAltScreen())
+				go p.Run()
+				return newListModel() // Return to main menu after JSON formatter exits
+			},
 		},
 	}
 

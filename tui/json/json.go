@@ -1,4 +1,4 @@
-package main
+package json
 
 import (
 	"bytes"
@@ -57,7 +57,7 @@ const (
 	statusMessageTimeout = time.Second * 3
 )
 
-type model struct {
+type Model struct {
 	width             int
 	height            int
 	formatted_content string
@@ -70,11 +70,18 @@ type model struct {
 	statusMessageTimer *time.Timer
 }
 
-func (m model) Init() tea.Cmd {
+func NewJSONModel() Model {
+	return Model{
+		content: "",
+		ready:   false,
+	}
+}
+
+func (m Model) Init() tea.Cmd {
 	return nil
 }
 
-func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
+func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	var (
 		cmd  tea.Cmd
 		cmds []tea.Cmd
@@ -127,7 +134,7 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	return m, tea.Batch(cmds...)
 }
 
-func (m *model) setContent(content string) {
+func (m *Model) setContent(content string) {
 	m.content = content
 	m.formatted_content = formatJSON(content)
 	var buf bytes.Buffer
@@ -135,7 +142,7 @@ func (m *model) setContent(content string) {
 	m.viewport.SetContent(buf.String())
 }
 
-func (m model) View() string {
+func (m Model) View() string {
 	var b strings.Builder
 
 	fmt.Fprint(&b, m.viewport.View()+"\n")
@@ -150,7 +157,7 @@ func (m model) View() string {
 	return b.String()
 }
 
-func (m *model) setSize(w, h int) {
+func (m *Model) setSize(w, h int) {
 	m.viewport.Width = w
 	m.viewport.Height = h - statusBarHeight
 
@@ -162,7 +169,7 @@ func (m *model) setSize(w, h int) {
 	}
 }
 
-func (m *model) toggleHelp() {
+func (m *Model) toggleHelp() {
 	m.showHelp = !m.showHelp
 	m.setSize(m.width, m.height)
 
@@ -171,7 +178,7 @@ func (m *model) toggleHelp() {
 	}
 }
 
-func (m model) statusBarView(b *strings.Builder) {
+func (m Model) statusBarView(b *strings.Builder) {
 	const (
 		minPercent               float64 = 0.0
 		maxPercent               float64 = 1.0
@@ -223,7 +230,7 @@ func (m model) statusBarView(b *strings.Builder) {
 
 }
 
-func (m model) helpView() (s string) {
+func (m Model) helpView() (s string) {
 	col1 := []string{
 		"c              copy formatted JSON",
 		"e              edit unformatted JSON",
@@ -283,7 +290,7 @@ func main() {
 	viewport.YPosition = 0
 	viewport.HighPerformanceRendering = true
 
-	m := model{content: "", viewport: viewport}
+	m := Model{content: "", viewport: viewport}
 
 	p := tea.NewProgram(m, tea.WithAltScreen(), tea.WithMouseCellMotion())
 	if _, err := p.Run(); err != nil {
