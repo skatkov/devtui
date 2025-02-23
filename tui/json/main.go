@@ -7,6 +7,7 @@ import (
 	"math"
 	"os"
 	"strings"
+	"time"
 
 	"github.com/alecthomas/chroma/quick"
 	"github.com/charmbracelet/bubbles/viewport"
@@ -15,6 +16,7 @@ import (
 	"github.com/mattn/go-runewidth"
 	"github.com/muesli/ansi"
 	"github.com/muesli/reflow/truncate"
+	"golang.design/x/clipboard"
 	"golang.org/x/term"
 )
 
@@ -50,8 +52,9 @@ var (
 )
 
 const (
-	statusBarHeight = 1
-	ellipsis        = "…"
+	statusBarHeight      = 1
+	ellipsis             = "…"
+	statusMessageTimeout = time.Second * 3
 )
 
 type model struct {
@@ -62,6 +65,9 @@ type model struct {
 	viewport          viewport.Model
 	showHelp          bool
 	ready             bool
+
+	statusMessage      string
+	statusMessageTimer *time.Timer
 }
 
 func (m model) Init() tea.Cmd {
@@ -80,6 +86,11 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			return m, openEditor(m.content, "json")
 		case "ctrl+c", "q":
 			return m, tea.Quit
+		case "v":
+			content := clipboard.Read(clipboard.FmtText)
+			m.setContent(string(content))
+		case "c":
+			clipboard.Write(clipboard.FmtText, []byte(m.formatted_content))
 		case "?":
 			m.toggleHelp()
 			if m.viewport.HighPerformanceRendering {
@@ -88,15 +99,9 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		}
 	case editorFinishedMsg:
 		if msg.err != nil {
-			// Handle error
-			return m, nil
+			panic(msg.err)
 		}
-		m.content = msg.content
-		m.formatted_content = formatJSON(msg.content)
-		var buf bytes.Buffer
-		_ = quick.Highlight(&buf, m.formatted_content, "json", "terminal", "nord")
-		m.viewport.SetContent(buf.String())
-		return m, nil
+		m.setContent(msg.content)
 	case tea.WindowSizeMsg:
 		m.width = msg.Width
 		m.height = msg.Height
@@ -120,6 +125,14 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	cmds = append(cmds, cmd)
 
 	return m, tea.Batch(cmds...)
+}
+
+func (m *model) setContent(content string) {
+	m.content = content
+	m.formatted_content = formatJSON(content)
+	var buf bytes.Buffer
+	_ = quick.Highlight(&buf, m.formatted_content, "json", "terminal", "nord")
+	m.viewport.SetContent(buf.String())
 }
 
 func (m model) View() string {
@@ -177,7 +190,7 @@ func (m model) statusBarView(b *strings.Builder) {
 	helpNote := statusBarHelpStyle.Render(" ? Help ")
 	var note string
 	if m.content == "" {
-		note = "Press 'e' to edit"
+		note = "Press 'v' to paste unformatted JSON"
 	}
 
 	note = truncate.StringWithTail(" "+note+" ", uint(max(0,
@@ -212,13 +225,10 @@ func (m model) statusBarView(b *strings.Builder) {
 
 func (m model) helpView() (s string) {
 	col1 := []string{
-		"g/home  go to top",
-		"G/end   go to bottom",
-		"c       copy contents",
-		"e       edit this document",
-		"r       reload this document",
-		"esc     back to files",
-		"q       quit",
+		"c              copy formatted JSON",
+		"e              edit unformatted JSON",
+		"v              paste unformatted JSON",
+		"q/ctrl+c       quit",
 	}
 
 	s += "\n"
@@ -226,7 +236,7 @@ func (m model) helpView() (s string) {
 	s += "j/↓      down                " + col1[1] + "\n"
 	s += "b/pgup   page up             " + col1[2] + "\n"
 	s += "f/pgdn   page down           " + col1[3] + "\n"
-	s += "u        ½ page up           " + col1[4] + "\n"
+	s += "u        ½ page up           " + "\n"
 	s += "d        ½ page down         "
 
 	if len(col1) > 5 {
