@@ -1,3 +1,5 @@
+# yaml-language-server: $schema=https://goreleaser.com/static/schema-pro.json
+
 # This is an example .goreleaser.yml file with some sensible defaults.
 # Make sure to check the documentation at https://goreleaser.com
 version: 2
@@ -20,6 +22,9 @@ builds:
       - linux
       - darwin
     binary: devtui
+before_publish:
+  - cmd: "git push --tags"
+    output: true
 
 changelog:
   sort: asc
@@ -67,6 +72,7 @@ release:
   github:
     owner: skatkov
     name: homebrew-tap
+  tag: "devtui-{{ .PrefixedCurrentTag }}"
 brews:
   - description: "A Swiss Army knife for developers"
     name: devtui
