@@ -79,6 +79,7 @@ release:
     owner: skatkov
     name: homebrew-tap
   tag: "devtui-{{ .Tag }}"
+  name_template: "devtui-{{ .Tag }}"
 brews:
   - description: "A Swiss Army knife for developers"
     name: devtui
