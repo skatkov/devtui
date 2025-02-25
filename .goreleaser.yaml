@@ -83,11 +83,7 @@ release:
 brews:
   - description: "A Swiss Army knife for developers"
     name: devtui
+    url_template: "https://github.com/skatkov/homebrew-tap/releases/download/{{ .Tag }}/{{ .ArtifactName }}"
     repository:
       owner: skatkov
       name: homebrew-tap
-
-# The lines beneath this are called `modelines`. See `:help modeline`
-# Feel free to remove those if you don't want/use them.
-# yaml-language-server: $schema=https://goreleaser.com/static/schema.json
-# vim: set ts=2 sw=2 tw=0 fo=cnqoj
