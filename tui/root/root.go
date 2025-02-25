@@ -2,25 +2,38 @@ package root
 
 import (
 	tea "github.com/charmbracelet/bubbletea"
+	"github.com/skatkov/devtui/tui/messages"
 )
 
-type rootScreenModel struct {
-	model tea.Model
+type RootModel struct {
+	currentView tea.Model
+	listModel   *listModel
 }
 
-func RootScreen() rootScreenModel {
-	m := newListModel()
-	return rootScreenModel{model: m}
+func RootScreen() RootModel {
+	listModel := newListModel()
+	return RootModel{
+		currentView: listModel,
+		listModel:   listModel,
+	}
 }
 
-func (m rootScreenModel) Init() tea.Cmd {
-	return m.model.Init()
+func (m RootModel) Init() tea.Cmd {
+	return m.currentView.Init()
 }
 
-func (m rootScreenModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
-	return m.model.Update(msg)
+func (m RootModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
+	switch msg.(type) {
+	case messages.ReturnToListMsg:
+		m.currentView = m.listModel
+		return m, m.listModel.Init()
+	}
+	var cmd tea.Cmd
+	m.currentView, cmd = m.currentView.Update(msg)
+
+	return m, cmd
 }
 
-func (m rootScreenModel) View() string {
-	return m.model.View()
+func (m RootModel) View() string {
+	return m.currentView.View()
 }

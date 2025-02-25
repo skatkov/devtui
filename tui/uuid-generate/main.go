@@ -9,6 +9,7 @@ import (
 	"github.com/charmbracelet/lipgloss"
 	"github.com/charmbracelet/lipgloss/table"
 	"github.com/google/uuid"
+	"github.com/skatkov/devtui/tui/messages"
 
 	tea "github.com/charmbracelet/bubbletea"
 )
@@ -90,8 +91,12 @@ func (m *UUIDGenerate) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	case tea.KeyMsg:
 		switch msg.String() {
 		// TODO: "esc" should actually lead back to RootModel with list.
-		case "q", "ctrl+c", "esc":
+		case "q", "ctrl+c":
 			return m, tea.Quit
+		case "esc":
+			return m, func() tea.Msg {
+				return messages.ReturnToListMsg{}
+			}
 		}
 	}
 

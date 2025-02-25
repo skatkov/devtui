@@ -12,6 +12,7 @@ import (
 	"github.com/charmbracelet/lipgloss"
 	"github.com/charmbracelet/lipgloss/table"
 	"github.com/google/uuid"
+	"github.com/skatkov/devtui/tui/messages"
 
 	tea "github.com/charmbracelet/bubbletea"
 )
@@ -64,9 +65,11 @@ func (m *UUIDDecode) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	switch msg := msg.(type) {
 	case tea.KeyMsg:
 		switch msg.String() {
-		case "ctrl+c":
-			return m, tea.Interrupt
-		case "q", "esc":
+		case "esc":
+			return m, func() tea.Msg {
+				return messages.ReturnToListMsg{}
+			}
+		case "q", "ctrl+c":
 			return m, tea.Quit
 		}
 	}

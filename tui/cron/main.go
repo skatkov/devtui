@@ -9,6 +9,7 @@ import (
 	"github.com/charmbracelet/huh"
 	"github.com/charmbracelet/lipgloss"
 	"github.com/lnquy/cron"
+	"github.com/skatkov/devtui/tui/messages"
 
 	tea "github.com/charmbracelet/bubbletea"
 )
@@ -67,9 +68,11 @@ func (m *CronModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	switch msg := msg.(type) {
 	case tea.KeyMsg:
 		switch msg.String() {
-		case "ctrl+c":
-			return m, tea.Interrupt
-		case "esc", "q":
+		case "esc":
+			return m, func() tea.Msg {
+				return messages.ReturnToListMsg{}
+			}
+		case "q", "ctrl+c":
 			return m, tea.Quit
 		}
 	}
