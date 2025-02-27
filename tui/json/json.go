@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"math"
-	"os"
 	"strings"
 	"time"
 
@@ -18,7 +17,6 @@ import (
 	"github.com/muesli/reflow/truncate"
 	"github.com/skatkov/devtui/internal/ui"
 	"golang.design/x/clipboard"
-	"golang.org/x/term"
 )
 
 var (
@@ -58,9 +56,9 @@ const (
 	statusMessageTimeout = time.Second * 3
 )
 
-type Model struct {
-	width             int
-	height            int
+type JsonModel struct {
+	common *ui.CommonModel
+
 	formatted_content string
 	content           string
 	viewport          viewport.Model
@@ -71,18 +69,23 @@ type Model struct {
 	statusMessageTimer *time.Timer
 }
 
-func NewJSONModel() Model {
-	return Model{
+func NewJsonModel(common *ui.CommonModel) JsonModel {
+	model := JsonModel{
 		content: "",
 		ready:   false,
+		common:  common,
 	}
+
+	model.setSize(common.Width, common.Height)
+
+	return model
 }
 
-func (m Model) Init() tea.Cmd {
+func (m JsonModel) Init() tea.Cmd {
 	return nil
 }
 
-func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
+func (m JsonModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	var (
 		cmd  tea.Cmd
 		cmds []tea.Cmd
@@ -96,7 +99,9 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			return m, tea.Quit
 		case "esc":
 			return m, func() tea.Msg {
-				return ui.ReturnToListMsg{}
+				return ui.ReturnToListMsg{
+					Common: m.common,
+				}
 			}
 		case "v":
 			content := clipboard.Read(clipboard.FmtText)
@@ -115,8 +120,10 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		}
 		m.setContent(msg.content)
 	case tea.WindowSizeMsg:
-		m.width = msg.Width
-		m.height = msg.Height
+		m.common.Width = msg.Width
+		m.common.Height = msg.Height
+
+		m.setSize(msg.Width, msg.Height)
 
 		if !m.ready {
 			// Since this program is using the full size of the viewport we
@@ -139,7 +146,7 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	return m, tea.Batch(cmds...)
 }
 
-func (m *Model) setContent(content string) {
+func (m *JsonModel) setContent(content string) {
 	m.content = content
 	m.formatted_content = formatJSON(content)
 	var buf bytes.Buffer
@@ -147,7 +154,7 @@ func (m *Model) setContent(content string) {
 	m.viewport.SetContent(buf.String())
 }
 
-func (m Model) View() string {
+func (m JsonModel) View() string {
 	var b strings.Builder
 
 	fmt.Fprint(&b, m.viewport.View()+"\n")
@@ -162,7 +169,7 @@ func (m Model) View() string {
 	return b.String()
 }
 
-func (m *Model) setSize(w, h int) {
+func (m *JsonModel) setSize(w, h int) {
 	m.viewport.Width = w
 	m.viewport.Height = h - statusBarHeight
 
@@ -174,16 +181,16 @@ func (m *Model) setSize(w, h int) {
 	}
 }
 
-func (m *Model) toggleHelp() {
+func (m *JsonModel) toggleHelp() {
 	m.showHelp = !m.showHelp
-	m.setSize(m.width, m.height)
+	m.setSize(m.common.Width, m.common.Height)
 
 	if m.viewport.PastBottom() {
 		m.viewport.GotoBottom()
 	}
 }
 
-func (m Model) statusBarView(b *strings.Builder) {
+func (m JsonModel) statusBarView(b *strings.Builder) {
 	const (
 		minPercent               float64 = 0.0
 		maxPercent               float64 = 1.0
@@ -206,7 +213,7 @@ func (m Model) statusBarView(b *strings.Builder) {
 	}
 
 	note = truncate.StringWithTail(" "+note+" ", uint(max(0,
-		m.width-
+		m.common.Width-
 			ansi.PrintableRuneWidth(appName)-
 			ansi.PrintableRuneWidth(scrollPercent)-
 			ansi.PrintableRuneWidth(helpNote),
@@ -216,7 +223,7 @@ func (m Model) statusBarView(b *strings.Builder) {
 
 	// Empty space
 	padding := max(0,
-		m.width-
+		m.common.Width-
 			ansi.PrintableRuneWidth(appName)-
 			ansi.PrintableRuneWidth(note)-
 			ansi.PrintableRuneWidth(scrollPercent)-
@@ -235,7 +242,7 @@ func (m Model) statusBarView(b *strings.Builder) {
 
 }
 
-func (m Model) helpView() (s string) {
+func (m JsonModel) helpView() (s string) {
 	col1 := []string{
 		"c              copy formatted JSON",
 		"e              edit unformatted JSON",
@@ -258,11 +265,11 @@ func (m Model) helpView() (s string) {
 	s = indent(s, 2)
 
 	// Fill up empty cells with spaces for background coloring
-	if m.width > 0 {
+	if m.common.Width > 0 {
 		lines := strings.Split(s, "\n")
 		for i := 0; i < len(lines); i++ {
 			l := runewidth.StringWidth(lines[i])
-			n := max(m.width-l, 0)
+			n := max(m.common.Width-l, 0)
 			lines[i] += strings.Repeat(" ", n)
 		}
 
@@ -283,25 +290,6 @@ func indent(s string, n int) string {
 		fmt.Fprintf(&b, "%s%s\n", i, v)
 	}
 	return b.String()
-}
-
-func main() {
-	w, h, err := term.GetSize(int(os.Stdout.Fd()))
-	if err != nil {
-		fmt.Println("Error getting terminal size:", err)
-		os.Exit(1)
-	}
-	viewport := viewport.New(w, h-statusBarHeight)
-	viewport.YPosition = 0
-	viewport.HighPerformanceRendering = true
-
-	m := Model{content: "", viewport: viewport}
-
-	p := tea.NewProgram(m, tea.WithAltScreen(), tea.WithMouseCellMotion())
-	if _, err := p.Run(); err != nil {
-		fmt.Println("Error running program:", err)
-		os.Exit(1)
-	}
 }
 
 func formatJSON(content string) string {

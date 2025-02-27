@@ -15,7 +15,7 @@ var rootCmd = &cobra.Command{
 	Long: `devtui is a collection of small developer apps that help with day to day work.
 	It includes tools like hash generator, unix timestamp converter, and number base converter and multiple others.`,
 	RunE: func(cmd *cobra.Command, args []string) error {
-		p := tea.NewProgram(root.RootScreen())
+		p := tea.NewProgram(root.RootScreen(), tea.WithAltScreen())
 		if _, err := p.Run(); err != nil {
 			fmt.Printf("Error starting program: %v", err)
 			os.Exit(1)

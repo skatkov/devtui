@@ -15,14 +15,15 @@ import (
 )
 
 type UUIDGenerate struct {
+	common        *ui.CommonModel
 	form          *huh.Form
 	version       int
 	namespace     string
 	generatedUUID uuid.UUID
 }
 
-func NewUUIDGenerateModel() *UUIDGenerate {
-	m := UUIDGenerate{}
+func NewUUIDGenerateModel(common *ui.CommonModel) *UUIDGenerate {
+	m := UUIDGenerate{common: common}
 	accessible, _ := strconv.ParseBool(os.Getenv("ACCESSIBLE"))
 
 	m.form = huh.NewForm(
@@ -80,22 +81,27 @@ func (m *UUIDGenerate) View() string {
 			Width(100).
 			Rows(rows...)
 
-		return lipgloss.NewStyle().Padding(2).PaddingTop(1).Render(tableOutput.String())
+		return ui.PagePaddingStyle.PaddingTop(1).Render(tableOutput.String())
 	default:
-		return lipgloss.NewStyle().Padding(2).Render(m.form.View())
+		return ui.PagePaddingStyle.Render(m.form.View())
 	}
 }
 
 func (m *UUIDGenerate) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	switch msg := msg.(type) {
+	// Window size is received when starting up and on every resize
+	case tea.WindowSizeMsg:
+		m.common.Width = msg.Width
+		m.common.Height = msg.Height
 	case tea.KeyMsg:
 		switch msg.String() {
-		// TODO: "esc" should actually lead back to RootModel with list.
 		case "q", "ctrl+c":
 			return m, tea.Quit
 		case "esc":
 			return m, func() tea.Msg {
-				return ui.ReturnToListMsg{}
+				return ui.ReturnToListMsg{
+					Common: m.common,
+				}
 			}
 		}
 	}

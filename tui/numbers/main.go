@@ -15,10 +15,11 @@ import (
 )
 
 type NumbersModel struct {
-	form  *huh.Form
-	value int64
-	base  NumberBase
-	input string
+	common *ui.CommonModel
+	form   *huh.Form
+	value  int64
+	base   NumberBase
+	input  string
 }
 
 type NumberBase struct {
@@ -34,8 +35,8 @@ var (
 	ReturnedBaseList = []NumberBase{Base2, Base8, Base10, Base16}
 )
 
-func NewNumberModel() NumbersModel {
-	m := NumbersModel{}
+func NewNumberModel(common *ui.CommonModel) NumbersModel {
+	m := NumbersModel{common: common}
 	accessible, _ := strconv.ParseBool(os.Getenv("ACCESSIBLE"))
 
 	m.form = huh.NewForm(
@@ -75,11 +76,17 @@ func (m NumbersModel) Init() tea.Cmd {
 
 func (m NumbersModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	switch msg := msg.(type) {
+	// Window size is received when starting up and on every resize
+	case tea.WindowSizeMsg:
+		m.common.Width = msg.Width
+		m.common.Height = msg.Height
 	case tea.KeyMsg:
 		switch msg.String() {
 		case "esc":
 			return m, func() tea.Msg {
-				return ui.ReturnToListMsg{}
+				return ui.ReturnToListMsg{
+					Common: m.common,
+				}
 			}
 		case "q", "ctrl+c":
 			return m, tea.Quit

@@ -15,12 +15,15 @@ import (
 )
 
 type CronModel struct {
+	common         *ui.CommonModel
 	form           *huh.Form
 	cronExpression string
 }
 
-func NewCronModel() *CronModel {
-	m := &CronModel{}
+func NewCronModel(common *ui.CommonModel) *CronModel {
+	m := &CronModel{
+		common: common,
+	}
 	accessible, _ := strconv.ParseBool(os.Getenv("ACCESSIBLE"))
 
 	// @see https://gist.github.com/Aterfax/401875eb3d45c9c114bbef69364dd045
@@ -66,11 +69,17 @@ func (m *CronModel) Init() tea.Cmd {
 
 func (m *CronModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	switch msg := msg.(type) {
+	// Window size is received when starting up and on every resize
+	case tea.WindowSizeMsg:
+		m.common.Width = msg.Width
+		m.common.Height = msg.Height
 	case tea.KeyMsg:
 		switch msg.String() {
 		case "esc":
 			return m, func() tea.Msg {
-				return ui.ReturnToListMsg{}
+				return ui.ReturnToListMsg{
+					Common: m.common,
+				}
 			}
 		case "q", "ctrl+c":
 			return m, tea.Quit
@@ -113,11 +122,8 @@ func (m *CronModel) View() string {
 			fmt.Sprintf("%s",
 				valueStyle.Render(desc))
 
-		return lipgloss.NewStyle().
-			Padding(2).
-			PaddingTop(1).
-			Render(output)
+		return ui.PagePaddingStyle.PaddingTop(1).Render(output)
 	default:
-		return lipgloss.NewStyle().Padding(2).Render(m.form.View())
+		return ui.PagePaddingStyle.Render(m.form.View())
 	}
 }

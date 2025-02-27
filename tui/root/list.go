@@ -8,6 +8,7 @@ import (
 	"github.com/charmbracelet/bubbles/list"
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/lipgloss"
+	"github.com/skatkov/devtui/internal/ui"
 	cron "github.com/skatkov/devtui/tui/cron"
 	"github.com/skatkov/devtui/tui/json"
 	"github.com/skatkov/devtui/tui/numbers"
@@ -16,6 +17,12 @@ import (
 )
 
 const listHeight = 15
+
+type listModel struct {
+	list   list.Model
+	err    string
+	common *ui.CommonModel
+}
 
 var (
 	titleStyle        = lipgloss.NewStyle().MarginLeft(2)
@@ -56,30 +63,28 @@ func (d itemDelegate) Render(w io.Writer, m list.Model, index int, listItem list
 	fmt.Fprint(w, fn(str))
 }
 
-func newListModel() *listModel {
+func newListModel(common *ui.CommonModel) *listModel {
 	items := []list.Item{
 		MenuOption{
 			title: "UUID Decode",
-			model: func() tea.Model { return uuiddecode.NewUUIDDecodeModel() },
+			model: func() tea.Model { return uuiddecode.NewUUIDDecodeModel(common) },
 		},
 		MenuOption{
 			title: "Number Base Converter",
-			model: func() tea.Model { return numbers.NewNumberModel() },
+			model: func() tea.Model { return numbers.NewNumberModel(common) },
 		},
 		MenuOption{
 			title: "UUID Generate",
-			model: func() tea.Model { return uuidgenerate.NewUUIDGenerateModel() },
+			model: func() tea.Model { return uuidgenerate.NewUUIDGenerateModel(common) },
 		},
 		MenuOption{
 			title: "Cron Job Parser",
-			model: func() tea.Model { return cron.NewCronModel() },
+			model: func() tea.Model { return cron.NewCronModel(common) },
 		},
 		MenuOption{
 			title: "JSON Formatter",
 			model: func() tea.Model {
-				p := tea.NewProgram(json.NewJSONModel(), tea.WithAltScreen())
-				go p.Run()
-				return newListModel() // Return to main menu after JSON formatter exits
+				return json.NewJsonModel(common)
 			},
 		},
 	}
@@ -94,13 +99,9 @@ func newListModel() *listModel {
 	l.Styles.HelpStyle = helpStyle
 
 	return &listModel{
-		list: l,
+		list:   l,
+		common: common,
 	}
-}
-
-type listModel struct {
-	list list.Model
-	err  string
 }
 
 func (m listModel) Init() tea.Cmd {
@@ -110,7 +111,9 @@ func (m listModel) Init() tea.Cmd {
 func (m listModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	switch msg := msg.(type) {
 	case tea.WindowSizeMsg:
-		m.list.SetWidth(msg.Width)
+		m.common.Width = msg.Width
+		m.common.Height = msg.Height
+		m.list.SetSize(msg.Width, msg.Height)
 		return m, nil
 
 	case tea.KeyMsg:

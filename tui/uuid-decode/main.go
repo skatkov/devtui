@@ -18,12 +18,13 @@ import (
 )
 
 type UUIDDecode struct {
-	form *huh.Form
-	uuid string
+	common *ui.CommonModel
+	form   *huh.Form
+	uuid   string
 }
 
-func NewUUIDDecodeModel() *UUIDDecode {
-	m := UUIDDecode{}
+func NewUUIDDecodeModel(common *ui.CommonModel) *UUIDDecode {
+	m := UUIDDecode{common: common}
 	accessible, _ := strconv.ParseBool(os.Getenv("ACCESSIBLE"))
 
 	m.form = huh.NewForm(
@@ -55,19 +56,25 @@ func (m *UUIDDecode) View() string {
 			Width(100).
 			Rows(extractUUIDData(result)...)
 
-		return lipgloss.NewStyle().Padding(2).PaddingTop(1).Render(tableOutput.String())
+		return ui.PagePaddingStyle.PaddingTop(1).Render(tableOutput.String())
 	default:
-		return lipgloss.NewStyle().Padding(2).Render(m.form.View())
+		return ui.PagePaddingStyle.Render(m.form.View())
 	}
 }
 
 func (m *UUIDDecode) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	switch msg := msg.(type) {
+	// Window size is received when starting up and on every resize
+	case tea.WindowSizeMsg:
+		m.common.Width = msg.Width
+		m.common.Height = msg.Height
 	case tea.KeyMsg:
 		switch msg.String() {
 		case "esc":
 			return m, func() tea.Msg {
-				return ui.ReturnToListMsg{}
+				return ui.ReturnToListMsg{
+					Common: m.common,
+				}
 			}
 		case "q", "ctrl+c":
 			return m, tea.Quit
