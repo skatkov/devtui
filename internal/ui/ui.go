@@ -1,3 +1,3 @@
-package messages
+package ui
 
 type ReturnToListMsg struct{}

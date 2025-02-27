@@ -2,7 +2,7 @@ package root
 
 import (
 	tea "github.com/charmbracelet/bubbletea"
-	"github.com/skatkov/devtui/tui/messages"
+	"github.com/skatkov/devtui/internal/ui"
 )
 
 type RootModel struct {
@@ -24,7 +24,7 @@ func (m RootModel) Init() tea.Cmd {
 
 func (m RootModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	switch msg.(type) {
-	case messages.ReturnToListMsg:
+	case ui.ReturnToListMsg:
 		m.currentView = m.listModel
 		return m, m.listModel.Init()
 	}

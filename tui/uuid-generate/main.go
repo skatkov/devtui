@@ -9,7 +9,7 @@ import (
 	"github.com/charmbracelet/lipgloss"
 	"github.com/charmbracelet/lipgloss/table"
 	"github.com/google/uuid"
-	"github.com/skatkov/devtui/tui/messages"
+	"github.com/skatkov/devtui/internal/ui"
 
 	tea "github.com/charmbracelet/bubbletea"
 )
@@ -95,7 +95,7 @@ func (m *UUIDGenerate) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			return m, tea.Quit
 		case "esc":
 			return m, func() tea.Msg {
-				return messages.ReturnToListMsg{}
+				return ui.ReturnToListMsg{}
 			}
 		}
 	}

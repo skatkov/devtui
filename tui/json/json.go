@@ -16,7 +16,7 @@ import (
 	"github.com/mattn/go-runewidth"
 	"github.com/muesli/ansi"
 	"github.com/muesli/reflow/truncate"
-	"github.com/skatkov/devtui/tui/messages"
+	"github.com/skatkov/devtui/internal/ui"
 	"golang.design/x/clipboard"
 	"golang.org/x/term"
 )
@@ -96,7 +96,7 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			return m, tea.Quit
 		case "esc":
 			return m, func() tea.Msg {
-				return messages.ReturnToListMsg{}
+				return ui.ReturnToListMsg{}
 			}
 		case "v":
 			content := clipboard.Read(clipboard.FmtText)
