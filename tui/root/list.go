@@ -122,6 +122,7 @@ func (m listModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			return m, tea.Quit
 
 		case "enter":
+			m.common.LastSelectedItem = m.list.Index()
 			i, ok := m.list.SelectedItem().(MenuOption)
 			if ok {
 				newScreen := i.model()

@@ -9,6 +9,8 @@ type ReturnToListMsg struct {
 type CommonModel struct {
 	Width  int
 	Height int
+
+	LastSelectedItem int
 }
 
 var (

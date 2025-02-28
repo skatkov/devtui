@@ -12,7 +12,7 @@ type RootModel struct {
 }
 
 func RootScreen() RootModel {
-	common := ui.CommonModel{}
+	common := ui.CommonModel{LastSelectedItem: 0}
 	listModel := newListModel(&common)
 	return RootModel{
 		common:      &common,
@@ -30,6 +30,10 @@ func (m RootModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	case ui.ReturnToListMsg:
 		m.listModel.common = msg.Common
 		m.listModel.list.SetSize(msg.Common.Width, msg.Common.Height)
+
+		// Restore previously selected last
+		m.listModel.list.Select(msg.Common.LastSelectedItem)
+
 		m.currentView = m.listModel
 		return m, m.listModel.Init()
 	// Window size is received when starting up and on every resize
@@ -37,6 +41,7 @@ func (m RootModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		m.common.Width = msg.Width
 		m.common.Height = msg.Height
 	}
+
 	var cmd tea.Cmd
 	m.currentView, cmd = m.currentView.Update(msg)
 
