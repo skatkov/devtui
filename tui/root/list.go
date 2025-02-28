@@ -25,11 +25,11 @@ type listModel struct {
 }
 
 var (
-	titleStyle        = lipgloss.NewStyle().MarginLeft(2)
+	titleStyle        = list.DefaultStyles().Title.MarginTop(1)
 	itemStyle         = lipgloss.NewStyle().PaddingLeft(4)
 	selectedItemStyle = lipgloss.NewStyle().PaddingLeft(2).Foreground(lipgloss.Color("170"))
 	paginationStyle   = list.DefaultStyles().PaginationStyle.PaddingLeft(4)
-	helpStyle         = list.DefaultStyles().HelpStyle.PaddingLeft(4).PaddingBottom(1)
+	helpStyle         = list.DefaultStyles().HelpStyle.PaddingLeft(2).PaddingBottom(1)
 )
 
 type MenuOption struct {
@@ -91,7 +91,7 @@ func newListModel(common *ui.CommonModel) *listModel {
 
 	delegate := itemDelegate{}
 	l := list.New(items, delegate, 20, listHeight)
-	l.Title = "Choose your weapon!"
+	l.Title = "DevTUI"
 	l.SetShowStatusBar(false)
 	l.SetFilteringEnabled(false)
 	l.Styles.Title = titleStyle
