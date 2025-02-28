@@ -35,7 +35,7 @@ builds:
 changelog:
   sort: asc
   use: github
-  format: "{{.Message}}"
+  format: '{{ replace (replace .Message "feat: " "") "fix: " "" }}'
   filters:
     exclude:
       - "^docs:"
