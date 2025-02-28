@@ -16,7 +16,6 @@ require (
 	github.com/muesli/reflow v0.3.0
 	github.com/spf13/cobra v1.9.1
 	golang.design/x/clipboard v0.7.0
-	golang.org/x/term v0.29.0
 )
 
 require (
