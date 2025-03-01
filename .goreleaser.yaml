@@ -20,7 +20,7 @@ before:
     - git push --tags
 
 builds:
-  - env: ["CGO_ENABLED=0"]
+  - env: ["CGO_ENABLED=1"]
     mod_timestamp: "{{ .CommitTimestamp }}"
     flags: ["-trimpath"]
     ldflags:
