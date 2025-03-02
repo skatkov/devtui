@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"math"
+	"os"
 	"strings"
 	"time"
 
@@ -16,7 +17,7 @@ import (
 	"github.com/muesli/ansi"
 	"github.com/muesli/reflow/truncate"
 	"github.com/skatkov/devtui/internal/ui"
-	"golang.design/x/clipboard"
+	"github.com/tiagomelo/go-clipboard/clipboard"
 )
 
 var (
@@ -104,10 +105,19 @@ func (m JsonModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				}
 			}
 		case "v":
-			content := clipboard.Read(clipboard.FmtText)
+			c := clipboard.New()
+			content, err := c.PasteText()
+			if err != nil {
+				fmt.Println(err)
+				os.Exit(1)
+			}
 			m.setContent(string(content))
 		case "c":
-			clipboard.Write(clipboard.FmtText, []byte(m.formatted_content))
+			c := clipboard.New()
+			if err := c.CopyText(m.formatted_content); err != nil {
+				fmt.Println(err)
+				os.Exit(1)
+			}
 		case "?":
 			m.toggleHelp()
 			if m.viewport.HighPerformanceRendering {
