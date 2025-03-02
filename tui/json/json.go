@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"math"
-	"os"
 	"strings"
 	"time"
 
@@ -108,15 +107,13 @@ func (m JsonModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			c := clipboard.New()
 			content, err := c.PasteText()
 			if err != nil {
-				fmt.Println(err)
-				os.Exit(1)
+				panic(err)
 			}
 			m.setContent(string(content))
 		case "c":
 			c := clipboard.New()
 			if err := c.CopyText(m.formatted_content); err != nil {
-				fmt.Println(err)
-				os.Exit(1)
+				panic(err)
 			}
 		case "?":
 			m.toggleHelp()
