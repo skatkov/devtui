@@ -1,6 +1,10 @@
 package ui
 
-import "github.com/charmbracelet/lipgloss"
+import (
+	"time"
+
+	"github.com/charmbracelet/lipgloss"
+)
 
 type ReturnToListMsg struct {
 	Common *CommonModel
@@ -14,3 +18,5 @@ type CommonModel struct {
 }
 
 var PagePaddingStyle = lipgloss.NewStyle().Padding(2)
+
+const StatusMessageTimeout = time.Second * 3 // how long to show status messages like "stashed!"

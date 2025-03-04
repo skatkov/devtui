@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"math"
 	"strings"
+	"time"
 
 	"github.com/alecthomas/chroma/quick"
 	"github.com/charmbracelet/bubbles/viewport"
@@ -40,6 +41,14 @@ var (
 			Background(fuchsia).
 			Bold(true)
 
+	green     = lipgloss.Color("#04B575")
+	mintGreen = lipgloss.AdaptiveColor{Light: "#89F0CB", Dark: "#89F0CB"}
+	darkGreen = lipgloss.AdaptiveColor{Light: "#1C8760", Dark: "#1C8760"}
+
+	statusBarMessageHelpStyle = lipgloss.NewStyle().
+					Foreground(lipgloss.Color("#B6FFE4")).
+					Background(green)
+
 	statusBarHelpStyle = lipgloss.NewStyle().
 				Foreground(statusBarNoteFg).
 				Background(lipgloss.AdaptiveColor{Light: "#DCDCDC", Dark: "#323232"})
@@ -48,12 +57,27 @@ var (
 				Foreground(lipgloss.AdaptiveColor{Light: "#949494", Dark: "#5A5A5A"}).
 				Background(statusBarBg).
 				Render
+	statusBarMessageStyle = lipgloss.NewStyle().
+				Foreground(mintGreen).
+				Background(darkGreen).Render
 )
 
 const (
 	statusBarHeight = 1
 	ellipsis        = "…"
 )
+
+type pagerState int
+
+const (
+	pagerStateBrowse pagerState = iota
+	pagerStateStatusMessage
+)
+
+type pagerStatusMessage struct {
+	message string
+}
+type statusMessageTimeoutMsg struct{}
 
 type JsonModel struct {
 	common *ui.CommonModel
@@ -63,6 +87,29 @@ type JsonModel struct {
 	viewport          viewport.Model
 	showHelp          bool
 	ready             bool
+	state             pagerState
+
+	statusMessage      string
+	statusMessageTimer *time.Timer
+}
+
+func (m *JsonModel) showStatusMessage(msg pagerStatusMessage) tea.Cmd {
+	// Show a success message to the user
+	m.state = pagerStateStatusMessage
+	m.statusMessage = msg.message
+	if m.statusMessageTimer != nil {
+		m.statusMessageTimer.Stop()
+	}
+	m.statusMessageTimer = time.NewTimer(ui.StatusMessageTimeout)
+
+	return waitForStatusMessageTimeout(m.statusMessageTimer)
+}
+
+func waitForStatusMessageTimeout(t *time.Timer) tea.Cmd {
+	return func() tea.Msg {
+		<-t.C
+		return statusMessageTimeoutMsg{}
+	}
 }
 
 func NewJsonModel(common *ui.CommonModel) JsonModel {
@@ -70,6 +117,7 @@ func NewJsonModel(common *ui.CommonModel) JsonModel {
 		content: "",
 		ready:   false,
 		common:  common,
+		state:   pagerStateBrowse,
 	}
 
 	model.setSize(common.Width, common.Height)
@@ -106,22 +154,39 @@ func (m JsonModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				panic(err)
 			}
 			m.setContent(content)
+
+			if json.Valid([]byte(content)) {
+				cmds = append(cmds, m.showStatusMessage(pagerStatusMessage{"Pasted contents"}))
+			} else {
+				cmds = append(cmds, m.showStatusMessage(pagerStatusMessage{"Pasted invalid JSON"}))
+			}
 		case "c":
 			c := clipboard.New()
 			if err := c.CopyText(m.formatted_content); err != nil {
 				panic(err)
 			}
+
+			cmds = append(cmds, m.showStatusMessage(pagerStatusMessage{"Copied contents"}))
 		case "?":
 			m.toggleHelp()
 			if m.viewport.HighPerformanceRendering {
 				cmds = append(cmds, viewport.Sync(m.viewport))
 			}
 		}
+	case statusMessageTimeoutMsg:
+		m.state = pagerStateBrowse
 	case editor.EditorFinishedMsg:
 		if msg.Err != nil {
 			panic(msg.Err)
 		}
 		m.setContent(msg.Content)
+
+		if json.Valid([]byte(msg.Content)) {
+			cmds = append(cmds, m.showStatusMessage(pagerStatusMessage{"Pasted contents"}))
+		} else {
+			cmds = append(cmds, m.showStatusMessage(pagerStatusMessage{"Pasted invalid JSON"}))
+		}
+
 	case tea.WindowSizeMsg:
 		m.common.Width = msg.Width
 		m.common.Height = msg.Height
@@ -135,6 +200,8 @@ func (m JsonModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			// quickly, though asynchronously, which is why we wait for them
 			// here.
 			m.viewport = viewport.New(msg.Width, msg.Height-statusBarHeight)
+			m.viewport.YPosition = 0
+			m.viewport.HighPerformanceRendering = true
 			m.viewport.SetContent(m.content)
 			m.ready = true
 		} else {
@@ -153,8 +220,13 @@ func (m *JsonModel) setContent(content string) {
 	m.content = content
 	m.formatted_content = formatJSON(content)
 	var buf bytes.Buffer
-	_ = quick.Highlight(&buf, m.formatted_content, "json", "terminal", "nord")
-	m.viewport.SetContent(buf.String())
+
+	if json.Valid([]byte(content)) {
+		_ = quick.Highlight(&buf, m.formatted_content, "json", "terminal", "nord")
+		m.viewport.SetContent(buf.String())
+	} else {
+		m.viewport.SetContent(m.formatted_content)
+	}
 }
 
 func (m JsonModel) View() string {
@@ -199,7 +271,7 @@ func (m JsonModel) statusBarView(b *strings.Builder) {
 		maxPercent               float64 = 1.0
 		percentToStringMagnitude float64 = 100.0
 	)
-
+	showStatusMessage := m.state == pagerStateStatusMessage
 	appName := appNameStyle.Render(" JSON Formatter ")
 
 	// Scroll percent
@@ -209,9 +281,17 @@ func (m JsonModel) statusBarView(b *strings.Builder) {
 		scrollPercent = fmt.Sprintf(" %3.f%% ", percent*percentToStringMagnitude)
 		scrollPercent = statusBarScrollPosStyle(scrollPercent)
 	}
-	helpNote := statusBarHelpStyle.Render(" ? Help ")
+	var helpNote string
+	if showStatusMessage {
+		helpNote = statusBarMessageHelpStyle.Render(" ? Help ")
+	} else {
+		helpNote = statusBarHelpStyle.Render(" ? Help ")
+	}
+
 	var note string
-	if m.content == "" {
+	if showStatusMessage {
+		note = m.statusMessage
+	} else if m.content == "" {
 		note = "Press 'v' to paste unformatted JSON"
 	}
 
@@ -222,7 +302,11 @@ func (m JsonModel) statusBarView(b *strings.Builder) {
 			ansi.PrintableRuneWidth(helpNote),
 	)), ellipsis)
 
-	note = statusBarNoteStyle(note)
+	if showStatusMessage {
+		note = statusBarMessageStyle(note)
+	} else {
+		note = statusBarNoteStyle(note)
+	}
 
 	// Empty space
 	padding := max(0,
@@ -233,7 +317,11 @@ func (m JsonModel) statusBarView(b *strings.Builder) {
 			ansi.PrintableRuneWidth(helpNote),
 	)
 	emptySpace := strings.Repeat(" ", padding)
-	emptySpace = statusBarNoteStyle(emptySpace)
+	if showStatusMessage {
+		emptySpace = statusBarMessageStyle(emptySpace)
+	} else {
+		emptySpace = statusBarNoteStyle(emptySpace)
+	}
 
 	fmt.Fprintf(b, "%s%s%s%s%s",
 		appName,
