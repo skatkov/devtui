@@ -14,6 +14,7 @@ import (
 	"github.com/mattn/go-runewidth"
 	"github.com/muesli/ansi"
 	"github.com/muesli/reflow/truncate"
+	"github.com/skatkov/devtui/internal/editor"
 	"github.com/skatkov/devtui/internal/ui"
 	"github.com/tiagomelo/go-clipboard/clipboard"
 )
@@ -89,7 +90,7 @@ func (m JsonModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	case tea.KeyMsg:
 		switch msg.String() {
 		case "e":
-			return m, openEditor(m.content, "json")
+			return m, editor.OpenEditor(m.content, "json")
 		case "ctrl+c", "q":
 			return m, tea.Quit
 		case "esc":
@@ -116,11 +117,11 @@ func (m JsonModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				cmds = append(cmds, viewport.Sync(m.viewport))
 			}
 		}
-	case editorFinishedMsg:
-		if msg.err != nil {
-			panic(msg.err)
+	case editor.EditorFinishedMsg:
+		if msg.Err != nil {
+			panic(msg.Err)
 		}
-		m.setContent(msg.content)
+		m.setContent(msg.Content)
 	case tea.WindowSizeMsg:
 		m.common.Width = msg.Width
 		m.common.Height = msg.Height

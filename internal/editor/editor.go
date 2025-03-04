@@ -1,4 +1,4 @@
-package json
+package editor
 
 import (
 	"os"
@@ -7,14 +7,14 @@ import (
 	"github.com/charmbracelet/x/editor"
 )
 
-type editorFinishedMsg struct {
-	err     error
-	content string
+type EditorFinishedMsg struct {
+	Err     error
+	Content string
 }
 
-func openEditor(content string, format string) tea.Cmd {
+func OpenEditor(content string, format string) tea.Cmd {
 	cb := func(err error, newContent string) tea.Msg {
-		return editorFinishedMsg{err: err, content: newContent}
+		return EditorFinishedMsg{Err: err, Content: newContent}
 	}
 
 	// Create a temporary file
