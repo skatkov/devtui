@@ -8,7 +8,7 @@
 - Number Base Converter
 - UUID Generator
 
-(in the works)
+### in the works
 - SQL Formatter
 - YAML Formatter
 - Markdown Renderer
@@ -22,3 +22,10 @@
 - X11 requires `xclip` or `xsel` to be installed
 
 Windows is currently not supported (please reach out if you want to help with testing)
+
+## Contact
+I love when people reach out, so please don't hesitate to do that.
+
+[https://t.me/skatkov](https://t.me/skatkov)
+[https://bsky.app/profile/skatkov.com](https://bsky.app/profile/skatkov.com)
+[https://x.com/5katkov](https://x.com/5katkov)
