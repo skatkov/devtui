@@ -11,14 +11,15 @@ Or download executable from [GitHub Releases](https://github.com/skatkov/homebre
 ## Requirements
 With **OSX** everything should work out of the box.
 
-On Linux, **Wayland** requires `wl-clipboard` and **X11** requires `xclip` or `xsel` to be installed. If you are not sure, what you use.
+On Linux, **Wayland** requires `wl-clipboard` and **X11** requires `xclip` or `xsel` to be installed.
 
+Check your session type to correctly identify clipboard manager to use.
 ```
 echo $XDG_SESSION_TYPE
 # wayland or X11
 ```
 
-Windows should work, but currently is not tested. If you want to help you with that, please reach out.
+Windows should work, but currently is not tested.
 
 ## Features
 - UUID Decoder
