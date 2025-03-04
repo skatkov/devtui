@@ -118,9 +118,7 @@ func (m *CronModel) View() string {
 			Foreground(lipgloss.Color("#87CEEB"))
 
 		output := fmt.Sprintf("%s \n\n",
-			titleStyle.Render(m.cronExpression)) +
-			fmt.Sprintf("%s",
-				valueStyle.Render(desc))
+			titleStyle.Render(m.cronExpression)) + valueStyle.Render(desc)
 
 		return ui.PagePaddingStyle.PaddingTop(1).Render(output)
 	default:

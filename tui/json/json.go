@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"math"
 	"strings"
-	"time"
 
 	"github.com/alecthomas/chroma/quick"
 	"github.com/charmbracelet/bubbles/viewport"
@@ -51,9 +50,8 @@ var (
 )
 
 const (
-	statusBarHeight      = 1
-	ellipsis             = "…"
-	statusMessageTimeout = time.Second * 3
+	statusBarHeight = 1
+	ellipsis        = "…"
 )
 
 type JsonModel struct {
@@ -64,9 +62,6 @@ type JsonModel struct {
 	viewport          viewport.Model
 	showHelp          bool
 	ready             bool
-
-	statusMessage      string
-	statusMessageTimer *time.Timer
 }
 
 func NewJsonModel(common *ui.CommonModel) JsonModel {
@@ -109,7 +104,7 @@ func (m JsonModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			if err != nil {
 				panic(err)
 			}
-			m.setContent(string(content))
+			m.setContent(content)
 		case "c":
 			c := clipboard.New()
 			if err := c.CopyText(m.formatted_content); err != nil {
@@ -246,7 +241,6 @@ func (m JsonModel) statusBarView(b *strings.Builder) {
 		scrollPercent,
 		helpNote,
 	)
-
 }
 
 func (m JsonModel) helpView() (s string) {

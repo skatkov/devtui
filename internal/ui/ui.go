@@ -13,6 +13,4 @@ type CommonModel struct {
 	LastSelectedItem int
 }
 
-var (
-	PagePaddingStyle = lipgloss.NewStyle().Padding(2)
-)
+var PagePaddingStyle = lipgloss.NewStyle().Padding(2)
