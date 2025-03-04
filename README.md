@@ -1,6 +1,5 @@
 ![devtui](devtui.gif)
 
-
 ## Features
 - UUID Decoder
 - JSON Formatter
@@ -16,3 +15,10 @@
 - JSON to GO converter
 - JSON to YAML converter
 - YAML to JSON converter
+
+## Requirements
+- In OSX everything should work out of the box
+- In Wayland requires `wl-clipboard` to be installed
+- X11 requires `xclip` or `xsel` to be installed
+
+Windows is currently not supported (please reach out if you want to help with testing)
