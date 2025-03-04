@@ -19,8 +19,7 @@ before:
     - go generate ./...
 
 builds:
-  - id: darwin
-    env: ["CGO_ENABLED=1"]
+  - env: ["CGO_ENABLED=0"]
     mod_timestamp: "{{ .CommitTimestamp }}"
     flags: ["-trimpath"]
     ldflags:
@@ -29,17 +28,6 @@ builds:
       ]
     goos:
       - darwin
-    binary: devtui
-
-  - id: linux
-    env: ["CGO_ENABLED=0"]
-    mod_timestamp: "{{ .CommitTimestamp }}"
-    flags: ["-trimpath"]
-    ldflags:
-      [
-        "-s -w -X github.com/skatkov/devtui/cmd.version={{.Version}} -X github.com/skatkov/devtui/cmd.commit={{.Commit}} -X github.com/skatkov/devtui/cmd.date={{ .CommitDate }}",
-      ]
-    goos:
       - linux
     binary: devtui
 changelog:
