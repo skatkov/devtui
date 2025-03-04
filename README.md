@@ -17,15 +17,20 @@
 - YAML to JSON converter
 
 ## Requirements
-- In OSX everything should work out of the box
-- In Wayland requires `wl-clipboard` to be installed
-- X11 requires `xclip` or `xsel` to be installed
+With **OSX** everything should work out of the box.
 
-Windows is currently not supported (please reach out if you want to help with testing)
+On Linux, **Wayland** requires `wl-clipboard` and **X11** requires `xclip` or `xsel` to be installed. If you are not sure, what you use.
+
+```
+echo $XDG_SESSION_TYPE
+# wayland or X11
+```
+
+Windows should work, but currently is not tested. If you want to help you with that, please reach out.
 
 ## Contact
 I love when people reach out, so please don't hesitate to do that.
 
-[https://t.me/skatkov](https://t.me/skatkov)
-[https://bsky.app/profile/skatkov.com](https://bsky.app/profile/skatkov.com)
-[https://x.com/5katkov](https://x.com/5katkov)
+- [https://t.me/skatkov](https://t.me/skatkov)
+- [https://bsky.app/profile/skatkov.com](https://bsky.app/profile/skatkov.com)
+-[https://x.com/5katkov](https://x.com/5katkov)
