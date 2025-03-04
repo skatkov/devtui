@@ -25,10 +25,11 @@ builds:
     ldflags:
       [
         "-s -w -X github.com/skatkov/devtui/cmd.version={{.Version}} -X github.com/skatkov/devtui/cmd.commit={{.Commit}} -X github.com/skatkov/devtui/cmd.date={{ .CommitDate }}",
-      ]
+        ]
     goos:
       - darwin
       - linux
+      - windows
     binary: devtui
 changelog:
   sort: asc
