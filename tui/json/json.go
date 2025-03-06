@@ -11,7 +11,6 @@ import (
 	"github.com/alecthomas/chroma/quick"
 	"github.com/charmbracelet/bubbles/viewport"
 	tea "github.com/charmbracelet/bubbletea"
-	"github.com/charmbracelet/lipgloss"
 	"github.com/mattn/go-runewidth"
 	"github.com/muesli/ansi"
 	"github.com/muesli/reflow/truncate"
@@ -22,62 +21,7 @@ import (
 
 var (
 	pagerHelpHeight int
-	fuchsia         = lipgloss.AdaptiveColor{Light: "#EE6FF8", Dark: "#EE6FF8"}
-	statusBarNoteFg = lipgloss.AdaptiveColor{Light: "#656565", Dark: "#7D7D7D"}
-
-	helpViewStyle = lipgloss.NewStyle().
-			Foreground(statusBarNoteFg).
-			Background(lipgloss.AdaptiveColor{Light: "#f2f2f2", Dark: "#1B1B1B"}).
-			Render
-
-	statusBarBg = lipgloss.AdaptiveColor{Light: "#E6E6E6", Dark: "#242424"}
-
-	statusBarNoteStyle = lipgloss.NewStyle().
-				Foreground(statusBarNoteFg).
-				Background(statusBarBg).Render
-
-	appNameStyle = lipgloss.NewStyle().
-			Foreground(lipgloss.Color("#ECFD65")).
-			Background(fuchsia).
-			Bold(true)
-
-	green     = lipgloss.Color("#04B575")
-	mintGreen = lipgloss.AdaptiveColor{Light: "#89F0CB", Dark: "#89F0CB"}
-	darkGreen = lipgloss.AdaptiveColor{Light: "#1C8760", Dark: "#1C8760"}
-
-	statusBarMessageHelpStyle = lipgloss.NewStyle().
-					Foreground(lipgloss.Color("#B6FFE4")).
-					Background(green)
-
-	statusBarHelpStyle = lipgloss.NewStyle().
-				Foreground(statusBarNoteFg).
-				Background(lipgloss.AdaptiveColor{Light: "#DCDCDC", Dark: "#323232"})
-
-	statusBarScrollPosStyle = lipgloss.NewStyle().
-				Foreground(lipgloss.AdaptiveColor{Light: "#949494", Dark: "#5A5A5A"}).
-				Background(statusBarBg).
-				Render
-	statusBarMessageStyle = lipgloss.NewStyle().
-				Foreground(mintGreen).
-				Background(darkGreen).Render
 )
-
-const (
-	statusBarHeight = 1
-	ellipsis        = "…"
-)
-
-type pagerState int
-
-const (
-	pagerStateBrowse pagerState = iota
-	pagerStateStatusMessage
-)
-
-type pagerStatusMessage struct {
-	message string
-}
-type statusMessageTimeoutMsg struct{}
 
 type JsonModel struct {
 	common *ui.CommonModel
@@ -87,29 +31,22 @@ type JsonModel struct {
 	viewport          viewport.Model
 	showHelp          bool
 	ready             bool
-	state             pagerState
+	state             ui.PagerState
 
 	statusMessage      string
 	statusMessageTimer *time.Timer
 }
 
-func (m *JsonModel) showStatusMessage(msg pagerStatusMessage) tea.Cmd {
+func (m *JsonModel) showStatusMessage(msg ui.PagerStatusMsg) tea.Cmd {
 	// Show a success message to the user
-	m.state = pagerStateStatusMessage
-	m.statusMessage = msg.message
+	m.state = ui.PagerStateStatusMessage
+	m.statusMessage = msg.Message
 	if m.statusMessageTimer != nil {
 		m.statusMessageTimer.Stop()
 	}
 	m.statusMessageTimer = time.NewTimer(ui.StatusMessageTimeout)
 
-	return waitForStatusMessageTimeout(m.statusMessageTimer)
-}
-
-func waitForStatusMessageTimeout(t *time.Timer) tea.Cmd {
-	return func() tea.Msg {
-		<-t.C
-		return statusMessageTimeoutMsg{}
-	}
+	return ui.WaitForStatusMessageTimeout(m.statusMessageTimer)
 }
 
 func NewJsonModel(common *ui.CommonModel) JsonModel {
@@ -117,7 +54,7 @@ func NewJsonModel(common *ui.CommonModel) JsonModel {
 		content: "",
 		ready:   false,
 		common:  common,
-		state:   pagerStateBrowse,
+		state:   ui.PagerStateBrowse,
 	}
 
 	model.setSize(common.Width, common.Height)
@@ -156,9 +93,9 @@ func (m JsonModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			m.setContent(content)
 
 			if json.Valid([]byte(content)) {
-				cmds = append(cmds, m.showStatusMessage(pagerStatusMessage{"Pasted contents"}))
+				cmds = append(cmds, m.showStatusMessage(ui.PagerStatusMsg{Message: "Pasted contents"}))
 			} else {
-				cmds = append(cmds, m.showStatusMessage(pagerStatusMessage{"Pasted invalid JSON"}))
+				cmds = append(cmds, m.showStatusMessage(ui.PagerStatusMsg{Message: "Pasted invalid JSON"}))
 			}
 		case "c":
 			c := clipboard.New()
@@ -166,15 +103,15 @@ func (m JsonModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				panic(err)
 			}
 
-			cmds = append(cmds, m.showStatusMessage(pagerStatusMessage{"Copied contents"}))
+			cmds = append(cmds, m.showStatusMessage(ui.PagerStatusMsg{Message: "Copied contents"}))
 		case "?":
 			m.toggleHelp()
 			if m.viewport.HighPerformanceRendering {
 				cmds = append(cmds, viewport.Sync(m.viewport))
 			}
 		}
-	case statusMessageTimeoutMsg:
-		m.state = pagerStateBrowse
+	case ui.StatusMessageTimeoutMsg:
+		m.state = ui.PagerStateBrowse
 	case editor.EditorFinishedMsg:
 		if msg.Err != nil {
 			panic(msg.Err)
@@ -182,9 +119,9 @@ func (m JsonModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		m.setContent(msg.Content)
 
 		if json.Valid([]byte(msg.Content)) {
-			cmds = append(cmds, m.showStatusMessage(pagerStatusMessage{"Pasted contents"}))
+			cmds = append(cmds, m.showStatusMessage(ui.PagerStatusMsg{Message: "Pasted contents"}))
 		} else {
-			cmds = append(cmds, m.showStatusMessage(pagerStatusMessage{"Pasted invalid JSON"}))
+			cmds = append(cmds, m.showStatusMessage(ui.PagerStatusMsg{Message: "Pasted invalid JSON"}))
 		}
 
 	case tea.WindowSizeMsg:
@@ -199,7 +136,7 @@ func (m JsonModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			// we can initialize the viewport. The initial dimensions come in
 			// quickly, though asynchronously, which is why we wait for them
 			// here.
-			m.viewport = viewport.New(msg.Width, msg.Height-statusBarHeight)
+			m.viewport = viewport.New(msg.Width, msg.Height-ui.StatusBarHeight)
 			m.viewport.YPosition = 0
 			m.viewport.HighPerformanceRendering = true
 			m.viewport.SetContent(m.content)
@@ -246,13 +183,13 @@ func (m JsonModel) View() string {
 
 func (m *JsonModel) setSize(w, h int) {
 	m.viewport.Width = w
-	m.viewport.Height = h - statusBarHeight
+	m.viewport.Height = h - ui.StatusBarHeight
 
 	if m.showHelp {
 		if pagerHelpHeight == 0 {
 			pagerHelpHeight = strings.Count(m.helpView(), "\n")
 		}
-		m.viewport.Height -= (statusBarHeight + pagerHelpHeight)
+		m.viewport.Height -= (ui.StatusBarHeight + pagerHelpHeight)
 	}
 }
 
@@ -271,21 +208,21 @@ func (m JsonModel) statusBarView(b *strings.Builder) {
 		maxPercent               float64 = 1.0
 		percentToStringMagnitude float64 = 100.0
 	)
-	showStatusMessage := m.state == pagerStateStatusMessage
-	appName := appNameStyle.Render(" JSON Formatter ")
+	showStatusMessage := m.state == ui.PagerStateStatusMessage
+	appName := ui.AppNameStyle(" JSON Formatter ")
 
 	// Scroll percent
 	scrollPercent := ""
 	if m.content != "" {
 		percent := math.Max(minPercent, math.Min(maxPercent, m.viewport.ScrollPercent()))
 		scrollPercent = fmt.Sprintf(" %3.f%% ", percent*percentToStringMagnitude)
-		scrollPercent = statusBarScrollPosStyle(scrollPercent)
+		scrollPercent = ui.StatusBarScrollPosStyle(scrollPercent)
 	}
 	var helpNote string
 	if showStatusMessage {
-		helpNote = statusBarMessageHelpStyle.Render(" ? Help ")
+		helpNote = ui.StatusBarMessageHelpStyle(" ? Help ")
 	} else {
-		helpNote = statusBarHelpStyle.Render(" ? Help ")
+		helpNote = ui.StatusBarHelpStyle(" ? Help ")
 	}
 
 	var note string
@@ -300,12 +237,12 @@ func (m JsonModel) statusBarView(b *strings.Builder) {
 			ansi.PrintableRuneWidth(appName)-
 			ansi.PrintableRuneWidth(scrollPercent)-
 			ansi.PrintableRuneWidth(helpNote),
-	)), ellipsis)
+	)), ui.Ellipsis)
 
 	if showStatusMessage {
-		note = statusBarMessageStyle(note)
+		note = ui.StatusBarMessageStyle(note)
 	} else {
-		note = statusBarNoteStyle(note)
+		note = ui.StatusBarNoteStyle(note)
 	}
 
 	// Empty space
@@ -318,9 +255,9 @@ func (m JsonModel) statusBarView(b *strings.Builder) {
 	)
 	emptySpace := strings.Repeat(" ", padding)
 	if showStatusMessage {
-		emptySpace = statusBarMessageStyle(emptySpace)
+		emptySpace = ui.StatusBarMessageStyle(emptySpace)
 	} else {
-		emptySpace = statusBarNoteStyle(emptySpace)
+		emptySpace = ui.StatusBarNoteStyle(emptySpace)
 	}
 
 	fmt.Fprintf(b, "%s%s%s%s%s",
@@ -352,12 +289,12 @@ func (m JsonModel) helpView() (s string) {
 		s += col1[5]
 	}
 
-	s = indent(s, 2)
+	s = ui.Indent(s, 2)
 
 	// Fill up empty cells with spaces for background coloring
 	if m.common.Width > 0 {
 		lines := strings.Split(s, "\n")
-		for i := 0; i < len(lines); i++ {
+		for i := range lines {
 			l := runewidth.StringWidth(lines[i])
 			n := max(m.common.Width-l, 0)
 			lines[i] += strings.Repeat(" ", n)
@@ -366,24 +303,11 @@ func (m JsonModel) helpView() (s string) {
 		s = strings.Join(lines, "\n")
 	}
 
-	return helpViewStyle(s)
-}
-
-func indent(s string, n int) string {
-	if n <= 0 || s == "" {
-		return s
-	}
-	l := strings.Split(s, "\n")
-	b := strings.Builder{}
-	i := strings.Repeat(" ", n)
-	for _, v := range l {
-		fmt.Fprintf(&b, "%s%s\n", i, v)
-	}
-	return b.String()
+	return ui.HelpViewStyle(s)
 }
 
 func formatJSON(content string) string {
-	var data interface{}
+	var data any
 	if err := json.Unmarshal([]byte(content), &data); err != nil {
 		return content
 	}
