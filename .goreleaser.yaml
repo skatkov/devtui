@@ -31,6 +31,11 @@ builds:
       - linux
       - windows
     binary: devtui
+    ignore:
+      - goos: windows
+        goarch: arm64
+      - goos: windows
+        goarm: "7"
 changelog:
   sort: asc
   use: github
@@ -64,10 +69,10 @@ archives:
       {{- else if eq .Arch "386" }}i386
       {{- else }}{{ .Arch }}{{ end }}
       {{- if .Arm }}v{{ .Arm }}{{ end }}
-    # use zip for windows archives
-    # format_overrides:
-    # - goos: windows
-    #   format: zip
+    format_overrides:
+      - goos: windows
+        format: zip
+
 snapshot:
   version_template: "{{ incpatch .Version }}-next"
 
