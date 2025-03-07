@@ -11,6 +11,7 @@ import (
 	"github.com/skatkov/devtui/internal/ui"
 	cron "github.com/skatkov/devtui/tui/cron"
 	"github.com/skatkov/devtui/tui/json"
+	"github.com/skatkov/devtui/tui/markdown"
 	"github.com/skatkov/devtui/tui/numbers"
 	uuiddecode "github.com/skatkov/devtui/tui/uuid-decode"
 	uuidgenerate "github.com/skatkov/devtui/tui/uuid-generate"
@@ -83,9 +84,11 @@ func newListModel(common *ui.CommonModel) *listModel {
 		},
 		MenuOption{
 			title: "JSON Formatter",
-			model: func() tea.Model {
-				return json.NewJsonModel(common)
-			},
+			model: func() tea.Model { return json.NewJsonModel(common) },
+		},
+		MenuOption{
+			title: "Markdown Renderer",
+			model: func() tea.Model { return markdown.NewMarkdownModel(common) },
 		},
 	}
 
