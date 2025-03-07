@@ -37,18 +37,6 @@ type JsonModel struct {
 	statusMessageTimer *time.Timer
 }
 
-func (m *JsonModel) showStatusMessage(msg ui.PagerStatusMsg) tea.Cmd {
-	// Show a success message to the user
-	m.state = ui.PagerStateStatusMessage
-	m.statusMessage = msg.Message
-	if m.statusMessageTimer != nil {
-		m.statusMessageTimer.Stop()
-	}
-	m.statusMessageTimer = time.NewTimer(ui.StatusMessageTimeout)
-
-	return ui.WaitForStatusMessageTimeout(m.statusMessageTimer)
-}
-
 func NewJsonModel(common *ui.CommonModel) JsonModel {
 	model := JsonModel{
 		content: "",
@@ -153,19 +141,6 @@ func (m JsonModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	return m, tea.Batch(cmds...)
 }
 
-func (m *JsonModel) setContent(content string) {
-	m.content = content
-	m.formatted_content = formatJSON(content)
-	var buf bytes.Buffer
-
-	if json.Valid([]byte(content)) {
-		_ = quick.Highlight(&buf, m.formatted_content, "json", "terminal", "nord")
-		m.viewport.SetContent(buf.String())
-	} else {
-		m.viewport.SetContent(m.formatted_content)
-	}
-}
-
 func (m JsonModel) View() string {
 	var b strings.Builder
 
@@ -179,6 +154,31 @@ func (m JsonModel) View() string {
 	}
 
 	return b.String()
+}
+
+func (m *JsonModel) showStatusMessage(msg ui.PagerStatusMsg) tea.Cmd {
+	// Show a success message to the user
+	m.state = ui.PagerStateStatusMessage
+	m.statusMessage = msg.Message
+	if m.statusMessageTimer != nil {
+		m.statusMessageTimer.Stop()
+	}
+	m.statusMessageTimer = time.NewTimer(ui.StatusMessageTimeout)
+
+	return ui.WaitForStatusMessageTimeout(m.statusMessageTimer)
+}
+
+func (m *JsonModel) setContent(content string) {
+	m.content = content
+	m.formatted_content = formatJSON(content)
+	var buf bytes.Buffer
+
+	if json.Valid([]byte(content)) {
+		_ = quick.Highlight(&buf, m.formatted_content, "json", "terminal", "nord")
+		m.viewport.SetContent(buf.String())
+	} else {
+		m.viewport.SetContent(m.formatted_content)
+	}
 }
 
 func (m *JsonModel) setSize(w, h int) {
