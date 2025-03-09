@@ -9,6 +9,7 @@ var (
 	fuchsia         = lipgloss.AdaptiveColor{Light: "#EE6FF8", Dark: "#EE6FF8"}
 	statusBarNoteFg = lipgloss.AdaptiveColor{Light: "#656565", Dark: "#7D7D7D"}
 	statusBarBg     = lipgloss.AdaptiveColor{Light: "#E6E6E6", Dark: "#242424"}
+	lineNumberFg    = lipgloss.AdaptiveColor{Light: "#656565", Dark: "#7D7D7D"}
 
 	HelpViewStyle = lipgloss.NewStyle().
 			Foreground(statusBarNoteFg).
@@ -39,4 +40,8 @@ var (
 	StatusBarMessageStyle = lipgloss.NewStyle().
 				Foreground(mintGreen).
 				Background(darkGreen).Render
+
+	LineNumberStyle = lipgloss.NewStyle().
+			Foreground(lineNumberFg).
+			Render
 )

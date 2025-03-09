@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/charmbracelet/bubbles/viewport"
+	"github.com/charmbracelet/glamour"
 	"github.com/mattn/go-runewidth"
 	"github.com/muesli/ansi"
 	"github.com/muesli/reflow/truncate"
@@ -17,8 +18,12 @@ import (
 	tea "github.com/charmbracelet/bubbletea"
 )
 
+type contentRenderedMsg string
+type errMsg struct{ err error }
+
 var (
 	pagerHelpHeight int
+	lineNumberWidth = 4
 )
 
 type MarkdownModel struct {
@@ -33,6 +38,8 @@ type MarkdownModel struct {
 	statusMessage     string
 	statusMessageTime *time.Timer
 }
+
+func (e errMsg) Error() string { return e.err.Error() }
 
 func (m MarkdownModel) Init() tea.Cmd {
 	return nil
@@ -63,8 +70,8 @@ func (m MarkdownModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			if err != nil {
 				panic(err)
 			}
-			m.setContent(content)
-			cmds = append(cmds, m.showStatusMessage(ui.PagerStatusMsg{Message: "Markdown content pasted"}))
+
+			return m, renderWithGlamour(m, content)
 		case "c":
 			c := clipboard.New()
 			if err := c.CopyText(m.content); err != nil {
@@ -81,13 +88,17 @@ func (m MarkdownModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 	case ui.StatusMessageTimeoutMsg:
 		m.state = ui.PagerStateBrowse
+	case contentRenderedMsg:
+		m.setContent(string(msg))
+		if m.viewport.HighPerformanceRendering {
+			cmds = append(cmds, viewport.Sync(m.viewport))
+		}
 	case editor.EditorFinishedMsg:
 		if msg.Err != nil {
 			panic(msg.Err)
 		}
 
-		m.setContent(msg.Content)
-		cmds = append(cmds, m.showStatusMessage(ui.PagerStatusMsg{Message: "Markdown content pasted"}))
+		return m, renderWithGlamour(m, msg.Content)
 	case tea.WindowSizeMsg:
 		m.common.Width = msg.Width
 		m.common.Height = msg.Height
@@ -284,4 +295,53 @@ func (m *MarkdownModel) helpView() (s string) {
 	}
 
 	return ui.HelpViewStyle(s)
+}
+
+// Most of the code here is inspired by glow codebase, see here:
+// https://github.com/charmbracelet/glow/blob/master/ui/pager.go#L83
+//
+
+func renderWithGlamour(m MarkdownModel, md string) tea.Cmd {
+	return func() tea.Msg {
+		s, err := glamourRender(m, md)
+		if err != nil {
+			//log.Error("error rendering with Glamour", "error", err)
+			panic(err)
+		}
+		return contentRenderedMsg(s)
+	}
+}
+
+func glamourRender(m MarkdownModel, markdown string) (string, error) {
+	width := m.viewport.Width
+
+	options := []glamour.TermRendererOption{
+		glamour.WithAutoStyle(),
+		glamour.WithWordWrap(width),
+	}
+
+	r, err := glamour.NewTermRenderer(options...)
+	if err != nil {
+		return "", err
+	}
+
+	out, err := r.Render(markdown)
+	if err != nil {
+		return "", err
+	}
+
+	// trim lines
+	lines := strings.Split(out, "\n")
+
+	var content strings.Builder
+	for i, s := range lines {
+		content.WriteString(s)
+
+		// don't add an artificial newline after the last split
+		if i+1 < len(lines) {
+			content.WriteRune('\n')
+		}
+	}
+
+	return content.String(), nil
 }
