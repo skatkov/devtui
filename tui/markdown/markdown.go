@@ -94,7 +94,7 @@ func (m MarkdownModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		}
 		m.setContent(msg.Content)
 
-		cmds = append(cmds, m.showStatusMessage(ui.PagerStatusMsg{Message: "Markdown content copied"}))
+		cmds = append(cmds, m.showStatusMessage(ui.PagerStatusMsg{Message: "Markdown content edited"}))
 	case tea.WindowSizeMsg:
 		m.common.Width = msg.Width
 		m.common.Height = msg.Height
@@ -188,7 +188,7 @@ func (m *MarkdownModel) statusBarView(b *strings.Builder) {
 		percentToStringMagnitude float64 = 100.0
 	)
 	showStatusMessage := m.state == ui.PagerStateStatusMessage
-	appName := ui.AppNameStyle(" JSON Formatter ")
+	appName := ui.AppNameStyle(" Markdown Renderer ")
 
 	// Scroll percent
 	scrollPercent := ""
