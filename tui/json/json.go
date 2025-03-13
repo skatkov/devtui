@@ -19,6 +19,8 @@ import (
 	"github.com/tiagomelo/go-clipboard/clipboard"
 )
 
+const Title = "JSON Formatter"
+
 var (
 	pagerHelpHeight int
 )
@@ -209,7 +211,7 @@ func (m JsonModel) statusBarView(b *strings.Builder) {
 		percentToStringMagnitude float64 = 100.0
 	)
 	showStatusMessage := m.state == ui.PagerStateStatusMessage
-	appName := ui.AppNameStyle(" JSON Formatter ")
+	appName := ui.AppNameStyle(" " + Title + " ")
 
 	// Scroll percent
 	scrollPercent := ""

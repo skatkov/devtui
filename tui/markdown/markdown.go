@@ -18,6 +18,8 @@ import (
 	tea "github.com/charmbracelet/bubbletea"
 )
 
+const Title = "Markdown Renderer"
+
 type contentRenderedMsg string
 type errMsg struct{ err error }
 
@@ -188,7 +190,7 @@ func (m *MarkdownModel) statusBarView(b *strings.Builder) {
 		percentToStringMagnitude float64 = 100.0
 	)
 	showStatusMessage := m.state == ui.PagerStateStatusMessage
-	appName := ui.AppNameStyle(" Markdown Renderer ")
+	appName := ui.AppNameStyle(" " + Title + " ")
 
 	// Scroll percent
 	scrollPercent := ""

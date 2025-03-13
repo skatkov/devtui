@@ -15,6 +15,8 @@ import (
 	tea "github.com/charmbracelet/bubbletea"
 )
 
+const Title = "UUID Generator"
+
 type UUIDGenerate struct {
 	common        *ui.CommonModel
 	form          *huh.Form
@@ -86,9 +88,9 @@ func (m *UUIDGenerate) View() string {
 		return s.Base.Render(tableOutput.String())
 	default:
 		header := s.Title.Render(lipgloss.JoinHorizontal(lipgloss.Left,
-			"DevTUI",
+			ui.AppTitle,
 			" :: ",
-			lipgloss.NewStyle().Bold(true).Render("UUID Generator"),
+			lipgloss.NewStyle().Bold(true).Render(Title),
 		))
 		v := strings.TrimSuffix(m.form.View(), "\n\n")
 		form := m.common.Lg.NewStyle().Margin(1, 0).Render(v)

@@ -9,6 +9,8 @@ import (
 	"github.com/charmbracelet/lipgloss"
 )
 
+const AppTitle = "DevTUI"
+
 type ReturnToListMsg struct {
 	Common *CommonModel
 }

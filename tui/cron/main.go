@@ -15,6 +15,8 @@ import (
 	tea "github.com/charmbracelet/bubbletea"
 )
 
+const Title = "Cron Job Parser"
+
 type CronModel struct {
 	common         *ui.CommonModel
 	form           *huh.Form
@@ -125,9 +127,9 @@ func (m *CronModel) View() string {
 		return s.Base.Render(output)
 	default:
 		header := s.Title.Render(lipgloss.JoinHorizontal(lipgloss.Left,
-			"DevTUI",
+			ui.AppTitle,
 			" :: ",
-			lipgloss.NewStyle().Bold(true).Render("Cron Job Parser"),
+			lipgloss.NewStyle().Bold(true).Render(Title),
 		))
 		v := strings.TrimSuffix(m.form.View(), "\n\n")
 		form := m.common.Lg.NewStyle().Margin(1, 0).Render(v)

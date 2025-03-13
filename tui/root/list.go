@@ -67,34 +67,34 @@ func (d itemDelegate) Render(w io.Writer, m list.Model, index int, listItem list
 func newListModel(common *ui.CommonModel) *listModel {
 	items := []list.Item{
 		MenuOption{
-			title: "UUID Decoder",
+			title: uuiddecode.Title,
 			model: func() tea.Model { return uuiddecode.NewUUIDDecodeModel(common) },
 		},
 		MenuOption{
-			title: "Number Base Converter",
+			title: numbers.Title,
 			model: func() tea.Model { return numbers.NewNumberModel(common) },
 		},
 		MenuOption{
-			title: "UUID Generator",
+			title: uuidgenerate.Title,
 			model: func() tea.Model { return uuidgenerate.NewUUIDGenerateModel(common) },
 		},
 		MenuOption{
-			title: "Cron Job Parser",
+			title: cron.Title,
 			model: func() tea.Model { return cron.NewCronModel(common) },
 		},
 		MenuOption{
-			title: "JSON Formatter",
+			title: json.Title,
 			model: func() tea.Model { return json.NewJsonModel(common) },
 		},
 		MenuOption{
-			title: "Markdown Renderer",
+			title: markdown.Title,
 			model: func() tea.Model { return markdown.NewMarkdownModel(common) },
 		},
 	}
 
 	delegate := itemDelegate{}
 	l := list.New(items, delegate, 20, listHeight)
-	l.Title = "DevTUI"
+	l.Title = ui.AppTitle
 	l.SetShowStatusBar(false)
 	l.SetFilteringEnabled(false)
 	l.Styles.Title = titleStyle
