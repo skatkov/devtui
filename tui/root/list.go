@@ -75,7 +75,7 @@ func newListModel(common *ui.CommonModel) *listModel {
 			model: func() tea.Model { return numbers.NewNumberModel(common) },
 		},
 		MenuOption{
-			title: "UUID Generate",
+			title: "UUID Generator",
 			model: func() tea.Model { return uuidgenerate.NewUUIDGenerateModel(common) },
 		},
 		MenuOption{

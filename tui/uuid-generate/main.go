@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 	"strconv"
+	"strings"
 
 	"github.com/charmbracelet/huh"
 	"github.com/charmbracelet/lipgloss"
@@ -46,7 +47,7 @@ func NewUUIDGenerateModel(common *ui.CommonModel) *UUIDGenerate {
 				Title("Namespace").
 				Value(&m.namespace),
 		).WithHideFunc(func() bool { return m.hideNamespace() }),
-	).WithTheme(huh.ThemeCharm()).WithAccessible(accessible)
+	).WithTheme(huh.ThemeCharm()).WithAccessible(accessible).WithShowHelp(false)
 
 	return &m
 }
@@ -67,6 +68,7 @@ func (m *UUIDGenerate) Init() tea.Cmd {
 }
 
 func (m *UUIDGenerate) View() string {
+	s := m.common.Styles
 	switch m.form.State {
 	case huh.StateCompleted:
 		var rows [][]string
@@ -81,9 +83,25 @@ func (m *UUIDGenerate) View() string {
 			Width(100).
 			Rows(rows...)
 
-		return ui.PagePaddingStyle.PaddingTop(1).Render(tableOutput.String())
+		return s.Base.Render(tableOutput.String())
 	default:
-		return ui.PagePaddingStyle.Render(m.form.View())
+		header := s.Title.Render(lipgloss.JoinHorizontal(lipgloss.Left,
+			"DevTUI",
+			" :: ",
+			lipgloss.NewStyle().Bold(true).Render("UUID Generator"),
+		))
+		v := strings.TrimSuffix(m.form.View(), "\n\n")
+		form := m.common.Lg.NewStyle().Margin(1, 0).Render(v)
+		body := lipgloss.JoinVertical(
+			lipgloss.Top,
+			form,
+			lipgloss.PlaceVertical(
+				m.common.Height-lipgloss.Height(header)-lipgloss.Height(form)-2,
+				lipgloss.Bottom,
+				m.form.Help().ShortHelpView(m.form.KeyBinds()),
+			),
+		)
+		return s.Base.Render(header + "\n" + body)
 	}
 }
 
