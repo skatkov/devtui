@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"os"
 	"strconv"
+	"strings"
 
 	"github.com/charmbracelet/huh"
 	"github.com/charmbracelet/lipgloss"
@@ -36,7 +37,9 @@ var (
 )
 
 func NewNumberModel(common *ui.CommonModel) NumbersModel {
-	m := NumbersModel{common: common}
+	m := NumbersModel{
+		common: common,
+	}
 	accessible, _ := strconv.ParseBool(os.Getenv("ACCESSIBLE"))
 
 	m.form = huh.NewForm(
@@ -65,7 +68,7 @@ func NewNumberModel(common *ui.CommonModel) NumbersModel {
 					return nil
 				}).Value(&m.input),
 		),
-	).WithTheme(huh.ThemeCharm()).WithAccessible(accessible)
+	).WithTheme(huh.ThemeCharm()).WithAccessible(accessible).WithShowHelp(false)
 
 	return m
 }
@@ -116,6 +119,7 @@ func (m NumbersModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 }
 
 func (m NumbersModel) View() string {
+	s := m.common.Styles
 	switch m.form.State {
 	case huh.StateCompleted:
 		rows := make([][]string, len(ReturnedBaseList))
@@ -130,8 +134,24 @@ func (m NumbersModel) View() string {
 			Width(100).
 			Headers("Base", "Value").
 			Rows(rows...)
-		return lipgloss.NewStyle().Padding(2).PaddingTop(1).Render(t.String())
+		return s.Base.Render(t.String())
 	default:
-		return lipgloss.NewStyle().Padding(2).Render(m.form.View())
+		header := s.Title.Render(lipgloss.JoinHorizontal(lipgloss.Left,
+			"DevTUI",
+			" :: ",
+			lipgloss.NewStyle().Bold(true).Render("Number Base Converter"),
+		))
+		v := strings.TrimSuffix(m.form.View(), "\n\n")
+		form := m.common.Lg.NewStyle().Margin(1, 0).Render(v)
+		body := lipgloss.JoinVertical(
+			lipgloss.Top,
+			form,
+			lipgloss.PlaceVertical(
+				m.common.Height-lipgloss.Height(header)-lipgloss.Height(form)-2,
+				lipgloss.Bottom,
+				m.form.Help().ShortHelpView(m.form.KeyBinds()),
+			),
+		)
+		return s.Base.Render(header + "\n" + body)
 	}
 }

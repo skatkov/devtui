@@ -45,3 +45,23 @@ var (
 			Foreground(lineNumberFg).
 			Render
 )
+
+// Use huh/examples/dynamic-bubbletea as an example how to style an application with a huh form in it.
+type Styles struct {
+	Base,
+	Title,
+	Subtitle,
+	Help lipgloss.Style
+}
+
+func NewStyle(lg *lipgloss.Renderer) *Styles {
+	s := Styles{
+		Base: lg.NewStyle().Padding(1, 4, 1, 2),
+		Title: lg.NewStyle().
+			Background(lipgloss.Color("62")).
+			Foreground(lipgloss.Color("230")).
+			Padding(0, 1),
+		Help: lg.NewStyle().Foreground(lipgloss.Color("240")),
+	}
+	return &s
+}

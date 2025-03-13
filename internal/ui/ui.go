@@ -18,6 +18,9 @@ type CommonModel struct {
 	Height int
 
 	LastSelectedItem int
+
+	Lg     *lipgloss.Renderer
+	Styles *Styles
 }
 
 var PagePaddingStyle = lipgloss.NewStyle().Padding(2)

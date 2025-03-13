@@ -2,6 +2,7 @@ package root
 
 import (
 	tea "github.com/charmbracelet/bubbletea"
+	"github.com/charmbracelet/lipgloss"
 	"github.com/skatkov/devtui/internal/ui"
 )
 
@@ -13,6 +14,9 @@ type RootModel struct {
 
 func RootScreen() RootModel {
 	common := ui.CommonModel{LastSelectedItem: 0}
+	common.Lg = lipgloss.DefaultRenderer()
+	common.Styles = ui.NewStyle(common.Lg)
+
 	listModel := newListModel(&common)
 	return RootModel{
 		common:      &common,
