@@ -1,5 +1,3 @@
-![devtui](devtui.gif)
-
 **DevTUI** - A Swiss-army app for developers
 
 It comes with a number of small utility apps that developers use in their day-to-day work. Such as:
@@ -9,6 +7,9 @@ It comes with a number of small utility apps that developers use in their day-to
 - Base Number Converter
 
 It is still being actively developed and improvements and more tools are being added often.
+
+![devtui](devtui.gif)
+
 ## Install
 Through homebrew:
 ```
