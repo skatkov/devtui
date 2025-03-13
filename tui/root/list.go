@@ -67,7 +67,7 @@ func (d itemDelegate) Render(w io.Writer, m list.Model, index int, listItem list
 func newListModel(common *ui.CommonModel) *listModel {
 	items := []list.Item{
 		MenuOption{
-			title: "UUID Decode",
+			title: "UUID Decoder",
 			model: func() tea.Model { return uuiddecode.NewUUIDDecodeModel(common) },
 		},
 		MenuOption{

@@ -37,7 +37,7 @@ func NewUUIDDecodeModel(common *ui.CommonModel) *UUIDDecode {
 					return err
 				}).Value(&m.uuid),
 		),
-	).WithTheme(huh.ThemeCharm()).WithAccessible(accessible)
+	).WithTheme(huh.ThemeCharm()).WithAccessible(accessible).WithShowHelp(false)
 
 	return &m
 }
@@ -47,6 +47,7 @@ func (m *UUIDDecode) Init() tea.Cmd {
 }
 
 func (m *UUIDDecode) View() string {
+	s := m.common.Styles
 	switch m.form.State {
 	case huh.StateCompleted:
 		result, _ := uuid.Parse(m.uuid)
@@ -56,9 +57,25 @@ func (m *UUIDDecode) View() string {
 			Width(100).
 			Rows(extractUUIDData(result)...)
 
-		return ui.PagePaddingStyle.PaddingTop(1).Render(tableOutput.String())
+		return s.Base.Render(tableOutput.String())
 	default:
-		return ui.PagePaddingStyle.Render(m.form.View())
+		header := s.Title.Render(lipgloss.JoinHorizontal(lipgloss.Left,
+			"DevTUI",
+			" :: ",
+			lipgloss.NewStyle().Bold(true).Render("UUID Decoder"),
+		))
+		v := strings.TrimSuffix(m.form.View(), "\n\n")
+		form := m.common.Lg.NewStyle().Margin(1, 0).Render(v)
+		body := lipgloss.JoinVertical(
+			lipgloss.Top,
+			form,
+			lipgloss.PlaceVertical(
+				m.common.Height-lipgloss.Height(header)-lipgloss.Height(form)-2,
+				lipgloss.Bottom,
+				m.form.Help().ShortHelpView(m.form.KeyBinds()),
+			),
+		)
+		return s.Base.Render(header + "\n" + body)
 	}
 }
 
