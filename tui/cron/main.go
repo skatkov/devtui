@@ -5,6 +5,7 @@ import (
 	"os"
 	"regexp"
 	"strconv"
+	"strings"
 
 	"github.com/charmbracelet/huh"
 	"github.com/charmbracelet/lipgloss"
@@ -58,7 +59,7 @@ func NewCronModel(common *ui.CommonModel) *CronModel {
 					return nil
 				}),
 		),
-	).WithTheme(huh.ThemeCharm()).WithAccessible(accessible)
+	).WithTheme(huh.ThemeCharm()).WithAccessible(accessible).WithShowHelp(false)
 
 	return m
 }
@@ -94,6 +95,7 @@ func (m *CronModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 }
 
 func (m *CronModel) View() string {
+	s := m.common.Styles
 	switch m.form.State {
 	case huh.StateCompleted:
 		expr, err := cron.NewDescriptor(
@@ -120,8 +122,24 @@ func (m *CronModel) View() string {
 		output := fmt.Sprintf("%s \n\n",
 			titleStyle.Render(m.cronExpression)) + valueStyle.Render(desc)
 
-		return ui.PagePaddingStyle.PaddingTop(1).Render(output)
+		return s.Base.Render(output)
 	default:
-		return ui.PagePaddingStyle.Render(m.form.View())
+		header := s.Title.Render(lipgloss.JoinHorizontal(lipgloss.Left,
+			"DevTUI",
+			" :: ",
+			lipgloss.NewStyle().Bold(true).Render("Cron Job Parser"),
+		))
+		v := strings.TrimSuffix(m.form.View(), "\n\n")
+		form := m.common.Lg.NewStyle().Margin(1, 0).Render(v)
+		body := lipgloss.JoinVertical(
+			lipgloss.Top,
+			form,
+			lipgloss.PlaceVertical(
+				m.common.Height-lipgloss.Height(header)-lipgloss.Height(form)-2,
+				lipgloss.Bottom,
+				m.form.Help().ShortHelpView(m.form.KeyBinds()),
+			),
+		)
+		return s.Base.Render(header + "\n" + body)
 	}
 }
