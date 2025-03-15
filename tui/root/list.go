@@ -11,6 +11,7 @@ import (
 	"github.com/skatkov/devtui/internal/ui"
 	cron "github.com/skatkov/devtui/tui/cron"
 	"github.com/skatkov/devtui/tui/json"
+	"github.com/skatkov/devtui/tui/jsonstruct"
 	"github.com/skatkov/devtui/tui/markdown"
 	"github.com/skatkov/devtui/tui/numbers"
 	uuiddecode "github.com/skatkov/devtui/tui/uuid-decode"
@@ -89,6 +90,10 @@ func newListModel(common *ui.CommonModel) *listModel {
 		MenuOption{
 			title: markdown.Title,
 			model: func() tea.Model { return markdown.NewMarkdownModel(common) },
+		},
+		MenuOption{
+			title: jsonstruct.Title,
+			model: func() tea.Model { return jsonstruct.NewJsonStructModel(common) },
 		},
 	}
 

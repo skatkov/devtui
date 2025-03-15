@@ -31,6 +31,8 @@ require (
 	github.com/dlclark/regexp2 v1.11.0 // indirect
 	github.com/dustin/go-humanize v1.0.1 // indirect
 	github.com/erikgeiser/coninput v0.0.0-20211004153227-1c3628e74d0f // indirect
+	github.com/fatih/camelcase v1.0.0 // indirect
+	github.com/fatih/structtag v1.2.0 // indirect
 	github.com/gorilla/css v1.0.1 // indirect
 	github.com/inconshreveable/mousetrap v1.1.0 // indirect
 	github.com/lucasb-eyer/go-colorful v1.2.0 // indirect
@@ -44,6 +46,8 @@ require (
 	github.com/rivo/uniseg v0.4.7 // indirect
 	github.com/sahilm/fuzzy v0.1.1 // indirect
 	github.com/spf13/pflag v1.0.6 // indirect
+	github.com/twpayne/go-jsonstruct v1.2.0 // indirect
+	github.com/twpayne/go-jsonstruct/v3 v3.1.0 // indirect
 	github.com/yuin/goldmark v1.7.4 // indirect
 	github.com/yuin/goldmark-emoji v1.0.3 // indirect
 	golang.org/x/net v0.27.0 // indirect
@@ -51,4 +55,5 @@ require (
 	golang.org/x/sys v0.30.0 // indirect
 	golang.org/x/term v0.22.0 // indirect
 	golang.org/x/text v0.18.0 // indirect
+	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
