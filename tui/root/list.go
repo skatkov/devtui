@@ -16,6 +16,7 @@ import (
 	"github.com/skatkov/devtui/tui/numbers"
 	uuiddecode "github.com/skatkov/devtui/tui/uuid-decode"
 	uuidgenerate "github.com/skatkov/devtui/tui/uuid-generate"
+	"github.com/skatkov/devtui/tui/yamlstruct"
 )
 
 const listHeight = 15
@@ -94,6 +95,10 @@ func newListModel(common *ui.CommonModel) *listModel {
 		MenuOption{
 			title: jsonstruct.Title,
 			model: func() tea.Model { return jsonstruct.NewJsonStructModel(common) },
+		},
+		MenuOption{
+			title: yamlstruct.Title,
+			model: func() tea.Model { return yamlstruct.NewYamlStructModel(common) },
 		},
 	}
 
