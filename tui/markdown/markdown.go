@@ -119,7 +119,9 @@ func (m MarkdownModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		}
 	}
 
-	cmds = append(cmds, viewport.Sync(m.viewport))
+	if m.viewport.HighPerformanceRendering {
+		cmds = append(cmds, viewport.Sync(m.viewport))
+	}
 	m.viewport, cmd = m.viewport.Update(msg)
 	cmds = append(cmds, cmd)
 

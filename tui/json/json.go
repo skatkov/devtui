@@ -135,8 +135,9 @@ func (m JsonModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			m.setSize(msg.Width, msg.Height)
 		}
 	}
-
-	cmds = append(cmds, viewport.Sync(m.viewport))
+	if m.viewport.HighPerformanceRendering {
+		cmds = append(cmds, viewport.Sync(m.viewport))
+	}
 	// Handle keyboard and mouse events in the viewport
 	m.viewport, cmd = m.viewport.Update(msg)
 	cmds = append(cmds, cmd)

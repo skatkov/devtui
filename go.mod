@@ -17,6 +17,7 @@ require (
 	github.com/muesli/reflow v0.3.0
 	github.com/spf13/cobra v1.9.1
 	github.com/tiagomelo/go-clipboard v0.1.2
+	github.com/twpayne/go-jsonstruct/v3 v3.1.0
 )
 
 require (
@@ -46,8 +47,6 @@ require (
 	github.com/rivo/uniseg v0.4.7 // indirect
 	github.com/sahilm/fuzzy v0.1.1 // indirect
 	github.com/spf13/pflag v1.0.6 // indirect
-	github.com/twpayne/go-jsonstruct v1.2.0 // indirect
-	github.com/twpayne/go-jsonstruct/v3 v3.1.0 // indirect
 	github.com/yuin/goldmark v1.7.4 // indirect
 	github.com/yuin/goldmark-emoji v1.0.3 // indirect
 	golang.org/x/net v0.27.0 // indirect
