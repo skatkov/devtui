@@ -28,7 +28,6 @@ type listModel struct {
 }
 
 var (
-	titleStyle        = list.DefaultStyles().Title.MarginTop(1)
 	itemStyle         = lipgloss.NewStyle().PaddingLeft(4)
 	selectedItemStyle = lipgloss.NewStyle().PaddingLeft(2).Foreground(lipgloss.Color("170"))
 	paginationStyle   = list.DefaultStyles().PaginationStyle.PaddingLeft(4)
@@ -106,8 +105,10 @@ func newListModel(common *ui.CommonModel) *listModel {
 	l := list.New(items, delegate, 20, listHeight)
 	l.Title = ui.AppTitle
 	l.SetShowStatusBar(false)
-	l.SetFilteringEnabled(false)
-	l.Styles.Title = titleStyle
+	l.SetFilteringEnabled(true)
+	l.Styles.Title = l.Styles.Title.MarginTop(1)
+	l.FilterInput.PromptStyle = l.FilterInput.PromptStyle.MarginTop(1)
+
 	l.Styles.PaginationStyle = paginationStyle
 	l.Styles.HelpStyle = helpStyle
 
@@ -153,5 +154,5 @@ func (m listModel) View() string {
 	if m.err != "" {
 		return lipgloss.NewStyle().Padding(2).Render(m.err)
 	}
-	return "\n" + m.list.View()
+	return m.list.View()
 }
