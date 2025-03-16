@@ -2,7 +2,6 @@ package yamlstruct
 
 import (
 	"bytes"
-	"encoding/json"
 	"fmt"
 	"io"
 	"math"
@@ -109,11 +108,7 @@ func (m YamlStructModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		}
 		m.setContent(msg.Content)
 
-		if json.Valid([]byte(msg.Content)) {
-			cmds = append(cmds, m.showStatusMessage(ui.PagerStatusMsg{Message: "Converted JSON to Go struct"}))
-		} else {
-			cmds = append(cmds, m.showStatusMessage(ui.PagerStatusMsg{Message: "Invalid JSON"}))
-		}
+		cmds = append(cmds, m.showStatusMessage(ui.PagerStatusMsg{Message: "Converted JSON to Go struct"}))
 
 	case tea.WindowSizeMsg:
 		m.common.Width = msg.Width
@@ -308,12 +303,14 @@ func yaml2Struct(input io.Reader) ([]byte, error) {
 		jsonstruct.WithSkipUnparsableProperties(true),
 		jsonstruct.WithStructTagName("yaml"),
 		jsonstruct.WithGoFormat(true),
+		jsonstruct.WithOmitEmptyTags(jsonstruct.OmitEmptyTagsAuto),
+		jsonstruct.WithTypeName("Root"),
 	}
 
 	generator := jsonstruct.NewGenerator(options...)
 
 	if err := generator.ObserveYAMLReader(input); err != nil {
-		panic(err)
+		return nil, err
 	}
 
 	return generator.Generate()
