@@ -1,0 +1,12 @@
+{
+  "age": 37,
+  "user_height_m": 2
+}
+
+{
+  "age": 38,
+  "user_height_m": 1.7,
+  "favoriteFoods": [
+    "cake"
+  ]
+}

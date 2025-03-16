@@ -2,8 +2,8 @@ package jsonstruct
 
 import (
 	"bytes"
-	"encoding/json"
 	"fmt"
+	"io"
 	"math"
 	"strings"
 	"time"
@@ -83,11 +83,8 @@ func (m JsonStructModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			}
 			m.setContent(content)
 
-			if json.Valid([]byte(content)) {
-				cmds = append(cmds, m.showStatusMessage(ui.PagerStatusMsg{Message: "Converted JSON to Go struct"}))
-			} else {
-				cmds = append(cmds, m.showStatusMessage(ui.PagerStatusMsg{Message: "Invalid JSON"}))
-			}
+			cmds = append(cmds, m.showStatusMessage(ui.PagerStatusMsg{Message: "Converted JSON to Go struct"}))
+
 		case "c":
 			c := clipboard.New()
 			if err := c.CopyText(m.converted_content); err != nil {
@@ -109,11 +106,7 @@ func (m JsonStructModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		}
 		m.setContent(msg.Content)
 
-		if json.Valid([]byte(msg.Content)) {
-			cmds = append(cmds, m.showStatusMessage(ui.PagerStatusMsg{Message: "Converted JSON to Go struct"}))
-		} else {
-			cmds = append(cmds, m.showStatusMessage(ui.PagerStatusMsg{Message: "Invalid JSON"}))
-		}
+		cmds = append(cmds, m.showStatusMessage(ui.PagerStatusMsg{Message: "Converted JSON to Go struct"}))
 
 	case tea.WindowSizeMsg:
 		m.common.Width = msg.Width
@@ -167,15 +160,17 @@ func (m *JsonStructModel) showStatusMessage(msg ui.PagerStatusMsg) tea.Cmd {
 
 func (m *JsonStructModel) setContent(content string) {
 	m.content = content
-	m.converted_content = convertJSONToStruct(content)
+	contentReader := strings.NewReader(content)
+	convertedBytes, err := json2Struct(contentReader)
+	if err != nil {
+		m.converted_content = fmt.Sprintf("Error converting YAML: %v", err)
+	} else {
+		m.converted_content = string(convertedBytes)
+	}
 	var buf bytes.Buffer
 
-	if json.Valid([]byte(content)) {
-		_ = quick.Highlight(&buf, m.converted_content, "go", "terminal", "nord")
-		m.viewport.SetContent(buf.String())
-	} else {
-		m.viewport.SetContent(m.converted_content)
-	}
+	_ = quick.Highlight(&buf, m.converted_content, "go", "terminal", "nord")
+	m.viewport.SetContent(buf.String())
 }
 
 func (m *JsonStructModel) setSize(w, h int) {
@@ -225,7 +220,7 @@ func (m JsonStructModel) statusBarView(b *strings.Builder) {
 	if showStatusMessage {
 		note = m.statusMessage
 	} else if m.content == "" {
-		note = "Press 'v' to paste JSON to convert to Go struct"
+		note = "Press 'v' to paste JSON"
 	}
 
 	note = truncate.StringWithTail(" "+note+" ", uint(max(0,
@@ -300,38 +295,20 @@ func (m JsonStructModel) helpView() (s string) {
 	return ui.HelpViewStyle(s)
 }
 
-func convertJSONToStruct(content string) string {
-	if !json.Valid([]byte(content)) {
-		return "Invalid JSON"
-	}
-
-	// Define generator options
+func json2Struct(input io.Reader) ([]byte, error) {
 	options := []jsonstruct.GeneratorOption{
-		jsonstruct.WithTypeName("Root"),
-		jsonstruct.WithPackageName("main"),
-		jsonstruct.WithOmitEmptyTags(jsonstruct.OmitEmptyTagsAuto),
+		jsonstruct.WithSkipUnparsableProperties(true),
+		jsonstruct.WithStructTagName("yaml"),
 		jsonstruct.WithGoFormat(true),
+		jsonstruct.WithOmitEmptyTags(jsonstruct.OmitEmptyTagsAuto),
+		jsonstruct.WithTypeName("Root"),
 	}
 
-	// Create the generator with our options
 	generator := jsonstruct.NewGenerator(options...)
 
-	// Observe the JSON content
-	var data any
-	if err := json.Unmarshal([]byte(content), &data); err != nil {
-		return "Error parsing JSON: " + err.Error()
+	if err := generator.ObserveJSONReader(input); err != nil {
+		return nil, err
 	}
 
-	err := generator.ObserveJSONReader(strings.NewReader(content))
-	if err != nil {
-		return "Error parsing JSON: " + err.Error()
-	}
-
-	// Generate the Go code
-	goCode, err := generator.Generate()
-	if err != nil {
-		return "Error generating struct: " + err.Error()
-	}
-
-	return string(goCode)
+	return generator.Generate()
 }

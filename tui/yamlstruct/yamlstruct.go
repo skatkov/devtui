@@ -173,7 +173,6 @@ func (m *YamlStructModel) setContent(content string) {
 
 	_ = quick.Highlight(&buf, m.converted_content, "go", "terminal", "nord")
 	m.viewport.SetContent(buf.String())
-
 }
 
 func (m *YamlStructModel) setSize(w, h int) {
