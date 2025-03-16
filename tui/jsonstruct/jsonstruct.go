@@ -131,7 +131,7 @@ func (m JsonStructModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			m.setSize(msg.Width, msg.Height)
 		}
 	}
-
+	cmds = append(cmds, viewport.Sync(m.viewport))
 	m.viewport, cmd = m.viewport.Update(msg)
 	cmds = append(cmds, cmd)
 

@@ -136,6 +136,7 @@ func (m JsonModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		}
 	}
 
+	cmds = append(cmds, viewport.Sync(m.viewport))
 	// Handle keyboard and mouse events in the viewport
 	m.viewport, cmd = m.viewport.Update(msg)
 	cmds = append(cmds, cmd)
