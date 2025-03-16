@@ -1,0 +1,12 @@
+---
+nested:
+  bar: true
+  foo: baz
+---
+nested:
+  bar: false
+  foo: null
+---
+nested:
+  bar: true
+  foo: ''
