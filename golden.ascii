@@ -1,0 +1,19 @@
+
+   DevTUI
+
+    • UUID Decoder
+    • Number Base Converter
+  > • UUID Generator
+    • Cron Job Parser
+    • JSON Formatter
+    • YAML Formatter
+    • Markdown Renderer
+    • JSON to Go Struct
+    • YAML to Go Struct
+    • CSV to JSON
+
+
+
+  ↑/k up • ↓/j down • / filter • q quit • ? more
+
+────────────────────────────────────────────────────────────────────────────────
