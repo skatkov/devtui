@@ -16,6 +16,7 @@ import (
 	"github.com/skatkov/devtui/tui/numbers"
 	uuiddecode "github.com/skatkov/devtui/tui/uuid-decode"
 	uuidgenerate "github.com/skatkov/devtui/tui/uuid-generate"
+	"github.com/skatkov/devtui/tui/yaml"
 	"github.com/skatkov/devtui/tui/yamlstruct"
 )
 
@@ -86,6 +87,10 @@ func newListModel(common *ui.CommonModel) *listModel {
 		MenuOption{
 			title: json.Title,
 			model: func() tea.Model { return json.NewJsonModel(common) },
+		},
+		MenuOption{
+			title: yaml.Title,
+			model: func() tea.Model { return yaml.NewYamlModel(common) },
 		},
 		MenuOption{
 			title: markdown.Title,

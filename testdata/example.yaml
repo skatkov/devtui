@@ -1,0 +1,1 @@
+[{name: 'unshielded twisted pair', speeds: [10mbps, 100mbps]}, {name: 'shielded twisted pair', speeds: [10mbps, 100mbps, 1gbps]}, {name: 'fiber optics', speeds: [100mbps, 1gbps, 10gbps]}]
