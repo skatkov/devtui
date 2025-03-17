@@ -10,6 +10,7 @@ import (
 	"github.com/charmbracelet/lipgloss"
 	"github.com/skatkov/devtui/internal/ui"
 	cron "github.com/skatkov/devtui/tui/cron"
+	"github.com/skatkov/devtui/tui/csvjson"
 	"github.com/skatkov/devtui/tui/json"
 	"github.com/skatkov/devtui/tui/jsonstruct"
 	"github.com/skatkov/devtui/tui/markdown"
@@ -103,6 +104,10 @@ func newListModel(common *ui.CommonModel) *listModel {
 		MenuOption{
 			title: yamlstruct.Title,
 			model: func() tea.Model { return yamlstruct.NewYamlStructModel(common) },
+		},
+		MenuOption{
+			title: csvjson.Title,
+			model: func() tea.Model { return csvjson.NewCSVJsonModel(common) },
 		},
 	}
 
