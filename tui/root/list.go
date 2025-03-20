@@ -16,6 +16,7 @@ import (
 	"github.com/skatkov/devtui/tui/jsontoml"
 	"github.com/skatkov/devtui/tui/markdown"
 	"github.com/skatkov/devtui/tui/numbers"
+	"github.com/skatkov/devtui/tui/toml"
 	"github.com/skatkov/devtui/tui/tomljson"
 	uuiddecode "github.com/skatkov/devtui/tui/uuid-decode"
 	uuidgenerate "github.com/skatkov/devtui/tui/uuid-generate"
@@ -118,6 +119,10 @@ func newListModel(common *ui.CommonModel) *listModel {
 		MenuOption{
 			title: jsontoml.Title,
 			model: func() tea.Model { return jsontoml.NewJsonTomlModel(common) },
+		},
+		MenuOption{
+			title: toml.Title,
+			model: func() tea.Model { return toml.NewTomlFormatModel(common) },
 		},
 	}
 

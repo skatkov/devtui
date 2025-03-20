@@ -1,8 +1,7 @@
-package jsontoml
+package toml
 
 import (
 	"bytes"
-	"encoding/json"
 	"fmt"
 	"math"
 	"strings"
@@ -20,17 +19,16 @@ import (
 	"github.com/tiagomelo/go-clipboard/clipboard"
 )
 
-const Title = "JSON to TOML"
+const Title = "TOML Formatter"
 
 var (
 	pagerHelpHeight int
-	useJsonNumber   = true // Enable JSON number handling
 )
 
-type JsonTomlModel struct {
+type TomlFormatModel struct {
 	common *ui.CommonModel
 
-	converted_content string
+	formatted_content string
 	content           string
 	viewport          viewport.Model
 	showHelp          bool
@@ -41,8 +39,8 @@ type JsonTomlModel struct {
 	statusMessageTimer *time.Timer
 }
 
-func NewJsonTomlModel(common *ui.CommonModel) JsonTomlModel {
-	model := JsonTomlModel{
+func NewTomlFormatModel(common *ui.CommonModel) TomlFormatModel {
+	model := TomlFormatModel{
 		content: "",
 		ready:   false,
 		common:  common,
@@ -54,11 +52,11 @@ func NewJsonTomlModel(common *ui.CommonModel) JsonTomlModel {
 	return model
 }
 
-func (m JsonTomlModel) Init() tea.Cmd {
+func (m TomlFormatModel) Init() tea.Cmd {
 	return nil
 }
 
-func (m JsonTomlModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
+func (m TomlFormatModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	var (
 		cmd  tea.Cmd
 		cmds []tea.Cmd
@@ -67,7 +65,7 @@ func (m JsonTomlModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	case tea.KeyMsg:
 		switch msg.String() {
 		case "e":
-			return m, editor.OpenEditor(m.content, "json")
+			return m, editor.OpenEditor(m.content, "toml")
 		case "ctrl+c", "q":
 			return m, tea.Quit
 		case "esc":
@@ -84,15 +82,15 @@ func (m JsonTomlModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			}
 			m.setContent(content)
 
-			cmds = append(cmds, m.showStatusMessage(ui.PagerStatusMsg{Message: "Converted JSON to TOML"}))
+			cmds = append(cmds, m.showStatusMessage(ui.PagerStatusMsg{Message: "Formatted TOML"}))
 
 		case "c":
 			c := clipboard.New()
-			if err := c.CopyText(m.converted_content); err != nil {
+			if err := c.CopyText(m.formatted_content); err != nil {
 				panic(err)
 			}
 
-			cmds = append(cmds, m.showStatusMessage(ui.PagerStatusMsg{Message: "Copied TOML"}))
+			cmds = append(cmds, m.showStatusMessage(ui.PagerStatusMsg{Message: "Copied formatted TOML"}))
 		case "?":
 			m.toggleHelp()
 			if m.viewport.HighPerformanceRendering {
@@ -107,7 +105,7 @@ func (m JsonTomlModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		}
 		m.setContent(msg.Content)
 
-		cmds = append(cmds, m.showStatusMessage(ui.PagerStatusMsg{Message: "Converted JSON to TOML"}))
+		cmds = append(cmds, m.showStatusMessage(ui.PagerStatusMsg{Message: "Formatted TOML"}))
 
 	case tea.WindowSizeMsg:
 		m.common.Width = msg.Width
@@ -134,7 +132,7 @@ func (m JsonTomlModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	return m, tea.Batch(cmds...)
 }
 
-func (m JsonTomlModel) View() string {
+func (m TomlFormatModel) View() string {
 	var b strings.Builder
 
 	fmt.Fprint(&b, m.viewport.View()+"\n")
@@ -148,7 +146,7 @@ func (m JsonTomlModel) View() string {
 	return b.String()
 }
 
-func (m *JsonTomlModel) showStatusMessage(msg ui.PagerStatusMsg) tea.Cmd {
+func (m *TomlFormatModel) showStatusMessage(msg ui.PagerStatusMsg) tea.Cmd {
 	m.state = ui.PagerStateStatusMessage
 	m.statusMessage = msg.Message
 	if m.statusMessageTimer != nil {
@@ -159,23 +157,23 @@ func (m *JsonTomlModel) showStatusMessage(msg ui.PagerStatusMsg) tea.Cmd {
 	return ui.WaitForStatusMessageTimeout(m.statusMessageTimer)
 }
 
-func (m *JsonTomlModel) setContent(content string) {
+func (m *TomlFormatModel) setContent(content string) {
 	m.content = content
 
-	tomlStr, err := convert(content)
+	formattedStr, err := convert(content)
 
 	if err != nil {
-		m.converted_content = fmt.Sprintf("Error converting JSON to TOML: %v", err)
+		m.formatted_content = fmt.Sprintf("Error formatting TOML: %v", err)
 	} else {
-		m.converted_content = tomlStr
+		m.formatted_content = formattedStr
 	}
 
 	var buf bytes.Buffer
-	_ = quick.Highlight(&buf, m.converted_content, "TOML", "terminal", "nord")
+	_ = quick.Highlight(&buf, m.formatted_content, "toml", "terminal", "nord")
 	m.viewport.SetContent(buf.String())
 }
 
-func (m *JsonTomlModel) setSize(w, h int) {
+func (m *TomlFormatModel) setSize(w, h int) {
 	m.viewport.Width = w
 	m.viewport.Height = h - ui.StatusBarHeight
 
@@ -187,7 +185,7 @@ func (m *JsonTomlModel) setSize(w, h int) {
 	}
 }
 
-func (m *JsonTomlModel) toggleHelp() {
+func (m *TomlFormatModel) toggleHelp() {
 	m.showHelp = !m.showHelp
 	m.setSize(m.common.Width, m.common.Height)
 
@@ -196,7 +194,7 @@ func (m *JsonTomlModel) toggleHelp() {
 	}
 }
 
-func (m JsonTomlModel) statusBarView(b *strings.Builder) {
+func (m TomlFormatModel) statusBarView(b *strings.Builder) {
 	const (
 		minPercent               float64 = 0.0
 		maxPercent               float64 = 1.0
@@ -222,7 +220,7 @@ func (m JsonTomlModel) statusBarView(b *strings.Builder) {
 	if showStatusMessage {
 		note = m.statusMessage
 	} else if m.content == "" {
-		note = "Press 'v' to paste JSON"
+		note = "Press 'v' to paste TOML to format"
 	}
 
 	note = truncate.StringWithTail(" "+note+" ", uint(max(0,
@@ -261,11 +259,11 @@ func (m JsonTomlModel) statusBarView(b *strings.Builder) {
 	)
 }
 
-func (m JsonTomlModel) helpView() (s string) {
+func (m TomlFormatModel) helpView() (s string) {
 	col1 := []string{
-		"c              copy TOML",
-		"e              edit JSON",
-		"v              paste JSON to convert",
+		"c              copy formatted TOML",
+		"e              edit TOML",
+		"v              paste TOML to format",
 		"q/ctrl+c       quit",
 	}
 
@@ -297,31 +295,22 @@ func (m JsonTomlModel) helpView() (s string) {
 	return ui.HelpViewStyle(s)
 }
 
-func convert(jsonContent string) (string, error) {
+func convert(tomlContent string) (string, error) {
 	var v interface{}
 
-	// Create a decoder that uses JSON numbers
-	decoder := json.NewDecoder(strings.NewReader(jsonContent))
-	if useJsonNumber {
-		decoder.UseNumber()
-	}
-
-	// Decode JSON
-	err := decoder.Decode(&v)
+	// Parse the TOML content
+	err := toml.Unmarshal([]byte(tomlContent), &v)
 	if err != nil {
-		return "", fmt.Errorf("JSON parsing error: %s", err.Error())
+		return "", fmt.Errorf("TOML parsing error: %s", err.Error())
 	}
 
-	// Create a buffer to hold the TOML output
+	// Create a buffer to hold the formatted TOML output
 	var buf bytes.Buffer
 
 	// Create a TOML encoder
 	encoder := toml.NewEncoder(&buf)
-	if useJsonNumber {
-		encoder.SetMarshalJsonNumbers(true)
-	}
 
-	// Encode to TOML
+	// Encode back to TOML (formatting happens during this process)
 	err = encoder.Encode(v)
 	if err != nil {
 		return "", fmt.Errorf("TOML encoding error: %s", err.Error())
