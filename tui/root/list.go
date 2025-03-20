@@ -15,6 +15,7 @@ import (
 	"github.com/skatkov/devtui/tui/jsonstruct"
 	"github.com/skatkov/devtui/tui/markdown"
 	"github.com/skatkov/devtui/tui/numbers"
+	"github.com/skatkov/devtui/tui/tomljson"
 	uuiddecode "github.com/skatkov/devtui/tui/uuid-decode"
 	uuidgenerate "github.com/skatkov/devtui/tui/uuid-generate"
 	"github.com/skatkov/devtui/tui/yaml"
@@ -108,6 +109,10 @@ func newListModel(common *ui.CommonModel) *listModel {
 		MenuOption{
 			title: csvjson.Title,
 			model: func() tea.Model { return csvjson.NewCSVJsonModel(common) },
+		},
+		MenuOption{
+			title: tomljson.Title,
+			model: func() tea.Model { return tomljson.NewTomlJsonModel(common) },
 		},
 	}
 

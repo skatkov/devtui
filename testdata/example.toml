@@ -1,0 +1,24 @@
+# Primitive Values
+enable = true
+initial_value = "string"
+value = 0
+
+# Tables (Hash tables or dictionaries)
+[check_ticket]
+infer_ticket = true
+title_position = "start"
+
+# Arrays of Tables
+[commit_scope]
+
+  [[commit_scope.options]]
+  value = "app"
+  label =  "Application"
+
+  [[commit_scope.options]]
+  value = "share"
+  label =  "Shared"
+
+  [[commit_scope.options]]
+  value = "tool"
+  label =  "Tools"
