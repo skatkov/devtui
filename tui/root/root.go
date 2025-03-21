@@ -35,6 +35,8 @@ func (m RootModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		m.listModel.common = msg.Common
 		m.listModel.list.SetSize(msg.Common.Width, msg.Common.Height)
 
+		m.listModel.RefreshOrder()
+
 		// Restore previously selected last
 		m.listModel.list.Select(msg.Common.LastSelectedItem)
 

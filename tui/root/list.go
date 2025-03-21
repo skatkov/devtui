@@ -1,17 +1,22 @@
 package root
 
 import (
+	"encoding/json"
 	"fmt"
 	"io"
+	"os"
+	"path/filepath"
+	"sort"
 	"strings"
 
+	"github.com/adrg/xdg"
 	"github.com/charmbracelet/bubbles/list"
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/lipgloss"
 	"github.com/skatkov/devtui/internal/ui"
 	cron "github.com/skatkov/devtui/tui/cron"
 	"github.com/skatkov/devtui/tui/csvjson"
-	"github.com/skatkov/devtui/tui/json"
+	js "github.com/skatkov/devtui/tui/json"
 	"github.com/skatkov/devtui/tui/jsonstruct"
 	"github.com/skatkov/devtui/tui/jsontoml"
 	"github.com/skatkov/devtui/tui/markdown"
@@ -30,6 +35,7 @@ type listModel struct {
 	list   list.Model
 	err    string
 	common *ui.CommonModel
+	items  []MenuOption
 }
 
 var (
@@ -40,8 +46,10 @@ var (
 )
 
 type MenuOption struct {
-	title string
-	model func() tea.Model
+	id         string
+	title      string
+	model      func() tea.Model
+	usageCount int
 }
 
 func (i MenuOption) FilterValue() string { return i.title }
@@ -71,63 +79,99 @@ func (d itemDelegate) Render(w io.Writer, m list.Model, index int, listItem list
 }
 
 func newListModel(common *ui.CommonModel) *listModel {
-	items := []list.Item{
+	menuOptions := []MenuOption{
 		MenuOption{
+			id:    "uuiddecode",
 			title: uuiddecode.Title,
 			model: func() tea.Model { return uuiddecode.NewUUIDDecodeModel(common) },
 		},
 		MenuOption{
+			id:    "numbers",
 			title: numbers.Title,
 			model: func() tea.Model { return numbers.NewNumberModel(common) },
 		},
 		MenuOption{
+			id:    "uuidgenerate",
 			title: uuidgenerate.Title,
 			model: func() tea.Model { return uuidgenerate.NewUUIDGenerateModel(common) },
 		},
 		MenuOption{
+			id:    "cron",
 			title: cron.Title,
 			model: func() tea.Model { return cron.NewCronModel(common) },
 		},
 		MenuOption{
-			title: json.Title,
-			model: func() tea.Model { return json.NewJsonModel(common) },
+			id:    "json",
+			title: js.Title,
+			model: func() tea.Model { return js.NewJsonModel(common) },
 		},
 		MenuOption{
+			id:    "yaml",
 			title: yaml.Title,
 			model: func() tea.Model { return yaml.NewYamlModel(common) },
 		},
 		MenuOption{
+			id:    "markdown",
 			title: markdown.Title,
 			model: func() tea.Model { return markdown.NewMarkdownModel(common) },
 		},
 		MenuOption{
+			id:    "jsonstruct",
 			title: jsonstruct.Title,
 			model: func() tea.Model { return jsonstruct.NewJsonStructModel(common) },
 		},
 		MenuOption{
+			id:    "yamlstruct",
 			title: yamlstruct.Title,
 			model: func() tea.Model { return yamlstruct.NewYamlStructModel(common) },
 		},
 		MenuOption{
+			id:    "csvjson",
 			title: csvjson.Title,
 			model: func() tea.Model { return csvjson.NewCSVJsonModel(common) },
 		},
 		MenuOption{
+			id:    "tomljson",
 			title: tomljson.Title,
 			model: func() tea.Model { return tomljson.NewTomlJsonModel(common) },
 		},
 		MenuOption{
+			id:    "jsontoml",
 			title: jsontoml.Title,
 			model: func() tea.Model { return jsontoml.NewJsonTomlModel(common) },
 		},
 		MenuOption{
+			id:    "toml",
 			title: toml.Title,
 			model: func() tea.Model { return toml.NewTomlFormatModel(common) },
 		},
 	}
 
+	// Load usage stats
+	stats, err := loadUsageStats()
+	if err != nil {
+		// Just log the error and continue with zero counts
+		fmt.Fprintf(os.Stderr, "Failed to load usage stats: %v\n", err)
+	}
+
+	// Apply usage counts to the items
+	for i := range menuOptions {
+		menuOptions[i].usageCount = stats[menuOptions[i].id]
+	}
+
+	// Sort items by usage count (descending)
+	sort.Slice(menuOptions, func(i, j int) bool {
+		return menuOptions[i].usageCount > menuOptions[j].usageCount
+	})
+
+	// Convert to list.Item interface for bubbles/list
+	listItems := make([]list.Item, len(menuOptions))
+	for i, item := range menuOptions {
+		listItems[i] = item
+	}
+
 	delegate := itemDelegate{}
-	l := list.New(items, delegate, 20, listHeight)
+	l := list.New(listItems, delegate, 20, listHeight)
 	l.Title = ui.AppTitle
 	l.SetShowStatusBar(false)
 	l.SetFilteringEnabled(true)
@@ -140,6 +184,7 @@ func newListModel(common *ui.CommonModel) *listModel {
 	return &listModel{
 		list:   l,
 		common: common,
+		items:  menuOptions,
 	}
 }
 
@@ -147,7 +192,7 @@ func (m listModel) Init() tea.Cmd {
 	return nil
 }
 
-func (m listModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
+func (m *listModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	switch msg := msg.(type) {
 	case tea.WindowSizeMsg:
 		m.common.Width = msg.Width
@@ -164,6 +209,18 @@ func (m listModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			m.common.LastSelectedItem = m.list.Index()
 			i, ok := m.list.SelectedItem().(MenuOption)
 			if ok {
+				// Find the selected item in our items slice and increment usage
+				for idx := range m.items {
+					if m.items[idx].id == i.id {
+						m.items[idx].usageCount++
+						break
+					}
+				}
+
+				// Save updated usage stats
+				if err := saveUsageStats(m.items); err != nil {
+					m.err = fmt.Sprintf("Failed to save usage stats: %v", err)
+				}
 				newScreen := i.model()
 				return newScreen, newScreen.Init()
 			}
@@ -180,4 +237,65 @@ func (m listModel) View() string {
 		return lipgloss.NewStyle().Padding(2).Render(m.err)
 	}
 	return m.list.View()
+}
+
+func (m *listModel) RefreshOrder() {
+	// Re-sort items by usage count
+	sort.Slice(m.items, func(i, j int) bool {
+		return m.items[i].usageCount > m.items[j].usageCount
+	})
+
+	// Convert MenuOptions to list.Items
+	items := make([]list.Item, len(m.items))
+	for i, opt := range m.items {
+		items[i] = opt
+	}
+
+	// Update the list with the new sorted items
+	m.list.SetItems(items)
+}
+
+// Update saveUsageStats to use xdg
+func saveUsageStats(items []MenuOption) error {
+	// Get the proper config path using xdg
+	configPath := filepath.Join(xdg.ConfigHome, "devtui")
+
+	if err := os.MkdirAll(configPath, 0755); err != nil {
+		return err
+	}
+
+	statsFile := filepath.Join(configPath, "usage_stats.json")
+
+	// Create a map of title -> count for serialization
+	stats := make(map[string]int)
+	for _, item := range items {
+		stats[item.id] = item.usageCount
+	}
+
+	data, err := json.Marshal(stats)
+	if err != nil {
+		return err
+	}
+
+	return os.WriteFile(statsFile, data, 0644)
+}
+
+// Update loadUsageStats to use xdg
+func loadUsageStats() (map[string]int, error) {
+	statsFile := filepath.Join(xdg.ConfigHome, "devtui", "usage_stats.json")
+
+	data, err := os.ReadFile(statsFile)
+	if err != nil {
+		if os.IsNotExist(err) {
+			return make(map[string]int), nil
+		}
+		return nil, err
+	}
+
+	var stats map[string]int
+	if err := json.Unmarshal(data, &stats); err != nil {
+		return nil, err
+	}
+
+	return stats, nil
 }
