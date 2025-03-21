@@ -5,6 +5,7 @@ go 1.23.5
 toolchain go1.24.1
 
 require (
+	github.com/adrg/xdg v0.5.3
 	github.com/alecthomas/chroma v0.10.0
 	github.com/charmbracelet/bubbles v0.20.0
 	github.com/charmbracelet/bubbletea v1.3.4
@@ -25,7 +26,6 @@ require (
 )
 
 require (
-	github.com/adrg/xdg v0.5.3 // indirect
 	github.com/alecthomas/chroma/v2 v2.14.0 // indirect
 	github.com/atotto/clipboard v0.1.4 // indirect
 	github.com/aymanbagabas/go-osc52/v2 v2.0.1 // indirect
