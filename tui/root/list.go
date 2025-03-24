@@ -16,6 +16,7 @@ import (
 	"github.com/skatkov/devtui/internal/ui"
 	cron "github.com/skatkov/devtui/tui/cron"
 	"github.com/skatkov/devtui/tui/csvjson"
+	"github.com/skatkov/devtui/tui/html"
 	js "github.com/skatkov/devtui/tui/json"
 	"github.com/skatkov/devtui/tui/jsonstruct"
 	"github.com/skatkov/devtui/tui/jsontoml"
@@ -144,6 +145,11 @@ func newListModel(common *ui.CommonModel) *listModel {
 			id:    "toml",
 			title: toml.Title,
 			model: func() tea.Model { return toml.NewTomlFormatModel(common) },
+		},
+		MenuOption{
+			id:    "html",
+			title: html.Title,
+			model: func() tea.Model { return html.NewHTMLFormatterModel(common) },
 		},
 	}
 
