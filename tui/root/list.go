@@ -26,6 +26,7 @@ import (
 	"github.com/skatkov/devtui/tui/tomljson"
 	uuiddecode "github.com/skatkov/devtui/tui/uuid-decode"
 	uuidgenerate "github.com/skatkov/devtui/tui/uuid-generate"
+	"github.com/skatkov/devtui/tui/xml"
 	"github.com/skatkov/devtui/tui/yaml"
 	"github.com/skatkov/devtui/tui/yamlstruct"
 )
@@ -150,6 +151,11 @@ func newListModel(common *ui.CommonModel) *listModel {
 			id:    "html",
 			title: html.Title,
 			model: func() tea.Model { return html.NewHTMLFormatterModel(common) },
+		},
+		MenuOption{
+			id:    "xml",
+			title: xml.Title,
+			model: func() tea.Model { return xml.NewXMLFormatterModel(common) },
 		},
 	}
 
