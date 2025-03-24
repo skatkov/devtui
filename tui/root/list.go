@@ -15,6 +15,7 @@ import (
 	"github.com/charmbracelet/lipgloss"
 	"github.com/skatkov/devtui/internal/ui"
 	cron "github.com/skatkov/devtui/tui/cron"
+	"github.com/skatkov/devtui/tui/css"
 	"github.com/skatkov/devtui/tui/csvjson"
 	"github.com/skatkov/devtui/tui/html"
 	js "github.com/skatkov/devtui/tui/json"
@@ -156,6 +157,11 @@ func newListModel(common *ui.CommonModel) *listModel {
 			id:    "xml",
 			title: xml.Title,
 			model: func() tea.Model { return xml.NewXMLFormatterModel(common) },
+		},
+		MenuOption{
+			id:    "css",
+			title: css.Title,
+			model: func() tea.Model { return css.NewCSSFormatterModel(common) },
 		},
 	}
 
