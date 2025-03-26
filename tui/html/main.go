@@ -21,9 +21,7 @@ import (
 
 const Title = "HTML Formatter"
 
-var (
-	pagerHelpHeight int
-)
+var pagerHelpHeight int
 
 type HTMLFormatterModel struct {
 	common *ui.CommonModel

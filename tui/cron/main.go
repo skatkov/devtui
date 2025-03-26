@@ -43,7 +43,7 @@ func NewCronModel(common *ui.CommonModel) *CronModel {
 					// First validate with regexp
 					matched, err := regexp.MatchString(cronRegex, str)
 					if err != nil {
-						return fmt.Errorf("Validation error: %v", err)
+						return fmt.Errorf("validation error: %v", err)
 					}
 					if !matched {
 						return fmt.Errorf("invalid cron expression format")

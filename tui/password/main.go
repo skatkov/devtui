@@ -47,7 +47,7 @@ func main() {
 }
 
 func showInterface(config *PasswordConfig) error {
-	var lengthStr string = strconv.Itoa(config.Length)
+	lengthStr := strconv.Itoa(config.Length)
 
 	// Create the form
 	form := huh.NewForm(
@@ -134,7 +134,7 @@ func generateSecurePassword(config *PasswordConfig) (string, error) {
 	poolLength := big.NewInt(int64(len(pool)))
 	password := make([]byte, config.Length)
 
-	for i := 0; i < config.Length; i++ {
+	for i := range config.Length {
 		// Generate cryptographically secure random number
 		n, err := rand.Int(rand.Reader, poolLength)
 		if err != nil {
@@ -144,12 +144,15 @@ func generateSecurePassword(config *PasswordConfig) (string, error) {
 	}
 
 	// Ensure at least one character from each selected set
-	ensureAllSetsIncluded(password, config, pool)
+	err := ensureAllSetsIncluded(password, config)
+	if err != nil {
+		return "", err
+	}
 
 	return string(password), nil
 }
 
-func ensureAllSetsIncluded(password []byte, config *PasswordConfig, pool string) error {
+func ensureAllSetsIncluded(password []byte, config *PasswordConfig) error {
 	if len(password) < len(config.CharacterSets) {
 		return fmt.Errorf("password length must be at least the number of character sets")
 	}

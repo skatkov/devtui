@@ -24,9 +24,7 @@ import (
 
 const Title = "CSV to JSON"
 
-var (
-	pagerHelpHeight int
-)
+var pagerHelpHeight int
 
 type CSVJsonModel struct {
 	common *ui.CommonModel
@@ -325,10 +323,10 @@ func (m CSVJsonModel) helpView() (s string) {
 }
 
 func csvToJson(rows [][]string) (string, error) {
-	var entries []map[string]interface{}
+	var entries []map[string]any
 	attributes := rows[0]
 	for _, row := range rows[1:] {
-		entry := map[string]interface{}{}
+		entry := map[string]any{}
 		for i, value := range row {
 			if i >= len(attributes) {
 				continue // Skip if there's no corresponding header
@@ -343,28 +341,28 @@ func csvToJson(rows [][]string) (string, error) {
 				key, arrayIndex := arrayContentMatch(val)
 				if arrayIndex != -1 {
 					if internal[key] == nil {
-						internal[key] = []interface{}{}
+						internal[key] = []any{}
 					}
-					internalArray := internal[key].([]interface{})
+					internalArray := internal[key].([]any)
 					if index == len(objectSlice)-1 {
 						internalArray = append(internalArray, value)
 						internal[key] = internalArray
 						break
 					}
 					if arrayIndex >= len(internalArray) {
-						internalArray = append(internalArray, map[string]interface{}{})
+						internalArray = append(internalArray, map[string]any{})
 					}
 					internal[key] = internalArray
-					internal = internalArray[arrayIndex].(map[string]interface{})
+					internal = internalArray[arrayIndex].(map[string]any)
 				} else {
 					if index == len(objectSlice)-1 {
 						internal[key] = value
 						break
 					}
 					if internal[key] == nil {
-						internal[key] = map[string]interface{}{}
+						internal[key] = map[string]any{}
 					}
-					internal = internal[key].(map[string]interface{})
+					internal = internal[key].(map[string]any)
 				}
 			}
 		}
@@ -373,7 +371,7 @@ func csvToJson(rows [][]string) (string, error) {
 
 	bytes, err := json.MarshalIndent(entries, "", "  ")
 	if err != nil {
-		return "", fmt.Errorf("Marshal error %s", err)
+		return "", fmt.Errorf("marshal error %s", err)
 	}
 
 	return string(bytes), nil

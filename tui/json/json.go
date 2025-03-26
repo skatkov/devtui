@@ -21,9 +21,7 @@ import (
 
 const Title = "JSON Formatter"
 
-var (
-	pagerHelpHeight int
-)
+var pagerHelpHeight int
 
 type JsonModel struct {
 	common *ui.CommonModel

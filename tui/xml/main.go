@@ -21,9 +21,7 @@ import (
 
 const Title = "XML Formatter"
 
-var (
-	pagerHelpHeight int
-)
+var pagerHelpHeight int
 
 type XMLFormatterModel struct {
 	common *ui.CommonModel

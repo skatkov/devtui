@@ -20,13 +20,7 @@ import (
 
 const Title = "Markdown Renderer"
 
-type contentRenderedMsg string
-type errMsg struct{ err error }
-
-var (
-	pagerHelpHeight int
-	lineNumberWidth = 4
-)
+var pagerHelpHeight int
 
 type MarkdownModel struct {
 	common *ui.CommonModel
@@ -40,8 +34,6 @@ type MarkdownModel struct {
 	statusMessage     string
 	statusMessageTime *time.Timer
 }
-
-func (e errMsg) Error() string { return e.err.Error() }
 
 func (m MarkdownModel) Init() tea.Cmd {
 	return nil

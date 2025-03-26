@@ -21,9 +21,7 @@ import (
 
 const Title = "TOML Formatter"
 
-var (
-	pagerHelpHeight int
-)
+var pagerHelpHeight int
 
 type TomlFormatModel struct {
 	common *ui.CommonModel
@@ -296,7 +294,7 @@ func (m TomlFormatModel) helpView() (s string) {
 }
 
 func convert(tomlContent string) (string, error) {
-	var v interface{}
+	var v any
 
 	// Parse the TOML content
 	err := toml.Unmarshal([]byte(tomlContent), &v)

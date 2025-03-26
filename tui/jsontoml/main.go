@@ -298,7 +298,7 @@ func (m JsonTomlModel) helpView() (s string) {
 }
 
 func convert(jsonContent string) (string, error) {
-	var v interface{}
+	var v any
 
 	// Create a decoder that uses JSON numbers
 	decoder := json.NewDecoder(strings.NewReader(jsonContent))

@@ -23,9 +23,7 @@ import (
 
 const Title = "TOML to JSON"
 
-var (
-	pagerHelpHeight int
-)
+var pagerHelpHeight int
 
 type TomlJsonModel struct {
 	common *ui.CommonModel
@@ -298,7 +296,7 @@ func (m TomlJsonModel) helpView() (s string) {
 }
 
 func convert(tomlContent string) (string, error) {
-	var v interface{}
+	var v any
 
 	err := toml.Unmarshal([]byte(tomlContent), &v)
 	if err != nil {

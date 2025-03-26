@@ -83,82 +83,82 @@ func (d itemDelegate) Render(w io.Writer, m list.Model, index int, listItem list
 
 func newListModel(common *ui.CommonModel) *listModel {
 	menuOptions := []MenuOption{
-		MenuOption{
+		{
 			id:    "uuiddecode",
 			title: uuiddecode.Title,
 			model: func() tea.Model { return uuiddecode.NewUUIDDecodeModel(common) },
 		},
-		MenuOption{
+		{
 			id:    "numbers",
 			title: numbers.Title,
 			model: func() tea.Model { return numbers.NewNumberModel(common) },
 		},
-		MenuOption{
+		{
 			id:    "uuidgenerate",
 			title: uuidgenerate.Title,
 			model: func() tea.Model { return uuidgenerate.NewUUIDGenerateModel(common) },
 		},
-		MenuOption{
+		{
 			id:    "cron",
 			title: cron.Title,
 			model: func() tea.Model { return cron.NewCronModel(common) },
 		},
-		MenuOption{
+		{
 			id:    "json",
 			title: js.Title,
 			model: func() tea.Model { return js.NewJsonModel(common) },
 		},
-		MenuOption{
+		{
 			id:    "yaml",
 			title: yaml.Title,
 			model: func() tea.Model { return yaml.NewYamlModel(common) },
 		},
-		MenuOption{
+		{
 			id:    "markdown",
 			title: markdown.Title,
 			model: func() tea.Model { return markdown.NewMarkdownModel(common) },
 		},
-		MenuOption{
+		{
 			id:    "jsonstruct",
 			title: jsonstruct.Title,
 			model: func() tea.Model { return jsonstruct.NewJsonStructModel(common) },
 		},
-		MenuOption{
+		{
 			id:    "yamlstruct",
 			title: yamlstruct.Title,
 			model: func() tea.Model { return yamlstruct.NewYamlStructModel(common) },
 		},
-		MenuOption{
+		{
 			id:    "csvjson",
 			title: csvjson.Title,
 			model: func() tea.Model { return csvjson.NewCSVJsonModel(common) },
 		},
-		MenuOption{
+		{
 			id:    "tomljson",
 			title: tomljson.Title,
 			model: func() tea.Model { return tomljson.NewTomlJsonModel(common) },
 		},
-		MenuOption{
+		{
 			id:    "jsontoml",
 			title: jsontoml.Title,
 			model: func() tea.Model { return jsontoml.NewJsonTomlModel(common) },
 		},
-		MenuOption{
+		{
 			id:    "toml",
 			title: toml.Title,
 			model: func() tea.Model { return toml.NewTomlFormatModel(common) },
 		},
-		MenuOption{
+		{
 			id:    "html",
 			title: html.Title,
 			model: func() tea.Model { return html.NewHTMLFormatterModel(common) },
 		},
-		MenuOption{
+		{
 			id:    "xml",
 			title: xml.Title,
 			model: func() tea.Model { return xml.NewXMLFormatterModel(common) },
 		},
-		MenuOption{
+		{
 			id:    "css",
 			title: css.Title,
 			model: func() tea.Model { return css.NewCSSFormatterModel(common) },
@@ -278,7 +278,7 @@ func saveUsageStats(items []MenuOption) error {
 	// Get the proper config path using xdg
 	configPath := filepath.Join(xdg.ConfigHome, "devtui")
 
-	if err := os.MkdirAll(configPath, 0755); err != nil {
+	if err := os.MkdirAll(configPath, 0o755); err != nil {
 		return err
 	}
 
@@ -295,7 +295,7 @@ func saveUsageStats(items []MenuOption) error {
 		return err
 	}
 
-	return os.WriteFile(statsFile, data, 0644)
+	return os.WriteFile(statsFile, data, 0o644)
 }
 
 // Update loadUsageStats to use xdg

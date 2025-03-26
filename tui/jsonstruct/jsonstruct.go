@@ -22,9 +22,7 @@ import (
 
 const Title = "JSON to Go Struct"
 
-var (
-	pagerHelpHeight int
-)
+var pagerHelpHeight int
 
 type JsonStructModel struct {
 	common *ui.CommonModel

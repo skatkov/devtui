@@ -24,9 +24,7 @@ import (
 
 const Title = "YAML to Go Struct"
 
-var (
-	pagerHelpHeight int
-)
+var pagerHelpHeight int
 
 type YamlStructModel struct {
 	common *ui.CommonModel

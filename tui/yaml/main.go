@@ -21,9 +21,7 @@ import (
 
 const Title = "YAML Formatter"
 
-var (
-	pagerHelpHeight int
-)
+var pagerHelpHeight int
 
 type YamlModel struct {
 	common *ui.CommonModel
@@ -300,7 +298,7 @@ func (m YamlModel) helpView() (s string) {
 }
 
 func formatYAML(content string) string {
-	var data interface{}
+	var data any
 	if err := yaml.Unmarshal([]byte(content), &data); err != nil {
 		return content
 	}
@@ -317,7 +315,7 @@ func formatYAML(content string) string {
 }
 
 func isValidYAML(content string) bool {
-	var data interface{}
+	var data any
 	err := yaml.Unmarshal([]byte(content), &data)
 	return err == nil
 }
