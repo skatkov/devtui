@@ -9,20 +9,27 @@ permissions:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-go@v5
         with:
-          go-version: stable
-      - name: test
+          go-version-file: 'go.mod'
+          cache: true
+
+      - name: Build
+        run: go build -v ./...
+
+      - name: Go Vet
+        run: go vet ./...
+
+      - name: Test
         run: |
-          go test -v -failfast -race -coverpkg=./... -covermode=atomic -coverprofile=coverage.txt ./...
-      - uses: codecov/codecov-action@v5
-        if: matrix.os == 'ubuntu-latest'
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
-          file: ./coverage.txt
+          go test -v -failfast -race ./...
+
   dependabot:
     needs: [build]
     runs-on: ubuntu-latest
