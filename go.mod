@@ -1,7 +1,6 @@
 module github.com/skatkov/devtui
 
 go 1.23.5
-
 toolchain go1.24.1
 
 require (
@@ -15,7 +14,7 @@ require (
 	github.com/charmbracelet/x/editor v0.1.0
 	github.com/client9/csstool v0.2.2
 	github.com/go-xmlfmt/xmlfmt v1.1.3
-	github.com/goccy/go-yaml v1.16.0
+	github.com/goccy/go-yaml v1.17.0
 	github.com/google/uuid v1.6.0
 	github.com/lnquy/cron v1.1.1
 	github.com/mattn/go-runewidth v0.0.16
