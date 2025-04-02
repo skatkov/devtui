@@ -1,6 +1,6 @@
 # **DevTUI** - A Swiss-army app for developers
 
-**DevTUI** is an all-in-one terminal toolkit designed for developers. It consolidates your everyday utilities into a single, unified TUI (Text User Interface) and experimental CLI (Command Line Interface). No more juggling multiple tools — everything you need is now just one command away.
+**DevTUI** is an all-in-one terminal toolkit designed for developers. It consolidates your everyday utilities into a single, unified TUI (Text User Interface) and CLI (Command Line Interface). No more juggling multiple tools — everything you need is now just one command away.
 
 🚀 Actively developed and continuously improving.
 
