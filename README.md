@@ -5,8 +5,9 @@ It comes with a number of small utility apps that developers use in their day-to
 - Cron parser
 - UUID generator
 - Base Number Converter
+- and others.
 
-It is still being actively developed and improvements and more tools are being added often.
+It is still being actively developed - new improvements and tools are added regularly.
 
 ![devtui](devtui.gif)
 
@@ -17,6 +18,13 @@ brew install skatkov/tap/devtui
 ```
 
 Or download executable from [GitHub Releases](https://github.com/skatkov/homebrew-tap/releases?q=devtui&expanded=true)
+
+## Why DevTUI?
+- Instead of wraningling multiple small utilities, everything is contained within one APP with unifieid TUI and CLI interface.
+- It's privacy focused, you don't have to worry about any data that you paste into it. Everything stays on your computer.
+- Works offline
+- For those people who spend a lot of time in terminal, app is just one command away. No need to touch a mouse to open a browser.
+- App is actively maintained, not another OSS project that depend on free time of a single maintainer.
 
 ## Requirements
 With **OSX** everything should work out of the box.
@@ -77,6 +85,9 @@ There are also additional flags that you can pass on
 ## Contact
 I love when people reach out, so please don't hesitate to do that.
 
+- contact@devtui.com
 - [https://t.me/skatkov](https://t.me/skatkov)
 - [https://bsky.app/profile/skatkov.com](https://bsky.app/profile/skatkov.com)
 - [https://x.com/5katkov](https://x.com/5katkov)
+
+
