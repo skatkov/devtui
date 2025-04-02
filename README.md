@@ -1,80 +1,98 @@
-**DevTUI** - A Swiss-army app for developers
+# **DevTUI** - A Swiss-army app for developers
 
-It comes with a number of small utility apps that developers use in their day-to-day work. Such as:
-- JSON Formatter
-- Cron parser
-- UUID generator
-- Base Number Converter
-- and others.
+**DevTUI** is an all-in-one terminal toolkit designed for developers. It consolidates your everyday utilities into a single, unified TUI (Text User Interface) and experimental CLI (Command Line Interface). No more juggling multiple tools — everything you need is now just one command away.
 
-It is still being actively developed - new improvements and tools are added regularly.
+🚀 Actively developed and continuously improving.
 
 ![devtui](devtui.gif)
 
-## Install
-Through homebrew:
+## ✨ Features
+
+DevTUI includes a growing collection of handy tools for developers:
+
+   - ✅ JSON Formatter
+   - ⏰ Cron Parser
+   - 🔑 UUID Generator
+   - 🔢 Base Number Converter
+   - 🎯 And more...
+
+---
+
+## 📦 Install
+### 🧃 Homebrew (macOS)
 ```
 brew install skatkov/tap/devtui
 ```
+### 📥 Download Executable
 
 Or download executable from [GitHub Releases](https://github.com/skatkov/homebrew-tap/releases?q=devtui&expanded=true)
 
-## Why DevTUI?
-- Instead of wraningling multiple small utilities, everything is contained within one APP with unifieid TUI and CLI interface.
-- It's privacy focused, you don't have to worry about any data that you paste into it. Everything stays on your computer.
-- Works offline
-- For those people who spend a lot of time in terminal, app is just one command away. No need to touch a mouse to open a browser.
-- App is actively maintained, not another OSS project that depend on free time of a single maintainer.
+---
 
-## Requirements
-With **OSX** everything should work out of the box.
+## 💡 Why DevTUI?
 
-On Linux, **Wayland** requires `wl-clipboard` and **X11** requires `xclip` or `xsel` to be installed.
+    - 🧰 Unified experience – Replace scattered tools with a single interface
+    - 🔒 Privacy-focused – Everything runs locally, no data ever leaves your computer
+    - 🌐 Offline support – No internet? No problem
+    - ⌨️ Built for the terminal – No need to reach for your mouse or browser
+    - 🛠️ Actively maintained – Not just another abandoned open-source project
 
-Check your session type to correctly identify clipboard manager to use.
+---
 
-```
+## 📋 Requirements
+
+### macOS
+- ✅ Works out of the box
+
+### Linux
+
+    - 🖱 Wayland requires: `wl-clipboard`
+    - 🧮 X11 requires: `xclip` or `xsel`
+
+To check your session type:
+```bash
 echo $XDG_SESSION_TYPE
-# wayland or X11
+# Output: wayland or x11
 ```
+### Windows
+    - ⚠️ Should work, but not officially tested.
+    - Grab the executable from the GitHub Releases page.
 
-Windows should work, but currently is not tested. Please see [Github Releases] (https://github.com/skatkov/homebrew-tap/releases) for a windows binary.
-## Usage
-Application comes with TUI and CLI interfaces.
+--- 
 
-### TUI
-TUI could be accessed by running a `devtui` in your terminal and you can see the list of available apps. Pick one and go.
+## 🚀 Usage
+DevTUI includes both a TUI and CLI interface.
 
-### CLI
-CLI interface is still experimental and could be a subject to change.
+### 🖥 TUI
+Run `devtui` you’ll see a list of available tools — just pick one and go!
 
-#### Autocomplete
- //TODO
+### CLI (Experimental)
+The CLI interface is still in development and may change in future versions.
 
-#### CSS Formatter
+#### 🎨 CSS Formatter
 ```bash
 devtui cssfmt < testdata/bootstrap.min.css > output.css
 ```
 
-There are also additional flags that you can pass on
+Optional flags:
 ```
   -i, --indent int   spaces for indentation (default 2)
       --semicolon    always end rule with semicolon, even if not needed (default true)
   -t, --tab          use tabs for indentation
 ```
-#### CSS Minimizer
-This tools just removes whitespace from css files. Basically similar to CSS Formatter, but with preconfigured options to remove whitespaces.
+#### 🧼 CSS Minimizer
+Strip unnecessary whitespace from CSS files:
 
 ```bash
 devtui cssmin < input.css > output.min.css
 ```
 
-#### XML Formatter
+#### 🗂 XML Formatter
 ```bash
 devtui xmlfmt < testdata/input.xml > output.xml
 ```
 
-There are also additional flags that you can pass on
+Optional flags:
 
 ```
   -i, --indent string   Indent string for nested elements (default "  ")
@@ -82,7 +100,9 @@ There are also additional flags that you can pass on
   -p, --prefix string   Each element begins on a new line and this prefix
 ```  
 
-## Contact
+---
+
+## 🧑‍💻 Contact
 I love when people reach out, so please don't hesitate to do that.
 
 - contact@devtui.com
