@@ -45,7 +45,7 @@ CLI interface is still experimental and could be a subject to change.
 
 #### CSS Formatter
 ```bash
-go run . cssfmt < testdata/bootstrap.min.css > output.css
+devtui cssfmt < testdata/bootstrap.min.css > output.css
 ```
 
 There are also additional flags that you can pass on
@@ -58,12 +58,12 @@ There are also additional flags that you can pass on
 This tools just removes whitespace from css files. Basically similar to CSS Formatter, but with preconfigured options to remove whitespaces.
 
 ```bash
-go run . cssmin < input.css > output.min.css
+devtui cssmin < input.css > output.min.css
 ```
 
 #### XML Formatter
 ```bash
-go run . xmlfmt < testdata/input.xml > output.xml
+devtui xmlfmt < testdata/input.xml > output.xml
 ```
 
 There are also additional flags that you can pass on
