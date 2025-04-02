@@ -10,11 +10,11 @@
 
 DevTUI includes a growing collection of handy tools for developers:
 
-   - ✅ JSON Formatter
-   - ⏰ Cron Parser
-   - 🔑 UUID Generator
-   - 🔢 Base Number Converter
-   - 🎯 And more...
+- ✅ JSON Formatter
+- ⏰ Cron Parser
+- 🔑 UUID Generator
+- 🔢 Base Number Converter
+- 🎯 And more...
 
 ---
 
@@ -31,11 +31,11 @@ Or download executable from [GitHub Releases](https://github.com/skatkov/homebre
 
 ## 💡 Why DevTUI?
 
-    - 🧰 Unified experience – Replace scattered tools with a single interface
-    - 🔒 Privacy-focused – Everything runs locally, no data ever leaves your computer
-    - 🌐 Offline support – No internet? No problem
-    - ⌨️ Built for the terminal – No need to reach for your mouse or browser
-    - 🛠️ Actively maintained – Not just another abandoned open-source project
+ - 🧰 Unified experience – Replace scattered tools with a single interface
+ - 🔒 Privacy-focused – Everything runs locally, no data ever leaves your computer
+ - 🌐 Offline support – No internet? No problem
+ - ⌨️ Built for the terminal – No need to reach for your mouse or browser
+ - 🛠️ Actively maintained – Not just another abandoned open-source project
 
 ---
 
@@ -46,8 +46,8 @@ Or download executable from [GitHub Releases](https://github.com/skatkov/homebre
 
 ### Linux
 
-    - 🖱 Wayland requires: `wl-clipboard`
-    - 🧮 X11 requires: `xclip` or `xsel`
+- 🖱 Wayland requires: `wl-clipboard`
+- 🧮 X11 requires: `xclip` or `xsel`
 
 To check your session type:
 ```bash
@@ -55,8 +55,9 @@ echo $XDG_SESSION_TYPE
 # Output: wayland or x11
 ```
 ### Windows
-    - ⚠️ Should work, but not officially tested.
-    - Grab the executable from the GitHub Releases page.
+
+- ⚠️ Should work, but not officially tested.
+- Grab the executable from the GitHub Releases page.
 
 --- 
 
