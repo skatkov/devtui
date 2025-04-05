@@ -1,0 +1,1 @@
+query{products(where:{or:{and:{not:{or:{id:{is_null:true} label:{eq:$label} price:{and:{gt:10.5 lt:20}}}} price:{gt:10} not:{and:{size:{gt:100} size:{lt:200} not:{or:{quantity:{eq:0} price:{eq:0}}}}}} not:{or:{quantity:{eq:0} price:{eq:0}}}}}){id name price}}

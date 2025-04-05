@@ -1,6 +1,7 @@
 module github.com/skatkov/devtui
 
 go 1.23.5
+
 toolchain go1.24.1
 
 require (
@@ -28,6 +29,7 @@ require (
 )
 
 require (
+	github.com/agnivade/levenshtein v1.2.1 // indirect
 	github.com/alecthomas/chroma/v2 v2.14.0 // indirect
 	github.com/atotto/clipboard v0.1.4 // indirect
 	github.com/aymanbagabas/go-osc52/v2 v2.0.1 // indirect
@@ -57,6 +59,7 @@ require (
 	github.com/sahilm/fuzzy v0.1.1 // indirect
 	github.com/spf13/pflag v1.0.6 // indirect
 	github.com/tdewolff/parse v2.3.3+incompatible // indirect
+	github.com/vektah/gqlparser/v2 v2.5.23 // indirect
 	github.com/xo/terminfo v0.0.0-20220910002029-abceb7e1c41e // indirect
 	github.com/yuin/goldmark v1.7.8 // indirect
 	github.com/yuin/goldmark-emoji v1.0.5 // indirect
