@@ -59,7 +59,7 @@ echo $XDG_SESSION_TYPE
 - ⚠️ Should work, but not officially tested.
 - Grab the executable from the GitHub Releases page.
 
---- 
+---
 
 ## 🚀 Usage
 DevTUI includes both a TUI and CLI interface.
@@ -99,7 +99,24 @@ Optional flags:
   -i, --indent string   Indent string for nested elements (default "  ")
   -n, --nested          Nested tags in comments
   -p, --prefix string   Each element begins on a new line and this prefix
-```  
+```
+
+#### 📝 GraphQL Query Formatter
+Format GraphQL queries:
+
+```bash
+devtui gqlquery < testdata/query.graphql
+
+devtui gqlquery < testdata/query.graphql > formatted.graphql
+devtui gqlfmt --indent "    " --with-comments --with-descriptions < testdata/query.graphql
+```
+
+Optional flags:
+```
+  -i, --indent string       Indent string for nested elements (default is 2 spaces) (default "  ")
+  -c, --with-comments       Include comments in the formatted output
+  -d, --with-descriptions   Include descriptions in the formatted output (omitted by default)
+```
 
 ---
 
@@ -110,5 +127,3 @@ I love when people reach out, so please don't hesitate to do that.
 - [https://t.me/skatkov](https://t.me/skatkov)
 - [https://bsky.app/profile/skatkov.com](https://bsky.app/profile/skatkov.com)
 - [https://x.com/5katkov](https://x.com/5katkov)
-
-
