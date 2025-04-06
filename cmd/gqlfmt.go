@@ -14,17 +14,17 @@ import (
 
 // ---
 // Example usage:
-// go run . gqlquery < testdata/query.graphql
+// go run . gqlfmt < testdata/query.graphql
 //
 // Output to file:
-// go run . gqlquery < testdata/query.graphql > formatted.graphql
+// go run . gqlfmt < testdata/query.graphql > formatted.graphql
 //
 // With options:
 // go run . gqlfmt --indent "    " --with-comments --with-descriptions < testdata/query.graphql
 // ---
 
 var gqlfmtCmd = &cobra.Command{
-	Use:   "gqlquery",
+	Use:   "gqlfmt",
 	Short: "Format GraphQL queries",
 	Long:  "Format GraphQL queries for better readability",
 	Run: func(cmd *cobra.Command, args []string) {

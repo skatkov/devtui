@@ -1,4 +1,4 @@
-package graphqlquery
+package graphql
 
 import (
 	"bytes"
