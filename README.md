@@ -67,6 +67,15 @@ DevTUI includes both a TUI and CLI interface.
 ### 🖥 TUI
 Run `devtui` you’ll see a list of available tools — just pick one and go!
 
+### Autocompletion
+Run a one of these commands depending on shell
+
+```
+devtui completion bash > ~/.bashrc
+devtui completion zsh  > ~/.zshrc
+devtui completion fish > ~/.fishrc
+```
+
 ### CLI (Experimental)
 The CLI interface is still in development and may change in future versions.
 
@@ -105,9 +114,9 @@ Optional flags:
 Format GraphQL queries:
 
 ```bash
-devtui gqlquery < testdata/query.graphql
+devtui gqlfmt < testdata/query.graphql
 
-devtui gqlquery < testdata/query.graphql > formatted.graphql
+devtui gqlfmt < testdata/query.graphql > formatted.graphql
 devtui gqlfmt --indent "    " --with-comments --with-descriptions < testdata/query.graphql
 ```
 
