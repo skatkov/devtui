@@ -38,6 +38,7 @@ var countCmd = &cobra.Command{
 				return
 			}
 		}
+
 		stats, err := textanalyzer.Analyze(text)
 		if err != nil {
 			fmt.Println(err)
@@ -47,7 +48,6 @@ var countCmd = &cobra.Command{
 			Row("Characters", strconv.Itoa(stats.Characters)).
 			Row("Spaces", strconv.Itoa(stats.Spaces)).
 			Row("Words", strconv.Itoa(stats.Words)))
-
 	},
 }
 

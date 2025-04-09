@@ -79,7 +79,6 @@ func TestTextAnalyzer_AnalyzeString(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			got, err := Analyze(tt.text)
-
 			if err != nil {
 				t.Errorf("TextAnalyzer.AnalyzeString() error = %v", err)
 				return
@@ -128,7 +127,6 @@ func TestTextAnalyzer_Analyze(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			got, err := Analyze(tt.text)
-
 			if err != nil {
 				t.Errorf("TextAnalyzer.Analyze() error = %v", err)
 				return
