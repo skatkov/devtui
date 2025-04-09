@@ -19,7 +19,7 @@ DevTUI includes a growing collection of handy tools for developers:
 ---
 
 ## 📦 Install
-### 🧃 Homebrew (macOS)
+### 🧃 Homebrew
 ```
 brew install skatkov/tap/devtui
 ```
