@@ -1,14 +1,12 @@
 package textanalyzer
 
 import (
-	"fmt"
 	"strings"
 	"unicode"
 )
 
 // TextStats represents the statistical information extracted from a text
 type TextStats struct {
-	Text       string
 	Characters int
 	Words      int
 	Spaces     int
@@ -16,14 +14,12 @@ type TextStats struct {
 
 // Analyze processes the given text and returns statistical information
 func Analyze(text string) (TextStats, error) {
-	stats := TextStats{Text: text}
+	stats := TextStats{}
 
-	// Count characters (runes)
-	runes := []rune(text)
-	stats.Characters = len(runes)
+	stats.Characters = len([]rune(text))
 
 	// Count spaces
-	for _, r := range runes {
+	for _, r := range text {
 		if unicode.IsSpace(r) {
 			stats.Spaces++
 		}
@@ -31,7 +27,6 @@ func Analyze(text string) (TextStats, error) {
 
 	// Count words
 	fields := strings.Fields(text)
-	fmt.Println(fields)
 	stats.Words = len(fields)
 
 	return stats, nil

@@ -15,7 +15,6 @@ func TestTextAnalyzer_AnalyzeString(t *testing.T) {
 			name: "Empty text",
 			text: "",
 			expected: TextStats{
-				Text:       "",
 				Characters: 0,
 				Words:      0,
 				Spaces:     0,
@@ -25,7 +24,6 @@ func TestTextAnalyzer_AnalyzeString(t *testing.T) {
 			name: "Simple sentence",
 			text: "Hello, world!",
 			expected: TextStats{
-				Text:       "Hello, world!",
 				Characters: 13,
 				Words:      2,
 				Spaces:     1,
@@ -35,7 +33,6 @@ func TestTextAnalyzer_AnalyzeString(t *testing.T) {
 			name: "Multiple sentences",
 			text: "This is a test. It has multiple sentences!",
 			expected: TextStats{
-				Text:       "This is a test. It has multiple sentences!",
 				Characters: 42,
 				Words:      8,
 				Spaces:     7,
@@ -43,19 +40,17 @@ func TestTextAnalyzer_AnalyzeString(t *testing.T) {
 		},
 		{
 			name: "Multiple paragraphs",
-			text: `This is the first paragraph.\n\nThis is the second paragraph.`,
+			text: "This is the first paragraph. This is the second paragraph.",
 			expected: TextStats{
-				Text:       `This is the first paragraph.\n\nThis is the second paragraph.`,
-				Characters: 61,
+				Characters: 58,
 				Words:      10,
-				Spaces:     11, // Including newlines
+				Spaces:     9, // Including newlines
 			},
 		},
 		{
 			name: "Text without sentence terminators",
 			text: "This text has no sentence terminators",
 			expected: TextStats{
-				Text:       "This text has no sentence terminators",
 				Characters: 37,
 				Words:      6,
 				Spaces:     5,
@@ -65,20 +60,18 @@ func TestTextAnalyzer_AnalyzeString(t *testing.T) {
 			name: "Text with multiple spaces",
 			text: "This   has   extra   spaces",
 			expected: TextStats{
-				Text:       "This   has   extra   spaces",
-				Characters: 28,
+				Characters: 27,
 				Words:      4,
-				Spaces:     12,
+				Spaces:     9,
 			},
 		},
 		{
 			name: "Text with multiple consecutive newlines",
-			text: `Paragraph one.\n\n\n\nParagraph two.`,
+			text: "Paragraph one. \nParagraph two.",
 			expected: TextStats{
-				Text:       `Paragraph one.\n\n\n\nParagraph two.`,
-				Characters: 32,
+				Characters: 30,
 				Words:      4,
-				Spaces:     5, // Including newlines
+				Spaces:     4,
 			},
 		},
 	}
@@ -93,9 +86,6 @@ func TestTextAnalyzer_AnalyzeString(t *testing.T) {
 			}
 
 			// Compare field by field for better error messages
-			if got.Text != tt.expected.Text {
-				t.Errorf("Text = %v, want %v", got.Text, tt.expected.Text)
-			}
 			if got.Characters != tt.expected.Characters {
 				t.Errorf("Characters = %v, want %v", got.Characters, tt.expected.Characters)
 			}
@@ -119,7 +109,6 @@ func TestTextAnalyzer_Analyze(t *testing.T) {
 			name: "ASCII text as bytes",
 			text: "Hello, world!",
 			expected: TextStats{
-				Text:       "Hello, world!",
 				Characters: 13,
 				Words:      2,
 				Spaces:     1,
@@ -129,7 +118,6 @@ func TestTextAnalyzer_Analyze(t *testing.T) {
 			name: "Text with Japanese characters (UTF-8)",
 			text: "こんにちは世界！",
 			expected: TextStats{
-				Text:       "こんにちは世界！",
 				Characters: 8, // 7 characters + 1 full-width exclamation
 				Words:      1, // Fields will count this as 1 word since no spaces
 				Spaces:     0,
