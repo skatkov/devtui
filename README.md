@@ -127,6 +127,54 @@ Optional flags:
   -d, --with-descriptions   Include descriptions in the formatted output (omitted by default)
 ```
 
+#### 🗒️ TSV to Markdown Table
+Convert TSV to Markdown Table:
+
+```bash
+devtui tsv2md -t < example.tsv          - convert tsv from stdin and view result in stdout
+
+devtui tsv2md < example.tsv > output.md - convert tsv from stdin and write result in new file
+
+cat example.tsv | devtui tsv2md         - convert tsv from stdin and view result in stdout
+```
+
+Optional flags:
+```
+  -a, --align           Align columns width
+  -t --header string    Add main header (h1) to result
+```
+
+#### 🗒️ CSV to Markdown Table
+Convert CSV to Markdown Table:
+
+```bash
+devtui csv2md -t < example.csv          - convert csv from stdin and view result in stdout
+
+devtui csv2md < example.csv > output.md - convert csv from stdin and write result in new file
+
+cat example.csv | devtui csv2md         - convert csv from stdin and view result in stdout
+```
+
+Optional flags:
+```
+  -a, --align           Align columns width
+  -t --header string    Add main header (h1) to result
+```
+
+#### 🗒️ TSV to CSV
+Convert TSV to CSV:
+
+```bash
+devtui tsv2csv < testdata/input.tsv > output.csv
+```
+
+Optional flags:
+```
+  -i, --indent string   Indent string for nested elements (default "  ")
+  -n, --nested          Nested tags in comments
+  -p, --prefix string   Each element begins on a new line and this prefix
+```
+
 ---
 
 ## 🧑‍💻 Contact
