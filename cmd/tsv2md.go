@@ -4,8 +4,8 @@ import (
 	"encoding/csv"
 	"fmt"
 	"os"
-	"strings"
 
+	"github.com/skatkov/devtui/internal/csv2md"
 	"github.com/spf13/cobra"
 )
 
@@ -18,8 +18,8 @@ import (
 
 var tsv2mdCmd = &cobra.Command{
 	Use:   "tsv2md",
-	Short: "Convert TSV to Markdown",
-	Long:  "Convert TSV to Markdown",
+	Short: "Convert TSV to Markdown Table",
+	Long:  "Convert TSV to Markdown Table",
 	Run: func(cmd *cobra.Command, args []string) {
 		tsvReader := csv.NewReader(os.Stdin)
 		tsvReader.Comma = '\t'
@@ -30,80 +30,18 @@ var tsv2mdCmd = &cobra.Command{
 			return
 		}
 
-		Print(Convert(header, records, alignColumns))
-
+		csv2md.Print(csv2md.Convert(tsv2mdHeader, records, tsv2mdAlignColumns))
 	},
 }
 
 var (
-	alignColumns bool   // align columns width
-	header       string // add main header (h1) to result
+	tsv2mdAlignColumns bool   // align columns width
+	tsv2mdHeader       string // add main header (h1) to result
 )
 
 func init() {
 	rootCmd.AddCommand(tsv2mdCmd)
 
-	tsv2mdCmd.Flags().BoolVarP(&alignColumns, "align", "a", false, "align columns width")
-	tsv2mdCmd.Flags().StringVarP(&header, "header", "t", "", "add main header (h1) to result")
-}
-
-// Convert formats data from file or stdin as markdown
-func Convert(header string, records [][]string, aligned bool) []string {
-	var result []string
-
-	// add h1 if passed
-	header = strings.Trim(header, "\t\r\n ")
-	if len(header) != 0 {
-		result = append(result, "# "+header)
-		result = append(result, "")
-	}
-
-	// if user wants aligned columns width then we
-	// count max length of every value in every column
-	widths := make(map[int]int)
-	if aligned {
-		for _, row := range records {
-			for col_idx, col := range row {
-				length := len(col)
-				if len(widths) == 0 || widths[col_idx] < length {
-					widths[col_idx] = length
-				}
-			}
-		}
-	}
-
-	// build markdown table
-	for row_idx, row := range records {
-
-		// table content
-		str := "| "
-		for col_idx, col := range row {
-			if aligned {
-				str += fmt.Sprintf("%-*s | ", widths[col_idx], col)
-			} else {
-				str += col + " | "
-			}
-		}
-		result = append(result, str)
-
-		// content separator only after first row (header)
-		if row_idx == 0 {
-			str := "| "
-			for col_idx := range row {
-				if !aligned || widths[col_idx] < 3 {
-					str += "--- | "
-				} else {
-					str += strings.Repeat("-", widths[col_idx]) + " | "
-				}
-			}
-			result = append(result, str)
-		}
-	}
-	return result
-}
-
-func Print(data []string) {
-	for _, row := range data {
-		fmt.Println(row)
-	}
+	tsv2mdCmd.Flags().BoolVarP(&tsv2mdAlignColumns, "align", "a", false, "align columns width")
+	tsv2mdCmd.Flags().StringVarP(&tsv2mdHeader, "header", "t", "", "add main header (h1) to result")
 }
