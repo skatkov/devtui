@@ -1,3 +1,50 @@
-id,employee.name.firstname,employee.name.lastname,employee.age,employee.info[0].title,employee.info[0].content,employee.info[1].title,employee.info[1].content
-1,Aditya,Raj,26,--AdditionalInfoTitle1--,InfoContent1,--AdditionalInfo2--,InfoContent2
-2,Raj,Aditya,22,--Info1--,--Content1--,--Info2--,--Content2--
+"Name","Team","Position","Height(inches)","Weight(lbs)","Age"
+"Adam Donachie","BAL","Catcher",74,180,22.99
+"Paul Bako","BAL","Catcher",74,215,34.69
+"Ramon Hernandez","BAL","Catcher",72,210,30.78
+"Kevin Millar","BAL","First Baseman",72,210,35.43
+"Chris Gomez","BAL","First Baseman",73,188,35.71
+"Brian Roberts","BAL","Second Baseman",69,176,29.39
+"Miguel Tejada","BAL","Shortstop",69,209,30.77
+"Melvin Mora","BAL","Third Baseman",71,200,35.07
+"Aubrey Huff","BAL","Third Baseman",76,231,30.19
+"Adam Stern","BAL","Outfielder",71,180,27.05
+"Jeff Fiorentino","BAL","Outfielder",73,188,23.88
+"Freddie Bynum","BAL","Outfielder",73,180,26.96
+"Nick Markakis","BAL","Outfielder",74,185,23.29
+"Brandon Fahey","BAL","Outfielder",74,160,26.11
+"Corey Patterson","BAL","Outfielder",69,180,27.55
+"Jay Payton","BAL","Outfielder",70,185,34.27
+"Jay Gibbons","BAL","Designated Hitter",72,197,30
+"Erik Bedard","BAL","Starting Pitcher",73,189,27.99
+"Hayden Penn","BAL","Starting Pitcher",75,185,22.38
+"Adam Loewen","BAL","Starting Pitcher",78,219,22.89
+"Daniel Cabrera","BAL","Starting Pitcher",79,230,25.76
+"Steve Trachsel","BAL","Starting Pitcher",76,205,36.33
+"Jaret Wright","BAL","Starting Pitcher",74,230,31.17
+"Kris Benson","BAL","Starting Pitcher",76,195,32.31
+"Scott Williamson","BAL","Relief Pitcher",72,180,31.03
+"John Parrish","BAL","Relief Pitcher",71,192,29.26
+"Danys Baez","BAL","Relief Pitcher",75,225,29.47
+"Chad Bradford","BAL","Relief Pitcher",77,203,32.46
+"Jamie Walker","BAL","Relief Pitcher",74,195,35.67
+"Brian Burres","BAL","Relief Pitcher",73,182,25.89
+"Kurt Birkins","BAL","Relief Pitcher",74,188,26.55
+"James Hoey","BAL","Relief Pitcher",78,200,24.17
+"Sendy Rleal","BAL","Relief Pitcher",73,180,26.69
+"Chris Ray","BAL","Relief Pitcher",75,200,25.13
+"Jeremy Guthrie","BAL","Relief Pitcher",73,200,27.9
+"A.J. Pierzynski","CWS","Catcher",75,245,30.17
+"Toby Hall","CWS","Catcher",75,240,31.36
+"Paul Konerko","CWS","First Baseman",74,215,30.99
+"Tadahito Iguchi","CWS","Second Baseman",69,185,32.24
+"Juan Uribe","CWS","Shortstop",71,175,27.61
+"Alex Cintron","CWS","Shortstop",74,199,28.2
+"Joe Crede","CWS","Third Baseman",73,200,28.85
+"Josh Fields","CWS","Third Baseman",73,215,24.21
+"Ryan Sweeney","CWS","Outfielder",76,200,22.02
+"Brian N. Anderson","CWS","Outfielder",74,205,24.97
+"Luis Terrero","CWS","Outfielder",74,206,26.78
+"Pablo Ozuna","CWS","Outfielder",70,186,32.51
+"Scott Podsednik","CWS","Outfielder",72,188,30.95
+"Jermaine Dye","CWS","Outfielder",77,220,33.09
