@@ -27,6 +27,7 @@ import (
 	"github.com/skatkov/devtui/tui/numbers"
 	"github.com/skatkov/devtui/tui/toml"
 	"github.com/skatkov/devtui/tui/tomljson"
+	"github.com/skatkov/devtui/tui/tsv2md"
 	uuiddecode "github.com/skatkov/devtui/tui/uuid-decode"
 	uuidgenerate "github.com/skatkov/devtui/tui/uuid-generate"
 	"github.com/skatkov/devtui/tui/xml"
@@ -174,6 +175,11 @@ func newListModel(common *ui.CommonModel) *listModel {
 			id:    "csv2md",
 			title: csv2md.Title,
 			model: func() tea.Model { return csv2md.NewCSV2MDModel(common) },
+		},
+		{
+			id:    "tsv2md",
+			title: tsv2md.Title,
+			model: func() tea.Model { return tsv2md.NewTSV2MDModel(common) },
 		},
 	}
 

@@ -10,6 +10,8 @@ var (
 	statusBarNoteFg = lipgloss.AdaptiveColor{Light: "#656565", Dark: "#7D7D7D"}
 	statusBarBg     = lipgloss.AdaptiveColor{Light: "#E6E6E6", Dark: "#242424"}
 	lineNumberFg    = lipgloss.AdaptiveColor{Light: "#656565", Dark: "#7D7D7D"}
+	lightRed        = lipgloss.AdaptiveColor{Light: "#FFAAAA", Dark: "#FFAAAA"}
+	darkRed         = lipgloss.AdaptiveColor{Light: "#CC0000", Dark: "#AA0000"}
 
 	HelpViewStyle = lipgloss.NewStyle().
 			Foreground(statusBarNoteFg).
@@ -24,6 +26,10 @@ var (
 			Foreground(lipgloss.Color("#ECFD65")).
 			Background(fuchsia).
 			Bold(true).Render
+
+	StatusBarErrorHelpStyle = lipgloss.NewStyle().
+				Foreground(lightRed).
+				Background(darkRed).Render
 
 	StatusBarMessageHelpStyle = lipgloss.NewStyle().
 					Foreground(lipgloss.Color("#B6FFE4")).
@@ -40,6 +46,9 @@ var (
 	StatusBarMessageStyle = lipgloss.NewStyle().
 				Foreground(mintGreen).
 				Background(darkGreen).Render
+	StatusBarErrorStyle = lipgloss.NewStyle().
+				Foreground(lightRed).
+				Background(darkRed).Render
 
 	LineNumberStyle = lipgloss.NewStyle().
 			Foreground(lineNumberFg).

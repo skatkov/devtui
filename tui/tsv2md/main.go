@@ -1,0 +1,348 @@
+package tsv2md
+
+import (
+	"bytes"
+	"encoding/csv"
+	"fmt"
+	"math"
+	"strings"
+	"time"
+
+	"github.com/charmbracelet/bubbles/viewport"
+	tea "github.com/charmbracelet/bubbletea"
+	"github.com/mattn/go-runewidth"
+	"github.com/muesli/ansi"
+	"github.com/muesli/reflow/truncate"
+	"github.com/skatkov/devtui/internal/csv2md"
+	"github.com/skatkov/devtui/internal/editor"
+	"github.com/skatkov/devtui/internal/ui"
+	"github.com/tiagomelo/go-clipboard/clipboard"
+)
+
+const Title = "TSV to Markdown Table"
+
+var pagerHelpHeight int
+
+type TSV2MDModel struct {
+	common *ui.CommonModel
+
+	converted_content string
+	content           string
+	viewport          viewport.Model
+	showHelp          bool
+	ready             bool
+	state             ui.PagerState
+	alignColumns      bool
+	error             error
+
+	statusMessage      string
+	statusMessageTimer *time.Timer
+}
+
+func NewTSV2MDModel(common *ui.CommonModel) TSV2MDModel {
+	model := TSV2MDModel{
+		content:      "",
+		ready:        false,
+		common:       common,
+		state:        ui.PagerStateBrowse,
+		alignColumns: true, // default to aligned columns
+	}
+
+	model.setSize(common.Width, common.Height)
+
+	return model
+}
+
+func (m TSV2MDModel) Init() tea.Cmd {
+	return nil
+}
+
+func (m TSV2MDModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
+	var (
+		cmd  tea.Cmd
+		cmds []tea.Cmd
+	)
+	switch msg := msg.(type) {
+	case tea.KeyMsg:
+		switch msg.String() {
+		case "e":
+			return m, editor.OpenEditor(m.content, "tsv")
+		case "ctrl+c", "q":
+			return m, tea.Quit
+		case "esc":
+			return m, func() tea.Msg {
+				return ui.ReturnToListMsg{
+					Common: m.common,
+				}
+			}
+		case "v":
+			c := clipboard.New()
+			content, err := c.PasteText()
+			if err != nil {
+				panic(err)
+			}
+			m.setContent(content)
+
+			cmds = append(cmds, m.showStatusMessage(ui.PagerStatusMsg{Message: "Converted TSV to Markdown. Press 'c' to copy result."}))
+		case "c":
+			c := clipboard.New()
+			if err := c.CopyText(m.converted_content); err != nil {
+				panic(err)
+			}
+
+			cmds = append(cmds, m.showStatusMessage(ui.PagerStatusMsg{Message: "Copied Markdown Table"}))
+		case "a":
+			m.alignColumns = !m.alignColumns
+			if m.content != "" {
+				m.setContent(m.content)
+				if m.alignColumns {
+					cmds = append(cmds, m.showStatusMessage(ui.PagerStatusMsg{Message: "Columns aligned"}))
+				} else {
+					cmds = append(cmds, m.showStatusMessage(ui.PagerStatusMsg{Message: "Columns unaligned"}))
+				}
+			}
+		case "?":
+			m.toggleHelp()
+			if m.viewport.HighPerformanceRendering {
+				cmds = append(cmds, viewport.Sync(m.viewport))
+			}
+		}
+	case ui.StatusMessageTimeoutMsg:
+		m.state = ui.PagerStateBrowse
+	case editor.EditorFinishedMsg:
+		if msg.Err != nil {
+			panic(msg.Err)
+		}
+		m.setContent(msg.Content)
+
+		cmds = append(cmds, m.showStatusMessage(ui.PagerStatusMsg{Message: "Converted TSV to Markdown"}))
+
+	case tea.WindowSizeMsg:
+		m.common.Width = msg.Width
+		m.common.Height = msg.Height
+
+		m.setSize(msg.Width, msg.Height)
+
+		if !m.ready {
+			m.viewport = viewport.New(msg.Width, msg.Height-ui.StatusBarHeight)
+			m.viewport.YPosition = 0
+			m.viewport.HighPerformanceRendering = true
+			m.viewport.SetContent(m.content)
+			m.ready = true
+		} else {
+			m.setSize(msg.Width, msg.Height)
+		}
+	}
+	if m.viewport.HighPerformanceRendering {
+		cmds = append(cmds, viewport.Sync(m.viewport))
+	}
+	m.viewport, cmd = m.viewport.Update(msg)
+	cmds = append(cmds, cmd)
+
+	return m, tea.Batch(cmds...)
+}
+
+func (m TSV2MDModel) View() string {
+	var b strings.Builder
+
+	fmt.Fprint(&b, m.viewport.View()+"\n")
+
+	m.statusBarView(&b)
+
+	if m.showHelp {
+		fmt.Fprint(&b, "\n"+m.helpView())
+	}
+
+	return b.String()
+}
+func (m *TSV2MDModel) showErrorMessage(msg ui.PagerStatusMsg) tea.Cmd {
+	m.state = ui.PagerStateStatusMessage
+	m.statusMessage = msg.Message
+	if m.statusMessageTimer != nil {
+		m.statusMessageTimer.Stop()
+	}
+	m.statusMessageTimer = time.NewTimer(ui.StatusMessageTimeout)
+
+	return ui.WaitForStatusMessageTimeout(m.statusMessageTimer)
+}
+
+func (m *TSV2MDModel) showStatusMessage(msg ui.PagerStatusMsg) tea.Cmd {
+	m.state = ui.PagerStateStatusMessage
+	m.statusMessage = msg.Message
+	if m.statusMessageTimer != nil {
+		m.statusMessageTimer.Stop()
+	}
+	m.statusMessageTimer = time.NewTimer(ui.StatusMessageTimeout)
+
+	return ui.WaitForStatusMessageTimeout(m.statusMessageTimer)
+}
+
+func (m *TSV2MDModel) setContent(content string) {
+	m.error = nil
+	m.content = content
+
+	reader := csv.NewReader(strings.NewReader(content))
+	reader.Comma = '\t'
+
+	// Read all records
+	rows, err := reader.ReadAll()
+	if err != nil {
+		m.error = fmt.Errorf("error reading TSV: %v", err)
+		return
+	}
+
+	if len(rows) == 0 {
+		m.error = fmt.Errorf("Empty TSV file")
+		return
+	}
+
+	// Convert to markdown
+	markdownLines := csv2md.Convert("", rows, m.alignColumns)
+	m.converted_content = strings.Join(markdownLines, "\n")
+
+	// Set content in viewport
+	var buf bytes.Buffer
+	buf.WriteString(m.converted_content)
+	m.viewport.SetContent(buf.String())
+}
+
+func (m *TSV2MDModel) setSize(w, h int) {
+	m.viewport.Width = w
+	m.viewport.Height = h - ui.StatusBarHeight
+
+	if m.showHelp {
+		if pagerHelpHeight == 0 {
+			pagerHelpHeight = strings.Count(m.helpView(), "\n")
+		}
+		m.viewport.Height -= (ui.StatusBarHeight + pagerHelpHeight)
+	}
+}
+
+func (m *TSV2MDModel) toggleHelp() {
+	m.showHelp = !m.showHelp
+	m.setSize(m.common.Width, m.common.Height)
+
+	if m.viewport.PastBottom() {
+		m.viewport.GotoBottom()
+	}
+}
+
+func (m TSV2MDModel) statusBarView(b *strings.Builder) {
+	const (
+		minPercent               float64 = 0.0
+		maxPercent               float64 = 1.0
+		percentToStringMagnitude float64 = 100.0
+	)
+	showStatusMessage := m.state == ui.PagerStateStatusMessage
+	appName := ui.AppNameStyle(" " + Title + " ")
+
+	scrollPercent := ""
+	if m.content != "" {
+		percent := math.Max(minPercent, math.Min(maxPercent, m.viewport.ScrollPercent()))
+		scrollPercent = fmt.Sprintf(" %3.f%% ", percent*percentToStringMagnitude)
+		scrollPercent = ui.StatusBarScrollPosStyle(scrollPercent)
+	}
+	var helpNote string
+	if showStatusMessage {
+		if m.error != nil {
+			helpNote = ui.StatusBarErrorHelpStyle(" ? Help ")
+		} else {
+			helpNote = ui.StatusBarMessageHelpStyle(" ? Help ")
+		}
+	} else {
+		helpNote = ui.StatusBarHelpStyle(" ? Help ")
+	}
+
+	var note string
+	if showStatusMessage {
+		note = m.statusMessage
+	} else if m.content == "" {
+		note = "Press 'v' to paste TSV"
+	} else {
+		if m.alignColumns {
+			note = "Columns aligned."
+		} else {
+			note = "Columns unaligned."
+		}
+	}
+
+	note = truncate.StringWithTail(" "+note+" ", uint(max(0,
+		m.common.Width-
+			ansi.PrintableRuneWidth(appName)-
+			ansi.PrintableRuneWidth(scrollPercent)-
+			ansi.PrintableRuneWidth(helpNote),
+	)), ui.Ellipsis)
+
+	if showStatusMessage {
+		if m.error != nil {
+			note = ui.StatusBarErrorStyle(m.error.Error())
+		} else {
+			note = ui.StatusBarMessageStyle(note)
+		}
+	} else {
+		note = ui.StatusBarNoteStyle(note)
+	}
+
+	padding := max(0,
+		m.common.Width-
+			ansi.PrintableRuneWidth(appName)-
+			ansi.PrintableRuneWidth(note)-
+			ansi.PrintableRuneWidth(scrollPercent)-
+			ansi.PrintableRuneWidth(helpNote),
+	)
+	emptySpace := strings.Repeat(" ", padding)
+	if showStatusMessage {
+		if m.error != nil {
+			emptySpace = ui.StatusBarErrorStyle(emptySpace)
+		} else {
+			emptySpace = ui.StatusBarMessageStyle(emptySpace)
+		}
+	} else {
+		emptySpace = ui.StatusBarNoteStyle(emptySpace)
+	}
+
+	fmt.Fprintf(b, "%s%s%s%s%s",
+		appName,
+		note,
+		emptySpace,
+		scrollPercent,
+		helpNote,
+	)
+}
+
+func (m TSV2MDModel) helpView() (s string) {
+	col1 := []string{
+		"c              copy markdown",
+		"e              edit TSV",
+		"v              paste TSV to convert",
+		"a              toggle column alignment",
+		"q/ctrl+c       quit",
+	}
+
+	s += "\n"
+	s += "k/↑      up                  " + col1[0] + "\n"
+	s += "j/↓      down                " + col1[1] + "\n"
+	s += "b/pgup   page up             " + col1[2] + "\n"
+	s += "f/pgdn   page down           " + col1[3] + "\n"
+	s += "u        ½ page up           " + col1[4] + "\n"
+	s += "d        ½ page down         "
+
+	if len(col1) > 5 {
+		s += col1[5]
+	}
+
+	s = ui.Indent(s, 2)
+
+	if m.common.Width > 0 {
+		lines := strings.Split(s, "\n")
+		for i := range lines {
+			l := runewidth.StringWidth(lines[i])
+			n := max(m.common.Width-l, 0)
+			lines[i] += strings.Repeat(" ", n)
+		}
+
+		s = strings.Join(lines, "\n")
+	}
+
+	return ui.HelpViewStyle(s)
+}
