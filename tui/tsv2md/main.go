@@ -115,7 +115,9 @@ func (m TSV2MDModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		}
 		m.setContent(msg.Content)
 
-		cmds = append(cmds, m.showStatusMessage(ui.PagerStatusMsg{Message: "Converted TSV to Markdown"}))
+		if m.error != nil {
+			cmds = append(cmds, m.showStatusMessage(ui.PagerStatusMsg{Message: "Converted TSV to Markdown"}))
+		}
 
 	case tea.WindowSizeMsg:
 		m.common.Width = msg.Width
@@ -155,16 +157,6 @@ func (m TSV2MDModel) View() string {
 
 	return b.String()
 }
-func (m *TSV2MDModel) showErrorMessage(msg ui.PagerStatusMsg) tea.Cmd {
-	m.state = ui.PagerStateStatusMessage
-	m.statusMessage = msg.Message
-	if m.statusMessageTimer != nil {
-		m.statusMessageTimer.Stop()
-	}
-	m.statusMessageTimer = time.NewTimer(ui.StatusMessageTimeout)
-
-	return ui.WaitForStatusMessageTimeout(m.statusMessageTimer)
-}
 
 func (m *TSV2MDModel) showStatusMessage(msg ui.PagerStatusMsg) tea.Cmd {
 	m.state = ui.PagerStateStatusMessage
@@ -192,7 +184,7 @@ func (m *TSV2MDModel) setContent(content string) {
 	}
 
 	if len(rows) == 0 {
-		m.error = fmt.Errorf("Empty TSV file")
+		m.error = fmt.Errorf("empty TSV file")
 		return
 	}
 
@@ -256,14 +248,8 @@ func (m TSV2MDModel) statusBarView(b *strings.Builder) {
 	var note string
 	if showStatusMessage {
 		note = m.statusMessage
-	} else if m.content == "" {
-		note = "Press 'v' to paste TSV"
-	} else {
-		if m.alignColumns {
-			note = "Columns aligned."
-		} else {
-			note = "Columns unaligned."
-		}
+	} else if m.converted_content == "" {
+		note = "Press 'v' to paste"
 	}
 
 	note = truncate.StringWithTail(" "+note+" ", uint(max(0,
