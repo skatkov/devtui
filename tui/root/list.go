@@ -16,6 +16,7 @@ import (
 	"github.com/skatkov/devtui/internal/ui"
 	cron "github.com/skatkov/devtui/tui/cron"
 	"github.com/skatkov/devtui/tui/css"
+	"github.com/skatkov/devtui/tui/csv2md"
 	"github.com/skatkov/devtui/tui/csvjson"
 	graphqlquery "github.com/skatkov/devtui/tui/graphql-query"
 	"github.com/skatkov/devtui/tui/html"
@@ -168,6 +169,11 @@ func newListModel(common *ui.CommonModel) *listModel {
 			id:    "graphql-query",
 			title: graphqlquery.Title,
 			model: func() tea.Model { return graphqlquery.NewGraphQLQueryModel(common) },
+		},
+		{
+			id:    "csv2md",
+			title: csv2md.Title,
+			model: func() tea.Model { return csv2md.NewCSV2MDModel(common) },
 		},
 	}
 
