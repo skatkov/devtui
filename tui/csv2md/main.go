@@ -85,7 +85,7 @@ func (m CSV2MDModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			m.setContent(content)
 
 			if m.error == nil {
-				cmds = append(cmds, m.showStatusMessage(ui.PagerStatusMsg{Message: "Converted" + Title}))
+				cmds = append(cmds, m.showStatusMessage(ui.PagerStatusMsg{Message: "Converted " + Title + ". Press 'c' to copy result."}))
 			}
 		case "c":
 			c := clipboard.New()
@@ -93,7 +93,7 @@ func (m CSV2MDModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				panic(err)
 			}
 
-			cmds = append(cmds, m.showStatusMessage(ui.PagerStatusMsg{Message: "Copied Markdown Table"}))
+			cmds = append(cmds, m.showStatusMessage(ui.PagerStatusMsg{Message: "Copied"}))
 		case "a":
 			m.alignColumns = !m.alignColumns
 			if m.content != "" {
@@ -118,7 +118,7 @@ func (m CSV2MDModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		}
 		m.setContent(msg.Content)
 
-		cmds = append(cmds, m.showStatusMessage(ui.PagerStatusMsg{Message: "Converted CSV to Markdown Table"}))
+		cmds = append(cmds, m.showStatusMessage(ui.PagerStatusMsg{Message: "Converted " + Title + ". Press 'c' to copy result."}))
 
 	case tea.WindowSizeMsg:
 		m.common.Width = msg.Width

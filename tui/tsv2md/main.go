@@ -83,14 +83,14 @@ func (m TSV2MDModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			}
 			m.setContent(content)
 
-			cmds = append(cmds, m.showStatusMessage(ui.PagerStatusMsg{Message: "Converted TSV to Markdown. Press 'c' to copy result."}))
+			cmds = append(cmds, m.showStatusMessage(ui.PagerStatusMsg{Message: "Converted " + Title + ". Press 'c' to copy result."}))
 		case "c":
 			c := clipboard.New()
 			if err := c.CopyText(m.converted_content); err != nil {
 				panic(err)
 			}
 
-			cmds = append(cmds, m.showStatusMessage(ui.PagerStatusMsg{Message: "Copied Markdown Table"}))
+			cmds = append(cmds, m.showStatusMessage(ui.PagerStatusMsg{Message: "Copied"}))
 		case "a":
 			m.alignColumns = !m.alignColumns
 			if m.content != "" {
