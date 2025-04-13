@@ -83,14 +83,14 @@ func (m TSV2MDModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			}
 			m.setContent(content)
 
-			cmds = append(cmds, m.showStatusMessage(ui.PagerStatusMsg{Message: "Converted TSV to Markdown. Press 'c' to copy result."}))
+			cmds = append(cmds, m.showStatusMessage(ui.PagerStatusMsg{Message: "Converted " + Title + ". Press 'c' to copy result."}))
 		case "c":
 			c := clipboard.New()
 			if err := c.CopyText(m.converted_content); err != nil {
 				panic(err)
 			}
 
-			cmds = append(cmds, m.showStatusMessage(ui.PagerStatusMsg{Message: "Copied Markdown Table"}))
+			cmds = append(cmds, m.showStatusMessage(ui.PagerStatusMsg{Message: "Copied"}))
 		case "a":
 			m.alignColumns = !m.alignColumns
 			if m.content != "" {
@@ -115,8 +115,8 @@ func (m TSV2MDModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		}
 		m.setContent(msg.Content)
 
-		if m.error != nil {
-			cmds = append(cmds, m.showStatusMessage(ui.PagerStatusMsg{Message: "Converted TSV to Markdown"}))
+		if m.error == nil {
+			cmds = append(cmds, m.showStatusMessage(ui.PagerStatusMsg{Message: "Converted " + Title}))
 		}
 
 	case tea.WindowSizeMsg:
@@ -299,8 +299,8 @@ func (m TSV2MDModel) statusBarView(b *strings.Builder) {
 func (m TSV2MDModel) helpView() (s string) {
 	col1 := []string{
 		"c              copy markdown",
-		"e              edit TSV",
-		"v              paste TSV to convert",
+		"e              edit",
+		"v              paste to convert",
 		"a              toggle column alignment",
 		"q/ctrl+c       quit",
 	}

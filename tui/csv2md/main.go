@@ -34,6 +34,7 @@ type CSV2MDModel struct {
 	ready             bool
 	state             ui.PagerState
 	alignColumns      bool
+	error             error
 
 	statusMessage      string
 	statusMessageTimer *time.Timer
@@ -83,14 +84,16 @@ func (m CSV2MDModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			}
 			m.setContent(content)
 
-			cmds = append(cmds, m.showStatusMessage(ui.PagerStatusMsg{Message: "Converted CSV to Markdown"}))
+			if m.error == nil {
+				cmds = append(cmds, m.showStatusMessage(ui.PagerStatusMsg{Message: "Converted " + Title + ". Press 'c' to copy result."}))
+			}
 		case "c":
 			c := clipboard.New()
 			if err := c.CopyText(m.converted_content); err != nil {
 				panic(err)
 			}
 
-			cmds = append(cmds, m.showStatusMessage(ui.PagerStatusMsg{Message: "Copied Markdown Table"}))
+			cmds = append(cmds, m.showStatusMessage(ui.PagerStatusMsg{Message: "Copied"}))
 		case "a":
 			m.alignColumns = !m.alignColumns
 			if m.content != "" {
@@ -115,7 +118,7 @@ func (m CSV2MDModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		}
 		m.setContent(msg.Content)
 
-		cmds = append(cmds, m.showStatusMessage(ui.PagerStatusMsg{Message: "Converted CSV to Markdown"}))
+		cmds = append(cmds, m.showStatusMessage(ui.PagerStatusMsg{Message: "Converted " + Title + ". Press 'c' to copy result."}))
 
 	case tea.WindowSizeMsg:
 		m.common.Width = msg.Width
@@ -168,6 +171,7 @@ func (m *CSV2MDModel) showStatusMessage(msg ui.PagerStatusMsg) tea.Cmd {
 }
 
 func (m *CSV2MDModel) setContent(content string) {
+	m.error = nil
 	m.content = content
 
 	reader := csv.NewReader(strings.NewReader(content))
@@ -175,14 +179,12 @@ func (m *CSV2MDModel) setContent(content string) {
 	// Read all records
 	rows, err := reader.ReadAll()
 	if err != nil {
-		m.converted_content = fmt.Sprintf("Error reading CSV: %v", err)
-		m.viewport.SetContent(m.converted_content)
+		m.error = fmt.Errorf("error reading content: %v", err)
 		return
 	}
 
 	if len(rows) == 0 {
-		m.converted_content = "Empty CSV file"
-		m.viewport.SetContent(m.converted_content)
+		m.error = fmt.Errorf("empty content")
 		return
 	}
 
@@ -234,7 +236,11 @@ func (m CSV2MDModel) statusBarView(b *strings.Builder) {
 	}
 	var helpNote string
 	if showStatusMessage {
-		helpNote = ui.StatusBarMessageHelpStyle(" ? Help ")
+		if m.error != nil {
+			helpNote = ui.StatusBarErrorHelpStyle(" ? Help ")
+		} else {
+			helpNote = ui.StatusBarMessageHelpStyle(" ? Help ")
+		}
 	} else {
 		helpNote = ui.StatusBarHelpStyle(" ? Help ")
 	}
@@ -243,13 +249,7 @@ func (m CSV2MDModel) statusBarView(b *strings.Builder) {
 	if showStatusMessage {
 		note = m.statusMessage
 	} else if m.content == "" {
-		note = "Press 'v' to paste CSV"
-	} else {
-		if m.alignColumns {
-			note = "Columns aligned. Press 'a' to toggle alignment."
-		} else {
-			note = "Columns unaligned. Press 'a' to toggle alignment."
-		}
+		note = "Press 'v' to paste"
 	}
 
 	note = truncate.StringWithTail(" "+note+" ", uint(max(0,
@@ -260,7 +260,11 @@ func (m CSV2MDModel) statusBarView(b *strings.Builder) {
 	)), ui.Ellipsis)
 
 	if showStatusMessage {
-		note = ui.StatusBarMessageStyle(note)
+		if m.error != nil {
+			note = ui.StatusBarErrorStyle(m.error.Error())
+		} else {
+			note = ui.StatusBarMessageStyle(note)
+		}
 	} else {
 		note = ui.StatusBarNoteStyle(note)
 	}
@@ -274,7 +278,11 @@ func (m CSV2MDModel) statusBarView(b *strings.Builder) {
 	)
 	emptySpace := strings.Repeat(" ", padding)
 	if showStatusMessage {
-		emptySpace = ui.StatusBarMessageStyle(emptySpace)
+		if m.error != nil {
+			emptySpace = ui.StatusBarErrorStyle(emptySpace)
+		} else {
+			emptySpace = ui.StatusBarMessageStyle(emptySpace)
+		}
 	} else {
 		emptySpace = ui.StatusBarNoteStyle(emptySpace)
 	}
@@ -291,8 +299,8 @@ func (m CSV2MDModel) statusBarView(b *strings.Builder) {
 func (m CSV2MDModel) helpView() (s string) {
 	col1 := []string{
 		"c              copy markdown",
-		"e              edit CSV",
-		"v              paste CSV to convert",
+		"e              edit",
+		"v              paste to convert",
 		"a              toggle column alignment",
 		"q/ctrl+c       quit",
 	}
