@@ -20,7 +20,7 @@ import (
 	"github.com/tiagomelo/go-clipboard/clipboard"
 )
 
-const Title = "CSV to Markdown Table"
+const Title = "CSV to Markdown Table Converter"
 
 var pagerHelpHeight int
 

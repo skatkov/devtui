@@ -21,7 +21,7 @@ import (
 	"github.com/tiagomelo/go-clipboard/clipboard"
 )
 
-const Title = "TOML to JSON"
+const Title = "TOML to JSON Converter"
 
 var pagerHelpHeight int
 

@@ -22,7 +22,7 @@ import (
 
 // https://github.com/twpayne/go-jsonstruct/blob/master/cmd/gojsonstruct/main.go
 
-const Title = "YAML to Go Struct"
+const Title = "YAML to Go Struct Converter"
 
 var pagerHelpHeight int
 

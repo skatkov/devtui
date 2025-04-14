@@ -19,7 +19,7 @@ import (
 	"github.com/tiagomelo/go-clipboard/clipboard"
 )
 
-const Title = "TSV to Markdown Table"
+const Title = "TSV to Markdown Table Converter"
 
 var pagerHelpHeight int
 

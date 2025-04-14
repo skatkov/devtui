@@ -20,7 +20,7 @@ import (
 	"github.com/twpayne/go-jsonstruct/v3"
 )
 
-const Title = "JSON to Go Struct"
+const Title = "JSON to Go Struct Converter"
 
 var pagerHelpHeight int
 

@@ -22,7 +22,7 @@ import (
 	"github.com/tiagomelo/go-clipboard/clipboard"
 )
 
-const Title = "CSV to JSON"
+const Title = "CSV to JSON Converter"
 
 var pagerHelpHeight int
 
