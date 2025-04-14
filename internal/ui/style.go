@@ -23,8 +23,8 @@ var (
 				Background(statusBarBg).Render
 
 	AppNameStyle = lipgloss.NewStyle().
-			Foreground(lipgloss.Color("#ECFD65")).
-			Background(fuchsia).
+			Foreground(lipgloss.Color("230")).
+			Background(lipgloss.Color("62")).
 			Bold(true).Render
 
 	StatusBarErrorHelpStyle = lipgloss.NewStyle().
