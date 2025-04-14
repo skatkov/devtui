@@ -110,9 +110,6 @@ func (m CSV2MDModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			}
 		case "?":
 			m.toggleHelp()
-			if m.viewport.HighPerformanceRendering {
-				cmds = append(cmds, viewport.Sync(m.viewport))
-			}
 		}
 	case ui.StatusMessageTimeoutMsg:
 		m.state = ui.PagerStateBrowse
@@ -136,16 +133,13 @@ func (m CSV2MDModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		if !m.ready {
 			m.viewport = viewport.New(msg.Width, msg.Height-ui.StatusBarHeight)
 			m.viewport.YPosition = 0
-			m.viewport.HighPerformanceRendering = true
 			m.viewport.SetContent(m.content)
 			m.ready = true
 		} else {
 			m.setSize(msg.Width, msg.Height)
 		}
 	}
-	if m.viewport.HighPerformanceRendering {
-		cmds = append(cmds, viewport.Sync(m.viewport))
-	}
+
 	m.viewport, cmd = m.viewport.Update(msg)
 	cmds = append(cmds, cmd)
 

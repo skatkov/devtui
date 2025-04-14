@@ -94,9 +94,6 @@ func (m JsonModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			cmds = append(cmds, m.showStatusMessage(ui.PagerStatusMsg{Message: "Copied contents"}))
 		case "?":
 			m.toggleHelp()
-			if m.viewport.HighPerformanceRendering {
-				cmds = append(cmds, viewport.Sync(m.viewport))
-			}
 		}
 	case ui.StatusMessageTimeoutMsg:
 		m.state = ui.PagerStateBrowse
@@ -126,15 +123,11 @@ func (m JsonModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			// here.
 			m.viewport = viewport.New(msg.Width, msg.Height-ui.StatusBarHeight)
 			m.viewport.YPosition = 0
-			m.viewport.HighPerformanceRendering = true
 			m.viewport.SetContent(m.content)
 			m.ready = true
 		} else {
 			m.setSize(msg.Width, msg.Height)
 		}
-	}
-	if m.viewport.HighPerformanceRendering {
-		cmds = append(cmds, viewport.Sync(m.viewport))
 	}
 	// Handle keyboard and mouse events in the viewport
 	m.viewport, cmd = m.viewport.Update(msg)
