@@ -39,11 +39,13 @@ type PagerState int
 const (
 	PagerStateBrowse PagerState = iota
 	PagerStateStatusMessage
+	PagerStateErrorMessage
 )
 
 type PagerStatusMsg struct {
 	Message string
 }
+
 type StatusMessageTimeoutMsg struct{}
 
 func WaitForStatusMessageTimeout(t *time.Timer) tea.Cmd {
