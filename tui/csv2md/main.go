@@ -125,7 +125,7 @@ func (m CSV2MDModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		if err != nil {
 			cmds = append(cmds, m.showErrorMessage(ui.PagerStatusMsg{Message: err.Error()}))
 		} else {
-			cmds = append(cmds, m.showStatusMessage(ui.PagerStatusMsg{Message: "Converted " + Title + ". Press 'c' to copy result."}))
+			cmds = append(cmds, m.showStatusMessage(ui.PagerStatusMsg{Message: "Converted. Press 'c' to copy result."}))
 		}
 	case tea.WindowSizeMsg:
 		m.common.Width = msg.Width

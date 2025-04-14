@@ -33,7 +33,6 @@ type TSV2MDModel struct {
 	ready             bool
 	state             ui.PagerState
 	alignColumns      bool
-	error             error
 
 	statusMessage      string
 	statusMessageTimer *time.Timer
@@ -45,7 +44,7 @@ func NewTSV2MDModel(common *ui.CommonModel) TSV2MDModel {
 		ready:        false,
 		common:       common,
 		state:        ui.PagerStateBrowse,
-		alignColumns: true, // default to aligned columns
+		alignColumns: true,
 	}
 
 	model.setSize(common.Width, common.Height)
@@ -78,24 +77,31 @@ func (m TSV2MDModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		case "v":
 			c := clipboard.New()
 			content, err := c.PasteText()
-			if err != nil {
-				panic(err)
+			if err == nil {
+				err = m.setContent(content)
 			}
-			m.setContent(content)
 
-			cmds = append(cmds, m.showStatusMessage(ui.PagerStatusMsg{Message: "Converted " + Title + ". Press 'c' to copy result."}))
+			if err != nil {
+				cmds = append(cmds, m.showErrorMessage(ui.PagerStatusMsg{Message: err.Error()}))
+			} else {
+				cmds = append(cmds, m.showStatusMessage(ui.PagerStatusMsg{Message: "Converted " + Title + ". Press 'c' to copy result."}))
+			}
 		case "c":
 			c := clipboard.New()
-			if err := c.CopyText(m.converted_content); err != nil {
-				panic(err)
-			}
+			err := c.CopyText(m.converted_content)
 
-			cmds = append(cmds, m.showStatusMessage(ui.PagerStatusMsg{Message: "Copied"}))
+			if err != nil {
+				cmds = append(cmds, m.showErrorMessage(ui.PagerStatusMsg{Message: err.Error()}))
+			} else {
+				cmds = append(cmds, m.showStatusMessage(ui.PagerStatusMsg{Message: "Copied"}))
+			}
 		case "a":
 			m.alignColumns = !m.alignColumns
 			if m.content != "" {
-				m.setContent(m.content)
-				if m.alignColumns {
+				err := m.setContent(m.content)
+				if err != nil {
+					cmds = append(cmds, m.showErrorMessage(ui.PagerStatusMsg{Message: err.Error()}))
+				} else if m.alignColumns {
 					cmds = append(cmds, m.showStatusMessage(ui.PagerStatusMsg{Message: "Columns aligned"}))
 				} else {
 					cmds = append(cmds, m.showStatusMessage(ui.PagerStatusMsg{Message: "Columns unaligned"}))
@@ -113,10 +119,12 @@ func (m TSV2MDModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		if msg.Err != nil {
 			panic(msg.Err)
 		}
-		m.setContent(msg.Content)
+		err := m.setContent(msg.Content)
 
-		if m.error == nil {
-			cmds = append(cmds, m.showStatusMessage(ui.PagerStatusMsg{Message: "Converted" + Title}))
+		if err != nil {
+			cmds = append(cmds, m.showErrorMessage(ui.PagerStatusMsg{Message: err.Error()}))
+		} else {
+			cmds = append(cmds, m.showStatusMessage(ui.PagerStatusMsg{Message: "Converted. Press 'c' to copy result."}))
 		}
 
 	case tea.WindowSizeMsg:
@@ -158,6 +166,17 @@ func (m TSV2MDModel) View() string {
 	return b.String()
 }
 
+func (m *TSV2MDModel) showErrorMessage(msg ui.PagerStatusMsg) tea.Cmd {
+	m.state = ui.PagerStateErrorMessage
+	m.statusMessage = msg.Message
+	if m.statusMessageTimer != nil {
+		m.statusMessageTimer.Stop()
+	}
+	m.statusMessageTimer = time.NewTimer(ui.StatusMessageTimeout)
+
+	return ui.WaitForStatusMessageTimeout(m.statusMessageTimer)
+}
+
 func (m *TSV2MDModel) showStatusMessage(msg ui.PagerStatusMsg) tea.Cmd {
 	m.state = ui.PagerStateStatusMessage
 	m.statusMessage = msg.Message
@@ -169,8 +188,7 @@ func (m *TSV2MDModel) showStatusMessage(msg ui.PagerStatusMsg) tea.Cmd {
 	return ui.WaitForStatusMessageTimeout(m.statusMessageTimer)
 }
 
-func (m *TSV2MDModel) setContent(content string) {
-	m.error = nil
+func (m *TSV2MDModel) setContent(content string) error {
 	m.content = content
 
 	reader := csv.NewReader(strings.NewReader(content))
@@ -179,13 +197,11 @@ func (m *TSV2MDModel) setContent(content string) {
 	// Read all records
 	rows, err := reader.ReadAll()
 	if err != nil {
-		m.error = fmt.Errorf("error reading TSV: %v", err)
-		return
+		return fmt.Errorf("error reading TSV: %v", err)
 	}
 
 	if len(rows) == 0 {
-		m.error = fmt.Errorf("empty TSV file")
-		return
+		return fmt.Errorf("empty result")
 	}
 
 	// Convert to markdown
@@ -196,6 +212,8 @@ func (m *TSV2MDModel) setContent(content string) {
 	var buf bytes.Buffer
 	buf.WriteString(m.converted_content)
 	m.viewport.SetContent(buf.String())
+
+	return nil
 }
 
 func (m *TSV2MDModel) setSize(w, h int) {
@@ -226,6 +244,7 @@ func (m TSV2MDModel) statusBarView(b *strings.Builder) {
 		percentToStringMagnitude float64 = 100.0
 	)
 	showStatusMessage := m.state == ui.PagerStateStatusMessage
+	showErrorMessage := m.state == ui.PagerStateErrorMessage
 	appName := ui.AppNameStyle(" " + Title + " ")
 
 	scrollPercent := ""
@@ -235,18 +254,16 @@ func (m TSV2MDModel) statusBarView(b *strings.Builder) {
 		scrollPercent = ui.StatusBarScrollPosStyle(scrollPercent)
 	}
 	var helpNote string
-	if showStatusMessage {
-		if m.error != nil {
-			helpNote = ui.StatusBarErrorHelpStyle(" ? Help ")
-		} else {
-			helpNote = ui.StatusBarMessageHelpStyle(" ? Help ")
-		}
+	if showErrorMessage {
+		helpNote = ui.StatusBarErrorHelpStyle(" ? Help ")
+	} else if showStatusMessage {
+		helpNote = ui.StatusBarMessageHelpStyle(" ? Help ")
 	} else {
 		helpNote = ui.StatusBarHelpStyle(" ? Help ")
 	}
 
 	var note string
-	if showStatusMessage {
+	if showStatusMessage || showErrorMessage {
 		note = m.statusMessage
 	} else if m.converted_content == "" {
 		note = "Press 'v' to paste"
@@ -259,12 +276,10 @@ func (m TSV2MDModel) statusBarView(b *strings.Builder) {
 			ansi.PrintableRuneWidth(helpNote),
 	)), ui.Ellipsis)
 
-	if showStatusMessage {
-		if m.error != nil {
-			note = ui.StatusBarErrorStyle(m.error.Error())
-		} else {
-			note = ui.StatusBarMessageStyle(note)
-		}
+	if showErrorMessage {
+		note = ui.StatusBarErrorStyle(note)
+	} else if showStatusMessage {
+		note = ui.StatusBarMessageStyle(note)
 	} else {
 		note = ui.StatusBarNoteStyle(note)
 	}
@@ -277,12 +292,10 @@ func (m TSV2MDModel) statusBarView(b *strings.Builder) {
 			ansi.PrintableRuneWidth(helpNote),
 	)
 	emptySpace := strings.Repeat(" ", padding)
-	if showStatusMessage {
-		if m.error != nil {
-			emptySpace = ui.StatusBarErrorStyle(emptySpace)
-		} else {
-			emptySpace = ui.StatusBarMessageStyle(emptySpace)
-		}
+	if showErrorMessage {
+		emptySpace = ui.StatusBarErrorStyle(emptySpace)
+	} else if showStatusMessage {
+		emptySpace = ui.StatusBarMessageStyle(emptySpace)
 	} else {
 		emptySpace = ui.StatusBarNoteStyle(emptySpace)
 	}
