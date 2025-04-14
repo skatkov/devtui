@@ -31,7 +31,7 @@ Or download executable from [GitHub Releases](https://github.com/skatkov/homebre
 
 ## 💡 Why DevTUI?
 
- - 🧰 Unified experience – Replace scattered tools with a single interface
+ - 🧰 Unified experience – Replace scattered tools with a single app
  - 🔒 Privacy-focused – Everything runs locally, no data ever leaves your computer
  - 🌐 Offline support – No internet? No problem
  - ⌨️ Built for the terminal – No need to reach for your mouse or browser
