@@ -127,7 +127,7 @@ Optional flags:
   -d, --with-descriptions   Include descriptions in the formatted output (omitted by default)
 ```
 
-#### 🗒️ TSV to Markdown Table
+#### 🗒️ TSV to Markdown Table Converter
 Convert TSV to Markdown Table:
 
 ```bash
@@ -144,7 +144,7 @@ Optional flags:
   -t --header string    Add main header (h1) to result
 ```
 
-#### 🗒️ CSV to Markdown Table
+#### 🗒️ CSV to Markdown Table Converter
 Convert CSV to Markdown Table:
 
 ```bash
@@ -161,7 +161,7 @@ Optional flags:
   -t --header string    Add main header (h1) to result
 ```
 
-#### 🗒️ TSV to CSV
+#### 🗒️ TSV to CSV Converter
 Convert TSV to CSV:
 
 ```bash
