@@ -13,14 +13,11 @@ devtui gqlquery [flags]
 ### Examples
 
 ```
-  # Format and output to stdout
-	gqlquery < testdata/query.graphql
 
-	# Output to file
-	gqlquery < testdata/query.graphql > formatted.graphql
-
-	# With formatting options
-	gqlfmt --indent "    " --with-comments --with-descriptions < testdata/query.graphql
+	gqlquery < testdata/query.graphql # Format and output to stdout
+ 	gqlquery < testdata/query.graphql > formatted.graphql # Output to file
+	gqlfmt --indent "    " --with-comments --with-descriptions < testdata/query.graphql # With formatting options
+	
 ```
 
 ### Options
