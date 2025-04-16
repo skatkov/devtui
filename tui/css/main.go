@@ -78,7 +78,7 @@ func (m CSSFormatterModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			if err != nil {
 				panic(err)
 			}
-			m.setContent(content)
+			m.SetContent(content)
 
 			cmds = append(cmds, m.showStatusMessage(ui.PagerStatusMsg{Message: "Formatted CSS"}))
 
@@ -98,7 +98,7 @@ func (m CSSFormatterModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		if msg.Err != nil {
 			panic(msg.Err)
 		}
-		m.setContent(msg.Content)
+		m.SetContent(msg.Content)
 
 		cmds = append(cmds, m.showStatusMessage(ui.PagerStatusMsg{Message: "Formatted CSS"}))
 
@@ -111,7 +111,9 @@ func (m CSSFormatterModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		if !m.ready {
 			m.viewport = viewport.New(msg.Width, msg.Height-ui.StatusBarHeight)
 			m.viewport.YPosition = 0
-			m.viewport.SetContent(m.content)
+			var highlightBuf bytes.Buffer
+			_ = quick.Highlight(&highlightBuf, m.formattedContent, "css", "terminal", "nord")
+			m.viewport.SetContent(highlightBuf.String())
 			m.ready = true
 		} else {
 			m.setSize(msg.Width, msg.Height)
@@ -149,7 +151,7 @@ func (m *CSSFormatterModel) showStatusMessage(msg ui.PagerStatusMsg) tea.Cmd {
 	return ui.WaitForStatusMessageTimeout(m.statusMessageTimer)
 }
 
-func (m *CSSFormatterModel) setContent(content string) {
+func (m *CSSFormatterModel) SetContent(content string) {
 	m.content = content
 
 	reader := strings.NewReader(content)
