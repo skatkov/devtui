@@ -32,6 +32,10 @@ func Execute() {
 	}
 }
 
+func GetRootCmd() *cobra.Command {
+	return rootCmd
+}
+
 func init() {
 	// Add persistent flags here if needed
 }
