@@ -4,7 +4,7 @@
 
 🚀 Actively developed and continuously improving.
 
-![devtui](devtui.gif)
+![devtui](devtui.png)
 
 ## ✨ Features
 
@@ -65,7 +65,7 @@ echo $XDG_SESSION_TYPE
 DevTUI includes both a TUI and CLI interface.
 
 ### 🖥 TUI
-Run `devtui` you’ll see a list of available tools — just pick one and go!
+Run `devtui` you'll see a list of available tools — just pick one and go!
 
 ### Autocompletion
 Run a one of these commands depending on shell
@@ -78,6 +78,12 @@ devtui completion fish > ~/.fishrc
 
 ### CLI (Experimental)
 The CLI interface is still in development and may change in future versions.
+
+To include all markdown files from the ./docs folder, use the following syntax:
+
+```bash
+find ./docs -name "*.md" -exec cat {} \;
+```
 
 #### 🎨 CSS Formatter
 ```bash
