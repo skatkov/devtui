@@ -9,18 +9,14 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// ---
-// Example usage:
-// go run . xmlfmt < testdata/sample.xml
-//
-// Output to file:
-// go run . xmlfmt < testdata/sample.xml > output.xml
-// ---
-
 var xmlfmtCmd = &cobra.Command{
 	Use:   "xmlfmt",
 	Short: "Format XML files",
 	Long:  "Format XML files",
+	Example: `
+	xmlfmt < testdata/sample.xml   # Format XML from stdin
+	xmlfmt < testdata/sample.xml > output.xml # Output formatted XML to file
+	`,
 	Run: func(cmd *cobra.Command, args []string) {
 		// Read all input data from stdin
 		data, err := io.ReadAll(os.Stdin)

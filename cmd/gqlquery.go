@@ -12,21 +12,18 @@ import (
 	"github.com/vektah/gqlparser/v2/parser"
 )
 
-// ---
-// Example usage:
-// go run . gqlquery < testdata/query.graphql
-//
-// Output to file:
-// go run . gqlquery < testdata/query.graphql > formatted.graphql
-//
-// With options:
-// go run . gqlfmt --indent "    " --with-comments --with-descriptions < testdata/query.graphql
-// ---
-
 var gqlfmtCmd = &cobra.Command{
 	Use:   "gqlquery",
 	Short: "Format GraphQL queries",
 	Long:  "Format GraphQL queries for better readability",
+	Example: `  # Format and output to stdout
+	gqlquery < testdata/query.graphql
+
+	# Output to file
+	gqlquery < testdata/query.graphql > formatted.graphql
+
+	# With formatting options
+	gqlfmt --indent "    " --with-comments --with-descriptions < testdata/query.graphql`,
 	Run: func(cmd *cobra.Command, args []string) {
 		// Read all input data from stdin
 		data, err := io.ReadAll(os.Stdin)

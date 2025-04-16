@@ -6,7 +6,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// These variables are populated by goreleaser during build
+// These variables are populated by goreleaser during build.
 var (
 	version = "dev"
 	commit  = "none"

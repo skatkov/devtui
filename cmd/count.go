@@ -12,18 +12,12 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// ---
-// Example usage:
-// go run . count < testdata/example.csv
-//
-// or:
-// go run . count "test me please"
-// ---
-
 var countCmd = &cobra.Command{
 	Use:   "count",
 	Short: "Character, spaces and word counter",
 	Long:  "Count characters, spaces and words in a string",
+	Example: `count < testdata/example.csv
+	count "test me please"`,
 	Run: func(cmd *cobra.Command, args []string) {
 		var text string
 		var err error

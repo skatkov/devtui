@@ -8,15 +8,11 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// ---
-// Example usage:
-// go run . cssfmt < testdata/bootstrap.min.css
-// ---
-
 var cssfmtCmd = &cobra.Command{
-	Use:   "cssfmt",
-	Short: "Format CSS files",
-	Long:  "Format CSS files",
+	Use:     "cssfmt",
+	Short:   "Format CSS files",
+	Long:    "Format CSS files",
+	Example: `cssfmt < testdata/bootstrap.min.css`,
 	Run: func(cmd *cobra.Command, args []string) {
 		if flagTab {
 			flagIndent = 1

@@ -8,15 +8,11 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// ---
-// Example usage:
-// go run . cssmin < testdata/bootstrap.min.css
-// ---
-
 var cssminCmd = &cobra.Command{
-	Use:   "cssmin",
-	Short: "Minify CSS files",
-	Long:  "Minify CSS files",
+	Use:     "cssmin",
+	Short:   "Minify CSS files",
+	Long:    "Minify CSS files",
+	Example: "cssmin < testdata/bootstrap.min.css",
 	Run: func(cmd *cobra.Command, args []string) {
 		cssformat := csstool.NewCSSFormat(0, false, nil)
 		cssformat.AlwaysSemicolon = false
