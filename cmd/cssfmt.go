@@ -28,8 +28,8 @@ var cssfmtCmd = &cobra.Command{
 
 			// Initialize the TUI
 			common := &ui.CommonModel{
-				Width:  80, // Default width, will be adjusted by the TUI
-				Height: 24, // Default height, will be adjusted by the TUI
+				Width:  100, // Default width, will be adjusted by the TUI
+				Height: 30,  // Default height, will be adjusted by the TUI
 			}
 
 			model := css.NewCSSFormatterModel(common)

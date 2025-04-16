@@ -78,7 +78,7 @@ func (m XMLFormatterModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			if err != nil {
 				panic(err)
 			}
-			m.setContent(content)
+			m.SetContent(content)
 
 			cmds = append(cmds, m.showStatusMessage(ui.PagerStatusMsg{Message: "Formatted XML"}))
 
@@ -98,7 +98,7 @@ func (m XMLFormatterModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		if msg.Err != nil {
 			panic(msg.Err)
 		}
-		m.setContent(msg.Content)
+		m.SetContent(msg.Content)
 
 		cmds = append(cmds, m.showStatusMessage(ui.PagerStatusMsg{Message: "Formatted XML"}))
 
@@ -111,7 +111,7 @@ func (m XMLFormatterModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		if !m.ready {
 			m.viewport = viewport.New(msg.Width, msg.Height-ui.StatusBarHeight)
 			m.viewport.YPosition = 0
-			m.viewport.SetContent(m.content)
+			m.SetContent(m.content)
 			m.ready = true
 		} else {
 			m.setSize(msg.Width, msg.Height)
@@ -149,7 +149,7 @@ func (m *XMLFormatterModel) showStatusMessage(msg ui.PagerStatusMsg) tea.Cmd {
 	return ui.WaitForStatusMessageTimeout(m.statusMessageTimer)
 }
 
-func (m *XMLFormatterModel) setContent(content string) {
+func (m *XMLFormatterModel) SetContent(content string) {
 	m.content = content
 	m.formattedContent = xmlfmt.FormatXML(content, "\t", "  ")
 
