@@ -6,7 +6,6 @@ var (
 	green           = lipgloss.Color("#04B575")
 	mintGreen       = lipgloss.AdaptiveColor{Light: "#89F0CB", Dark: "#89F0CB"}
 	darkGreen       = lipgloss.AdaptiveColor{Light: "#1C8760", Dark: "#1C8760"}
-	fuchsia         = lipgloss.AdaptiveColor{Light: "#EE6FF8", Dark: "#EE6FF8"}
 	statusBarNoteFg = lipgloss.AdaptiveColor{Light: "#656565", Dark: "#7D7D7D"}
 	statusBarBg     = lipgloss.AdaptiveColor{Light: "#E6E6E6", Dark: "#242424"}
 	lineNumberFg    = lipgloss.AdaptiveColor{Light: "#656565", Dark: "#7D7D7D"}
