@@ -16,14 +16,11 @@ var gqlfmtCmd = &cobra.Command{
 	Use:   "gqlquery",
 	Short: "Format GraphQL queries",
 	Long:  "Format GraphQL queries for better readability",
-	Example: `  # Format and output to stdout
-	gqlquery < testdata/query.graphql
-
-	# Output to file
-	gqlquery < testdata/query.graphql > formatted.graphql
-
-	# With formatting options
-	gqlfmt --indent "    " --with-comments --with-descriptions < testdata/query.graphql`,
+	Example: `
+	gqlquery < testdata/query.graphql # Format and output to stdout
+ 	gqlquery < testdata/query.graphql > formatted.graphql # Output to file
+	gqlfmt --indent "    " --with-comments --with-descriptions < testdata/query.graphql # With formatting options
+	`,
 	Run: func(cmd *cobra.Command, args []string) {
 		// Read all input data from stdin
 		data, err := io.ReadAll(os.Stdin)
