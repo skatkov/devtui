@@ -223,12 +223,13 @@ func (m CSSFormatterModel) statusBarView(b *strings.Builder) {
 		note = "Press 'v' to paste CSS to format"
 	}
 
-	note = truncate.StringWithTail(" "+note+" ", uint(max(0,
-		m.common.Width-
-			ansi.PrintableRuneWidth(appName)-
-			ansi.PrintableRuneWidth(scrollPercent)-
-			ansi.PrintableRuneWidth(helpNote),
-	)), ui.Ellipsis)
+	width := m.common.Width -
+		ansi.PrintableRuneWidth(appName) -
+		ansi.PrintableRuneWidth(scrollPercent) -
+		ansi.PrintableRuneWidth(helpNote)
+	width = max(width, 0)
+
+	note = truncate.StringWithTail(" "+note+" ", uint(width), ui.Ellipsis)
 
 	if showStatusMessage {
 		note = ui.StatusBarMessageStyle(note)
@@ -236,13 +237,13 @@ func (m CSSFormatterModel) statusBarView(b *strings.Builder) {
 		note = ui.StatusBarNoteStyle(note)
 	}
 
-	padding := max(0,
-		m.common.Width-
-			ansi.PrintableRuneWidth(appName)-
-			ansi.PrintableRuneWidth(note)-
-			ansi.PrintableRuneWidth(scrollPercent)-
-			ansi.PrintableRuneWidth(helpNote),
-	)
+	padding := m.common.Width -
+		ansi.PrintableRuneWidth(appName) -
+		ansi.PrintableRuneWidth(note) -
+		ansi.PrintableRuneWidth(scrollPercent) -
+		ansi.PrintableRuneWidth(helpNote)
+	padding = max(padding, 0)
+
 	emptySpace := strings.Repeat(" ", padding)
 	if showStatusMessage {
 		emptySpace = ui.StatusBarMessageStyle(emptySpace)

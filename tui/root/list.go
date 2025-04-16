@@ -81,11 +81,14 @@ func (d itemDelegate) Render(w io.Writer, m list.Model, index int, listItem list
 		}
 	}
 
-	fmt.Fprint(w, fn(str))
+	_, err := fmt.Fprint(w, fn(str))
+	if err != nil {
+		fmt.Println("Error rendering item:", err)
+	}
 }
 
-func newListModel(common *ui.CommonModel) *listModel {
-	menuOptions := []MenuOption{
+func getMenuOptions(common *ui.CommonModel) []MenuOption {
+	return []MenuOption{
 		{
 			id:    "uuiddecode",
 			title: uuiddecode.Title,
@@ -182,6 +185,10 @@ func newListModel(common *ui.CommonModel) *listModel {
 			model: func() tea.Model { return tsv2md.NewTSV2MDModel(common) },
 		},
 	}
+}
+
+func newListModel(common *ui.CommonModel) *listModel {
+	menuOptions := getMenuOptions(common)
 
 	// Load usage stats
 	stats, err := loadUsageStats()
@@ -291,12 +298,12 @@ func (m *listModel) RefreshOrder() {
 	m.list.SetItems(items)
 }
 
-// Update saveUsageStats to use xdg
+// Update saveUsageStats to use xdg.
 func saveUsageStats(items []MenuOption) error {
 	// Get the proper config path using xdg
 	configPath := filepath.Join(xdg.ConfigHome, "devtui")
 
-	if err := os.MkdirAll(configPath, 0o755); err != nil {
+	if err := os.MkdirAll(configPath, 0o750); err != nil {
 		return err
 	}
 
@@ -313,10 +320,10 @@ func saveUsageStats(items []MenuOption) error {
 		return err
 	}
 
-	return os.WriteFile(statsFile, data, 0o644)
+	return os.WriteFile(statsFile, data, 0o600)
 }
 
-// Update loadUsageStats to use xdg
+// Update loadUsageStats to use xdg.
 func loadUsageStats() (map[string]int, error) {
 	statsFile := filepath.Join(xdg.ConfigHome, "devtui", "usage_stats.json")
 

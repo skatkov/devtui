@@ -10,7 +10,7 @@ import (
 	"github.com/charmbracelet/huh"
 )
 
-// PasswordConfig holds the configuration for password generation
+// PasswordConfig holds the configuration for password generation.
 type PasswordConfig struct {
 	Length        int
 	CharacterSets []string
