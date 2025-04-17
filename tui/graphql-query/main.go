@@ -80,7 +80,7 @@ func (m GraphQLQueryModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			if err != nil {
 				panic(err)
 			}
-			m.setContent(content)
+			m.SetContent(content)
 
 			_, err = parser.ParseQuery(&ast.Source{Input: content})
 			if err != nil {
@@ -104,7 +104,7 @@ func (m GraphQLQueryModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		if msg.Err != nil {
 			panic(msg.Err)
 		}
-		m.setContent(msg.Content)
+		m.SetContent(msg.Content)
 
 		_, err := parser.ParseQuery(&ast.Source{Input: msg.Content})
 		if err != nil {
@@ -122,7 +122,7 @@ func (m GraphQLQueryModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		if !m.ready {
 			m.viewport = viewport.New(msg.Width, msg.Height-ui.StatusBarHeight)
 			m.viewport.YPosition = 0
-			m.viewport.SetContent(m.content)
+			m.SetContent(m.content)
 			m.ready = true
 		} else {
 			m.setSize(msg.Width, msg.Height)
@@ -159,7 +159,7 @@ func (m *GraphQLQueryModel) showStatusMessage(msg ui.PagerStatusMsg) tea.Cmd {
 	return ui.WaitForStatusMessageTimeout(m.statusMessageTimer)
 }
 
-func (m *GraphQLQueryModel) setContent(content string) {
+func (m *GraphQLQueryModel) SetContent(content string) {
 	m.content = content
 	m.formatted_content = formatGraphQL(content)
 	var buf bytes.Buffer
