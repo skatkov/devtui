@@ -13,10 +13,13 @@ import (
 )
 
 var cssfmtCmd = &cobra.Command{
-	Use:     "cssfmt",
-	Short:   "Format CSS files",
-	Long:    "Format CSS files",
-	Example: `cssfmt < testdata/bootstrap.min.css`,
+	Use:   "cssfmt",
+	Short: "Format CSS files",
+	Long:  "Format CSS files",
+	Example: `
+	cssfmt < testdata/bootstrap.min.css
+	cssfmt < testdata/bootstrap.min.css --tui # Show results in a TUI
+	`,
 	Run: func(cmd *cobra.Command, args []string) {
 		if flagTui {
 			// Read input CSS
