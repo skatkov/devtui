@@ -14,6 +14,11 @@ func main() {
 
 	cmds := rootCmd.Commands()
 	for _, cmd := range cmds {
+		// Skip version command
+		if cmd.Name() == "version" {
+			continue
+		}
+
 		// Create a file
 		file, err := os.Create(filepath.Join("./docs", cmd.Name()+".md"))
 		if err != nil {
