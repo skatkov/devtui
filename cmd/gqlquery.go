@@ -101,7 +101,6 @@ var (
 	gqlIndentString     string
 	gqlWithComments     bool
 	gqlWithDescriptions bool
-	flagTUI             bool
 )
 
 func init() {

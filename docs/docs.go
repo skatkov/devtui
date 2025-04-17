@@ -10,10 +10,8 @@ import (
 )
 
 func main() {
-	// Get the root command from your cmd package
-	rootCmd := cmd.GetRootCmd() // You'll need to export this
+	rootCmd := cmd.GetRootCmd()
 
-	// Only generate docs for specific commands
 	cmds := rootCmd.Commands()
 	for _, cmd := range cmds {
 		// Create a file

@@ -14,8 +14,8 @@ import (
 
 var xmlfmtCmd = &cobra.Command{
 	Use:   "xmlfmt",
-	Short: "Format XML files",
-	Long:  "Format XML files",
+	Short: "Format XML",
+	Long:  "Format XML",
 	Example: `
 	xmlfmt < testdata/sample.xml   # Format XML from stdin
 	xmlfmt < testdata/sample.xml > output.xml # Output formatted XML to file
@@ -29,7 +29,7 @@ var xmlfmtCmd = &cobra.Command{
 			return
 		}
 
-		if useTUI {
+		if flagTUI {
 			common := &ui.CommonModel{
 				Width:  0, // Will be set by tea.WindowSizeMsg
 				Height: 0,
@@ -61,7 +61,6 @@ var (
 	xmlPrefix string
 	xmlIndent string
 	xmlNested bool
-	useTUI    bool
 )
 
 func init() {
@@ -69,5 +68,5 @@ func init() {
 	xmlfmtCmd.Flags().StringVarP(&xmlPrefix, "prefix", "p", "", "Each element begins on a new line and this prefix")
 	xmlfmtCmd.Flags().StringVarP(&xmlIndent, "indent", "i", "  ", "Indent string for nested elements")
 	xmlfmtCmd.Flags().BoolVarP(&xmlNested, "nested", "n", false, "Nested tags in comments")
-	xmlfmtCmd.Flags().BoolVarP(&useTUI, "tui", "t", false, "Enable TUI mode")
+	xmlfmtCmd.Flags().BoolVarP(&flagTUI, "tui", "t", false, "Show output in TUI")
 }
