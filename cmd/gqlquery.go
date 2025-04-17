@@ -6,6 +6,9 @@ import (
 	"os"
 	"strings"
 
+	tea "github.com/charmbracelet/bubbletea"
+	"github.com/skatkov/devtui/internal/ui"
+	graphqlquery "github.com/skatkov/devtui/tui/graphql-query"
 	"github.com/spf13/cobra"
 	"github.com/vektah/gqlparser/v2/ast"
 	"github.com/vektah/gqlparser/v2/formatter"
@@ -26,6 +29,28 @@ var gqlfmtCmd = &cobra.Command{
 		data, err := io.ReadAll(os.Stdin)
 		if err != nil {
 			log.Printf("ERROR: %s", err)
+			return
+		}
+
+		if flagTUI {
+			// Initialize the TUI
+			common := &ui.CommonModel{
+				Width:  100, // Default width, will be adjusted by the TUI
+				Height: 30,  // Default height, will be adjusted by the TUI
+			}
+
+			model := graphqlquery.NewGraphQLQueryModel(common)
+			model.SetContent(string(data))
+
+			p := tea.NewProgram(
+				model,
+				tea.WithAltScreen(),       // Use alternate screen buffer
+				tea.WithMouseCellMotion(), // Enable mouse support
+			)
+
+			if _, err := p.Run(); err != nil {
+				log.Printf("ERROR running TUI: %s", err)
+			}
 			return
 		}
 
@@ -75,6 +100,7 @@ var (
 	gqlIndentString     string
 	gqlWithComments     bool
 	gqlWithDescriptions bool
+	flagTUI             bool
 )
 
 func init() {
@@ -88,4 +114,6 @@ func init() {
 
 	gqlfmtCmd.Flags().BoolVarP(&gqlWithDescriptions, "with-descriptions", "d", false,
 		"Include descriptions in the formatted output (omitted by default)")
+	gqlfmtCmd.Flags().BoolVarP(&flagTUI, "tui", "t", false,
+		"Open result in TUI")
 }
