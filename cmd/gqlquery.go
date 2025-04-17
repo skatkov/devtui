@@ -22,7 +22,8 @@ var gqlfmtCmd = &cobra.Command{
 	Example: `
 	gqlquery < testdata/query.graphql # Format and output to stdout
  	gqlquery < testdata/query.graphql > formatted.graphql # Output to file
-	gqlfmt --indent "    " --with-comments --with-descriptions < testdata/query.graphql # With formatting options
+	gqlquery --indent "    " --with-comments --with-descriptions < testdata/query.graphql # With formatting options
+	gqlquery < testdata/query.graphql --tui # Show results in a TUI
 	`,
 	Run: func(cmd *cobra.Command, args []string) {
 		// Read all input data from stdin

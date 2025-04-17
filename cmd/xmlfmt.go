@@ -19,6 +19,7 @@ var xmlfmtCmd = &cobra.Command{
 	Example: `
 	xmlfmt < testdata/sample.xml   # Format XML from stdin
 	xmlfmt < testdata/sample.xml > output.xml # Output formatted XML to file
+	xmlfmt < testdata/sample.xml --tui # Open XML formatter in TUI
 	`,
 	Run: func(cmd *cobra.Command, args []string) {
 		// Read all input data from stdin
