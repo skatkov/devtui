@@ -123,7 +123,7 @@ func (m *CSVJsonModel) SetContent(content string) error {
 	}
 
 	if len(rows) == 0 {
-		return errors.New("Empty CSV file")
+		return errors.New("empty CSV file")
 	}
 
 	jsonStr, err := csvToJson(rows)
