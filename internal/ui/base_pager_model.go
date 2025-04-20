@@ -15,7 +15,7 @@ import (
 	"github.com/tiagomelo/go-clipboard/clipboard"
 )
 
-// BasePagerModel provides common functionality for pager-based TUI views
+// BasePagerModel provides common functionality for pager-based TUI views. There is a lot of common
 type BasePagerModel struct {
 	Common             *CommonModel
 	Title              string
