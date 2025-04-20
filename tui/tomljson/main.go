@@ -5,16 +5,11 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"math"
 	"strings"
-	"time"
 
 	"github.com/alecthomas/chroma/quick"
-	"github.com/charmbracelet/bubbles/viewport"
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/mattn/go-runewidth"
-	"github.com/muesli/ansi"
-	"github.com/muesli/reflow/truncate"
 	"github.com/pelletier/go-toml/v2"
 	"github.com/skatkov/devtui/internal/editor"
 	"github.com/skatkov/devtui/internal/ui"
@@ -23,37 +18,20 @@ import (
 
 const Title = "TOML to JSON Converter"
 
-var pagerHelpHeight int
-
 type TomlJsonModel struct {
-	common *ui.CommonModel
-
-	converted_content string
-	content           string
-	viewport          viewport.Model
-	showHelp          bool
-	ready             bool
-	state             ui.PagerState
-
-	statusMessage      string
-	statusMessageTimer *time.Timer
+	ui.BasePagerModel
 }
 
 func NewTomlJsonModel(common *ui.CommonModel) TomlJsonModel {
 	model := TomlJsonModel{
-		content: "",
-		ready:   false,
-		common:  common,
-		state:   ui.PagerStateBrowse,
+		BasePagerModel: ui.NewBasePagerModel(common, Title),
 	}
-
-	model.setSize(common.Width, common.Height)
 
 	return model
 }
 
 func (m TomlJsonModel) Init() tea.Cmd {
-	return nil
+	return m.BasePagerModel.Init()
 }
 
 func (m TomlJsonModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
@@ -63,63 +41,45 @@ func (m TomlJsonModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	)
 	switch msg := msg.(type) {
 	case tea.KeyMsg:
+		if cmd, handled := m.HandleCommonKeys(msg); handled {
+			return m, cmd
+		}
 		switch msg.String() {
 		case "e":
-			return m, editor.OpenEditor(m.content, "toml")
-		case "ctrl+c", "q":
-			return m, tea.Quit
-		case "esc":
-			return m, func() tea.Msg {
-				return ui.ReturnToListMsg{
-					Common: m.common,
-				}
-			}
+			return m, editor.OpenEditor(m.Content, "toml")
 		case "v":
 			c := clipboard.New()
 			content, err := c.PasteText()
+			if err == nil {
+				err = m.SetContent(content)
+			}
+
 			if err != nil {
-				panic(err)
+				cmds = append(cmds, m.ShowErrorMessage(err.Error()))
+			} else {
+				cmds = append(cmds, m.ShowStatusMessage("Pasted. Press 'c' to copy result."))
 			}
-			m.setContent(content)
-
-			cmds = append(cmds, m.showStatusMessage(ui.PagerStatusMsg{Message: "Converted TOML to JSON"}))
-
-		case "c":
-			c := clipboard.New()
-			if err := c.CopyText(m.converted_content); err != nil {
-				panic(err)
-			}
-
-			cmds = append(cmds, m.showStatusMessage(ui.PagerStatusMsg{Message: "Copied JSON"}))
-		case "?":
-			m.toggleHelp()
 		}
 	case ui.StatusMessageTimeoutMsg:
-		m.state = ui.PagerStateBrowse
+		m.State = ui.PagerStateBrowse
 	case editor.EditorFinishedMsg:
 		if msg.Err != nil {
-			panic(msg.Err)
-		}
-		m.setContent(msg.Content)
+			return m, m.ShowErrorMessage(msg.Err.Error())
+		} else {
+			err := m.SetContent(msg.Content)
 
-		cmds = append(cmds, m.showStatusMessage(ui.PagerStatusMsg{Message: "Converted TOML to JSON"}))
+			if err != nil {
+				cmds = append(cmds, m.ShowErrorMessage(err.Error()))
+			} else {
+				cmds = append(cmds, m.ShowStatusMessage("Pasted. Press 'c' to copy result."))
+			}
+		}
 
 	case tea.WindowSizeMsg:
-		m.common.Width = msg.Width
-		m.common.Height = msg.Height
-
-		m.setSize(msg.Width, msg.Height)
-
-		if !m.ready {
-			m.viewport = viewport.New(msg.Width, msg.Height-ui.StatusBarHeight)
-			m.viewport.YPosition = 0
-			m.viewport.SetContent(m.content)
-			m.ready = true
-		} else {
-			m.setSize(msg.Width, msg.Height)
-		}
+		cmd = m.HandleWindowSizeMsg(msg)
+		cmds = append(cmds, cmd)
 	}
-	m.viewport, cmd = m.viewport.Update(msg)
+	m.Viewport, cmd = m.Viewport.Update(msg)
 	cmds = append(cmds, cmd)
 
 	return m, tea.Batch(cmds...)
@@ -128,128 +88,34 @@ func (m TomlJsonModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 func (m TomlJsonModel) View() string {
 	var b strings.Builder
 
-	fmt.Fprint(&b, m.viewport.View()+"\n")
+	fmt.Fprint(&b, m.Viewport.View()+"\n")
+	fmt.Fprint(&b, m.StatusBarView())
 
-	m.statusBarView(&b)
-
-	if m.showHelp {
+	if m.ShowHelp {
 		fmt.Fprint(&b, "\n"+m.helpView())
 	}
 
 	return b.String()
 }
 
-func (m *TomlJsonModel) showStatusMessage(msg ui.PagerStatusMsg) tea.Cmd {
-	m.state = ui.PagerStateStatusMessage
-	m.statusMessage = msg.Message
-	if m.statusMessageTimer != nil {
-		m.statusMessageTimer.Stop()
-	}
-	m.statusMessageTimer = time.NewTimer(ui.StatusMessageTimeout)
-
-	return ui.WaitForStatusMessageTimeout(m.statusMessageTimer)
-}
-
-func (m *TomlJsonModel) setContent(content string) {
-	m.content = content
-
-	jsonStr, err := convert(content)
+func (m *TomlJsonModel) SetContent(content string) error {
+	m.Content = content
+	jsonStr, err := Convert(content)
 
 	if err != nil {
-		m.converted_content = fmt.Sprintf("Error converting TOML to JSON: %v", err)
+		return err
 	} else {
-		m.converted_content = jsonStr
+		m.FormattedContent = jsonStr
 	}
 
 	var buf bytes.Buffer
-	_ = quick.Highlight(&buf, m.converted_content, "json", "terminal", "nord")
-	m.viewport.SetContent(buf.String())
-}
-
-func (m *TomlJsonModel) setSize(w, h int) {
-	m.viewport.Width = w
-	m.viewport.Height = h - ui.StatusBarHeight
-
-	if m.showHelp {
-		if pagerHelpHeight == 0 {
-			pagerHelpHeight = strings.Count(m.helpView(), "\n")
-		}
-		m.viewport.Height -= (ui.StatusBarHeight + pagerHelpHeight)
+	err = quick.Highlight(&buf, m.FormattedContent, "json", "terminal", "nord")
+	if err != nil {
+		return err
 	}
-}
+	m.Viewport.SetContent(buf.String())
 
-func (m *TomlJsonModel) toggleHelp() {
-	m.showHelp = !m.showHelp
-	m.setSize(m.common.Width, m.common.Height)
-
-	if m.viewport.PastBottom() {
-		m.viewport.GotoBottom()
-	}
-}
-
-func (m TomlJsonModel) statusBarView(b *strings.Builder) {
-	const (
-		minPercent               float64 = 0.0
-		maxPercent               float64 = 1.0
-		percentToStringMagnitude float64 = 100.0
-	)
-	showStatusMessage := m.state == ui.PagerStateStatusMessage
-	appName := ui.AppNameStyle(" " + Title + " ")
-
-	scrollPercent := ""
-	if m.content != "" {
-		percent := math.Max(minPercent, math.Min(maxPercent, m.viewport.ScrollPercent()))
-		scrollPercent = fmt.Sprintf(" %3.f%% ", percent*percentToStringMagnitude)
-		scrollPercent = ui.StatusBarScrollPosStyle(scrollPercent)
-	}
-	var helpNote string
-	if showStatusMessage {
-		helpNote = ui.StatusBarMessageHelpStyle(" ? Help ")
-	} else {
-		helpNote = ui.StatusBarHelpStyle(" ? Help ")
-	}
-
-	var note string
-	if showStatusMessage {
-		note = m.statusMessage
-	} else if m.content == "" {
-		note = "Press 'v' to paste TOML"
-	}
-
-	note = truncate.StringWithTail(" "+note+" ", uint(max(0,
-		m.common.Width-
-			ansi.PrintableRuneWidth(appName)-
-			ansi.PrintableRuneWidth(scrollPercent)-
-			ansi.PrintableRuneWidth(helpNote),
-	)), ui.Ellipsis)
-
-	if showStatusMessage {
-		note = ui.StatusBarMessageStyle(note)
-	} else {
-		note = ui.StatusBarNoteStyle(note)
-	}
-
-	padding := max(0,
-		m.common.Width-
-			ansi.PrintableRuneWidth(appName)-
-			ansi.PrintableRuneWidth(note)-
-			ansi.PrintableRuneWidth(scrollPercent)-
-			ansi.PrintableRuneWidth(helpNote),
-	)
-	emptySpace := strings.Repeat(" ", padding)
-	if showStatusMessage {
-		emptySpace = ui.StatusBarMessageStyle(emptySpace)
-	} else {
-		emptySpace = ui.StatusBarNoteStyle(emptySpace)
-	}
-
-	fmt.Fprintf(b, "%s%s%s%s%s",
-		appName,
-		note,
-		emptySpace,
-		scrollPercent,
-		helpNote,
-	)
+	return nil
 }
 
 func (m TomlJsonModel) helpView() (s string) {
@@ -274,11 +140,11 @@ func (m TomlJsonModel) helpView() (s string) {
 
 	s = ui.Indent(s, 2)
 
-	if m.common.Width > 0 {
+	if m.Common.Width > 0 {
 		lines := strings.Split(s, "\n")
 		for i := range lines {
 			l := runewidth.StringWidth(lines[i])
-			n := max(m.common.Width-l, 0)
+			n := max(m.Common.Width-l, 0)
 			lines[i] += strings.Repeat(" ", n)
 		}
 
@@ -288,7 +154,7 @@ func (m TomlJsonModel) helpView() (s string) {
 	return ui.HelpViewStyle(s)
 }
 
-func convert(tomlContent string) (string, error) {
+func Convert(tomlContent string) (string, error) {
 	var v any
 
 	err := toml.Unmarshal([]byte(tomlContent), &v)
