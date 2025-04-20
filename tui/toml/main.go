@@ -78,7 +78,7 @@ func (m TomlFormatModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			if err != nil {
 				panic(err)
 			}
-			m.setContent(content)
+			m.SetContent(content)
 
 			cmds = append(cmds, m.showStatusMessage(ui.PagerStatusMsg{Message: "Formatted TOML"}))
 
@@ -98,7 +98,7 @@ func (m TomlFormatModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		if msg.Err != nil {
 			panic(msg.Err)
 		}
-		m.setContent(msg.Content)
+		m.SetContent(msg.Content)
 
 		cmds = append(cmds, m.showStatusMessage(ui.PagerStatusMsg{Message: "Formatted TOML"}))
 
@@ -149,10 +149,10 @@ func (m *TomlFormatModel) showStatusMessage(msg ui.PagerStatusMsg) tea.Cmd {
 	return ui.WaitForStatusMessageTimeout(m.statusMessageTimer)
 }
 
-func (m *TomlFormatModel) setContent(content string) {
+func (m *TomlFormatModel) SetContent(content string) {
 	m.content = content
 
-	formattedStr, err := convert(content)
+	formattedStr, err := Convert(content)
 
 	if err != nil {
 		m.formatted_content = fmt.Sprintf("Error formatting TOML: %v", err)
@@ -161,7 +161,7 @@ func (m *TomlFormatModel) setContent(content string) {
 	}
 
 	var buf bytes.Buffer
-	_ = quick.Highlight(&buf, m.formatted_content, "toml", "terminal", "nord")
+	_ = quick.Highlight(&buf, m.formatted_content, "TOML", "terminal", "nord")
 	m.viewport.SetContent(buf.String())
 }
 
@@ -287,7 +287,7 @@ func (m TomlFormatModel) helpView() (s string) {
 	return ui.HelpViewStyle(s)
 }
 
-func convert(tomlContent string) (string, error) {
+func Convert(tomlContent string) (string, error) {
 	var v any
 
 	// Parse the TOML content

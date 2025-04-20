@@ -31,8 +31,8 @@ var xmlfmtCmd = &cobra.Command{
 
 		if flagTUI {
 			common := &ui.CommonModel{
-				Width:  0, // Will be set by tea.WindowSizeMsg
-				Height: 0,
+				Width:  80,
+				Height: 80,
 			}
 
 			model := xml.NewXMLFormatterModel(common)
@@ -49,7 +49,6 @@ var xmlfmtCmd = &cobra.Command{
 		result := xmlfmt.FormatXML(string(data),
 			xmlPrefix, xmlIndent, xmlNested)
 
-		// Write the result to stdout
 		_, err = os.Stdout.WriteString(result)
 		if err != nil {
 			log.Printf("ERROR: %s", err)
