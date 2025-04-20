@@ -4,15 +4,10 @@ import (
 	"bytes"
 	"encoding/csv"
 	"fmt"
-	"math"
 	"strings"
-	"time"
 
-	"github.com/charmbracelet/bubbles/viewport"
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/mattn/go-runewidth"
-	"github.com/muesli/ansi"
-	"github.com/muesli/reflow/truncate"
 	"github.com/skatkov/devtui/internal/csv2md"
 	"github.com/skatkov/devtui/internal/editor"
 	"github.com/skatkov/devtui/internal/ui"
@@ -21,39 +16,22 @@ import (
 
 const Title = "TSV to Markdown Table Converter"
 
-var pagerHelpHeight int
-
 type TSV2MDModel struct {
-	common *ui.CommonModel
-
-	converted_content string
-	content           string
-	viewport          viewport.Model
-	showHelp          bool
-	ready             bool
-	state             ui.PagerState
-	alignColumns      bool
-
-	statusMessage      string
-	statusMessageTimer *time.Timer
+	ui.BasePagerModel
+	alignColumns bool
 }
 
 func NewTSV2MDModel(common *ui.CommonModel) TSV2MDModel {
 	model := TSV2MDModel{
-		content:      "",
-		ready:        false,
-		common:       common,
-		state:        ui.PagerStateBrowse,
-		alignColumns: true,
+		BasePagerModel: ui.NewBasePagerModel(common, Title),
+		alignColumns:   true,
 	}
-
-	model.setSize(common.Width, common.Height)
 
 	return model
 }
 
 func (m TSV2MDModel) Init() tea.Cmd {
-	return nil
+	return m.BasePagerModel.Init()
 }
 
 func (m TSV2MDModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
@@ -63,17 +41,12 @@ func (m TSV2MDModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	)
 	switch msg := msg.(type) {
 	case tea.KeyMsg:
+		if cmd, handled := m.HandleCommonKeys(msg); handled {
+			return m, cmd
+		}
 		switch msg.String() {
 		case "e":
-			return m, editor.OpenEditor(m.content, "tsv")
-		case "ctrl+c", "q":
-			return m, tea.Quit
-		case "esc":
-			return m, func() tea.Msg {
-				return ui.ReturnToListMsg{
-					Common: m.common,
-				}
-			}
+			return m, editor.OpenEditor(m.Content, "tsv")
 		case "v":
 			c := clipboard.New()
 			content, err := c.PasteText()
@@ -82,64 +55,44 @@ func (m TSV2MDModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			}
 
 			if err != nil {
-				cmds = append(cmds, m.showErrorMessage(ui.PagerStatusMsg{Message: err.Error()}))
+				cmds = append(cmds, m.ShowErrorMessage(err.Error()))
 			} else {
-				cmds = append(cmds, m.showStatusMessage(ui.PagerStatusMsg{Message: "Converted " + Title + ". Press 'c' to copy result."}))
-			}
-		case "c":
-			c := clipboard.New()
-			err := c.CopyText(m.converted_content)
-
-			if err != nil {
-				cmds = append(cmds, m.showErrorMessage(ui.PagerStatusMsg{Message: err.Error()}))
-			} else {
-				cmds = append(cmds, m.showStatusMessage(ui.PagerStatusMsg{Message: "Copied"}))
+				cmds = append(cmds, m.ShowStatusMessage("Pasted. Press 'c' to copy result."))
 			}
 		case "a":
 			m.alignColumns = !m.alignColumns
-			if m.content != "" {
-				err := m.setContent(m.content)
+			if m.Content != "" {
+				err := m.setContent(m.Content)
 				if err != nil {
-					cmds = append(cmds, m.showErrorMessage(ui.PagerStatusMsg{Message: err.Error()}))
+					cmds = append(cmds, m.ShowErrorMessage(err.Error()))
 				} else if m.alignColumns {
-					cmds = append(cmds, m.showStatusMessage(ui.PagerStatusMsg{Message: "Columns aligned"}))
+					cmds = append(cmds, m.ShowStatusMessage("Columns aligned"))
 				} else {
-					cmds = append(cmds, m.showStatusMessage(ui.PagerStatusMsg{Message: "Columns unaligned"}))
+					cmds = append(cmds, m.ShowStatusMessage("Columns unaligned"))
 				}
 			}
-		case "?":
-			m.toggleHelp()
 		}
 	case ui.StatusMessageTimeoutMsg:
-		m.state = ui.PagerStateBrowse
+		m.State = ui.PagerStateBrowse
+
 	case editor.EditorFinishedMsg:
 		if msg.Err != nil {
-			panic(msg.Err)
-		}
-		err := m.setContent(msg.Content)
-
-		if err != nil {
-			cmds = append(cmds, m.showErrorMessage(ui.PagerStatusMsg{Message: err.Error()}))
+			return m, m.ShowErrorMessage(msg.Err.Error())
 		} else {
-			cmds = append(cmds, m.showStatusMessage(ui.PagerStatusMsg{Message: "Converted. Press 'c' to copy result."}))
+			err := m.setContent(msg.Content)
+
+			if err != nil {
+				cmds = append(cmds, m.ShowErrorMessage(err.Error()))
+			} else {
+				cmds = append(cmds, m.ShowStatusMessage("Pasted. Press 'c' to copy result."))
+			}
 		}
 
 	case tea.WindowSizeMsg:
-		m.common.Width = msg.Width
-		m.common.Height = msg.Height
-
-		m.setSize(msg.Width, msg.Height)
-
-		if !m.ready {
-			m.viewport = viewport.New(msg.Width, msg.Height-ui.StatusBarHeight)
-			m.viewport.YPosition = 0
-			m.viewport.SetContent(m.content)
-			m.ready = true
-		} else {
-			m.setSize(msg.Width, msg.Height)
-		}
+		cmd = m.HandleWindowSizeMsg(msg)
+		cmds = append(cmds, cmd)
 	}
-	m.viewport, cmd = m.viewport.Update(msg)
+	m.Viewport, cmd = m.Viewport.Update(msg)
 	cmds = append(cmds, cmd)
 
 	return m, tea.Batch(cmds...)
@@ -148,41 +101,18 @@ func (m TSV2MDModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 func (m TSV2MDModel) View() string {
 	var b strings.Builder
 
-	fmt.Fprint(&b, m.viewport.View()+"\n")
+	fmt.Fprint(&b, m.Viewport.View()+"\n")
+	fmt.Fprint(&b, m.StatusBarView())
 
-	m.statusBarView(&b)
-
-	if m.showHelp {
+	if m.ShowHelp {
 		fmt.Fprint(&b, "\n"+m.helpView())
 	}
 
 	return b.String()
 }
 
-func (m *TSV2MDModel) showErrorMessage(msg ui.PagerStatusMsg) tea.Cmd {
-	m.state = ui.PagerStateErrorMessage
-	m.statusMessage = msg.Message
-	if m.statusMessageTimer != nil {
-		m.statusMessageTimer.Stop()
-	}
-	m.statusMessageTimer = time.NewTimer(ui.StatusMessageTimeout)
-
-	return ui.WaitForStatusMessageTimeout(m.statusMessageTimer)
-}
-
-func (m *TSV2MDModel) showStatusMessage(msg ui.PagerStatusMsg) tea.Cmd {
-	m.state = ui.PagerStateStatusMessage
-	m.statusMessage = msg.Message
-	if m.statusMessageTimer != nil {
-		m.statusMessageTimer.Stop()
-	}
-	m.statusMessageTimer = time.NewTimer(ui.StatusMessageTimeout)
-
-	return ui.WaitForStatusMessageTimeout(m.statusMessageTimer)
-}
-
 func (m *TSV2MDModel) setContent(content string) error {
-	m.content = content
+	m.Content = content
 
 	reader := csv.NewReader(strings.NewReader(content))
 	reader.Comma = '\t'
@@ -199,107 +129,14 @@ func (m *TSV2MDModel) setContent(content string) error {
 
 	// Convert to markdown
 	markdownLines := csv2md.Convert("", rows, m.alignColumns)
-	m.converted_content = strings.Join(markdownLines, "\n")
+	m.FormattedContent = strings.Join(markdownLines, "\n")
 
 	// Set content in viewport
 	var buf bytes.Buffer
-	buf.WriteString(m.converted_content)
-	m.viewport.SetContent(buf.String())
+	buf.WriteString(m.FormattedContent)
+	m.Viewport.SetContent(buf.String())
 
 	return nil
-}
-
-func (m *TSV2MDModel) setSize(w, h int) {
-	m.viewport.Width = w
-	m.viewport.Height = h - ui.StatusBarHeight
-
-	if m.showHelp {
-		if pagerHelpHeight == 0 {
-			pagerHelpHeight = strings.Count(m.helpView(), "\n")
-		}
-		m.viewport.Height -= (ui.StatusBarHeight + pagerHelpHeight)
-	}
-}
-
-func (m *TSV2MDModel) toggleHelp() {
-	m.showHelp = !m.showHelp
-	m.setSize(m.common.Width, m.common.Height)
-
-	if m.viewport.PastBottom() {
-		m.viewport.GotoBottom()
-	}
-}
-
-func (m TSV2MDModel) statusBarView(b *strings.Builder) {
-	const (
-		minPercent               float64 = 0.0
-		maxPercent               float64 = 1.0
-		percentToStringMagnitude float64 = 100.0
-	)
-	showStatusMessage := m.state == ui.PagerStateStatusMessage
-	showErrorMessage := m.state == ui.PagerStateErrorMessage
-	appName := ui.AppNameStyle(" " + Title + " ")
-
-	scrollPercent := ""
-	if m.content != "" {
-		percent := math.Max(minPercent, math.Min(maxPercent, m.viewport.ScrollPercent()))
-		scrollPercent = fmt.Sprintf(" %3.f%% ", percent*percentToStringMagnitude)
-		scrollPercent = ui.StatusBarScrollPosStyle(scrollPercent)
-	}
-	var helpNote string
-	if showErrorMessage {
-		helpNote = ui.StatusBarErrorHelpStyle(" ? Help ")
-	} else if showStatusMessage {
-		helpNote = ui.StatusBarMessageHelpStyle(" ? Help ")
-	} else {
-		helpNote = ui.StatusBarHelpStyle(" ? Help ")
-	}
-
-	var note string
-	if showStatusMessage || showErrorMessage {
-		note = m.statusMessage
-	} else if m.converted_content == "" {
-		note = "Press 'v' to paste"
-	}
-
-	note = truncate.StringWithTail(" "+note+" ", uint(max(0,
-		m.common.Width-
-			ansi.PrintableRuneWidth(appName)-
-			ansi.PrintableRuneWidth(scrollPercent)-
-			ansi.PrintableRuneWidth(helpNote),
-	)), ui.Ellipsis)
-
-	if showErrorMessage {
-		note = ui.StatusBarErrorStyle(note)
-	} else if showStatusMessage {
-		note = ui.StatusBarMessageStyle(note)
-	} else {
-		note = ui.StatusBarNoteStyle(note)
-	}
-
-	padding := max(0,
-		m.common.Width-
-			ansi.PrintableRuneWidth(appName)-
-			ansi.PrintableRuneWidth(note)-
-			ansi.PrintableRuneWidth(scrollPercent)-
-			ansi.PrintableRuneWidth(helpNote),
-	)
-	emptySpace := strings.Repeat(" ", padding)
-	if showErrorMessage {
-		emptySpace = ui.StatusBarErrorStyle(emptySpace)
-	} else if showStatusMessage {
-		emptySpace = ui.StatusBarMessageStyle(emptySpace)
-	} else {
-		emptySpace = ui.StatusBarNoteStyle(emptySpace)
-	}
-
-	fmt.Fprintf(b, "%s%s%s%s%s",
-		appName,
-		note,
-		emptySpace,
-		scrollPercent,
-		helpNote,
-	)
 }
 
 func (m TSV2MDModel) helpView() (s string) {
@@ -325,11 +162,11 @@ func (m TSV2MDModel) helpView() (s string) {
 
 	s = ui.Indent(s, 2)
 
-	if m.common.Width > 0 {
+	if m.Common.Width > 0 {
 		lines := strings.Split(s, "\n")
 		for i := range lines {
 			l := runewidth.StringWidth(lines[i])
-			n := max(m.common.Width-l, 0)
+			n := max(m.Common.Width-l, 0)
 			lines[i] += strings.Repeat(" ", n)
 		}
 
