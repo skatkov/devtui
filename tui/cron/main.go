@@ -1,6 +1,7 @@
 package cron
 
 import (
+	"errors"
 	"fmt"
 	"os"
 	"regexp"
@@ -9,7 +10,6 @@ import (
 
 	"github.com/charmbracelet/huh"
 	"github.com/charmbracelet/lipgloss"
-	"github.com/goccy/go-yaml/internal/errors"
 	"github.com/lnquy/cron"
 	"github.com/skatkov/devtui/internal/ui"
 
