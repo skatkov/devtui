@@ -52,7 +52,7 @@ func (m TSV2MDModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			c := clipboard.New()
 			content, err := c.PasteText()
 			if err == nil {
-				err = m.setContent(content)
+				err = m.SetContent(content)
 			}
 
 			if err != nil {
@@ -63,7 +63,7 @@ func (m TSV2MDModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		case "a":
 			m.alignColumns = !m.alignColumns
 			if m.Content != "" {
-				err := m.setContent(m.Content)
+				err := m.SetContent(m.Content)
 				if err != nil {
 					cmds = append(cmds, m.ShowErrorMessage(err.Error()))
 				} else if m.alignColumns {
@@ -80,7 +80,7 @@ func (m TSV2MDModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		if msg.Err != nil {
 			return m, m.ShowErrorMessage(msg.Err.Error())
 		} else {
-			err := m.setContent(msg.Content)
+			err := m.SetContent(msg.Content)
 
 			if err != nil {
 				cmds = append(cmds, m.ShowErrorMessage(err.Error()))
@@ -112,7 +112,7 @@ func (m TSV2MDModel) View() string {
 	return b.String()
 }
 
-func (m *TSV2MDModel) setContent(content string) error {
+func (m *TSV2MDModel) SetContent(content string) error {
 	m.Content = content
 
 	reader := csv.NewReader(strings.NewReader(content))
