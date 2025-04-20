@@ -24,7 +24,11 @@ func main() {
 		if err != nil {
 			log.Fatal(err)
 		}
-		defer file.Close()
+		defer func() {
+			if err := file.Close(); err != nil {
+				log.Fatal(err)
+			}
+		}()
 
 		// Use the file as io.Writer
 		err = doc.GenMarkdown(cmd, file)

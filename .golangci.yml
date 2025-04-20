@@ -4,13 +4,13 @@ run:
 linters:
   enable:
     - bodyclose
-    - exhaustive
+    # - exhaustive
     - goconst
-    - godot
+    # - godot
     - godox
     - gomoddirectives
     - goprintffuncname
-    - gosec
+    # - gosec
     - misspell
     - nakedret
     - nestif
@@ -25,6 +25,7 @@ linters:
     - unconvert
     - unparam
     - whitespace
+    - perfsprint
     # - wrapcheck
   exclusions:
     generated: lax

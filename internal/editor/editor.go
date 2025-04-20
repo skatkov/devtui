@@ -1,6 +1,7 @@
 package editor
 
 import (
+	"errors"
 	"os"
 
 	tea "github.com/charmbracelet/bubbletea"
@@ -25,25 +26,36 @@ func OpenEditor(content string, format string) tea.Cmd {
 
 	// Write the initial content
 	if _, err := tmpfile.WriteString(content); err != nil {
-		tmpfile.Close()
-		os.Remove(tmpfile.Name())
-		return func() tea.Msg { return cb(err, "") }
+		if err := tmpfile.Close(); err != nil {
+			// We still need to try to remove the file even if closing failed
+			if removeErr := os.Remove(tmpfile.Name()); removeErr != nil {
+				// If both close and remove fail, combine the errors
+				return func() tea.Msg { return cb(errors.Join(err, removeErr), "") }
+			}
+			return func() tea.Msg { return cb(err, "") }
+		}
 	}
-	tmpfile.Close()
 
 	// Open editor with the temp file
 	cmd, err := editor.Cmd("", tmpfile.Name())
 	if err != nil {
-		os.Remove(tmpfile.Name())
-		return func() tea.Msg { return cb(err, "") }
+		if removeErr := os.Remove(tmpfile.Name()); removeErr != nil {
+			return func() tea.Msg { return cb(errors.Join(err, removeErr), "") }
+		}
 	}
 
 	return tea.ExecProcess(cmd, func(err error) tea.Msg {
 		// Read the modified content
 		content, readErr := os.ReadFile(tmpfile.Name())
-		os.Remove(tmpfile.Name()) // Clean up
+		removeErr := os.Remove(tmpfile.Name())
 		if readErr != nil {
+			if removeErr != nil {
+				return cb(errors.Join(readErr, removeErr), "")
+			}
 			return cb(readErr, "")
+		}
+		if removeErr != nil {
+			return cb(errors.Join(err, removeErr), string(content))
 		}
 		return cb(err, string(content))
 	})
