@@ -107,7 +107,7 @@ func (m *JsonTomlModel) SetContent(content string) error {
 	tomlStr, err := Convert(content)
 
 	if err != nil {
-		return fmt.Errorf("Error converting JSON to TOML: %v", err)
+		return fmt.Errorf("error converting JSON to TOML: %v", err)
 	} else {
 		m.FormattedContent = tomlStr
 	}
