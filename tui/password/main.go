@@ -2,6 +2,7 @@ package main
 
 import (
 	"crypto/rand"
+	"errors"
 	"fmt"
 	"math/big"
 	"strconv"
@@ -154,7 +155,7 @@ func generateSecurePassword(config *PasswordConfig) (string, error) {
 
 func ensureAllSetsIncluded(password []byte, config *PasswordConfig) error {
 	if len(password) < len(config.CharacterSets) {
-		return fmt.Errorf("password length must be at least the number of character sets")
+		return errors.New("password length must be at least the number of character sets")
 	}
 
 	// For each selected character set, ensure at least one character is included

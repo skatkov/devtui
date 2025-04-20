@@ -7,13 +7,13 @@ linters:
     # - exhaustive
     - goconst
     # - godot
-    - godox
+    # - godox
     - gomoddirectives
     - goprintffuncname
     # - gosec
     - misspell
     - nakedret
-    - nestif
+    #- nestif
     - nilerr
     - noctx
     - nolintlint

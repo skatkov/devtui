@@ -24,9 +24,7 @@ var rootCmd = &cobra.Command{
 	},
 }
 
-var (
-	flagTUI bool
-)
+var flagTUI bool
 
 func Execute() {
 	err := rootCmd.Execute()

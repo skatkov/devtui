@@ -47,7 +47,6 @@ var jsonfmtCmd = &cobra.Command{
 		if err != nil {
 			log.Printf("ERROR: %s", err)
 		}
-
 	},
 }
 

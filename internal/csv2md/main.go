@@ -7,7 +7,13 @@ import (
 
 // Convert formats data from file or stdin as markdown
 func Convert(header string, records [][]string, aligned bool) []string {
-	var result []string
+	// Preallocate result slice to reduce allocations
+	// Size estimate: header (if exists) + empty line + records + separator line
+	resultSize := len(records) + 1 // +1 for the separator after header row
+	if len(header) > 0 {
+		resultSize += 2 // Add 2 for header title and blank line
+	}
+	result := make([]string, 0, resultSize)
 
 	// add h1 if passed
 	header = strings.Trim(header, "\t\r\n ")
@@ -32,7 +38,6 @@ func Convert(header string, records [][]string, aligned bool) []string {
 
 	// build markdown table
 	for row_idx, row := range records {
-
 		// table content
 		str := "| "
 		for col_idx, col := range row {

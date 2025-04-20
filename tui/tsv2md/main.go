@@ -3,6 +3,7 @@ package tsv2md
 import (
 	"bytes"
 	"encoding/csv"
+	"errors"
 	"fmt"
 	"strings"
 
@@ -124,7 +125,7 @@ func (m *TSV2MDModel) setContent(content string) error {
 	}
 
 	if len(rows) == 0 {
-		return fmt.Errorf("empty result")
+		return errors.New("empty result")
 	}
 
 	// Convert to markdown

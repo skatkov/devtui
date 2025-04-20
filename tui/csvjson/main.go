@@ -317,8 +317,9 @@ func (m CSVJsonModel) helpView() (s string) {
 }
 
 func csvToJson(rows [][]string) (string, error) {
-	var entries []map[string]any
 	attributes := rows[0]
+	// Pre-allocate entries with capacity for all data rows
+	entries := make([]map[string]any, 0, len(rows)-1)
 	for _, row := range rows[1:] {
 		entry := map[string]any{}
 		for i, value := range row {

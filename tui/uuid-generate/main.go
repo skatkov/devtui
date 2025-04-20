@@ -74,7 +74,7 @@ func (m *UUIDGenerate) View() string {
 	switch m.form.State {
 	case huh.StateCompleted:
 		var rows [][]string
-		rows = append(rows, []string{"Version", fmt.Sprintf("%d", m.version)})
+		rows = append(rows, []string{"Version", strconv.Itoa(m.version)})
 		if m.namespace != "" {
 			rows = append(rows, []string{"Namespace", m.namespace})
 		}

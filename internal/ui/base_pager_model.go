@@ -62,7 +62,6 @@ func (m *BasePagerModel) HandleCommonKeys(msg tea.KeyMsg) (tea.Cmd, bool) {
 	case "c":
 		c := clipboard.New()
 		err := c.CopyText(m.FormattedContent)
-
 		if err != nil {
 			return m.ShowErrorMessage(err.Error()), true
 		}

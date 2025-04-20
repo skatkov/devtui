@@ -9,6 +9,7 @@ import (
 
 	"github.com/charmbracelet/huh"
 	"github.com/charmbracelet/lipgloss"
+	"github.com/goccy/go-yaml/internal/errors"
 	"github.com/lnquy/cron"
 	"github.com/skatkov/devtui/internal/ui"
 
@@ -46,7 +47,7 @@ func NewCronModel(common *ui.CommonModel) *CronModel {
 						return fmt.Errorf("validation error: %v", err)
 					}
 					if !matched {
-						return fmt.Errorf("invalid cron expression format")
+						return errors.New("invalid cron expression format")
 					}
 
 					// Then validate with cron descriptor
@@ -121,8 +122,7 @@ func (m *CronModel) View() string {
 		valueStyle := lipgloss.NewStyle().
 			Foreground(lipgloss.Color("#87CEEB"))
 
-		output := fmt.Sprintf("%s \n\n",
-			titleStyle.Render(m.cronExpression)) + valueStyle.Render(desc)
+		output := titleStyle.Render(m.cronExpression) + " \n\n" + valueStyle.Render(desc)
 
 		return s.Base.Render(output)
 	default:

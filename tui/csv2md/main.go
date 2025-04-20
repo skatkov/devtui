@@ -4,6 +4,7 @@ package csv2md
 import (
 	"bytes"
 	"encoding/csv"
+	"errors"
 	"fmt"
 	"strings"
 
@@ -125,7 +126,7 @@ func (m *CSV2MDModel) SetContent(content string) error {
 	}
 
 	if len(rows) == 0 {
-		return fmt.Errorf("empty content")
+		return errors.New("empty content")
 	}
 
 	// Convert to markdown
