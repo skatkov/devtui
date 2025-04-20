@@ -78,7 +78,7 @@ func (m JsonModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			if err != nil {
 				panic(err)
 			}
-			m.setContent(content)
+			m.SetContent(content)
 
 			if json.Valid([]byte(content)) {
 				cmds = append(cmds, m.showStatusMessage(ui.PagerStatusMsg{Message: "Pasted contents"}))
@@ -101,7 +101,7 @@ func (m JsonModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		if msg.Err != nil {
 			panic(msg.Err)
 		}
-		m.setContent(msg.Content)
+		m.SetContent(msg.Content)
 
 		if json.Valid([]byte(msg.Content)) {
 			cmds = append(cmds, m.showStatusMessage(ui.PagerStatusMsg{Message: "Pasted contents"}))
@@ -163,9 +163,9 @@ func (m *JsonModel) showStatusMessage(msg ui.PagerStatusMsg) tea.Cmd {
 	return ui.WaitForStatusMessageTimeout(m.statusMessageTimer)
 }
 
-func (m *JsonModel) setContent(content string) {
+func (m *JsonModel) SetContent(content string) {
 	m.content = content
-	m.formatted_content = formatJSON(content)
+	m.formatted_content = FormatJSON(content)
 	var buf bytes.Buffer
 
 	if json.Valid([]byte(content)) {
@@ -301,7 +301,7 @@ func (m JsonModel) helpView() (s string) {
 	return ui.HelpViewStyle(s)
 }
 
-func formatJSON(content string) string {
+func FormatJSON(content string) string {
 	var data any
 	if err := json.Unmarshal([]byte(content), &data); err != nil {
 		return content
