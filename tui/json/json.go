@@ -39,10 +39,9 @@ type JsonModel struct {
 
 func NewJsonModel(common *ui.CommonModel) JsonModel {
 	model := JsonModel{
-		content: "",
-		ready:   false,
-		common:  common,
-		state:   ui.PagerStateBrowse,
+		ready:  false,
+		common: common,
+		state:  ui.PagerStateBrowse,
 	}
 
 	model.setSize(common.Width, common.Height)
@@ -224,7 +223,7 @@ func (m JsonModel) statusBarView(b *strings.Builder) {
 	if showStatusMessage {
 		note = m.statusMessage
 	} else if m.content == "" {
-		note = "Press 'v' to paste unformatted JSON"
+		note = "Press 'v' to paste"
 	}
 
 	note = truncate.StringWithTail(" "+note+" ", uint(max(0,
