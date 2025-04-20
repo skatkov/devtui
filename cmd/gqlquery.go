@@ -41,7 +41,10 @@ var gqlfmtCmd = &cobra.Command{
 			}
 
 			model := graphqlquery.NewGraphQLQueryModel(common)
-			model.SetContent(string(data))
+			err := model.SetContent(string(data))
+			if err != nil {
+				log.Printf("ERROR running TUI: %s", err)
+			}
 
 			p := tea.NewProgram(
 				model,
