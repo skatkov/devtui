@@ -79,7 +79,7 @@ func (m CSV2MDModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			c := clipboard.New()
 			content, err := c.PasteText()
 			if err == nil {
-				err = m.setContent(content)
+				err = m.SetContent(content)
 			}
 
 			if err != nil {
@@ -99,7 +99,7 @@ func (m CSV2MDModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		case "a":
 			m.alignColumns = !m.alignColumns
 			if m.content != "" {
-				err := m.setContent(m.content)
+				err := m.SetContent(m.content)
 				if err != nil {
 					cmds = append(cmds, m.showErrorMessage(ui.PagerStatusMsg{Message: err.Error()}))
 				} else if m.alignColumns {
@@ -117,7 +117,7 @@ func (m CSV2MDModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		if msg.Err != nil {
 			panic(msg.Err)
 		}
-		err := m.setContent(msg.Content)
+		err := m.SetContent(msg.Content)
 
 		if err != nil {
 			cmds = append(cmds, m.showErrorMessage(ui.PagerStatusMsg{Message: err.Error()}))
@@ -182,7 +182,7 @@ func (m *CSV2MDModel) showStatusMessage(msg ui.PagerStatusMsg) tea.Cmd {
 	return ui.WaitForStatusMessageTimeout(m.statusMessageTimer)
 }
 
-func (m *CSV2MDModel) setContent(content string) error {
+func (m *CSV2MDModel) SetContent(content string) error {
 	m.content = content
 
 	reader := csv.NewReader(strings.NewReader(content))

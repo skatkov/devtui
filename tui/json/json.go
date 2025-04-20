@@ -75,22 +75,23 @@ func (m JsonModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			c := clipboard.New()
 			content, err := c.PasteText()
 			if err != nil {
-				panic(err)
-			}
-			m.SetContent(content)
-
-			if json.Valid([]byte(content)) {
-				cmds = append(cmds, m.showStatusMessage(ui.PagerStatusMsg{Message: "Pasted contents"}))
+				cmds = append(cmds, m.showErrorMessage(ui.PagerStatusMsg{Message: err.Error()}))
 			} else {
-				cmds = append(cmds, m.showStatusMessage(ui.PagerStatusMsg{Message: "Pasted invalid JSON"}))
+				err := m.SetContent(content)
+
+				if err != nil {
+					cmds = append(cmds, m.showErrorMessage(ui.PagerStatusMsg{Message: err.Error()}))
+				} else {
+					cmds = append(cmds, m.showStatusMessage(ui.PagerStatusMsg{Message: "Pasted. Press 'c' to copy"}))
+				}
 			}
 		case "c":
 			c := clipboard.New()
 			if err := c.CopyText(m.formatted_content); err != nil {
-				panic(err)
+				cmds = append(cmds, m.showErrorMessage(ui.PagerStatusMsg{Message: err.Error()}))
+			} else {
+				cmds = append(cmds, m.showStatusMessage(ui.PagerStatusMsg{Message: "Copied."}))
 			}
-
-			cmds = append(cmds, m.showStatusMessage(ui.PagerStatusMsg{Message: "Copied contents"}))
 		case "?":
 			m.toggleHelp()
 		}
@@ -98,16 +99,16 @@ func (m JsonModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		m.state = ui.PagerStateBrowse
 	case editor.EditorFinishedMsg:
 		if msg.Err != nil {
-			panic(msg.Err)
-		}
-		m.SetContent(msg.Content)
-
-		if json.Valid([]byte(msg.Content)) {
-			cmds = append(cmds, m.showStatusMessage(ui.PagerStatusMsg{Message: "Pasted contents"}))
+			cmds = append(cmds, m.showErrorMessage(ui.PagerStatusMsg{Message: msg.Err.Error()}))
 		} else {
-			cmds = append(cmds, m.showStatusMessage(ui.PagerStatusMsg{Message: "Pasted invalid JSON"}))
-		}
+			err := m.SetContent(msg.Content)
 
+			if err != nil {
+				cmds = append(cmds, m.showErrorMessage(ui.PagerStatusMsg{Message: err.Error()}))
+			} else {
+				cmds = append(cmds, m.showStatusMessage(ui.PagerStatusMsg{Message: "Pasted. Press 'c' to copy"}))
+			}
+		}
 	case tea.WindowSizeMsg:
 		m.common.Width = msg.Width
 		m.common.Height = msg.Height
@@ -150,6 +151,17 @@ func (m JsonModel) View() string {
 	return b.String()
 }
 
+func (m *JsonModel) showErrorMessage(msg ui.PagerStatusMsg) tea.Cmd {
+	m.state = ui.PagerStateErrorMessage
+	m.statusMessage = msg.Message
+	if m.statusMessageTimer != nil {
+		m.statusMessageTimer.Stop()
+	}
+	m.statusMessageTimer = time.NewTimer(ui.StatusMessageTimeout)
+
+	return ui.WaitForStatusMessageTimeout(m.statusMessageTimer)
+}
+
 func (m *JsonModel) showStatusMessage(msg ui.PagerStatusMsg) tea.Cmd {
 	// Show a success message to the user
 	m.state = ui.PagerStateStatusMessage
@@ -162,17 +174,18 @@ func (m *JsonModel) showStatusMessage(msg ui.PagerStatusMsg) tea.Cmd {
 	return ui.WaitForStatusMessageTimeout(m.statusMessageTimer)
 }
 
-func (m *JsonModel) SetContent(content string) {
+func (m *JsonModel) SetContent(content string) error {
 	m.content = content
 	m.formatted_content = FormatJSON(content)
-	var buf bytes.Buffer
 
-	if json.Valid([]byte(content)) {
-		_ = quick.Highlight(&buf, m.formatted_content, "json", "terminal", "nord")
-		m.viewport.SetContent(buf.String())
-	} else {
-		m.viewport.SetContent(m.formatted_content)
+	var buf bytes.Buffer
+	err := quick.Highlight(&buf, m.formatted_content, "json", "terminal", "nord")
+	if err != nil {
+		return err
 	}
+	m.viewport.SetContent(buf.String())
+
+	return nil
 }
 
 func (m *JsonModel) setSize(w, h int) {
@@ -203,6 +216,7 @@ func (m JsonModel) statusBarView(b *strings.Builder) {
 		percentToStringMagnitude float64 = 100.0
 	)
 	showStatusMessage := m.state == ui.PagerStateStatusMessage
+	showErrorMessage := m.state == ui.PagerStateErrorMessage
 	appName := ui.AppNameStyle(" " + Title + " ")
 
 	// Scroll percent
@@ -213,14 +227,17 @@ func (m JsonModel) statusBarView(b *strings.Builder) {
 		scrollPercent = ui.StatusBarScrollPosStyle(scrollPercent)
 	}
 	var helpNote string
-	if showStatusMessage {
+
+	if showErrorMessage {
+		helpNote = ui.StatusBarErrorHelpStyle(" ? Help ")
+	} else if showStatusMessage {
 		helpNote = ui.StatusBarMessageHelpStyle(" ? Help ")
 	} else {
 		helpNote = ui.StatusBarHelpStyle(" ? Help ")
 	}
 
 	var note string
-	if showStatusMessage {
+	if showStatusMessage || showErrorMessage {
 		note = m.statusMessage
 	} else if m.content == "" {
 		note = "Press 'v' to paste"
@@ -248,7 +265,9 @@ func (m JsonModel) statusBarView(b *strings.Builder) {
 			ansi.PrintableRuneWidth(helpNote),
 	)
 	emptySpace := strings.Repeat(" ", padding)
-	if showStatusMessage {
+	if showErrorMessage {
+		emptySpace = ui.StatusBarErrorStyle(emptySpace)
+	} else if showStatusMessage {
 		emptySpace = ui.StatusBarMessageStyle(emptySpace)
 	} else {
 		emptySpace = ui.StatusBarNoteStyle(emptySpace)
