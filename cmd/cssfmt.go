@@ -36,8 +36,11 @@ var cssfmtCmd = &cobra.Command{
 			}
 
 			model := css.NewCSSFormatterModel(common)
-			model.SetContent(string(input))
-
+			err = model.SetContent(string(input))
+			if err != nil {
+				log.Printf("ERROR reading input: %s", err)
+				return
+			}
 			p := tea.NewProgram(
 				model,
 				tea.WithAltScreen(),       // Use alternate screen buffer
