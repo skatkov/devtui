@@ -16,8 +16,6 @@ import (
 
 const Title = "TOML Formatter"
 
-var pagerHelpHeight int
-
 type TomlFormatModel struct {
 	ui.BasePagerModel
 }
@@ -59,7 +57,6 @@ func (m TomlFormatModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			} else {
 				cmds = append(cmds, m.ShowStatusMessage("Pasted. Press 'c' to copy result."))
 			}
-
 		}
 	case ui.StatusMessageTimeoutMsg:
 		m.State = ui.PagerStateBrowse

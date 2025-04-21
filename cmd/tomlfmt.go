@@ -29,7 +29,11 @@ var tomlfmtCmd = &cobra.Command{
 			}
 
 			model := toml.NewTomlFormatModel(common)
-			model.SetContent(string(data))
+			err = model.SetContent(string(data))
+			if err != nil {
+				log.Printf("ERROR reading input: %s", err)
+				return
+			}
 
 			p := tea.NewProgram(model, tea.WithAltScreen())
 			if _, err := p.Run(); err != nil {
