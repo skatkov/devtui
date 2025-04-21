@@ -25,7 +25,7 @@ require (
 	github.com/spf13/cobra v1.9.1
 	github.com/tiagomelo/go-clipboard v0.1.2
 	github.com/twpayne/go-jsonstruct/v3 v3.2.0
-	github.com/vektah/gqlparser/v2 v2.5.24
+	github.com/vektah/gqlparser/v2 v2.5.25
 	github.com/yosssi/gohtml v0.0.0-20201013000340-ee4748c638f4
 )
 
