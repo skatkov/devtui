@@ -4,16 +4,11 @@ import (
 	"bytes"
 	"fmt"
 	"io"
-	"math"
 	"strings"
-	"time"
 
 	"github.com/alecthomas/chroma/quick"
-	"github.com/charmbracelet/bubbles/viewport"
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/mattn/go-runewidth"
-	"github.com/muesli/ansi"
-	"github.com/muesli/reflow/truncate"
 	"github.com/skatkov/devtui/internal/editor"
 	"github.com/skatkov/devtui/internal/ui"
 	"github.com/tiagomelo/go-clipboard/clipboard"
@@ -24,37 +19,20 @@ import (
 
 const Title = "YAML to Go Struct Converter"
 
-var pagerHelpHeight int
-
 type YamlStructModel struct {
-	common *ui.CommonModel
-
-	converted_content string
-	content           string
-	viewport          viewport.Model
-	showHelp          bool
-	ready             bool
-	state             ui.PagerState
-
-	statusMessage      string
-	statusMessageTimer *time.Timer
+	ui.BasePagerModel
 }
 
 func NewYamlStructModel(common *ui.CommonModel) YamlStructModel {
 	model := YamlStructModel{
-		content: "",
-		ready:   false,
-		common:  common,
-		state:   ui.PagerStateBrowse,
+		BasePagerModel: ui.NewBasePagerModel(common, Title),
 	}
-
-	model.setSize(common.Width, common.Height)
 
 	return model
 }
 
 func (m YamlStructModel) Init() tea.Cmd {
-	return nil
+	return m.BasePagerModel.Init()
 }
 
 func (m YamlStructModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
@@ -65,63 +43,46 @@ func (m YamlStructModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 	switch msg := msg.(type) {
 	case tea.KeyMsg:
+		if cmd, handled := m.HandleCommonKeys(msg); handled {
+			return m, cmd
+		}
 		switch msg.String() {
 		case "e":
-			return m, editor.OpenEditor(m.content, "yaml")
-		case "ctrl+c", "q":
-			return m, tea.Quit
-		case "esc":
-			return m, func() tea.Msg {
-				return ui.ReturnToListMsg{
-					Common: m.common,
-				}
-			}
+			return m, editor.OpenEditor(m.Content, "yaml")
 		case "v":
 			c := clipboard.New()
 			content, err := c.PasteText()
+			if err == nil {
+				err = m.SetContent(content)
+			}
+
 			if err != nil {
-				panic(err)
+				cmds = append(cmds, m.ShowErrorMessage(err.Error()))
+			} else {
+				cmds = append(cmds, m.ShowStatusMessage("Pasted. Press 'c' to copy result."))
 			}
-			m.setContent(content)
-
-			cmds = append(cmds, m.showStatusMessage(ui.PagerStatusMsg{Message: "Yaml content pated"}))
-		case "c":
-			c := clipboard.New()
-			if err := c.CopyText(m.converted_content); err != nil {
-				panic(err)
-			}
-
-			cmds = append(cmds, m.showStatusMessage(ui.PagerStatusMsg{Message: "Copied Go struct"}))
-		case "?":
-			m.toggleHelp()
 		}
 	case ui.StatusMessageTimeoutMsg:
-		m.state = ui.PagerStateBrowse
+		m.State = ui.PagerStateBrowse
 	case editor.EditorFinishedMsg:
 		if msg.Err != nil {
-			panic(msg.Err)
-		}
-		m.setContent(msg.Content)
+			return m, m.ShowErrorMessage(msg.Err.Error())
+		} else {
+			err := m.SetContent(msg.Content)
 
-		cmds = append(cmds, m.showStatusMessage(ui.PagerStatusMsg{Message: "Converted JSON to Go struct"}))
+			if err != nil {
+				cmds = append(cmds, m.ShowErrorMessage(err.Error()))
+			} else {
+				cmds = append(cmds, m.ShowStatusMessage("Pasted. Press 'c' to copy result."))
+			}
+		}
 
 	case tea.WindowSizeMsg:
-		m.common.Width = msg.Width
-		m.common.Height = msg.Height
-
-		m.setSize(msg.Width, msg.Height)
-
-		if !m.ready {
-			m.viewport = viewport.New(msg.Width, msg.Height-ui.StatusBarHeight)
-			m.viewport.YPosition = 0
-			m.viewport.SetContent(m.content)
-			m.ready = true
-		} else {
-			m.setSize(msg.Width, msg.Height)
-		}
+		cmd = m.HandleWindowSizeMsg(msg)
+		cmds = append(cmds, cmd)
 	}
 
-	m.viewport, cmd = m.viewport.Update(msg)
+	m.Viewport, cmd = m.Viewport.Update(msg)
 	cmds = append(cmds, cmd)
 
 	return m, tea.Batch(cmds...)
@@ -130,127 +91,33 @@ func (m YamlStructModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 func (m YamlStructModel) View() string {
 	var b strings.Builder
 
-	fmt.Fprint(&b, m.viewport.View()+"\n")
+	fmt.Fprint(&b, m.Viewport.View()+"\n")
+	fmt.Fprint(&b, m.StatusBarView())
 
-	m.statusBarView(&b)
-
-	if m.showHelp {
+	if m.ShowHelp {
 		fmt.Fprint(&b, "\n"+m.helpView())
 	}
 
 	return b.String()
 }
 
-func (m *YamlStructModel) showStatusMessage(msg ui.PagerStatusMsg) tea.Cmd {
-	m.state = ui.PagerStateStatusMessage
-	m.statusMessage = msg.Message
-	if m.statusMessageTimer != nil {
-		m.statusMessageTimer.Stop()
-	}
-	m.statusMessageTimer = time.NewTimer(ui.StatusMessageTimeout)
-
-	return ui.WaitForStatusMessageTimeout(m.statusMessageTimer)
-}
-
-func (m *YamlStructModel) setContent(content string) {
-	m.content = content
+func (m *YamlStructModel) SetContent(content string) error {
+	m.Content = content
 	contentReader := strings.NewReader(content)
 	convertedBytes, err := yaml2Struct(contentReader)
 	if err != nil {
-		m.converted_content = fmt.Sprintf("Error converting YAML: %v", err)
+		return err
 	} else {
-		m.converted_content = string(convertedBytes)
+		m.FormattedContent = string(convertedBytes)
 	}
 	var buf bytes.Buffer
 
-	_ = quick.Highlight(&buf, m.converted_content, "go", "terminal", "nord")
-	m.viewport.SetContent(buf.String())
-}
-
-func (m *YamlStructModel) setSize(w, h int) {
-	m.viewport.Width = w
-	m.viewport.Height = h - ui.StatusBarHeight
-
-	if m.showHelp {
-		if pagerHelpHeight == 0 {
-			pagerHelpHeight = strings.Count(m.helpView(), "\n")
-		}
-		m.viewport.Height -= (ui.StatusBarHeight + pagerHelpHeight)
+	err = quick.Highlight(&buf, m.FormattedContent, "go", "terminal", "nord")
+	if err != nil {
+		return err
 	}
-}
-
-func (m YamlStructModel) statusBarView(b *strings.Builder) {
-	const (
-		minPercent               float64 = 0.0
-		maxPercent               float64 = 1.0
-		percentToStringMagnitude float64 = 100.0
-	)
-	showStatusMessage := m.state == ui.PagerStateStatusMessage
-	appName := ui.AppNameStyle(" " + Title + " ")
-
-	scrollPercent := ""
-	if m.content != "" {
-		percent := math.Max(minPercent, math.Min(maxPercent, m.viewport.ScrollPercent()))
-		scrollPercent = fmt.Sprintf(" %3.f%% ", percent*percentToStringMagnitude)
-		scrollPercent = ui.StatusBarScrollPosStyle(scrollPercent)
-	}
-	var helpNote string
-	if showStatusMessage {
-		helpNote = ui.StatusBarMessageHelpStyle(" ? Help ")
-	} else {
-		helpNote = ui.StatusBarHelpStyle(" ? Help ")
-	}
-
-	var note string
-	if showStatusMessage {
-		note = m.statusMessage
-	} else if m.content == "" {
-		note = "Press 'v' to paste YAML"
-	}
-
-	note = truncate.StringWithTail(" "+note+" ", uint(max(0,
-		m.common.Width-
-			ansi.PrintableRuneWidth(appName)-
-			ansi.PrintableRuneWidth(scrollPercent)-
-			ansi.PrintableRuneWidth(helpNote),
-	)), ui.Ellipsis)
-
-	if showStatusMessage {
-		note = ui.StatusBarMessageStyle(note)
-	} else {
-		note = ui.StatusBarNoteStyle(note)
-	}
-
-	padding := max(0,
-		m.common.Width-
-			ansi.PrintableRuneWidth(appName)-
-			ansi.PrintableRuneWidth(note)-
-			ansi.PrintableRuneWidth(scrollPercent)-
-			ansi.PrintableRuneWidth(helpNote),
-	)
-	emptySpace := strings.Repeat(" ", padding)
-	if showStatusMessage {
-		emptySpace = ui.StatusBarMessageStyle(emptySpace)
-	} else {
-		emptySpace = ui.StatusBarNoteStyle(emptySpace)
-	}
-
-	fmt.Fprintf(b, "%s%s%s%s%s",
-		appName,
-		note,
-		emptySpace,
-		scrollPercent,
-		helpNote,
-	)
-}
-
-func (m *YamlStructModel) toggleHelp() {
-	m.showHelp = !m.showHelp
-	m.setSize(m.common.Width, m.common.Height)
-
-	if m.viewport.PastBottom() {
-		m.viewport.GotoBottom()
-	}
+	m.Viewport.SetContent(buf.String())
+	return nil
 }
 
 func (m YamlStructModel) helpView() (s string) {
@@ -275,11 +142,11 @@ func (m YamlStructModel) helpView() (s string) {
 
 	s = ui.Indent(s, 2)
 
-	if m.common.Width > 0 {
+	if m.Common.Width > 0 {
 		lines := strings.Split(s, "\n")
 		for i := range lines {
 			l := runewidth.StringWidth(lines[i])
-			n := max(m.common.Width-l, 0)
+			n := max(m.Common.Width-l, 0)
 			lines[i] += strings.Repeat(" ", n)
 		}
 
