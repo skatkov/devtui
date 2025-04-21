@@ -36,8 +36,11 @@ var xmlfmtCmd = &cobra.Command{
 			}
 
 			model := xml.NewXMLFormatterModel(common)
-			model.SetContent(string(data))
-
+			err = model.SetContent(string(data))
+			if err != nil {
+				log.Printf("ERROR: %s", err)
+				return
+			}
 			p := tea.NewProgram(model, tea.WithAltScreen())
 			if _, err := p.Run(); err != nil {
 				log.Printf("ERROR: %s", err)
