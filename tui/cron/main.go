@@ -3,9 +3,7 @@ package cron
 import (
 	"errors"
 	"fmt"
-	"os"
 	"regexp"
-	"strconv"
 	"strings"
 
 	"github.com/charmbracelet/huh"
@@ -26,20 +24,20 @@ type CronModel struct {
 
 func NewCronModel(common *ui.CommonModel) *CronModel {
 	m := &CronModel{
-		common: common,
+		common:         common,
+		cronExpression: "*/5 * * * *",
 	}
-	accessible, _ := strconv.ParseBool(os.Getenv("ACCESSIBLE"))
 
 	// @see https://gist.github.com/Aterfax/401875eb3d45c9c114bbef69364dd045
 	// @see https://regexr.com/4jp54
+	// TODO: Invalid "*/5 * * * *." format is being allowed. Fix it.
 	cronRegex := `^((((\d+,)+\d+|(\d+(\/|-|#)\d+)|\d+L?|\*(\/\d+)?|L(-\d+)?|\?|[A-Z]{3}(-[A-Z]{3})?) ?){5,7})|(@(annually|yearly|monthly|weekly|daily|hourly|reboot))|(@every (\d+(ns|us|µs|ms|s|m|h))+)$`
-
 	m.form = huh.NewForm(
 		huh.NewGroup(
 			huh.NewInput().
 				Title("Cron Expression").
-				Placeholder("* * * * *").
 				Value(&m.cronExpression).
+				Placeholder("*/5 * * * *").
 				Validate(func(str string) error {
 					// First validate with regexp
 					matched, err := regexp.MatchString(cronRegex, str)
@@ -60,9 +58,28 @@ func NewCronModel(common *ui.CommonModel) *CronModel {
 						return fmt.Errorf("invalid cron expression: %v", err)
 					}
 					return nil
-				}),
+				}).
+				DescriptionFunc(func() string {
+					expr, err := cron.NewDescriptor(
+						cron.Use24HourTimeFormat(true),
+						cron.DayOfWeekStartsAtOne(true),
+					)
+					if err != nil {
+						return ""
+					}
+
+					desc, err := expr.ToDescription(m.cronExpression, cron.Locale_en)
+					if err != nil {
+						return ""
+					}
+
+					valueStyle := lipgloss.NewStyle().
+						Foreground(lipgloss.Color("#87CEEB")).PaddingLeft(20)
+
+					return valueStyle.Render(desc)
+				}, &m.cronExpression),
 		),
-	).WithTheme(huh.ThemeCharm()).WithAccessible(accessible).WithShowHelp(false)
+	).WithTheme(huh.ThemeCharm()).WithShowHelp(false)
 
 	return m
 }
