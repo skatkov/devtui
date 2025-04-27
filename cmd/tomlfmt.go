@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"fmt"
 	"io"
 	"log"
 	"os"
@@ -48,7 +49,7 @@ var tomlfmtCmd = &cobra.Command{
 			return
 		}
 
-		_, err = os.Stdout.WriteString(result)
+		_, err = fmt.Fprintln(cmd.OutOrStdout(), result)
 		if err != nil {
 			log.Printf("ERROR: %s", err)
 		}

@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"fmt"
 	"io"
 	"log"
 	"os"
@@ -43,7 +44,7 @@ var jsonfmtCmd = &cobra.Command{
 
 		result := json.FormatJSON(string(data))
 
-		_, err = os.Stdout.WriteString(result)
+		_, err = fmt.Fprintln(cmd.OutOrStdout(), result)
 		if err != nil {
 			log.Printf("ERROR: %s", err)
 		}

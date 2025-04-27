@@ -38,7 +38,7 @@ var countCmd = &cobra.Command{
 			fmt.Println(err)
 			return
 		}
-		fmt.Println(table.New().Border(lipgloss.NormalBorder()).
+		fmt.Fprintln(cmd.OutOrStdout(), table.New().Border(lipgloss.NormalBorder()).
 			Row("Characters", strconv.Itoa(stats.Characters)).
 			Row("Spaces", strconv.Itoa(stats.Spaces)).
 			Row("Words", strconv.Itoa(stats.Words)))
