@@ -7,6 +7,7 @@ import (
 
 	polargo "github.com/polarsource/polar-go"
 	"github.com/polarsource/polar-go/models/components"
+	parentcmd "github.com/skatkov/devtui/cmd"
 	"github.com/spf13/cobra"
 )
 
@@ -14,16 +15,16 @@ var ValidateCmd = &cobra.Command{
 	Use:     "validate",
 	Short:   "Validate a license",
 	Long:    "Validate a license",
-	Example: "devtui validate",
+	Example: "devtui license validate",
 	RunE: func(cmd *cobra.Command, args []string) error {
 		ctx := context.Background()
 
 		s := polargo.New()
 
 		res, err := s.CustomerPortal.LicenseKeys.Validate(ctx, components.LicenseKeyValidate{
-			Key:            "DEVTUI-2CA57A34-E191-4290-A394-7B107BCA1036",
-			OrganizationID: "afde3142-5d70-42e3-8214-71c5bbc04e6f",
-			ActivationID:   polargo.String("802c9aa5-9156-4b48-9a6e-3e716c335955"),
+			Key:            parentcmd.GetLicenseKey(),
+			OrganizationID: parentcmd.GetOrgID(),
+			ActivationID:   polargo.String(parentcmd.GetActivationID()),
 		})
 		if err != nil {
 			log.Fatal(err)
