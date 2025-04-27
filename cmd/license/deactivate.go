@@ -1,4 +1,4 @@
-package cmd
+package license
 
 import (
 	"context"
@@ -10,7 +10,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var deactivateCmd = &cobra.Command{
+var DeactivateCmd = &cobra.Command{
 	Use:     "deactivate",
 	Short:   "Deactivate a license",
 	Long:    "Deactivate a license",
@@ -33,8 +33,4 @@ var deactivateCmd = &cobra.Command{
 		}
 		return nil
 	},
-}
-
-func init() {
-	rootCmd.AddCommand(deactivateCmd)
 }
