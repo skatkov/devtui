@@ -8,18 +8,15 @@ import (
 
 	polargo "github.com/polarsource/polar-go"
 	"github.com/polarsource/polar-go/models/components"
+	parentcmd "github.com/skatkov/devtui/cmd"
 	"github.com/spf13/cobra"
-)
-
-var (
-	licenseKey string
 )
 
 var ActivateCmd = &cobra.Command{
 	Use:     "activate",
 	Short:   "Activate a license",
 	Long:    "Activate a license",
-	Example: "devtui activate --key=YOUR_LICENSE_KEY",
+	Example: "devtui license activate --key=YOUR_LICENSE_KEY",
 	RunE: func(cmd *cobra.Command, args []string) error {
 		ctx := context.Background()
 
@@ -30,20 +27,12 @@ var ActivateCmd = &cobra.Command{
 			hostname = "DevTUI"
 		}
 
-		// If no key is provided via flag, check for environment variable
-		if licenseKey == "" {
-			envKey := os.Getenv("DEVTUI_KEY")
-			if envKey != "" {
-				licenseKey = envKey
-			}
-		}
-
 		tz, _ := time.Now().Zone()
 		label := fmt.Sprintf("%s-%s", hostname, tz)
 
 		res, err := s.CustomerPortal.LicenseKeys.Activate(ctx, components.LicenseKeyActivate{
-			Key:            licenseKey,
-			OrganizationID: "afde3142-5d70-42e3-8214-71c5bbc04e6f",
+			Key:            parentcmd.GetLicenseKey(),
+			OrganizationID: parentcmd.GetOrgID(),
 			Label:          label,
 		})
 		if err != nil {
@@ -60,8 +49,4 @@ var ActivateCmd = &cobra.Command{
 		}
 		return nil
 	},
-}
-
-func init() {
-	ActivateCmd.Flags().StringVar(&licenseKey, "key", "", "License key to activate")
 }
