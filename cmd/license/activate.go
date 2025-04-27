@@ -1,4 +1,4 @@
-package cmd
+package license
 
 import (
 	"context"
@@ -15,7 +15,7 @@ var (
 	licenseKey string
 )
 
-var activateCmd = &cobra.Command{
+var ActivateCmd = &cobra.Command{
 	Use:     "activate",
 	Short:   "Activate a license",
 	Long:    "Activate a license",
@@ -63,6 +63,5 @@ var activateCmd = &cobra.Command{
 }
 
 func init() {
-	activateCmd.Flags().StringVar(&licenseKey, "key", "", "License key to activate")
-	rootCmd.AddCommand(activateCmd)
+	ActivateCmd.Flags().StringVar(&licenseKey, "key", "", "License key to activate")
 }
