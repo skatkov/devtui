@@ -12,7 +12,7 @@ func MacUint64() uint64 {
 	}
 
 	for _, i := range interfaces {
-		if i.Flags&net.FlagUp != 0 && !bytes.Equal(i.HardwareAddr, nil) {
+		if i.Flags&net.FlagUp != 0 && len(i.HardwareAddr) > 0 {
 
 			// Skip locally administered addresses
 			if i.HardwareAddr[0]&2 == 2 {
