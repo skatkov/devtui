@@ -36,7 +36,7 @@ var DeactivateCmd = &cobra.Command{
 			ActivationID:   id,
 		})
 		if err != nil {
-			log.Fatal(err)
+			return err
 		}
 		if res != nil {
 			fmt.Println("Deactivation completed successfully")
