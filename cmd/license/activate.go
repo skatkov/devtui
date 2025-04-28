@@ -8,7 +8,6 @@ import (
 
 	polargo "github.com/polarsource/polar-go"
 	"github.com/polarsource/polar-go/models/components"
-	parentcmd "github.com/skatkov/devtui/cmd"
 	"github.com/spf13/cobra"
 )
 
@@ -30,9 +29,14 @@ var ActivateCmd = &cobra.Command{
 		tz, _ := time.Now().Zone()
 		label := fmt.Sprintf("%s-%s", hostname, tz)
 
+		key, err := cmd.Flags().GetString("key")
+		if err != nil {
+			return err
+		}
+
 		res, err := s.CustomerPortal.LicenseKeys.Activate(ctx, components.LicenseKeyActivate{
-			Key:            parentcmd.GetLicenseKey(),
-			OrganizationID: parentcmd.GetOrgID(),
+			Key:            key,
+			OrganizationID: "afde3142-5d70-42e3-8214-71c5bbc04e6f",
 			Label:          label,
 		})
 		if err != nil {
