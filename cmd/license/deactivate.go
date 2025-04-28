@@ -3,7 +3,6 @@ package license
 import (
 	"context"
 	"fmt"
-	"log"
 
 	polargo "github.com/polarsource/polar-go"
 	"github.com/polarsource/polar-go/models/components"
@@ -32,7 +31,7 @@ var DeactivateCmd = &cobra.Command{
 
 		res, err := s.CustomerPortal.LicenseKeys.Deactivate(ctx, components.LicenseKeyDeactivate{
 			Key:            key,
-			OrganizationID: "afde3142-5d70-42e3-8214-71c5bbc04e6f",
+			OrganizationID: OrganizationID,
 			ActivationID:   id,
 		})
 		if err != nil {

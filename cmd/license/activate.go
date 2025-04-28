@@ -11,6 +11,8 @@ import (
 	"github.com/spf13/cobra"
 )
 
+const OrganizationID = "afde3142-5d70-42e3-8214-71c5bbc04e6f"
+
 var ActivateCmd = &cobra.Command{
 	Use:     "activate",
 	Short:   "Activate a license",
@@ -36,7 +38,7 @@ var ActivateCmd = &cobra.Command{
 
 		res, err := s.CustomerPortal.LicenseKeys.Activate(ctx, components.LicenseKeyActivate{
 			Key:            key,
-			OrganizationID: "afde3142-5d70-42e3-8214-71c5bbc04e6f",
+			OrganizationID: OrganizationID,
 			Label:          label,
 		})
 		if err != nil {
