@@ -36,7 +36,7 @@ var ValidateCmd = &cobra.Command{
 			ActivationID:   polargo.String(id),
 		})
 		if err != nil {
-			log.Fatal(err)
+			return err
 		}
 		if res.ValidatedLicenseKey != nil {
 			fmt.Printf("ID: %s\n", res.ValidatedLicenseKey.ID)
