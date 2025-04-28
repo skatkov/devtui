@@ -24,11 +24,20 @@ func init() {
 	LicenseCmd.AddCommand(license.ValidateCmd)
 
 	LicenseCmd.PersistentFlags().StringVar(&licenseKey, "key", "", "License key")
-	LicenseCmd.MarkFlagRequired("key")
+	err := LicenseCmd.MarkFlagRequired("key")
+	if err != nil {
+		panic(err)
+	}
 
-	viper.BindPFlag("key", LicenseCmd.PersistentFlags().Lookup("key"))
+	err = viper.BindPFlag("key", LicenseCmd.PersistentFlags().Lookup("key"))
+	if err != nil {
+		panic(err)
+	}
 
 	LicenseCmd.PersistentFlags().StringVar(&activationID, "id", "", "License activation ID")
-	viper.BindPFlag("id", LicenseCmd.PersistentFlags().Lookup("id"))
+	err = viper.BindPFlag("id", LicenseCmd.PersistentFlags().Lookup("id"))
+	if err != nil {
+		panic(err)
+	}
 
 }
