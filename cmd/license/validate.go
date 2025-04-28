@@ -3,7 +3,6 @@ package license
 import (
 	"context"
 	"fmt"
-	"log"
 
 	polargo "github.com/polarsource/polar-go"
 	"github.com/polarsource/polar-go/models/components"
@@ -32,7 +31,7 @@ var ValidateCmd = &cobra.Command{
 
 		res, err := s.CustomerPortal.LicenseKeys.Validate(ctx, components.LicenseKeyValidate{
 			Key:            key,
-			OrganizationID: "afde3142-5d70-42e3-8214-71c5bbc04e6f",
+			OrganizationID: OrganizationID,
 			ActivationID:   polargo.String(id),
 		})
 		if err != nil {
