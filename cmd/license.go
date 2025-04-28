@@ -1,10 +1,9 @@
 package cmd
 
 import (
-	"os"
-
 	"github.com/skatkov/devtui/cmd/license"
 	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
 )
 
 var LicenseCmd = &cobra.Command{
@@ -16,7 +15,6 @@ var LicenseCmd = &cobra.Command{
 var (
 	licenseKey   string
 	activationID string
-	orgID        string = "afde3142-5d70-42e3-8214-71c5bbc04e6f"
 )
 
 func init() {
@@ -25,36 +23,12 @@ func init() {
 	LicenseCmd.AddCommand(license.DeactivateCmd)
 	LicenseCmd.AddCommand(license.ValidateCmd)
 
-	LicenseCmd.PersistentFlags().StringVar(&licenseKey, "key", "", "License key to activate")
+	LicenseCmd.PersistentFlags().StringVar(&licenseKey, "key", "", "License key")
+	LicenseCmd.MarkFlagRequired("key")
+
+	viper.BindPFlag("key", LicenseCmd.PersistentFlags().Lookup("key"))
+
 	LicenseCmd.PersistentFlags().StringVar(&activationID, "id", "", "License activation ID")
-}
+	viper.BindPFlag("id", LicenseCmd.PersistentFlags().Lookup("id"))
 
-func GetLicenseKey() string {
-	if licenseKey == "" {
-		envKey := os.Getenv("DEVTUI_KEY")
-		if envKey != "" {
-			licenseKey = envKey
-		}
-	}
-	return licenseKey
-}
-
-func GetOrgID() string {
-	if orgID == "" {
-		envKey := os.Getenv("DEVTUI_ORG_ID")
-		if envKey != "" {
-			orgID = envKey
-		}
-	}
-	return orgID
-}
-
-func GetActivationID() string {
-	if activationID == "" {
-		envKey := os.Getenv("DEVTUI_ID")
-		if envKey != "" {
-			activationID = envKey
-		}
-	}
-	return activationID
 }
