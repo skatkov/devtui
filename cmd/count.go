@@ -18,7 +18,7 @@ var countCmd = &cobra.Command{
 	Long:  "Count characters, spaces and words in a string",
 	Example: `count < testdata/example.csv
 	count "test me please"`,
-	Run: func(cmd *cobra.Command, args []string) {
+	RunE: func(cmd *cobra.Command, args []string) error {
 		var text string
 		var err error
 
@@ -28,20 +28,23 @@ var countCmd = &cobra.Command{
 			reader := bufio.NewReader(os.Stdin)
 			text, err = reader.ReadString('\n')
 			if err != nil {
-				fmt.Println(err)
-				return
+				return err
 			}
 		}
 
 		stats, err := textanalyzer.Analyze(text)
 		if err != nil {
-			fmt.Println(err)
-			return
+			return err
 		}
-		fmt.Fprintln(cmd.OutOrStdout(), table.New().Border(lipgloss.NormalBorder()).
+
+		_, err = fmt.Fprintln(cmd.OutOrStdout(), table.New().Border(lipgloss.NormalBorder()).
 			Row("Characters", strconv.Itoa(stats.Characters)).
 			Row("Spaces", strconv.Itoa(stats.Spaces)).
 			Row("Words", strconv.Itoa(stats.Words)))
+		if err != nil {
+			return err
+		}
+		return nil
 	},
 }
 
