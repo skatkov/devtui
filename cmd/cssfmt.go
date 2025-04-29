@@ -2,7 +2,6 @@ package cmd
 
 import (
 	"io"
-	"log"
 	"os"
 
 	tea "github.com/charmbracelet/bubbletea"
@@ -20,16 +19,13 @@ var cssfmtCmd = &cobra.Command{
 	cssfmt < testdata/bootstrap.min.css
 	cssfmt < testdata/bootstrap.min.css --tui # Show results in a TUI
 	`,
-	Run: func(cmd *cobra.Command, args []string) {
+	RunE: func(cmd *cobra.Command, args []string) error {
 		if flagTui {
-			// Read input CSS
 			input, err := io.ReadAll(os.Stdin)
 			if err != nil {
-				log.Printf("ERROR reading input: %s", err)
-				return
+				return err
 			}
 
-			// Initialize the TUI
 			common := &ui.CommonModel{
 				Width:  100, // Default width, will be adjusted by the TUI
 				Height: 30,  // Default height, will be adjusted by the TUI
@@ -38,8 +34,7 @@ var cssfmtCmd = &cobra.Command{
 			model := css.NewCSSFormatterModel(common)
 			err = model.SetContent(string(input))
 			if err != nil {
-				log.Printf("ERROR reading input: %s", err)
-				return
+				return err
 			}
 			p := tea.NewProgram(
 				model,
@@ -48,9 +43,10 @@ var cssfmtCmd = &cobra.Command{
 			)
 
 			if _, err := p.Run(); err != nil {
-				log.Printf("ERROR running TUI: %s", err)
+				return err
 			}
-			return
+
+			return nil
 		}
 
 		if flagTab {
@@ -60,8 +56,10 @@ var cssfmtCmd = &cobra.Command{
 		cssformat.AlwaysSemicolon = flagSemicolon
 		err := cssformat.Format(os.Stdin, os.Stdout)
 		if err != nil {
-			log.Printf("ERROR: %s", err)
+			return err
 		}
+
+		return nil
 	},
 }
 

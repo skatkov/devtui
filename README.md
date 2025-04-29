@@ -6,15 +6,13 @@
 
 ![devtui](devtui.png)
 
-## ✨ Features
+## 💡 Why DevTUI?
 
-DevTUI includes a growing collection of handy tools for developers:
-
-- ✅ JSON Formatter
-- ⏰ Cron Parser
-- 🔑 UUID Generator
-- 🔢 Base Number Converter
-- 🎯 And more...
+ - 🧰 Unified experience – Replace scattered tools with a single app
+ - 🔒 Privacy-focused – Everything runs locally, no data ever leaves your computer
+ - 🌐 Offline support – No internet? No problem
+ - ⌨️ Built for the terminal – No need to reach for your mouse or browser
+ - 🛠️ Actively maintained – Not just another abandoned open-source project
 
 ---
 
@@ -26,16 +24,6 @@ brew install skatkov/tap/devtui
 ### 📥 Download Executable
 
 Or download executable from [GitHub Releases](https://github.com/skatkov/homebrew-tap/releases?q=devtui&expanded=true)
-
----
-
-## 💡 Why DevTUI?
-
- - 🧰 Unified experience – Replace scattered tools with a single app
- - 🔒 Privacy-focused – Everything runs locally, no data ever leaves your computer
- - 🌐 Offline support – No internet? No problem
- - ⌨️ Built for the terminal – No need to reach for your mouse or browser
- - 🛠️ Actively maintained – Not just another abandoned open-source project
 
 ---
 
