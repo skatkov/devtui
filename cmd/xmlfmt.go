@@ -3,7 +3,6 @@ package cmd
 import (
 	"fmt"
 	"io"
-	"log"
 	"os"
 
 	tea "github.com/charmbracelet/bubbletea"
@@ -22,12 +21,11 @@ var xmlfmtCmd = &cobra.Command{
 	xmlfmt < testdata/sample.xml > output.xml # Output formatted XML to file
 	xmlfmt < testdata/sample.xml --tui # Open XML formatter in TUI
 	`,
-	Run: func(cmd *cobra.Command, args []string) {
+	RunE: func(cmd *cobra.Command, args []string) error {
 		// Read all input data from stdin
 		data, err := io.ReadAll(os.Stdin)
 		if err != nil {
-			log.Printf("ERROR: %s", err)
-			return
+			return err
 		}
 
 		if flagTUI {
@@ -39,14 +37,13 @@ var xmlfmtCmd = &cobra.Command{
 			model := xml.NewXMLFormatterModel(common)
 			err = model.SetContent(string(data))
 			if err != nil {
-				log.Printf("ERROR: %s", err)
-				return
+				return err
 			}
 			p := tea.NewProgram(model, tea.WithAltScreen())
 			if _, err := p.Run(); err != nil {
-				log.Printf("ERROR: %s", err)
+				return err
 			}
-			return
+			return nil
 		}
 
 		// Process the XML
@@ -55,8 +52,10 @@ var xmlfmtCmd = &cobra.Command{
 
 		_, err = fmt.Fprintln(cmd.OutOrStdout(), result)
 		if err != nil {
-			log.Printf("ERROR: %s", err)
+			return err
 		}
+
+		return nil
 	},
 }
 
