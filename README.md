@@ -27,7 +27,7 @@ Or download executable from [GitHub Releases](https://github.com/skatkov/homebre
 
 ---
 
-## 📋 Docs
+## 📋 Requirements
 
 ### macOS
 - ✅ Works out of the box
@@ -43,13 +43,11 @@ echo $XDG_SESSION_TYPE
 # Output: wayland or x11
 ```
 ### Windows
-
-- ⚠️ Should work, but not officially tested.
-- Grab the executable from the GitHub Releases page.
+- ⚠️ Not tested, but available.
 
 ---
 
-## 🚀 Usage
+## 🚀 Docs
 DevTUI includes both a TUI and CLI interface.
 
 ### 🖥 TUI
