@@ -3,7 +3,6 @@ package cmd
 import (
 	"fmt"
 	"io"
-	"log"
 	"os"
 
 	"github.com/skatkov/devtui/tui/json"
@@ -19,11 +18,10 @@ var jsonfmtCmd = &cobra.Command{
  	devtui jsonfmt < testdata/example.json > formatted.json # Output to file
 	`,
 	Args: cobra.NoArgs,
-	Run: func(cmd *cobra.Command, args []string) {
+	RunE: func(cmd *cobra.Command, args []string) error {
 		data, err := io.ReadAll(os.Stdin)
 		if err != nil {
-			log.Printf("ERROR: %s", err)
-			return
+			return err
 		}
 
 		// if flagTUI {
@@ -46,8 +44,10 @@ var jsonfmtCmd = &cobra.Command{
 
 		_, err = fmt.Fprintln(cmd.OutOrStdout(), result)
 		if err != nil {
-			log.Printf("ERROR: %s", err)
+			return err
 		}
+
+		return nil
 	},
 }
 
