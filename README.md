@@ -27,7 +27,7 @@ Or download executable from [GitHub Releases](https://github.com/skatkov/homebre
 
 ---
 
-## 📋 Requirements
+## 📋 Docs
 
 ### macOS
 - ✅ Works out of the box
