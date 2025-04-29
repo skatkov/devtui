@@ -3,7 +3,6 @@ package cmd
 import (
 	"fmt"
 	"io"
-	"log"
 	"os"
 	"strings"
 
@@ -26,12 +25,11 @@ var gqlfmtCmd = &cobra.Command{
 	gqlquery --indent "    " --with-comments --with-descriptions < testdata/query.graphql # With formatting options
 	gqlquery < testdata/query.graphql --tui # Show results in a TUI
 	`,
-	Run: func(cmd *cobra.Command, args []string) {
+	RunE: func(cmd *cobra.Command, args []string) error {
 		// Read all input data from stdin
 		data, err := io.ReadAll(os.Stdin)
 		if err != nil {
-			log.Printf("ERROR: %s", err)
-			return
+			return err
 		}
 
 		if flagTUI {
@@ -44,7 +42,7 @@ var gqlfmtCmd = &cobra.Command{
 			model := graphqlquery.NewGraphQLQueryModel(common)
 			err := model.SetContent(string(data))
 			if err != nil {
-				log.Printf("ERROR running TUI: %s", err)
+				return err
 			}
 
 			p := tea.NewProgram(
@@ -54,9 +52,9 @@ var gqlfmtCmd = &cobra.Command{
 			)
 
 			if _, err := p.Run(); err != nil {
-				log.Printf("ERROR running TUI: %s", err)
+				return err
 			}
-			return
+			return nil
 		}
 
 		// Parse the GraphQL query
@@ -65,8 +63,7 @@ var gqlfmtCmd = &cobra.Command{
 			Name:  "stdin",
 		})
 		if err != nil {
-			log.Printf("ERROR parsing GraphQL: %s", err)
-			return
+			return err
 		}
 
 		// Configure formatter options
@@ -96,8 +93,10 @@ var gqlfmtCmd = &cobra.Command{
 		// Write the result to stdout
 		_, err = fmt.Fprintln(cmd.OutOrStdout(), result)
 		if err != nil {
-			log.Printf("ERROR: %s", err)
+			return err
 		}
+
+		return nil
 	},
 }
 
