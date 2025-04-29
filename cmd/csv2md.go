@@ -2,7 +2,6 @@ package cmd
 
 import (
 	"encoding/csv"
-	"fmt"
 	"os"
 
 	"github.com/skatkov/devtui/internal/csv2md"
@@ -19,16 +18,17 @@ var csv2mdCmd = &cobra.Command{
 	Example: `  devtui csv2md -t < example.tsv          - convert tsv from stdin and view result in stdout
 	devtui csv2md < example.tsv > output.md - convert tsv from stdin and write result in new file
 	cat example.tsv | devtui csv2md         - convert tsv from stdin and view result in stdout`,
-	Run: func(cmd *cobra.Command, args []string) {
+	RunE: func(cmd *cobra.Command, args []string) error {
 		csvReader := csv.NewReader(os.Stdin)
 
 		records, err := csvReader.ReadAll()
 		if err != nil {
-			fmt.Printf("Failed to parse input from stdin: %v\n", err)
-			return
+			return err
 		}
 
 		csv2md.Print(csv2md.Convert(csv2mdHeader, records, csv2mdAlignColumns))
+
+		return nil
 	},
 }
 
