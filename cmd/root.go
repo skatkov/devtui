@@ -17,8 +17,7 @@ var rootCmd = &cobra.Command{
 	RunE: func(cmd *cobra.Command, args []string) error {
 		p := tea.NewProgram(root.RootScreen(), tea.WithAltScreen())
 		if _, err := p.Run(); err != nil {
-			fmt.Printf("Error starting program: %v", err)
-			os.Exit(1)
+			return err
 		}
 		return nil
 	},

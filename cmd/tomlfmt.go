@@ -3,7 +3,6 @@ package cmd
 import (
 	"fmt"
 	"io"
-	"log"
 	"os"
 
 	tea "github.com/charmbracelet/bubbletea"
@@ -16,11 +15,10 @@ var tomlfmtCmd = &cobra.Command{
 	Use:   "tomlfmt",
 	Short: "Format TOML files",
 	Long:  "Format TOML files",
-	Run: func(cmd *cobra.Command, args []string) {
+	RunE: func(cmd *cobra.Command, args []string) error {
 		data, err := io.ReadAll(os.Stdin)
 		if err != nil {
-			log.Printf("ERROR: %s", err)
-			return
+			return err
 		}
 
 		if flagTUI {
@@ -32,27 +30,27 @@ var tomlfmtCmd = &cobra.Command{
 			model := toml.NewTomlFormatModel(common)
 			err = model.SetContent(string(data))
 			if err != nil {
-				log.Printf("ERROR reading input: %s", err)
-				return
+				return err
 			}
 
 			p := tea.NewProgram(model, tea.WithAltScreen())
 			if _, err := p.Run(); err != nil {
-				log.Printf("ERROR: %s", err)
+				return err
 			}
-			return
+			return nil
 		}
 
 		result, err := toml.Convert(string(data))
 		if err != nil {
-			log.Printf("ERROR: %s", err)
-			return
+			return err
 		}
 
 		_, err = fmt.Fprintln(cmd.OutOrStdout(), result)
 		if err != nil {
-			log.Printf("ERROR: %s", err)
+			return err
 		}
+
+		return nil
 	},
 }
 
