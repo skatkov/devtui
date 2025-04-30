@@ -8,6 +8,7 @@ import (
 
 	polargo "github.com/polarsource/polar-go"
 	"github.com/polarsource/polar-go/models/components"
+	"github.com/skatkov/devtui/internal/macaddr"
 	"github.com/spf13/cobra"
 )
 
@@ -40,6 +41,9 @@ var ActivateCmd = &cobra.Command{
 			Key:            key,
 			OrganizationID: OrganizationID,
 			Label:          label,
+			Conditions: map[string]components.LicenseKeyActivateConditions{
+				"macaddr": components.CreateLicenseKeyActivateConditionsInteger(int64(macaddr.MacUint64())),
+			},
 		})
 		if err != nil {
 			return err
