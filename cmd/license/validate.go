@@ -6,6 +6,7 @@ import (
 
 	polargo "github.com/polarsource/polar-go"
 	"github.com/polarsource/polar-go/models/components"
+	"github.com/skatkov/devtui/internal/macaddr"
 	"github.com/spf13/cobra"
 )
 
@@ -33,8 +34,17 @@ var ValidateCmd = &cobra.Command{
 			Key:            key,
 			OrganizationID: OrganizationID,
 			ActivationID:   polargo.String(id),
+			Conditions: map[string]components.Conditions{
+				"macaddr": components.CreateConditionsInteger(int64(macaddr.MacUint64())),
+			},
 		})
 		if err != nil {
+			// Activation ID is wrong
+			// Error: {"detail":[{"loc":["body","activation_id"],"msg":"Input should be a valid UUID, invalid group length in group 0: expected 8, found 5","type":"uuid_parsing"}]}
+
+			// MacAddress is wrong or not provided.
+			// {"error":"ResourceNotFound","detail":"License key does not match required conditions"}
+
 			return err
 		}
 		if res.ValidatedLicenseKey != nil {
