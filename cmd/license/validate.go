@@ -8,6 +8,7 @@ import (
 	"github.com/polarsource/polar-go/models/components"
 	"github.com/skatkov/devtui/internal/macaddr"
 	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
 )
 
 var ValidateCmd = &cobra.Command{
@@ -20,20 +21,10 @@ var ValidateCmd = &cobra.Command{
 
 		s := polargo.New()
 
-		key, err := cmd.Flags().GetString("key")
-		if err != nil {
-			return err
-		}
-
-		id, err := cmd.Flags().GetString("id")
-		if err != nil {
-			return err
-		}
-
 		res, err := s.CustomerPortal.LicenseKeys.Validate(ctx, components.LicenseKeyValidate{
-			Key:            key,
+			Key:            viper.GetString("key"),
 			OrganizationID: OrganizationID,
-			ActivationID:   polargo.String(id),
+			ActivationID:   polargo.String(viper.GetString("id")),
 			Conditions: map[string]components.Conditions{
 				"macaddr": components.CreateConditionsInteger(int64(macaddr.MacUint64())),
 			},

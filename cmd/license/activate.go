@@ -10,6 +10,7 @@ import (
 	"github.com/polarsource/polar-go/models/components"
 	"github.com/skatkov/devtui/internal/macaddr"
 	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
 )
 
 const OrganizationID = "afde3142-5d70-42e3-8214-71c5bbc04e6f"
@@ -32,13 +33,8 @@ var ActivateCmd = &cobra.Command{
 		tz, _ := time.Now().Zone()
 		label := fmt.Sprintf("%s-%s", hostname, tz)
 
-		key, err := cmd.Flags().GetString("key")
-		if err != nil {
-			return err
-		}
-
 		res, err := s.CustomerPortal.LicenseKeys.Activate(ctx, components.LicenseKeyActivate{
-			Key:            key,
+			Key:            viper.GetString("key"),
 			OrganizationID: OrganizationID,
 			Label:          label,
 			Conditions: map[string]components.LicenseKeyActivateConditions{

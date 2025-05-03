@@ -7,6 +7,7 @@ import (
 	polargo "github.com/polarsource/polar-go"
 	"github.com/polarsource/polar-go/models/components"
 	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
 )
 
 var DeactivateCmd = &cobra.Command{
@@ -19,20 +20,10 @@ var DeactivateCmd = &cobra.Command{
 
 		s := polargo.New()
 
-		key, err := cmd.Flags().GetString("key")
-		if err != nil {
-			return err
-		}
-
-		id, err := cmd.Flags().GetString("id")
-		if err != nil {
-			return err
-		}
-
 		res, err := s.CustomerPortal.LicenseKeys.Deactivate(ctx, components.LicenseKeyDeactivate{
-			Key:            key,
+			Key:            viper.GetString("key"),
 			OrganizationID: OrganizationID,
-			ActivationID:   id,
+			ActivationID:   viper.GetString("id"),
 		})
 		if err != nil {
 			return err

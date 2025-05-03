@@ -23,6 +23,9 @@ func init() {
 	LicenseCmd.AddCommand(license.DeactivateCmd)
 	LicenseCmd.AddCommand(license.ValidateCmd)
 
+	viper.SetEnvPrefix("DEVTUI")
+	viper.AutomaticEnv()
+
 	LicenseCmd.PersistentFlags().StringVar(&licenseKey, "key", "", "License key")
 	err := viper.BindPFlag("key", LicenseCmd.PersistentFlags().Lookup("key"))
 	if err != nil {
