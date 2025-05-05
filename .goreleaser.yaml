@@ -37,6 +37,12 @@ builds:
       - goos: windows
         goarm: "7"
 changelog:
+  ai:
+    use: openai
+    model: o3
+    prompt:
+      from_file:
+        path: ./CHANGELOG_PROMPT.md
   sort: asc
   use: github
   format: '{{ replace (replace .Message "feat: " "") "fix: " "" }}'
