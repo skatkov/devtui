@@ -2,29 +2,38 @@ package license
 
 import (
 	"context"
+	"errors"
 	"fmt"
 
 	polargo "github.com/polarsource/polar-go"
 	"github.com/polarsource/polar-go/models/components"
 	"github.com/skatkov/devtui/internal/macaddr"
 	"github.com/spf13/cobra"
-	"github.com/spf13/viper"
 )
 
 var ValidateCmd = &cobra.Command{
 	Use:     "validate",
 	Short:   "Validate a license",
-	Long:    "Validate a license",
+	Long:    "Reads a license and validates it",
 	Example: "devtui license validate",
 	RunE: func(cmd *cobra.Command, args []string) error {
 		ctx := context.Background()
 
+		licenseData, err := loadLicenseData()
+		if err != nil {
+			return fmt.Errorf("failed to load license data: %w", err)
+		}
+
+		if licenseData == nil {
+			return errors.New("no active license found")
+		}
+
 		s := polargo.New()
 
 		res, err := s.CustomerPortal.LicenseKeys.Validate(ctx, components.LicenseKeyValidate{
-			Key:            viper.GetString("key"),
+			Key:            licenseData.LicenseKeyID,
 			OrganizationID: OrganizationID,
-			ActivationID:   polargo.String(viper.GetString("id")),
+			ActivationID:   polargo.String(licenseData.ActivationID),
 			Conditions: map[string]components.Conditions{
 				"macaddr": components.CreateConditionsInteger(int64(macaddr.MacUint64())),
 			},
@@ -39,21 +48,7 @@ var ValidateCmd = &cobra.Command{
 			return err
 		}
 		if res.ValidatedLicenseKey != nil {
-			fmt.Printf("ID: %s\n", res.ValidatedLicenseKey.ID)
-			// fmt.Printf("Organization ID: %s\n", res.ValidatedLicenseKey.OrganizationID)
-			fmt.Printf("Customer ID: %s\n", res.ValidatedLicenseKey.CustomerID)
-			fmt.Printf("Customer: %+v\n", res.ValidatedLicenseKey.Customer)
-			fmt.Printf("Benefit ID: %s\n", res.ValidatedLicenseKey.BenefitID)
-			fmt.Printf("Key: %s\n", res.ValidatedLicenseKey.Key)
-			fmt.Printf("Display Key: %s\n", res.ValidatedLicenseKey.DisplayKey)
-			fmt.Printf("Status: %s\n", res.ValidatedLicenseKey.Status)
-			fmt.Printf("Limit Activations: %v\n", res.ValidatedLicenseKey.LimitActivations)
-			fmt.Printf("Usage: %d\n", res.ValidatedLicenseKey.Usage)
-			fmt.Printf("Limit Usage: %v\n", res.ValidatedLicenseKey.LimitUsage)
-			fmt.Printf("Validations: %d\n", res.ValidatedLicenseKey.Validations)
-			fmt.Printf("Last Validated At: %v\n", res.ValidatedLicenseKey.LastValidatedAt)
-			fmt.Printf("Expires At: %v\n", res.ValidatedLicenseKey.ExpiresAt)
-			fmt.Printf("Activation: %+v\n", res.ValidatedLicenseKey.Activation)
+			fmt.Println("\nLicense valid.")
 		}
 		return nil
 	},
