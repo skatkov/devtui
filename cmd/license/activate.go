@@ -2,15 +2,10 @@ package license
 
 import (
 	"context"
-	"crypto/sha256"
-	"encoding/hex"
-	"encoding/json"
 	"fmt"
 	"os"
-	"path/filepath"
 	"time"
 
-	"github.com/adrg/xdg"
 	polargo "github.com/polarsource/polar-go"
 	"github.com/polarsource/polar-go/models/components"
 	"github.com/skatkov/devtui/internal/macaddr"
@@ -18,19 +13,6 @@ import (
 	"github.com/spf13/viper"
 )
 
-const (
-	OrganizationID  = "afde3142-5d70-42e3-8214-71c5bbc04e6f"
-	Salt            = "7f75d39f55414c9f9862dfc33163b598"
-	RecheckInterval = 168 * time.Hour // weekly
-)
-
-type LicenseData struct {
-	Hash           string    `json:"hash"`
-	LicenseKeyID   string    `json:"license_key_id"`
-	ActivationID   string    `json:"activation_id"`
-	NextCheckTime  time.Time `json:"next_check_time"`
-	LastVerifiedAt time.Time `json:"last_verified_at"`
-}
 var ActivateCmd = &cobra.Command{
 	Use:     "activate",
 	Short:   "Activate a license",
@@ -63,12 +45,19 @@ var ActivateCmd = &cobra.Command{
 			return err
 		}
 		if res.LicenseKeyActivationRead != nil {
+			fmt.Printf("ID: %s\n", res.LicenseKeyActivationRead.ID)
+			fmt.Printf("License Key ID: %s\n", res.LicenseKeyActivationRead.LicenseKeyID)
+			fmt.Printf("Label: %s\n", res.LicenseKeyActivationRead.Label)
+			fmt.Printf("Created At: %s\n", res.LicenseKeyActivationRead.CreatedAt)
+			if res.LicenseKeyActivationRead.ModifiedAt != nil {
+				fmt.Printf("Modified At: %s\n", *res.LicenseKeyActivationRead.ModifiedAt)
+			}
 			nextCheckTime := time.Now().Add(RecheckInterval)
 			hash := createLicenseHash(licenseKey, macAddress, Salt, nextCheckTime)
 
 			err = storeLicenseData(LicenseData{
 				Hash:           hash,
-				LicenseKeyID:   res.LicenseKeyActivationRead.LicenseKeyID,
+				LicenseKeyID:   licenseKey,
 				ActivationID:   res.LicenseKeyActivationRead.ID,
 				NextCheckTime:  nextCheckTime,
 				LastVerifiedAt: time.Now(),
@@ -77,40 +66,9 @@ var ActivateCmd = &cobra.Command{
 				return fmt.Errorf("failed to store license data: %w", err)
 			}
 
-			fmt.Println("License activated and stored successfully")
+			fmt.Println("\nLicense activated and stored successfully")
 		}
 
 		return nil
 	},
-}
-
-// createLicenseHash creates a SHA-256 hash from the license key, MAC address, salt, and next check time
-func createLicenseHash(licenseKey string, macAddress uint64, salt string, nextCheckTime time.Time) string {
-	// Combine the input values into a single string
-	data := fmt.Sprintf("%s:%d:%s:%d", licenseKey, macAddress, salt, nextCheckTime.Unix())
-
-	// Create a SHA-256 hash
-	hash := sha256.Sum256([]byte(data))
-
-	// Convert the hash to a hexadecimal string
-	return hex.EncodeToString(hash[:])
-}
-
-// storeLicenseData stores the license data in a JSON file in the XDG data directory
-func storeLicenseData(data LicenseData) error {
-	// Create directories if they don't exist
-	dataDir := filepath.Join(xdg.DataHome, "devtui")
-	if err := os.MkdirAll(dataDir, 0700); err != nil {
-		return err
-	}
-
-	// Convert license data to JSON
-	jsonData, err := json.MarshalIndent(data, "", "  ")
-	if err != nil {
-		return err
-	}
-
-	// Write to file
-	licenseFilePath := filepath.Join(dataDir, "license.json")
-	return os.WriteFile(licenseFilePath, jsonData, 0600)
 }
