@@ -24,17 +24,17 @@ var (
 )
 
 type LicenseData struct {
-	Hash           string    `json:"hash" validate:"required"`
-	LicenseKeyID   string    `json:"license_key_id" validate:"required"`
-	ActivationID   string    `json:"activation_id" validate:"required,uuid"`
-	NextCheckTime  time.Time `json:"next_check_time" validate:"required,datetime=2006-01-02T15:04:05Z07:00"`
-	LastVerifiedAt time.Time `json:"last_verified_at" validate:"required,datetime=2006-01-02T15:04:05Z07:00"`
+	Hash          string    `json:"hash" validate:"required"`
+	LicenseKeyID  string    `json:"license_key_id" validate:"required"`
+	ActivationID  string    `json:"activation_id" validate:"required,uuid"`
+	NextCheckTime time.Time `json:"next_check_time" validate:"required,datetime=2006-01-02T15:04:05Z07:00"`
+	VerifiedAt    time.Time `json:"last_verified_at" validate:"required,datetime=2006-01-02T15:04:05Z07:00"`
 }
 
 // createLicenseHash creates a SHA-256 hash from the license key, MAC address, salt, and next check time
-func createLicenseHash(licenseKey string, macAddress uint64, salt string, nextCheckTime time.Time) string {
+func createLicenseHash(licenseKey string, macAddress uint64, nextCheckTime time.Time) string {
 	// Combine the input values into a single string
-	data := fmt.Sprintf("%s:%d:%s:%d", licenseKey, macAddress, salt, nextCheckTime.Unix())
+	data := fmt.Sprintf("%s:%d:%s:%d", licenseKey, macAddress, Salt, nextCheckTime.Unix())
 
 	// Create a SHA-256 hash
 	hash := sha256.Sum256([]byte(data))
@@ -44,7 +44,13 @@ func createLicenseHash(licenseKey string, macAddress uint64, salt string, nextCh
 }
 
 // storeLicenseData stores the license data in a JSON file in the XDG data directory
-func storeLicenseData(data LicenseData) error {
+func storeLicense(data LicenseData, macAddress uint64) error {
+	nextCheckTime := time.Now().Add(RecheckInterval)
+	hash := createLicenseHash(data.LicenseKeyID, macAddress, nextCheckTime)
+
+	data.NextCheckTime = nextCheckTime
+	data.Hash = hash
+
 	if err := os.MkdirAll(DataDir, 0o700); err != nil {
 		return err
 	}

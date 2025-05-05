@@ -13,6 +13,8 @@ import (
 	"github.com/spf13/viper"
 )
 
+var licenseKey string
+
 var ActivateCmd = &cobra.Command{
 	Use:     "activate",
 	Short:   "Activate a license",
@@ -52,16 +54,12 @@ var ActivateCmd = &cobra.Command{
 			if res.LicenseKeyActivationRead.ModifiedAt != nil {
 				fmt.Printf("Modified At: %s\n", *res.LicenseKeyActivationRead.ModifiedAt)
 			}
-			nextCheckTime := time.Now().Add(RecheckInterval)
-			hash := createLicenseHash(licenseKey, macAddress, Salt, nextCheckTime)
 
-			err = storeLicenseData(LicenseData{
-				Hash:           hash,
-				LicenseKeyID:   licenseKey,
-				ActivationID:   res.LicenseKeyActivationRead.ID,
-				NextCheckTime:  nextCheckTime,
-				LastVerifiedAt: time.Now(),
-			})
+			err = storeLicense(LicenseData{
+				LicenseKeyID: licenseKey,
+				ActivationID: res.LicenseKeyActivationRead.ID,
+				VerifiedAt:   time.Now(),
+			}, macAddress)
 			if err != nil {
 				return fmt.Errorf("failed to store license data: %w", err)
 			}
@@ -71,4 +69,15 @@ var ActivateCmd = &cobra.Command{
 
 		return nil
 	},
+}
+
+func init() {
+	viper.SetEnvPrefix("DEVTUI")
+	viper.AutomaticEnv()
+
+	ActivateCmd.Flags().StringVar(&licenseKey, "key", "", "License key")
+	err := viper.BindPFlag("key", ActivateCmd.Flags().Lookup("key"))
+	if err != nil {
+		panic(err)
+	}
 }
