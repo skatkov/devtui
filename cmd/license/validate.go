@@ -28,6 +28,12 @@ var ValidateCmd = &cobra.Command{
 			return errors.New("no active license found")
 		}
 
+		// Verify that license file hasn't been tampered with
+		currentHash := createLicenseHash(licenseData.ActivationID, licenseData.LicenseKeyID, macaddr.MacUint64(), licenseData.NextCheckTime)
+		if currentHash != licenseData.Hash {
+			return errors.New("license file is not valid")
+		}
+
 		s := polargo.New()
 
 		res, err := s.CustomerPortal.LicenseKeys.Validate(ctx, components.LicenseKeyValidate{

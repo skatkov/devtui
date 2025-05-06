@@ -31,10 +31,9 @@ type LicenseData struct {
 	VerifiedAt    time.Time `json:"last_verified_at" validate:"required,datetime=2006-01-02T15:04:05Z07:00"`
 }
 
-// createLicenseHash creates a SHA-256 hash from the license key, MAC address, salt, and next check time
-func createLicenseHash(licenseKey string, macAddress uint64, nextCheckTime time.Time) string {
+func createLicenseHash(activationID string, licenseKey string, macAddress uint64, nextCheckTime time.Time) string {
 	// Combine the input values into a single string
-	data := fmt.Sprintf("%s:%d:%s:%d", licenseKey, macAddress, Salt, nextCheckTime.Unix())
+	data := fmt.Sprintf("%s:%s:%d:%s:%d", activationID, licenseKey, macAddress, Salt, nextCheckTime.Unix())
 
 	// Create a SHA-256 hash
 	hash := sha256.Sum256([]byte(data))
@@ -46,7 +45,7 @@ func createLicenseHash(licenseKey string, macAddress uint64, nextCheckTime time.
 // storeLicenseData stores the license data in a JSON file in the XDG data directory
 func storeLicense(data LicenseData, macAddress uint64) error {
 	nextCheckTime := time.Now().Add(RecheckInterval)
-	hash := createLicenseHash(data.LicenseKeyID, macAddress, nextCheckTime)
+	hash := createLicenseHash(data.ActivationID, data.LicenseKeyID, macAddress, nextCheckTime)
 
 	data.NextCheckTime = nextCheckTime
 	data.Hash = hash

@@ -41,9 +41,9 @@ var DeactivateCmd = &cobra.Command{
 		if res != nil {
 			// Delete the license file after successful deactivation
 			if err := os.Remove(LicenseFilePath); err != nil {
-				fmt.Printf("Warning: License deactivated but failed to remove license file: %v\n", err)
+				fmt.Printf("Warning: License deactivated, but failed to remove license file: %v\n", err)
 			}
-			fmt.Println("Deactivation completed successfully")
+			fmt.Println("License deactivated.")
 		}
 		return nil
 	},
