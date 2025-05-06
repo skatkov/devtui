@@ -10,7 +10,6 @@ import (
 	"github.com/polarsource/polar-go/models/components"
 	"github.com/skatkov/devtui/internal/macaddr"
 	"github.com/spf13/cobra"
-	"github.com/spf13/viper"
 )
 
 var licenseKey string
@@ -21,6 +20,10 @@ var ActivateCmd = &cobra.Command{
 	Long:    "Activate a license",
 	Example: "devtui license activate --key=YOUR_LICENSE_KEY",
 	RunE: func(cmd *cobra.Command, args []string) error {
+		if licenseKey == "" {
+			return fmt.Errorf("license key is required")
+		}
+
 		ctx := context.Background()
 
 		s := polargo.New()
@@ -32,7 +35,6 @@ var ActivateCmd = &cobra.Command{
 
 		tz, _ := time.Now().Zone()
 		label := fmt.Sprintf("%s-%s", hostname, tz)
-		licenseKey := viper.GetString("key")
 		macAddress := macaddr.MacUint64()
 
 		res, err := s.CustomerPortal.LicenseKeys.Activate(ctx, components.LicenseKeyActivate{
@@ -72,12 +74,5 @@ var ActivateCmd = &cobra.Command{
 }
 
 func init() {
-	viper.SetEnvPrefix("DEVTUI")
-	viper.AutomaticEnv()
-
 	ActivateCmd.Flags().StringVar(&licenseKey, "key", "", "License key")
-	err := viper.BindPFlag("key", ActivateCmd.Flags().Lookup("key"))
-	if err != nil {
-		panic(err)
-	}
 }
