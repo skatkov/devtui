@@ -1,13 +1,10 @@
 package license
 
 import (
-	"context"
 	"errors"
 	"fmt"
-	"os"
 
-	polargo "github.com/polarsource/polar-go"
-	"github.com/polarsource/polar-go/models/components"
+	license "github.com/skatkov/devtui/internal/license"
 	"github.com/spf13/cobra"
 )
 
@@ -17,34 +14,22 @@ var DeactivateCmd = &cobra.Command{
 	Long:    "Deactivate a license",
 	Example: "devtui license deactivate",
 	RunE: func(cmd *cobra.Command, args []string) error {
-		ctx := context.Background()
-
-		licenseData, err := loadLicenseData()
+		licenseData, err := license.LoadLicense()
 		if err != nil {
-			return fmt.Errorf("failed to load license data: %w", err)
+			return fmt.Errorf("failed to load license: %w", err)
 		}
 
 		if licenseData == nil {
 			return errors.New("no active license found")
 		}
-		s := polargo.New()
 
-		res, err := s.CustomerPortal.LicenseKeys.Deactivate(ctx, components.LicenseKeyDeactivate{
-			Key:            licenseData.LicenseKeyID,
-			OrganizationID: OrganizationID,
-			ActivationID:   licenseData.ActivationID,
-		})
+		err = licenseData.Deactivate()
 		if err != nil {
-			return err
+			return fmt.Errorf("failed to deactivate license: %w", err)
 		}
 
-		if res != nil {
-			// Delete the license file after successful deactivation
-			if err := os.Remove(LicenseFilePath); err != nil {
-				fmt.Printf("Warning: License deactivated, but failed to remove license file: %v\n", err)
-			}
-			fmt.Println("License deactivated.")
-		}
+		fmt.Println("License deactivated")
+
 		return nil
 	},
 }

@@ -1,13 +1,10 @@
 package license
 
 import (
-	"context"
 	"errors"
 	"fmt"
 
-	polargo "github.com/polarsource/polar-go"
-	"github.com/polarsource/polar-go/models/components"
-	"github.com/skatkov/devtui/internal/macaddr"
+	license "github.com/skatkov/devtui/internal/license"
 	"github.com/spf13/cobra"
 )
 
@@ -17,45 +14,19 @@ var ValidateCmd = &cobra.Command{
 	Long:    "Reads a license and validates it",
 	Example: "devtui license validate",
 	RunE: func(cmd *cobra.Command, args []string) error {
-		ctx := context.Background()
-
-		licenseData, err := loadLicenseData()
+		licenseData, err := license.LoadLicense()
 		if err != nil {
-			return fmt.Errorf("failed to load license data: %w", err)
+			return fmt.Errorf("failed to load license: %w", err)
 		}
 
 		if licenseData == nil {
 			return errors.New("no active license found")
 		}
 
-		// Verify that license file hasn't been tampered with
-		currentHash := createLicenseHash(licenseData.ActivationID, licenseData.LicenseKeyID, macaddr.MacUint64(), licenseData.NextCheckTime)
-		if currentHash != licenseData.Hash {
+		if err := licenseData.Validate(); err != nil {
 			return errors.New("license file is not valid")
 		}
 
-		s := polargo.New()
-
-		res, err := s.CustomerPortal.LicenseKeys.Validate(ctx, components.LicenseKeyValidate{
-			Key:            licenseData.LicenseKeyID,
-			OrganizationID: OrganizationID,
-			ActivationID:   polargo.String(licenseData.ActivationID),
-			Conditions: map[string]components.Conditions{
-				"macaddr": components.CreateConditionsInteger(int64(macaddr.MacUint64())),
-			},
-		})
-		if err != nil {
-			// Activation ID is wrong
-			// Error: {"detail":[{"loc":["body","activation_id"],"msg":"Input should be a valid UUID, invalid group length in group 0: expected 8, found 5","type":"uuid_parsing"}]}
-
-			// MacAddress is wrong or not provided.
-			// {"error":"ResourceNotFound","detail":"License key does not match required conditions"}
-
-			return err
-		}
-		if res.ValidatedLicenseKey != nil {
-			fmt.Println("\nLicense valid.")
-		}
 		return nil
 	},
 }
