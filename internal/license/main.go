@@ -90,6 +90,11 @@ func(d LicenseData) Validate() error {
 		return errors.New("license file is not valid")
 	}
 
+	// Skip API validation if we haven't reached the next check time
+	if time.Now().Before(d.NextCheckTime) {
+		return nil
+	}
+
 	s := polargo.New()
 	ctx := context.Background()
 
@@ -109,6 +114,12 @@ func(d LicenseData) Validate() error {
 		// {"error":"ResourceNotFound","detail":"License key does not match required conditions"}
 
 		return err
+	}
+
+	// Update VerifiedAt and store the updated license data
+	d.VerifiedAt = time.Now()
+	if err := d.store(macaddr.MacUint64()); err != nil {
+		return fmt.Errorf("failed to update license data: %w", err)
 	}
 
 	return nil

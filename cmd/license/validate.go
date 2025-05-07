@@ -27,6 +27,8 @@ var ValidateCmd = &cobra.Command{
 			return errors.New("license file is not valid")
 		}
 
+		fmt.Println("License is valid")
+
 		return nil
 	},
 }
