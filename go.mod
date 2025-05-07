@@ -24,9 +24,10 @@ require (
 	github.com/pelletier/go-toml/v2 v2.2.4
 	github.com/polarsource/polar-go v0.4.16
 	github.com/spf13/cobra v1.9.1
+	github.com/stretchr/testify v1.10.0
 	github.com/tiagomelo/go-clipboard v0.1.2
 	github.com/twpayne/go-jsonstruct/v3 v3.2.0
-	github.com/vektah/gqlparser/v2 v2.5.26
+	github.com/vektah/gqlparser/v2 v2.5.27
 	github.com/yosssi/gohtml v0.0.0-20201013000340-ee4748c638f4
 )
 
@@ -43,6 +44,7 @@ require (
 	github.com/charmbracelet/x/exp/strings v0.0.0-20250505150409-97991a1f17d1 // indirect
 	github.com/charmbracelet/x/term v0.2.1 // indirect
 	github.com/cpuguy83/go-md2man/v2 v2.0.7 // indirect
+	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/dlclark/regexp2 v1.11.5 // indirect
 	github.com/dustin/go-humanize v1.0.1 // indirect
 	github.com/ericlagergren/decimal v0.0.0-20240411145413-00de7ca16731 // indirect
@@ -60,6 +62,7 @@ require (
 	github.com/muesli/cancelreader v0.2.2 // indirect
 	github.com/muesli/termenv v0.16.0 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
+	github.com/pmezard/go-difflib v1.0.0 // indirect
 	github.com/rivo/uniseg v0.4.7 // indirect
 	github.com/russross/blackfriday/v2 v2.1.0 // indirect
 	github.com/sahilm/fuzzy v0.1.1 // indirect
