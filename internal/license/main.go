@@ -36,7 +36,7 @@ type LicenseData struct {
 	VerifiedAt    time.Time `json:"last_verified_at" validate:"required,datetime=2006-01-02T15:04:05Z07:00"`
 }
 
-func NewLicense(licenseKey string, label string) (*LicenseData, error){
+func NewLicense(licenseKey string, label string) (*LicenseData, error) {
 	ctx := context.Background()
 	s := polargo.New()
 	macAddress := macaddr.MacUint64()
@@ -54,7 +54,7 @@ func NewLicense(licenseKey string, label string) (*LicenseData, error){
 	}
 
 	data := &LicenseData{
-		KeyID: licenseKey,
+		KeyID:        licenseKey,
 		ActivationID: res.LicenseKeyActivationRead.ID,
 		VerifiedAt:   time.Now(),
 	}
@@ -84,7 +84,7 @@ func LoadLicense() (*LicenseData, error) {
 	return &licenseData, nil
 }
 
-func(d LicenseData) Validate() error {
+func (d LicenseData) Validate() error {
 	currentHash := d.buildHash(macaddr.MacUint64())
 	if currentHash != d.Hash {
 		return errors.New("license file is not valid")
