@@ -5,7 +5,6 @@ import (
 	"crypto/sha256"
 	"encoding/hex"
 	"encoding/json"
-	"errors"
 	"fmt"
 	"os"
 	"path/filepath"
@@ -87,14 +86,28 @@ func LoadLicense() (*LicenseData, error) {
 func (d LicenseData) Validate() error {
 	currentHash := d.buildHash(macaddr.MacUint64())
 	if currentHash != d.Hash {
-		return errors.New("license file is not valid")
+		// license file is not valid or was tampered with, let's validate with server.
+
+		err := d.validateWithServer()
+		if err != nil {
+			return err
+		}
+	} else {
+		// If license file is valid, we might skip server validation if we haven't reached the next check time
+		if time.Now().Before(d.NextCheckTime) {
+			return nil
+		}
+
+		err := d.validateWithServer()
+		if err != nil {
+			return err
+		}
 	}
 
-	// Skip API validation if we haven't reached the next check time
-	if time.Now().Before(d.NextCheckTime) {
-		return nil
-	}
+	return nil
+}
 
+func (d LicenseData) validateWithServer() error {
 	s := polargo.New()
 	ctx := context.Background()
 
