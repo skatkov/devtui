@@ -6,6 +6,7 @@ nav_order: 2
 
 
 ## 📦 Install
+{: #install}
 ### 🧃 Homebrew
 ```
 brew install skatkov/tap/devtui

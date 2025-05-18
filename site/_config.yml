@@ -72,7 +72,7 @@ aux_links:
   Log In:
     - https://polar.sh/krooni/portal/request
 
-footer_content: 'Project by <a href="https://skatkov.com">Stanislav Katkov</a>. For support and questions please contact via email <a href="mailto:contact@devtui.com">contact@devtui.com</a>'
+footer_content: '<div class="text-center">Project by <a href="https://skatkov.com">Stanislav Katkov</a>. For support and questions please contact via email <a href="mailto:contact@devtui.com">contact@devtui.com</a></span>'
 
 kramdown:
   syntax_highlighter_opts:
@@ -95,6 +95,8 @@ callouts:
   warning:
     title: Warning
     color: red
+
+nav_footer_custom: ""
 
 nav_external_links:
   - title: Pricing
