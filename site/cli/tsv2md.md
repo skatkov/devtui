@@ -1,7 +1,6 @@
 ---
 title: tsv2md
 parent: CLI
-layout: default
 ---
 
 ## devtui tsv2md

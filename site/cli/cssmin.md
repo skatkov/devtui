@@ -1,7 +1,6 @@
 ---
 title: cssmin
 parent: CLI
-layout: default
 ---
 
 ## devtui cssmin

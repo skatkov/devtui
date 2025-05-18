@@ -1,7 +1,6 @@
 ---
 title: count
 parent: CLI
-layout: default
 ---
 
 ## devtui count

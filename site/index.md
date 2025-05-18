@@ -1,5 +1,4 @@
 ---
-layout: default
 title: Home
 nav_order: 1
 permalink: /
@@ -29,7 +28,7 @@ permalink: /
 ---
 
 ## 🏷️ Pricing
-{: .fw-700 .text-center}
+{: #pricing .fw-700 .text-center}
 
 A one-time payment of $40
 {: .text-center .lh-default .my-6}

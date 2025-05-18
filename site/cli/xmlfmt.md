@@ -1,7 +1,6 @@
 ---
 title: xmlfmt
 parent: CLI
-layout: default
 ---
 
 ## devtui xmlfmt

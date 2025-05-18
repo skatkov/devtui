@@ -1,7 +1,6 @@
 ---
 title: cssfmt
 parent: CLI
-layout: default
 ---
 
 ## devtui cssfmt

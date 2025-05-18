@@ -29,6 +29,10 @@ url: "https://devtui.com" # the base hostname & protocol for your site, e.g. htt
 twitter_username: 5katkov
 github_username: skatkov
 
+defaults:
+  - values:
+      layout: "default"
+
 # Build settings
 theme: just-the-docs
 plugins:
@@ -74,3 +78,27 @@ kramdown:
   syntax_highlighter_opts:
     block:
       line_numbers: false
+
+callouts_level: quiet # or loud
+callouts:
+  highlight:
+    color: yellow
+  important:
+    title: Important
+    color: blue
+  new:
+    title: New
+    color: green
+  note:
+    title: Note
+    color: purple
+  warning:
+    title: Warning
+    color: red
+
+nav_external_links:
+  - title: Pricing
+    url: "/#pricing"
+    hide_icon: true
+
+nav_enabled: true

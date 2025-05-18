@@ -1,7 +1,6 @@
 ---
 title: gqlquery
 parent: CLI
-layout: default
 ---
 
 ## devtui gqlquery

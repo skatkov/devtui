@@ -1,7 +1,6 @@
 ---
 title: csv2md
 parent: CLI
-layout: default
 ---
 
 ## devtui csv2md
