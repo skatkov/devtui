@@ -34,10 +34,9 @@ jobs:
       - name: Setup Ruby
         uses: ruby/setup-ruby@v1
         with:
+          working-directory: site
           bundler-cache: true # runs 'bundle install' and caches installed gems automatically
           cache-version: 0 # Increment this number if you need to re-download cached gems
-        env:
-          BUNDLE_GEMFILE: ./site/Gemfile
       - name: Setup Pages
         id: pages
         uses: actions/configure-pages@v5
