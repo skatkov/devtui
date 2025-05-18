@@ -12,7 +12,7 @@ search: false
 **DevTUI** is an all-in-one terminal toolkit designed for developers. It consolidates your everyday utilities into a single, unified TUI (Text User Interface) and CLI (Command Line Interface). No more juggling multiple tools — everything you need is now just one command away.
 {: .fs-6 .fw-300 }
 
-[Get started](start#install){: .btn .btn-blue .fs-5 .mb-4 .mb-md-0 .mr-2 } [See docs](start){: .btn .fs-5 .mb-4 .mb-md-0 .mr-2}
+[Get started](start#install){: .btn .btn-blue .fs-5 .mb-4 .mb-md-0 .mr-2 } [See docs](cli){: .btn .fs-5 .mb-4 .mb-md-0 .mr-2}
 {: .text-center}
 
 ![devtui](/assets/img/devtui.png)
