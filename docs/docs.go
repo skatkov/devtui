@@ -31,12 +31,12 @@ func generateMarkdownForCommand(cmd *cobra.Command, isSubcommand bool) {
 	}
 
 	// Write front matter
-	_, err = file.WriteString(fmt.Sprintf(`---
+	_, err = fmt.Fprintf(file, `---
 title: %s
 parent: CLI
 ---
 
-`, cmd.Name()))
+`, cmd.Name())
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -54,13 +54,13 @@ parent: CLI
 			if subCmd.Name() == "help" {
 				continue
 			}
-			
+
 			// Add a separator and subcommand documentation
-			_, err = file.WriteString(fmt.Sprintf("\n---\n\n"))
+			_, err = file.WriteString(string("\n---\n\n"))
 			if err != nil {
 				log.Fatal(err)
 			}
-			
+
 			err = doc.GenMarkdown(subCmd, file)
 			if err != nil {
 				log.Fatal(err)
@@ -72,7 +72,7 @@ parent: CLI
 	if err := file.Close(); err != nil {
 		log.Fatal(err)
 	}
-	
+
 	// Read the file to process it
 	content, err := os.ReadFile(filepath.Join(sitePath, cmd.Name()+".md"))
 	if err != nil {
@@ -81,9 +81,9 @@ parent: CLI
 
 	// Process content to remove duplicate title and clean up
 	lines := strings.Split(string(content), "\n")
-	var processedLines []string
+	processedLines := make([]string, 0, len(lines))
 	inSeeAlso := false
-	
+
 	for _, line := range lines {
 		if strings.HasPrefix(line, "# ") {
 			// Skip the auto-generated title
@@ -110,7 +110,7 @@ parent: CLI
 	}
 
 	// Write the processed content back
-	err = os.WriteFile(filepath.Join(sitePath, cmd.Name()+".md"), []byte(strings.Join(processedLines, "\n")), 0644)
+	err = os.WriteFile(filepath.Join(sitePath, cmd.Name()+".md"), []byte(strings.Join(processedLines, "\n")), 0o644)
 	if err != nil {
 		log.Fatal(err)
 	}

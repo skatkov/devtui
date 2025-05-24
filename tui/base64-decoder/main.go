@@ -58,7 +58,6 @@ func (m Base64Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			} else {
 				cmds = append(cmds, m.ShowStatusMessage("Pasted and decoded. Press 'c' to copy result."))
 			}
-
 		}
 	case ui.StatusMessageTimeoutMsg:
 		m.State = ui.PagerStateBrowse

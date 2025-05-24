@@ -129,7 +129,7 @@ func TestBase64InvalidDecode(t *testing.T) {
 
 func TestBase64TestDataFiles(t *testing.T) {
 	testDataDir := "../../testdata"
-	
+
 	// Check if testdata directory exists
 	if _, err := os.Stat(testDataDir); os.IsNotExist(err) {
 		t.Skip("testdata directory not found, skipping file tests")
