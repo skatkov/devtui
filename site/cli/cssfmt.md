@@ -21,7 +21,7 @@ devtui cssfmt [flags]
 
 	cssfmt < testdata/bootstrap.min.css
 	cssfmt < testdata/bootstrap.min.css --tui # Show results in a TUI
-
+	
 ```
 
 ### Options
