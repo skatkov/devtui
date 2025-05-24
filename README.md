@@ -169,6 +169,36 @@ Optional flags:
 
 ---
 
+## 📚 Documentation Generator
+
+DevTUI includes automated documentation generators for both CLI and TUI interfaces.
+
+### Generate All Documentation
+To regenerate both CLI and TUI documentation:
+
+```bash
+cd docs && go run *.go
+```
+
+This will:
+- Generate CLI documentation in `site/cli/` with proper Jekyll front matter
+- Generate TUI documentation in `site/tui/` with key bindings and usage instructions
+- Clean up auto-generated content (remove footers, SEE ALSO sections, etc.)
+- Apply proper formatting and language hints for code examples
+
+### Individual Generators
+You can also run generators separately:
+
+```bash
+# CLI documentation only
+cd docs && go run cli-docs.go docs.go
+
+# TUI documentation only  
+cd docs && go run tui-docs.go docs.go
+```
+
+---
+
 ## 🧑‍💻 Contact
 I love when people reach out, so please don't hesitate to do that.
 
