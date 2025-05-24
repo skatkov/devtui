@@ -11,17 +11,15 @@ Format CSS files
 
 Format CSS files
 
-```
+```bash
 devtui cssfmt [flags]
 ```
 
 ### Examples
 
-```
-
-	cssfmt < testdata/bootstrap.min.css
-	cssfmt < testdata/bootstrap.min.css --tui # Show results in a TUI
-	
+```bash
+cssfmt < testdata/bootstrap.min.css
+cssfmt < testdata/bootstrap.min.css --tui # Show results in a TUI
 ```
 
 ### Options

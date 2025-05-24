@@ -11,17 +11,15 @@ Format JSON
 
 Format JSON
 
-```
+```bash
 devtui jsonfmt [flags]
 ```
 
 ### Examples
 
-```
-
-	devtui jsonfmt < testdata/example.json # Format and output to stdout
- 	devtui jsonfmt < testdata/example.json > formatted.json # Output to file
-	
+```bash
+devtui jsonfmt < testdata/example.json # Format and output to stdout
+devtui jsonfmt < testdata/example.json > formatted.json # Output to file
 ```
 
 ### Options

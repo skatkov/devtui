@@ -11,7 +11,7 @@ Format TOML files
 
 Format TOML files
 
-```
+```bash
 devtui tomlfmt [flags]
 ```
 

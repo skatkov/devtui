@@ -11,16 +11,16 @@ Convert CSV to Markdown Table
 
 Convert CSV to Markdown Table
 
-```
+```bash
 devtui csv2md [flags]
 ```
 
 ### Examples
 
-```
-  devtui csv2md -t < example.tsv          - convert tsv from stdin and view result in stdout
-	devtui csv2md < example.tsv > output.md - convert tsv from stdin and write result in new file
-	cat example.tsv | devtui csv2md         - convert tsv from stdin and view result in stdout
+```bash
+devtui csv2md -t < example.tsv          - convert tsv from stdin and view result in stdout
+devtui csv2md < example.tsv > output.md - convert tsv from stdin and write result in new file
+cat example.tsv | devtui csv2md         - convert tsv from stdin and view result in stdout
 ```
 
 ### Options

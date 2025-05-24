@@ -11,18 +11,16 @@ Format XML
 
 Format XML
 
-```
+```bash
 devtui xmlfmt [flags]
 ```
 
 ### Examples
 
-```
-
-	xmlfmt < testdata/sample.xml   # Format XML from stdin
-	xmlfmt < testdata/sample.xml > output.xml # Output formatted XML to file
-	xmlfmt < testdata/sample.xml --tui # Open XML formatter in TUI
-	
+```bash
+xmlfmt < testdata/sample.xml   # Format XML from stdin
+xmlfmt < testdata/sample.xml > output.xml # Output formatted XML to file
+xmlfmt < testdata/sample.xml --tui # Open XML formatter in TUI
 ```
 
 ### Options

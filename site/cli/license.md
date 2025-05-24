@@ -25,13 +25,13 @@ Activate a license
 
 Activate a license
 
-```
+```bash
 devtui license activate [flags]
 ```
 
 ### Examples
 
-```
+```bash
 devtui license activate --key=YOUR_LICENSE_KEY
 ```
 
@@ -50,13 +50,13 @@ Deactivate a license
 
 Deactivate a license
 
-```
+```bash
 devtui license deactivate [flags]
 ```
 
 ### Examples
 
-```
+```bash
 devtui license deactivate
 ```
 
@@ -74,13 +74,13 @@ Validate a license
 
 Reads a license and validates it
 
-```
+```bash
 devtui license validate [flags]
 ```
 
 ### Examples
 
-```
+```bash
 devtui license validate
 ```
 

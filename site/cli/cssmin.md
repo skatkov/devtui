@@ -11,13 +11,13 @@ Minify CSS files
 
 Minify CSS files
 
-```
+```bash
 devtui cssmin [flags]
 ```
 
 ### Examples
 
-```
+```bash
 cssmin < testdata/bootstrap.min.css
 ```
 

@@ -83,6 +83,9 @@ parent: CLI
 	lines := strings.Split(string(content), "\n")
 	processedLines := make([]string, 0, len(lines))
 	inSeeAlso := false
+	inCodeBlock := false
+	codeBlockLines := []string{}
+	lastSection := ""
 
 	for _, line := range lines {
 		if strings.HasPrefix(line, "# ") {
@@ -106,6 +109,48 @@ parent: CLI
 			// Skip lines in SEE ALSO section
 			continue
 		}
+
+		// Track current section
+		if strings.HasPrefix(line, "### ") {
+			lastSection = strings.TrimSpace(line)
+		}
+
+		// Handle code blocks
+		if strings.TrimSpace(line) == "```" && !inCodeBlock {
+			// Start of code block
+			inCodeBlock = true
+			// Add bash language hint for Examples and Synopsis sections
+			if lastSection == "### Examples" || lastSection == "### Synopsis" {
+				processedLines = append(processedLines, "```bash")
+			} else {
+				processedLines = append(processedLines, "```")
+			}
+			continue
+		}
+		if strings.TrimSpace(line) == "```" && inCodeBlock {
+			// End of code block - process collected lines
+			for _, codeLine := range codeBlockLines {
+				// Remove leading whitespace for Examples sections only
+				if lastSection == "### Examples" {
+					trimmed := strings.TrimLeft(codeLine, " \t")
+					if trimmed != "" {
+						processedLines = append(processedLines, trimmed)
+					}
+				} else {
+					processedLines = append(processedLines, codeLine)
+				}
+			}
+			processedLines = append(processedLines, "```")
+			inCodeBlock = false
+			codeBlockLines = []string{}
+			continue
+		}
+		if inCodeBlock {
+			// Collect lines inside code block
+			codeBlockLines = append(codeBlockLines, line)
+			continue
+		}
+
 		processedLines = append(processedLines, line)
 	}
 

@@ -11,19 +11,17 @@ Format GraphQL queries
 
 Format GraphQL queries for better readability
 
-```
+```bash
 devtui gqlquery [flags]
 ```
 
 ### Examples
 
-```
-
-	gqlquery < testdata/query.graphql # Format and output to stdout
- 	gqlquery < testdata/query.graphql > formatted.graphql # Output to file
-	gqlquery --indent "    " --with-comments --with-descriptions < testdata/query.graphql # With formatting options
-	gqlquery < testdata/query.graphql --tui # Show results in a TUI
-	
+```bash
+gqlquery < testdata/query.graphql # Format and output to stdout
+gqlquery < testdata/query.graphql > formatted.graphql # Output to file
+gqlquery --indent "    " --with-comments --with-descriptions < testdata/query.graphql # With formatting options
+gqlquery < testdata/query.graphql --tui # Show results in a TUI
 ```
 
 ### Options

@@ -11,15 +11,15 @@ Character, spaces and word counter
 
 Count characters, spaces and words in a string
 
-```
+```bash
 devtui count [flags]
 ```
 
 ### Examples
 
-```
+```bash
 count < testdata/example.csv
-	count "test me please"
+count "test me please"
 ```
 
 ### Options
