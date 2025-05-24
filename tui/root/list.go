@@ -14,6 +14,8 @@ import (
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/lipgloss"
 	"github.com/skatkov/devtui/internal/ui"
+	base64encoder "github.com/skatkov/devtui/tui/base64-encoder"
+	base64decoder "github.com/skatkov/devtui/tui/base64-decoder"
 	cron "github.com/skatkov/devtui/tui/cron"
 	"github.com/skatkov/devtui/tui/css"
 	"github.com/skatkov/devtui/tui/csv2md"
@@ -89,6 +91,16 @@ func (d itemDelegate) Render(w io.Writer, m list.Model, index int, listItem list
 
 func getMenuOptions(common *ui.CommonModel) []MenuOption {
 	return []MenuOption{
+		{
+			id:    "base64-encoder",
+			title: base64encoder.Title,
+			model: func() tea.Model { return base64encoder.NewBase64Model(common) },
+		},
+		{
+			id:    "base64-decoder",
+			title: base64decoder.Title,
+			model: func() tea.Model { return base64decoder.NewBase64Model(common) },
+		},
 		{
 			id:    "uuiddecode",
 			title: uuiddecode.Title,
