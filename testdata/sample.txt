@@ -1,0 +1,25 @@
+Hello, World! This is a sample text file for testing base64 encoding.
+
+It contains multiple lines with various characters:
+- ASCII letters: abcdefghijklmnopqrstuvwxyz
+- Numbers: 0123456789
+- Special characters: !@#$%^&*()_+-=[]{}|;:,.<>?
+- Unicode characters: ñáéíóú 中文 🚀 ✨
+
+This file can be used to test:
+1. Basic text encoding/decoding
+2. Multi-line content handling
+3. Special character preservation
+4. Unicode character support
+
+Some programming code examples:
+```
+function hello() {
+    console.log("Hello from JavaScript!");
+}
+
+def greet(name):
+    return f"Hello, {name}!"
+```
+
+End of sample file.

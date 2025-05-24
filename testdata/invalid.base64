@@ -1,0 +1,5 @@
+SGVsbG8gV29ybGQ!invalid_base64_characters@#$%^&*()
+This is not valid base64!
+aGVsbG8===too_many_padding
+Invalid characters: <>?/\|
+Mixed valid/invalid: SGVsbG8gV29ybGQ=invalid_part

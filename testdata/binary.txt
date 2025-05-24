@@ -1,0 +1,11 @@
+This is a binary-like test file with various byte values.
+It contains null bytes: 
+Special control characters:	
+Form feed:
+Vertical tab:
+Backspace:
+Escape sequences and non-printable characters.
+Mixed with regular text: Hello World!
+Numbers: 12345
+Symbols: !@#$%^&*()
+End of binary test data.

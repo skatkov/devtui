@@ -1,0 +1,48 @@
+{
+  "name": "John Doe",
+  "age": 30,
+  "email": "john.doe@example.com",
+  "address": {
+    "street": "123 Main St",
+    "city": "Anytown",
+    "state": "CA",
+    "zipCode": "12345",
+    "country": "USA"
+  },
+  "phoneNumbers": [
+    {
+      "type": "home",
+      "number": "555-123-4567"
+    },
+    {
+      "type": "work",
+      "number": "555-987-6543"
+    },
+    {
+      "type": "mobile",
+      "number": "555-555-5555"
+    }
+  ],
+  "hobbies": ["reading", "hiking", "photography", "coding"],
+  "isEmployed": true,
+  "salary": 75000.50,
+  "spouse": null,
+  "children": [],
+  "metadata": {
+    "created": "2024-01-15T10:30:00Z",
+    "updated": "2024-01-20T14:45:30Z",
+    "version": 1,
+    "tags": ["user", "profile", "active"],
+    "preferences": {
+      "theme": "dark",
+      "language": "en-US",
+      "notifications": {
+        "email": true,
+        "sms": false,
+        "push": true
+      }
+    }
+  },
+  "specialCharacters": "Testing UTF-8: ñáéíóú 中文 🚀 ✨ Ω α β γ",
+  "escapedStrings": "Quotes: \"Hello\", Backslash: \\, Tab: \t, Newline: \n"
+}

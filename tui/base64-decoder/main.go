@@ -3,12 +3,12 @@ package base64decoder
 
 import (
 	"bytes"
-	"encoding/base64"
 	"fmt"
 	"strings"
 
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/mattn/go-runewidth"
+	"github.com/skatkov/devtui/internal/base64"
 	"github.com/skatkov/devtui/internal/editor"
 	"github.com/skatkov/devtui/internal/ui"
 	"github.com/tiagomelo/go-clipboard/clipboard"
@@ -109,11 +109,10 @@ func (m *Base64Model) SetContent(content string) error {
 	}
 
 	// Decode from base64
-	decoded, err := base64.StdEncoding.DecodeString(strings.TrimSpace(content))
+	result, err := base64.DecodeToString(content)
 	if err != nil {
-		return fmt.Errorf("invalid base64 input: %v", err)
+		return err
 	}
-	result := string(decoded)
 
 	m.FormattedContent = result
 

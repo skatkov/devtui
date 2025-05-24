@@ -3,12 +3,12 @@ package base64encoder
 
 import (
 	"bytes"
-	"encoding/base64"
 	"fmt"
 	"strings"
 
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/mattn/go-runewidth"
+	"github.com/skatkov/devtui/internal/base64"
 	"github.com/skatkov/devtui/internal/editor"
 	"github.com/skatkov/devtui/internal/ui"
 	"github.com/tiagomelo/go-clipboard/clipboard"
@@ -109,7 +109,7 @@ func (m *Base64Model) SetContent(content string) error {
 	}
 
 	// Encode to base64
-	result := base64.StdEncoding.EncodeToString([]byte(content))
+	result := base64.EncodeString(content)
 
 	m.FormattedContent = result
 
