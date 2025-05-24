@@ -23,7 +23,7 @@ devtui gqlquery [flags]
  	gqlquery < testdata/query.graphql > formatted.graphql # Output to file
 	gqlquery --indent "    " --with-comments --with-descriptions < testdata/query.graphql # With formatting options
 	gqlquery < testdata/query.graphql --tui # Show results in a TUI
-
+	
 ```
 
 ### Options

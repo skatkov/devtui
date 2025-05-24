@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"errors"
 	"fmt"
 	"io"
 	"os"
@@ -12,31 +13,31 @@ import (
 var base64Cmd = &cobra.Command{
 	Use:   "base64 [string or file]",
 	Short: "Encode or decode base64 strings and files",
-	Long: `Encode or decode base64 strings and files. 
+	Long: `Encode or decode base64 strings and files.
 
 By default, input is encoded to base64. Use the --decode flag to decode base64 input.
 Input can be a string, file path, or piped from stdin.`,
 	Example: `  # Encode a string
   devtui base64 "hello world"
-  
+
   # Decode a base64 string
   devtui base64 "aGVsbG8gd29ybGQ=" --decode
   devtui base64 "aGVsbG8gd29ybGQ=" -d
-  
+
   # Encode a file
   devtui base64 /path/to/file.txt
-  
+
   # Decode a file containing base64
   devtui base64 /path/to/base64file.txt --decode
-  
+
   # Output to file
   devtui base64 "hello world" > encoded.txt
   devtui base64 "aGVsbG8gd29ybGQ=" --decode > decoded.txt
-  
+
   # Pipe input from other commands
   echo -n "hello world" | devtui base64
   echo -n "aGVsbG8gd29ybGQ=" | devtui base64 --decode
-  
+
   # Chain with other commands
   cat file.txt | devtui base64 | devtui base64 --decode`,
 	RunE: func(cmd *cobra.Command, args []string) error {
@@ -54,7 +55,7 @@ Input can be a string, file path, or piped from stdin.`,
 				return fmt.Errorf("error reading from stdin: %v", err)
 			}
 		} else if len(args) == 0 {
-			return fmt.Errorf("no input provided. Use a string argument, file path, or pipe input")
+			return errors.New("no input provided. Use a string argument, file path, or pipe input")
 		} else {
 			inputArg := args[0]
 

@@ -69,29 +69,29 @@ func TestBase64CLI(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			cmd := exec.Command(binary, tt.args...)
-			
+
 			var stdout, stderr bytes.Buffer
 			cmd.Stdout = &stdout
 			cmd.Stderr = &stderr
-			
+
 			if tt.input != "" {
 				cmd.Stdin = strings.NewReader(tt.input)
 			}
-			
+
 			err := cmd.Run()
-			
+
 			if tt.hasErr {
 				if err == nil {
 					t.Errorf("Expected error but command succeeded")
 				}
 				return
 			}
-			
+
 			if err != nil {
 				t.Errorf("Unexpected error: %v\nStderr: %s", err, stderr.String())
 				return
 			}
-			
+
 			got := stdout.String()
 			if got != tt.want {
 				t.Errorf("Output mismatch:\nGot:  %q\nWant: %q", got, tt.want)
@@ -111,7 +111,7 @@ func TestBase64CLIWithFiles(t *testing.T) {
 
 	binary := "../devtui_test"
 	testDataDir := "../testdata"
-	
+
 	// Check if testdata directory exists
 	if _, err := os.Stat(testDataDir); os.IsNotExist(err) {
 		t.Skip("testdata directory not found, skipping file tests")
@@ -218,7 +218,7 @@ func TestBase64CLIRoundTrip(t *testing.T) {
 
 	binary := "../devtui_test"
 	testDataDir := "../testdata"
-	
+
 	// Check if testdata directory exists
 	if _, err := os.Stat(testDataDir); os.IsNotExist(err) {
 		t.Skip("testdata directory not found, skipping round-trip tests")
@@ -229,7 +229,7 @@ func TestBase64CLIRoundTrip(t *testing.T) {
 	for _, filename := range testFiles {
 		t.Run("roundtrip_"+filename, func(t *testing.T) {
 			filePath := filepath.Join(testDataDir, filename)
-			
+
 			// Skip if file doesn't exist
 			if _, err := os.Stat(filePath); os.IsNotExist(err) {
 				t.Skipf("File %s not found", filePath)
@@ -291,7 +291,7 @@ func TestBase64CLIInvalidData(t *testing.T) {
 	binary := "../devtui_test"
 	testDataDir := "../testdata"
 	invalidFile := filepath.Join(testDataDir, "invalid.base64")
-	
+
 	// Check if invalid file exists
 	if _, err := os.Stat(invalidFile); os.IsNotExist(err) {
 		t.Skip("invalid.base64 not found, skipping invalid data test")
