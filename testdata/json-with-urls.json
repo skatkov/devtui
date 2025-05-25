@@ -1,0 +1,122 @@
+{
+  "name": "DevTUI API Configuration",
+  "version": "1.0.0",
+  "description": "Configuration file for DevTUI with various URL endpoints",
+  "endpoints": {
+    "production": {
+      "api_base": "https://api.devtui.dev",
+      "auth_url": "https://auth.devtui.dev/oauth/authorize",
+      "docs_url": "https://docs.devtui.dev",
+      "status_page": "https://status.devtui.dev"
+    },
+    "staging": {
+      "api_base": "https://staging-api.devtui.dev",
+      "auth_url": "https://staging-auth.devtui.dev/oauth/authorize",
+      "docs_url": "https://staging-docs.devtui.dev",
+      "status_page": "https://staging-status.devtui.dev"
+    },
+    "development": {
+      "api_base": "http://localhost:8080",
+      "auth_url": "http://localhost:8081/oauth/authorize",
+      "docs_url": "http://localhost:3000",
+      "status_page": "http://localhost:3001/status"
+    }
+  },
+  "external_services": {
+    "github": {
+      "repository": "https://github.com/skatkov/devtui",
+      "releases": "https://github.com/skatkov/devtui/releases",
+      "issues": "https://github.com/skatkov/devtui/issues",
+      "discussions": "https://github.com/skatkov/devtui/discussions"
+    },
+    "documentation": {
+      "main_site": "https://devtui.dev",
+      "getting_started": "https://devtui.dev/docs/getting-started",
+      "api_reference": "https://devtui.dev/api-reference",
+      "tutorials": "https://devtui.dev/tutorials"
+    },
+    "community": {
+      "discord": "https://discord.gg/devtui-community",
+      "twitter": "https://twitter.com/devtui",
+      "reddit": "https://reddit.com/r/devtui",
+      "stackoverflow": "https://stackoverflow.com/questions/tagged/devtui"
+    },
+    "cdn": {
+      "assets": "https://cdn.devtui.dev/assets",
+      "downloads": "https://releases.devtui.dev",
+      "images": "https://images.devtui.dev",
+      "fonts": "https://fonts.devtui.dev"
+    }
+  },
+  "webhooks": [
+    {
+      "name": "github_release",
+      "url": "https://webhooks.devtui.dev/github/release",
+      "events": ["release.published"]
+    },
+    {
+      "name": "discord_notifications",
+      "url": "https://webhooks.devtui.dev/discord/notifications",
+      "events": ["deployment.success", "deployment.failure"]
+    }
+  ],
+  "monitoring": {
+    "health_check": "https://api.devtui.dev/health",
+    "metrics": "https://metrics.devtui.dev/prometheus",
+    "logs": "https://logs.devtui.dev/kibana",
+    "traces": "https://traces.devtui.dev/jaeger"
+  },
+  "third_party_apis": [
+    {
+      "name": "JSONSchema Validator",
+      "url": "https://www.jsonschemavalidator.net/api",
+      "documentation": "https://www.jsonschemavalidator.net/docs"
+    },
+    {
+      "name": "Base64 API",
+      "url": "https://api.base64api.com/v1",
+      "documentation": "https://base64api.com/docs"
+    },
+    {
+      "name": "URL Shortener",
+      "url": "https://short.ly/api/v1",
+      "documentation": "https://short.ly/docs/api"
+    }
+  ],
+  "mirrors": [
+    "https://mirror1.devtui.dev",
+    "https://mirror2.devtui.dev", 
+    "https://eu.devtui.dev",
+    "https://asia.devtui.dev"
+  ],
+  "support": {
+    "email": "mailto:support@devtui.dev",
+    "help_center": "https://help.devtui.dev",
+    "knowledge_base": "https://kb.devtui.dev",
+    "contact_form": "https://devtui.dev/contact"
+  },
+  "legal": {
+    "privacy_policy": "https://devtui.dev/privacy",
+    "terms_of_service": "https://devtui.dev/terms",
+    "cookie_policy": "https://devtui.dev/cookies",
+    "license": "https://github.com/skatkov/devtui/blob/main/LICENSE"
+  },
+  "development": {
+    "local_urls": [
+      "http://localhost:3000",
+      "http://127.0.0.1:8080",
+      "http://0.0.0.0:4000"
+    ],
+    "test_urls": [
+      "https://httpbin.org/get",
+      "https://jsonplaceholder.typicode.com/posts",
+      "https://reqres.in/api/users"
+    ]
+  },
+  "config": {
+    "update_check_url": "https://api.devtui.dev/v1/version/check",
+    "telemetry_endpoint": "https://telemetry.devtui.dev/events",
+    "crash_report_url": "https://crash-reports.devtui.dev/submit",
+    "feature_flags_url": "https://flags.devtui.dev/v1/flags"
+  }
+}
