@@ -5,6 +5,8 @@ parent: TUI
 
 # HTML Formatter
 
+![Screenshot](/assets/img/tui/html.png)
+
 ## Usage
 
 1. Run `devtui` to open the main menu

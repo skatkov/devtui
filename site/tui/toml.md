@@ -5,6 +5,8 @@ parent: TUI
 
 # TOML Formatter
 
+![Screenshot](/assets/img/tui/toml.png)
+
 ## Usage
 
 1. Run `devtui` to open the main menu

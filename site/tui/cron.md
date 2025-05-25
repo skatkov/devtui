@@ -5,6 +5,8 @@ parent: TUI
 
 # Cron Job Parser
 
+![Screenshot](/assets/img/tui/cron.png)
+
 ## Usage
 
 1. Run `devtui` to open the main menu

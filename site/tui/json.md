@@ -5,6 +5,8 @@ parent: TUI
 
 # JSON Formatter
 
+![Screenshot](/assets/img/tui/json.png)
+
 ## Usage
 
 1. Run `devtui` to open the main menu

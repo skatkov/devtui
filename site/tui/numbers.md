@@ -5,6 +5,8 @@ parent: TUI
 
 # Number Base Converter
 
+![Screenshot](/assets/img/tui/numbers.png)
+
 ## Usage
 
 1. Run `devtui` to open the main menu

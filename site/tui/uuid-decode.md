@@ -5,6 +5,8 @@ parent: TUI
 
 # UUID Decoder
 
+![Screenshot](/assets/img/tui/uuiddecode.png)
+
 ## Usage
 
 1. Run `devtui` to open the main menu

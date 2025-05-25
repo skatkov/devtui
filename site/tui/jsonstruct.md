@@ -5,6 +5,8 @@ parent: TUI
 
 # JSON to Go Struct Converter
 
+![Screenshot](/assets/img/tui/jsonstruct.png)
+
 ## Usage
 
 1. Run `devtui` to open the main menu

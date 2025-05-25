@@ -5,6 +5,8 @@ parent: TUI
 
 # JSON to TOML Converter
 
+![Screenshot](/assets/img/tui/jsontoml.png)
+
 ## Usage
 
 1. Run `devtui` to open the main menu

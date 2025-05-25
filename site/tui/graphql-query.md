@@ -5,6 +5,8 @@ parent: TUI
 
 # GraphQL Query Formatter
 
+![Screenshot](/assets/img/tui/graphql-query.png)
+
 ## Usage
 
 1. Run `devtui` to open the main menu

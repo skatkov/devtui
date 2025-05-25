@@ -5,6 +5,8 @@ parent: TUI
 
 # Base64 Encoder
 
+![Screenshot](/assets/img/tui/base64-encoder.png)
+
 ## Usage
 
 1. Run `devtui` to open the main menu

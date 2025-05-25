@@ -5,6 +5,8 @@ parent: TUI
 
 # YAML to Go Struct Converter
 
+![Screenshot](/assets/img/tui/yamlstruct.png)
+
 ## Usage
 
 1. Run `devtui` to open the main menu

@@ -5,6 +5,8 @@ parent: TUI
 
 # YAML Formatter
 
+![Screenshot](/assets/img/tui/yaml.png)
+
 ## Usage
 
 1. Run `devtui` to open the main menu

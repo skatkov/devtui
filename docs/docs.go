@@ -20,5 +20,11 @@ func main() {
 		log.Fatalf("Failed to generate TUI documentation: %v", err)
 	}
 
+	// Generate Tape documentation
+	fmt.Println("Generating Tape documentation...")
+	if err := GenerateTapeDocumentation(); err != nil {
+		log.Fatalf("Failed to generate Tape documentation: %v", err)
+	}
+
 	fmt.Println("Documentation generation completed successfully!")
 }

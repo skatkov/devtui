@@ -5,6 +5,8 @@ parent: TUI
 
 # UUID Generator
 
+![Screenshot](/assets/img/tui/uuidgenerate.png)
+
 ## Usage
 
 1. Run `devtui` to open the main menu

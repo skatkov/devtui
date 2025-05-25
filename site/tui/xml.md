@@ -5,6 +5,8 @@ parent: TUI
 
 # XML Formatter
 
+![Screenshot](/assets/img/tui/xml.png)
+
 ## Usage
 
 1. Run `devtui` to open the main menu

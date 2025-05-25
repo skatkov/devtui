@@ -5,6 +5,8 @@ parent: TUI
 
 # TSV to Markdown Table Converter
 
+![Screenshot](/assets/img/tui/tsv2md.png)
+
 ## Usage
 
 1. Run `devtui` to open the main menu

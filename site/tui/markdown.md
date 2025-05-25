@@ -5,6 +5,8 @@ parent: TUI
 
 # Markdown Renderer
 
+![Screenshot](/assets/img/tui/markdown.png)
+
 ## Usage
 
 1. Run `devtui` to open the main menu

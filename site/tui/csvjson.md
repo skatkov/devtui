@@ -5,6 +5,8 @@ parent: TUI
 
 # CSV to JSON Converter
 
+![Screenshot](/assets/img/tui/csvjson.png)
+
 ## Usage
 
 1. Run `devtui` to open the main menu
