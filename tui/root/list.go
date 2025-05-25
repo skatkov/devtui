@@ -30,6 +30,7 @@ import (
 	"github.com/skatkov/devtui/tui/toml"
 	"github.com/skatkov/devtui/tui/tomljson"
 	"github.com/skatkov/devtui/tui/tsv2md"
+	urlextractor "github.com/skatkov/devtui/tui/url-extractor"
 	uuiddecode "github.com/skatkov/devtui/tui/uuid-decode"
 	uuidgenerate "github.com/skatkov/devtui/tui/uuid-generate"
 	"github.com/skatkov/devtui/tui/xml"
@@ -195,6 +196,11 @@ func getMenuOptions(common *ui.CommonModel) []MenuOption {
 			id:    "tsv2md",
 			title: tsv2md.Title,
 			model: func() tea.Model { return tsv2md.NewTSV2MDModel(common) },
+		},
+		{
+			id:    "url-extractor",
+			title: urlextractor.Title,
+			model: func() tea.Model { return urlextractor.NewURLExtractorModel(common) },
 		},
 	}
 }
