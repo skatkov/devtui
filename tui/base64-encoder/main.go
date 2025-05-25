@@ -6,8 +6,10 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/charmbracelet/bubbles/viewport"
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/mattn/go-runewidth"
+
 	"github.com/skatkov/devtui/internal/base64"
 	"github.com/skatkov/devtui/internal/editor"
 	"github.com/skatkov/devtui/internal/ui"
@@ -75,8 +77,27 @@ func (m Base64Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			}
 		}
 	case tea.WindowSizeMsg:
-		cmd = m.HandleWindowSizeMsg(msg)
-		cmds = append(cmds, cmd)
+		// Handle window size change with custom logic for re-wrapping
+		m.Common.Width = msg.Width
+		m.Common.Height = msg.Height
+
+		m.SetSize(msg.Width, msg.Height)
+
+		if !m.Ready {
+			m.Viewport = viewport.New(msg.Width, msg.Height-ui.StatusBarHeight)
+			m.Viewport.YPosition = 0
+			m.Ready = true
+		} else {
+			m.SetSize(msg.Width, msg.Height)
+		}
+
+		// Re-wrap content with new width if we have content
+		if m.Content != "" {
+			err := m.SetContent(m.Content)
+			if err != nil {
+				cmds = append(cmds, m.ShowErrorMessage(err.Error()))
+			}
+		}
 	}
 
 	m.Viewport, cmd = m.Viewport.Update(msg)
@@ -110,11 +131,27 @@ func (m *Base64Model) SetContent(content string) error {
 	// Encode to base64
 	result := base64.EncodeString(content)
 
-	m.FormattedContent = result
+	// Wrap the base64 output to fit the screen width
+	// Use common width minus some padding for readability
+	wrapWidth := m.Common.Width - 4
+	if wrapWidth < 20 {
+		wrapWidth = 20 // Minimum width to ensure readability on very narrow screens
+	}
+
+	// Hard wrap the base64 string at character boundaries
+	var wrappedResult strings.Builder
+	for i, char := range result {
+		if i > 0 && i%wrapWidth == 0 {
+			wrappedResult.WriteRune('\n')
+		}
+		wrappedResult.WriteRune(char)
+	}
+
+	m.FormattedContent = result // Keep original unwrapped for copying
 
 	// Set content in viewport
 	var buf bytes.Buffer
-	buf.WriteString(m.FormattedContent)
+	buf.WriteString(wrappedResult.String())
 	m.Viewport.SetContent(buf.String())
 
 	return nil
