@@ -2,3 +2,4 @@ coverage.txt
 dist/*
 _site/*
 devtui
+.idea
