@@ -9,8 +9,8 @@ search: false
 # **DevTUI** - _A Swiss-army app for developers_
 {: .fw-700}
 
-**DevTUI** is an all-in-one terminal toolkit designed for developers. It consolidates your everyday utilities into a single, unified TUI (Text User Interface) and CLI (Command Line Interface). No more juggling multiple tools — everything you need is now just one command away.
-{: .fs-6 .fw-300 }
+{:.fs-6 .fw-300 .mt-5}
+All-in-one terminal toolkit that consolidates everyday developer utilities into a unified <abbr title="Text User Interface">TUI</abbr> and <abbr title="Command Line Interface">CLI</abbr> interfaces.
 
 [Get started](start#install){: .btn .btn-blue .fs-5 .mb-4 .mb-md-0 .mr-2 } [See docs](cli){: .btn .fs-5 .mb-4 .mb-md-0 .mr-2}
 {: .text-center}
