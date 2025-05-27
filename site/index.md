@@ -33,7 +33,7 @@ All-in-one terminal toolkit that consolidates everyday developer utilities into 
 ## 🏷️ **Pricing**
 {: #pricing .fw-700 .text-center}
 
-A one-time payment of $40
+A one-time payment of $25
 {: .text-center .lh-default .my-6}
 
 {: .text-center }
