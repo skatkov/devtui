@@ -161,7 +161,7 @@ parent: CLI
 	}
 }
 
-func GenerateCLIDocumentation() error {
+func GenerateCLIDocumentation() {
 	rootCmd := cmd.GetRootCmd()
 
 	cmds := rootCmd.Commands()
@@ -174,5 +174,4 @@ func GenerateCLIDocumentation() error {
 		// Generate documentation for the command (including subcommands)
 		generateMarkdownForCommand(cmd, false)
 	}
-	return nil
 }
