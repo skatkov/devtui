@@ -14,7 +14,11 @@ import (
 	"mvdan.cc/xurls/v2"
 )
 
-const Title = "URL Extractor"
+const (
+	Title       = "URL Extractor"
+	ModeStrict  = "strict"
+	ModeRelaxed = "relaxed"
+)
 
 type URLExtractorModel struct {
 	ui.BasePagerModel
@@ -67,16 +71,16 @@ func (m *URLExtractorModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				if err != nil {
 					cmds = append(cmds, m.ShowErrorMessage(err.Error()))
 				} else {
-					mode := "relaxed"
+					mode := ModeRelaxed
 					if m.StrictMode {
-						mode = "strict"
+						mode = ModeStrict
 					}
 					cmds = append(cmds, m.ShowStatusMessage(fmt.Sprintf("Switched to %s mode. Press 'c' to copy result.", mode)))
 				}
 			} else {
-				mode := "relaxed"
+				mode := ModeRelaxed
 				if m.StrictMode {
-					mode = "strict"
+					mode = ModeStrict
 				}
 				cmds = append(cmds, m.ShowStatusMessage(fmt.Sprintf("Switched to %s mode.", mode)))
 			}
@@ -111,7 +115,7 @@ func (m *URLExtractorModel) View() string {
 	var b strings.Builder
 
 	fmt.Fprint(&b, m.Viewport.View()+"\n")
-	fmt.Fprint(&b, m.BasePagerModel.StatusBarView())
+	fmt.Fprint(&b, m.StatusBarView())
 
 	if m.ShowHelp {
 		fmt.Fprint(&b, "\n"+m.helpView())
@@ -119,8 +123,6 @@ func (m *URLExtractorModel) View() string {
 
 	return b.String()
 }
-
-
 
 func (m *URLExtractorModel) SetContent(content string) error {
 	m.Content = content
@@ -160,14 +162,12 @@ func (m *URLExtractorModel) SetContent(content string) error {
 	return nil
 }
 
-
-
 func (m *URLExtractorModel) helpView() (s string) {
-	mode := "relaxed"
+	mode := ModeRelaxed
 	if m.StrictMode {
-		mode = "strict"
+		mode = ModeStrict
 	}
-	
+
 	col1 := []string{
 		"c              copy URLs",
 		"e              edit text",

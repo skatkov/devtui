@@ -107,7 +107,7 @@ func extractModuleInfo(modulePath, moduleName string) (*TUIModule, error) {
 		}
 
 		// Extract description from comments or docstrings
-		description := extractDescription(fileContent, module)
+		description := extractDescription(module)
 		if description != "" {
 			if module == nil {
 				module = &TUIModule{
@@ -141,13 +141,13 @@ func extractKeyBindings(content string) []KeyBinding {
 	for _, match := range entryMatches {
 		if len(match) >= 2 {
 			entry := strings.TrimSpace(match[1])
-			
+
 			// Split on multiple spaces to separate key from description
 			parts := regexp.MustCompile(`\s{2,}`).Split(entry, 2)
 			if len(parts) == 2 {
 				key := strings.TrimSpace(parts[0])
 				desc := strings.TrimSpace(parts[1])
-				
+
 				// Skip navigation keys and empty descriptions
 				if len(desc) > 3 && !strings.Contains(key, "↑") && !strings.Contains(key, "↓") && key != "k" && key != "j" {
 					bindings = append(bindings, KeyBinding{
@@ -162,7 +162,7 @@ func extractKeyBindings(content string) []KeyBinding {
 	return bindings
 }
 
-func extractDescription(content string, module *TUIModule) string {
+func extractDescription(module *TUIModule) string {
 	// Generate description based on title
 	if module != nil && module.Title != "" {
 		return generateDescriptionFromTitle(module.Title)
@@ -173,7 +173,7 @@ func extractDescription(content string, module *TUIModule) string {
 
 func generateDescriptionFromTitle(title string) string {
 	title = strings.ToLower(title)
-	
+
 	if strings.Contains(title, "formatter") {
 		return "A text formatting tool that prettifies and standardizes code or data format."
 	}
@@ -195,7 +195,7 @@ func generateDescriptionFromTitle(title string) string {
 	if strings.Contains(title, "renderer") {
 		return "A rendering tool that displays content in a formatted view."
 	}
-	
+
 	return "An interactive TUI tool for text processing and manipulation."
 }
 
@@ -206,12 +206,12 @@ func generateTUIDocumentation(modules []TUIModule) error {
 	}
 
 	// Create tui directory if it doesn't exist
-	if err := os.MkdirAll(sitePath, 0755); err != nil {
+	if err := os.MkdirAll(sitePath, 0o755); err != nil {
 		return err
 	}
 
 	// Generate index file
-	if err := generateIndexFile(sitePath, modules); err != nil {
+	if err := generateIndexFile(sitePath); err != nil {
 		return err
 	}
 
@@ -225,7 +225,7 @@ func generateTUIDocumentation(modules []TUIModule) error {
 	return nil
 }
 
-func generateIndexFile(sitePath string, modules []TUIModule) error {
+func generateIndexFile(sitePath string) error {
 	content := `---
 title: TUI
 nav_order: 4
@@ -254,7 +254,7 @@ Most TUI tools share these common key bindings:
 - **↓/j** - Navigate down
 `
 
-	return os.WriteFile(filepath.Join(sitePath, "index.md"), []byte(content), 0644)
+	return os.WriteFile(filepath.Join(sitePath, "index.md"), []byte(content), 0o644)
 }
 
 func generateModuleFile(sitePath string, module TUIModule) error {
@@ -267,10 +267,10 @@ parent: TUI
 
 ## Usage
 
-1. Run ` + "`devtui`" + ` to open the main menu
-2. Select "` + module.Title + `" from the list
+1. Run `+"`devtui`"+` to open the main menu
+2. Select "`+module.Title+`" from the list
 3. Use the key bindings below to interact with the tool
-4. Press ` + "`q`" + ` or ` + "`Ctrl+C`" + ` to return to the main menu
+4. Press `+"`q`"+` or `+"`Ctrl+C`"+` to return to the main menu
 
 ## Key Bindings
 
@@ -290,8 +290,8 @@ parent: TUI
 
 `
 
-	filename := fmt.Sprintf("%s.md", module.Name)
-	return os.WriteFile(filepath.Join(sitePath, filename), []byte(content), 0644)
+	filename := module.Name + ".md"
+	return os.WriteFile(filepath.Join(sitePath, filename), []byte(content), 0o644)
 }
 
 func GenerateTUIDocumentation() error {

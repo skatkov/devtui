@@ -10,9 +10,7 @@ func main() {
 
 	// Generate CLI documentation
 	fmt.Println("Generating CLI documentation...")
-	if err := GenerateCLIDocumentation(); err != nil {
-		log.Fatalf("Failed to generate CLI documentation: %v", err)
-	}
+	GenerateCLIDocumentation()
 
 	// Generate TUI documentation
 	fmt.Println("Generating TUI documentation...")
