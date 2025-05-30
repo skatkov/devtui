@@ -12,7 +12,7 @@ search: false
 {:.fs-6 .fw-300 .mt-5}
 All-in-one terminal toolkit that consolidates everyday developer utilities into a unified <abbr title="Text User Interface">TUI</abbr> and <abbr title="Command Line Interface">CLI</abbr> interfaces.
 
-[Get started](start#install){: .btn .btn-blue .fs-5 .mb-4 .mb-md-0 .mr-2 } [See docs](cli){: .btn .fs-5 .mb-4 .mb-md-0 .mr-2}
+[Install](start#install){: .btn .btn-blue .fs-5 .mb-4 .mb-md-0 .mr-2 } [See docs](cli){: .btn .fs-5 .mb-4 .mb-md-0 .mr-2}
 {: .text-center}
 
 ![devtui](/assets/img/devtui.png)
