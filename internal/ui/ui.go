@@ -9,7 +9,7 @@ import (
 	"github.com/charmbracelet/lipgloss"
 )
 
-const AppTitle = "DevTUI"
+const appTitle = "DevTUI"
 
 type ReturnToListMsg struct {
 	Common *CommonModel
@@ -23,6 +23,22 @@ type CommonModel struct {
 
 	Lg     *lipgloss.Renderer
 	Styles *Styles
+
+	Registered bool
+}
+
+func (c *CommonModel) AppTitle(title ...string) string {
+	var baseTitle string
+	if len(title) > 0 && title[0] != "" {
+		baseTitle = title[0]
+	} else {
+		baseTitle = appTitle
+	}
+
+	if c.Registered {
+		return baseTitle
+	}
+	return baseTitle + " (UNREGISTERED)"
 }
 
 var PagePaddingStyle = lipgloss.NewStyle().Padding(2)

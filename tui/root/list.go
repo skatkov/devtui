@@ -233,7 +233,7 @@ func newListModel(common *ui.CommonModel) *listModel {
 
 	delegate := itemDelegate{}
 	l := list.New(listItems, delegate, 20, listHeight)
-	l.Title = ui.AppTitle
+	l.Title = common.AppTitle()
 	l.SetShowStatusBar(false)
 	l.SetFilteringEnabled(true)
 	l.Styles.Title = l.Styles.Title.MarginTop(1)

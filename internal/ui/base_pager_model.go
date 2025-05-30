@@ -33,7 +33,7 @@ type BasePagerModel struct {
 func NewBasePagerModel(common *CommonModel, title string) BasePagerModel {
 	model := BasePagerModel{
 		Common: common,
-		Title:  title,
+		Title:  common.AppTitle(title),
 		Ready:  false,
 		State:  PagerStateBrowse,
 	}
