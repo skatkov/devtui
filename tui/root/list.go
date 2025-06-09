@@ -22,6 +22,7 @@ import (
 	"github.com/skatkov/devtui/tui/csvjson"
 	graphqlquery "github.com/skatkov/devtui/tui/graphql-query"
 	"github.com/skatkov/devtui/tui/html"
+	"github.com/skatkov/devtui/tui/iban"
 	js "github.com/skatkov/devtui/tui/json"
 	"github.com/skatkov/devtui/tui/jsonstruct"
 	"github.com/skatkov/devtui/tui/jsontoml"
@@ -116,6 +117,11 @@ func getMenuOptions(common *ui.CommonModel) []MenuOption {
 			id:    "uuidgenerate",
 			title: uuidgenerate.Title,
 			model: func() tea.Model { return uuidgenerate.NewUUIDGenerateModel(common) },
+		},
+		{
+			id:    "iban",
+			title: iban.Title,
+			model: func() tea.Model { return iban.NewIBANGenerateModel(common) },
 		},
 		{
 			id:    "cron",
