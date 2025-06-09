@@ -18,12 +18,12 @@ import (
 const Title = "IBAN Generator"
 
 type IBANGenerate struct {
-	common            *ui.CommonModel
-	form              *huh.Form
-	countryCode       string
-	generatedIBAN     string
-	formattedIBAN     string
-	error             string
+	common        *ui.CommonModel
+	form          *huh.Form
+	countryCode   string
+	generatedIBAN string
+	formattedIBAN string
+	error         string
 }
 
 type CountryOption struct {
@@ -170,7 +170,7 @@ func (m *IBANGenerate) View() string {
 	switch m.form.State {
 	case huh.StateCompleted:
 		var rows [][]string
-		
+
 		// Find country name for display
 		countryName := ""
 		for _, option := range getCountryOptions() {
@@ -179,9 +179,9 @@ func (m *IBANGenerate) View() string {
 				break
 			}
 		}
-		
+
 		rows = append(rows, []string{"Country", fmt.Sprintf("%s (%s)", countryName, m.countryCode)})
-		
+
 		if m.error != "" {
 			rows = append(rows, []string{"Error", m.error})
 		} else {
@@ -199,7 +199,7 @@ func (m *IBANGenerate) View() string {
 			" :: ",
 			lipgloss.NewStyle().Bold(true).Render(Title),
 		))
-		
+
 		results := m.common.Lg.NewStyle().Margin(1, 0).Render(tableOutput.String())
 		body := lipgloss.JoinVertical(lipgloss.Top, results)
 
