@@ -199,6 +199,9 @@ cd docs && go run tui-docs.go docs.go
 
 ---
 
+## Logo
+https://www.figma.com/design/JTS0mzphMDiRuuC3xNprLu/Untitled?node-id=0-1&p=f&t=0LeB0uhXSUmZpE3Q-0
+
 ## 🧑‍💻 Contact
 I love when people reach out, so please don't hesitate to do that.
 
