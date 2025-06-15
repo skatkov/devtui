@@ -139,7 +139,7 @@ func (m NumbersModel) View() string {
 		return s.Base.Render(t.String())
 	default:
 		header := s.Title.Render(lipgloss.JoinHorizontal(lipgloss.Left,
-			m.common.AppTitle(),
+			ui.AppTitle,
 			" :: ",
 			lipgloss.NewStyle().Bold(true).Render(Title),
 		))

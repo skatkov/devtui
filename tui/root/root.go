@@ -3,7 +3,6 @@ package root
 import (
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/lipgloss"
-	"github.com/skatkov/devtui/internal/license"
 	"github.com/skatkov/devtui/internal/ui"
 )
 
@@ -14,15 +13,7 @@ type RootModel struct {
 }
 
 func RootScreen() RootModel {
-	registered := false
-
-	licenseData, err := license.LoadLicense()
-	if err == nil && licenseData != nil {
-		if err := licenseData.Validate(); err == nil {
-			registered = true
-		}
-	}
-	common := ui.CommonModel{LastSelectedItem: 0, Registered: registered}
+	common := ui.CommonModel{LastSelectedItem: 0}
 	common.Lg = lipgloss.DefaultRenderer()
 	common.Styles = ui.NewStyle(common.Lg)
 

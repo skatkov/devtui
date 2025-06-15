@@ -62,7 +62,7 @@ func (m *UUIDDecode) View() string {
 		return s.Base.Render(tableOutput.String())
 	default:
 		header := s.Title.Render(lipgloss.JoinHorizontal(lipgloss.Left,
-			m.common.AppTitle(),
+			ui.AppTitle,
 			" :: ",
 			lipgloss.NewStyle().Bold(true).Render(Title),
 		))

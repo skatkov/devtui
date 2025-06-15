@@ -144,7 +144,7 @@ func (m *CronModel) View() string {
 		return s.Base.Render(output)
 	default:
 		header := s.Title.Render(lipgloss.JoinHorizontal(lipgloss.Left,
-			m.common.AppTitle(),
+			ui.AppTitle,
 			" :: ",
 			lipgloss.NewStyle().Bold(true).Render(Title),
 		))
