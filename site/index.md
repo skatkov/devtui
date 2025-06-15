@@ -26,16 +26,4 @@ All-in-one terminal toolkit that consolidates everyday developer utilities into 
  - 🔒 **Privacy-focused** – Everything runs locally, no data ever leaves your computer. Your code and information stay completely private.
  - 🌐 **Offline support** – No internet? No problem. DevTUI works perfectly offline, so you can keep coding anywhere, anytime.
  - ⌨️ **Built for the terminal** – No need to reach for your mouse or browser. Stay in your terminal where you're most productive.
- - 🛠️ **Actively maintained** – Not just another abandoned open-source project
 {: .mt-5}
-
----
-
-## 🏷️ **Pricing**
-{: #pricing .fw-700 .text-center}
-
-Support development with a one-time payment of $25. License valid for 3 machines.
-{: .text-center .lh-default .my-6}
-
-{: .text-center }
-[Buy](https://buy.polar.sh/polar_cl_JPBTnQKWsNBC8lA7tpR1uZYne5hMuW40xqTRI3P9WcH){: .btn .btn-blue .fs-6 .ml-5}
