@@ -66,6 +66,8 @@ mermaid:
 
 enable_copy_code_button: true
 
+favicon_ico: "/assets/img/favicon.ico"
+
 aux_links:
   Log In:
     - https://polar.sh/krooni/portal/request
