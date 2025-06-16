@@ -195,7 +195,7 @@ func (m *IBANGenerate) View() string {
 			Rows(rows...)
 
 		header := s.Title.Render(lipgloss.JoinHorizontal(lipgloss.Left,
-			m.common.AppTitle(),
+			Title,
 			" :: ",
 			lipgloss.NewStyle().Bold(true).Render(Title),
 		))
@@ -206,7 +206,7 @@ func (m *IBANGenerate) View() string {
 		return s.Base.Render(header + "\n" + body)
 	default:
 		header := s.Title.Render(lipgloss.JoinHorizontal(lipgloss.Left,
-			m.common.AppTitle(),
+			Title,
 			" :: ",
 			lipgloss.NewStyle().Bold(true).Render(Title),
 		))
