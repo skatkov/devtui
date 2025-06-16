@@ -4,10 +4,17 @@ nav_order: 3
 ---
 
 ### Autocompletion
-Run a one of these commands depending on shell
 
+Add following lines to ~/.bashrc if your using bash:
 ```
-devtui completion bash > ~/.bashrc
-devtui completion zsh  > ~/.zshrc
-devtui completion fish > ~/.fishrc
+eval "devtui completion bash"
+```
+In case of of zsh add this to ~/.zshrc:
+```
+eval "devtui completion zsh"
+```
+
+In case of of fish shell add this to ~/.config/fish/config.fish:
+```
+eval "devtui completion fish"
 ```
