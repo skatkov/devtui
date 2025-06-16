@@ -12,7 +12,6 @@
  - 🔒 Privacy-focused – Everything runs locally, no data ever leaves your computer
  - 🌐 Offline support – No internet? No problem
  - ⌨️ Built for the terminal – No need to reach for your mouse or browser
- - 🛠️ Actively maintained – Not just another abandoned open-source project
 
 ---
 
@@ -193,7 +192,7 @@ You can also run generators separately:
 # CLI documentation only
 cd docs && go run cli-docs.go docs.go
 
-# TUI documentation only  
+# TUI documentation only
 cd docs && go run tui-docs.go docs.go
 ```
 
