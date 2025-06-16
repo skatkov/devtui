@@ -69,8 +69,8 @@ enable_copy_code_button: true
 favicon_ico: "/assets/img/favicon.ico"
 
 aux_links:
-  Log In:
-    - https://polar.sh/krooni/portal/request
+  Github:
+    - https://github.com/skatkov/devtui
 
 footer_content: '<div class="text-center">Built in Netherlands by <a href="https://skatkov.com">Stanislav Katkov</a>. <br/>For support and questions please contact via email <a href="mailto:contact@devtui.com">contact@devtui.com</a></span>'
 
@@ -97,10 +97,5 @@ callouts:
     color: red
 
 nav_footer_custom: ""
-
-nav_external_links:
-  - title: Pricing
-    url: "/#pricing"
-    hide_icon: true
 
 nav_enabled: true
