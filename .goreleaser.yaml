@@ -25,7 +25,7 @@ builds:
     ldflags:
       [
         "-s -w -X github.com/skatkov/devtui/cmd.version={{.Version}} -X github.com/skatkov/devtui/cmd.commit={{.Commit}} -X github.com/skatkov/devtui/cmd.date={{ .CommitDate }}",
-        ]
+      ]
     goos:
       - darwin
       - linux
@@ -60,7 +60,7 @@ changelog:
       order: 999
 
 archives:
-  - formats: ['tar.gz']
+  - formats: ["tar.gz"]
     # this name template makes the OS and Arch compatible with the results of uname.
     name_template: >-
       devtui_
@@ -71,7 +71,7 @@ archives:
       {{- if .Arm }}v{{ .Arm }}{{ end }}
     format_overrides:
       - goos: windows
-        formats: [ 'zip' ]
+        formats: ["zip"]
 
 snapshot:
   version_template: "{{ incpatch .Version }}-next"
@@ -82,13 +82,13 @@ source:
 release:
   github:
     owner: skatkov
-    name: homebrew-tap
+    name: devtui
   tag: "devtui-{{ .Tag }}"
   name_template: "devtui-{{ .Tag }}"
 brews:
   - description: "A Swiss Army knife for developers"
     name: devtui
-    url_template: "https://github.com/skatkov/homebrew-tap/releases/download/devtui-{{ .Tag }}/{{ .ArtifactName }}"
+    url_template: "https://github.com/skatkov/devtui/releases/download/devtui-{{ .Tag }}/{{ .ArtifactName }}"
     repository:
       owner: skatkov
       name: homebrew-tap
