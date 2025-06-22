@@ -1,14 +1,10 @@
-# yaml-language-server: $schema=https://goreleaser.com/static/schema-pro.json
+# yaml-language-server: $schema=https://goreleaser.com/static/schema.json
 
 # This is an example .goreleaser.yml file with some sensible defaults.
 # Make sure to check the documentation at https://goreleaser.com
 version: 2
 
 metadata:
-  maintainers:
-    - "Stanislav (Stas) Katkov <devtui@skatkov.com>"
-  homepage: "https://devtui.com"
-  description: "A Swiss-army knife TUI for developers"
   mod_timestamp: "{{ .CommitTimestamp }}"
 
 before:
@@ -83,12 +79,10 @@ release:
   github:
     owner: skatkov
     name: devtui
-  tag: "devtui-{{ .Tag }}"
   name_template: "devtui-{{ .Tag }}"
 brews:
   - description: "A Swiss Army knife for developers"
     name: devtui
-    url_template: "https://github.com/skatkov/devtui/releases/download/devtui-{{ .Tag }}/{{ .ArtifactName }}"
     repository:
       owner: skatkov
       name: homebrew-tap
