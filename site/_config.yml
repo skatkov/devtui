@@ -72,8 +72,6 @@ aux_links:
   Github:
     - https://github.com/skatkov/devtui
 
-footer_content: '<div class="text-center">Built in Netherlands by <a href="https://skatkov.com">Stanislav Katkov</a>. <br/>For support and questions please contact via email <a href="mailto:contact@devtui.com">contact@devtui.com</a></span>'
-
 kramdown:
   syntax_highlighter_opts:
     block:
