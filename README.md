@@ -62,6 +62,3 @@ Logo was done by [Andrei Kedrin](https://linktr.ee/andreikedrin).
 
 Figma original:
 https://www.figma.com/design/JTS0mzphMDiRuuC3xNprLu/Untitled?node-id=0-1&p=f&t=0LeB0uhXSUmZpE3Q-0
-
-## 🧑‍💻 Contact
-contact@devtui.com
