@@ -20,7 +20,7 @@ brew install skatkov/tap/devtui
 ```
 ### 📥 Download Executable
 
-Or download executable from [GitHub Releases](https://github.com/skatkov/homebrew-tap/releases?q=devtui&expanded=true)
+Or download executable from [GitHub Releases](https://github.com/skatkov/devtui/releases)
 
 ## 🚀 Docs
 -> [devtui.com/start](https://devtui.com/start)
