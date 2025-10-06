@@ -18,7 +18,7 @@ require (
 	github.com/google/uuid v1.6.0
 	github.com/jacoelho/banking v1.7.1
 	github.com/lnquy/cron v1.1.1
-	github.com/mattn/go-runewidth v0.0.17
+	github.com/mattn/go-runewidth v0.0.19
 	github.com/muesli/ansi v0.0.0-20230316100256-276c6243b2f6
 	github.com/muesli/reflow v0.3.0
 	github.com/pelletier/go-toml/v2 v2.2.4
@@ -48,6 +48,7 @@ require (
 	github.com/charmbracelet/x/term v0.2.1 // indirect
 	github.com/charmbracelet/x/termios v0.1.1 // indirect
 	github.com/charmbracelet/x/windows v0.2.2 // indirect
+	github.com/clipperhouse/uax29/v2 v2.2.0 // indirect
 	github.com/cpuguy83/go-md2man/v2 v2.0.7 // indirect
 	github.com/dlclark/regexp2 v1.11.5 // indirect
 	github.com/dustin/go-humanize v1.0.1 // indirect
