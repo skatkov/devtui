@@ -7,7 +7,7 @@ require (
 	github.com/alecthomas/chroma v0.10.0
 	github.com/charmbracelet/bubbles v0.21.0
 	github.com/charmbracelet/bubbletea v1.3.9
-	github.com/charmbracelet/fang v0.4.2
+	github.com/charmbracelet/fang v0.4.3
 	github.com/charmbracelet/glamour v0.10.0
 	github.com/charmbracelet/huh v0.7.0
 	github.com/charmbracelet/lipgloss v1.1.1-0.20250404203927-76690c660834
