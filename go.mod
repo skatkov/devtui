@@ -27,7 +27,7 @@ require (
 	github.com/twpayne/go-jsonstruct/v3 v3.3.0
 	github.com/vektah/gqlparser/v2 v2.5.30
 	github.com/yosssi/gohtml v0.0.0-20201013000340-ee4748c638f4
-	golang.org/x/net v0.44.0
+	golang.org/x/net v0.46.0
 	mvdan.cc/xurls/v2 v2.6.0
 )
 
@@ -79,9 +79,9 @@ require (
 	github.com/yuin/goldmark v1.7.12 // indirect
 	github.com/yuin/goldmark-emoji v1.0.6 // indirect
 	golang.org/x/sync v0.17.0 // indirect
-	golang.org/x/sys v0.36.0 // indirect
-	golang.org/x/term v0.35.0 // indirect
-	golang.org/x/text v0.29.0 // indirect
+	golang.org/x/sys v0.37.0 // indirect
+	golang.org/x/term v0.36.0 // indirect
+	golang.org/x/text v0.30.0 // indirect
 	gopkg.in/check.v1 v1.0.0-20190902080502-41f04d3bba15 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
