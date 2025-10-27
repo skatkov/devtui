@@ -16,7 +16,7 @@ require (
 	github.com/go-xmlfmt/xmlfmt v1.1.3
 	github.com/goccy/go-yaml v1.18.0
 	github.com/google/uuid v1.6.0
-	github.com/jacoelho/banking v1.7.1
+	github.com/jacoelho/banking v1.8.1
 	github.com/lnquy/cron v1.1.1
 	github.com/mattn/go-runewidth v0.0.19
 	github.com/muesli/ansi v0.0.0-20230316100256-276c6243b2f6
