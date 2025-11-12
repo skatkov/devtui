@@ -39,27 +39,29 @@ func Convert(header string, records [][]string, aligned bool) []string {
 	// build markdown table
 	for row_idx, row := range records {
 		// table content
-		str := "| "
+		var sb strings.Builder
+		sb.WriteString("| ")
 		for col_idx, col := range row {
 			if aligned {
-				str += fmt.Sprintf("%-*s | ", widths[col_idx], col)
+				sb.WriteString(fmt.Sprintf("%-*s | ", widths[col_idx], col))
 			} else {
-				str += col + " | "
+				sb.WriteString(col + " | ")
 			}
 		}
-		result = append(result, str)
+		result = append(result, sb.String())
 
 		// content separator only after first row (header)
 		if row_idx == 0 {
-			str := "| "
+			var sepBuilder strings.Builder
+			sepBuilder.WriteString("| ")
 			for col_idx := range row {
 				if !aligned || widths[col_idx] < 3 {
-					str += "--- | "
+					sepBuilder.WriteString("--- | ")
 				} else {
-					str += strings.Repeat("-", widths[col_idx]) + " | "
+					sepBuilder.WriteString(strings.Repeat("-", widths[col_idx]) + " | ")
 				}
 			}
-			result = append(result, str)
+			result = append(result, sepBuilder.String())
 		}
 	}
 	return result
