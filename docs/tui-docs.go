@@ -278,9 +278,11 @@ parent: TUI
 
 	if len(module.KeyBindings) > 0 {
 		content += "| Key | Action |\n|-----|--------|\n"
+		var builder strings.Builder
 		for _, binding := range module.KeyBindings {
-			content += fmt.Sprintf("| `%s` | %s |\n", binding.Key, binding.Description)
+			builder.WriteString(fmt.Sprintf("| `%s` | %s |\n", binding.Key, binding.Description))
 		}
+		content += builder.String()
 	} else {
 		content += "Standard key bindings apply (see main TUI documentation).\n"
 	}
