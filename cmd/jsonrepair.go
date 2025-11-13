@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"errors"
 	"fmt"
 	"io"
 
@@ -42,7 +43,7 @@ This tool can fix various JSON issues including:
 		}
 
 		if len(data) == 0 {
-			return fmt.Errorf("no input provided. Pipe JSON input to this command")
+			return errors.New("no input provided. Pipe JSON input to this command")
 		}
 
 		result, err := jsonrepair.RepairJSON(string(data))

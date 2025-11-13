@@ -39,16 +39,16 @@ func Convert(header string, records [][]string, aligned bool) []string {
 	// build markdown table
 	for row_idx, row := range records {
 		// table content
-		var sb strings.Builder
-		sb.WriteString("| ")
+		var builder strings.Builder
+		builder.WriteString("| ")
 		for col_idx, col := range row {
 			if aligned {
-				sb.WriteString(fmt.Sprintf("%-*s | ", widths[col_idx], col))
+				fmt.Fprintf(&builder, "%-*s | ", widths[col_idx], col)
 			} else {
-				sb.WriteString(col + " | ")
+				builder.WriteString(col + " | ")
 			}
 		}
-		result = append(result, sb.String())
+		result = append(result, builder.String())
 
 		// content separator only after first row (header)
 		if row_idx == 0 {
