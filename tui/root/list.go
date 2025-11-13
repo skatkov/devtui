@@ -24,6 +24,7 @@ import (
 	"github.com/skatkov/devtui/tui/html"
 	"github.com/skatkov/devtui/tui/iban"
 	js "github.com/skatkov/devtui/tui/json"
+	"github.com/skatkov/devtui/tui/jsonrepair"
 	"github.com/skatkov/devtui/tui/jsonstruct"
 	"github.com/skatkov/devtui/tui/jsontoml"
 	"github.com/skatkov/devtui/tui/markdown"
@@ -207,6 +208,11 @@ func getMenuOptions(common *ui.CommonModel) []MenuOption {
 			id:    "url-extractor",
 			title: urlextractor.Title,
 			model: func() tea.Model { return urlextractor.NewURLExtractorModel(common) },
+		},
+		{
+			id:    "jsonrepair",
+			title: jsonrepair.Title,
+			model: func() tea.Model { return jsonrepair.NewJSONRepairModel(common) },
 		},
 	}
 }

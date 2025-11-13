@@ -3,6 +3,7 @@ module github.com/skatkov/devtui
 go 1.24.2
 
 require (
+	github.com/RealAlexandreAI/json-repair v0.0.14
 	github.com/adrg/xdg v0.5.3
 	github.com/alecthomas/chroma v0.10.0
 	github.com/charmbracelet/bubbles v0.21.1-0.20250623103423-23b8fd6302d7
