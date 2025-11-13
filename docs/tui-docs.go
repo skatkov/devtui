@@ -258,7 +258,9 @@ Most TUI tools share these common key bindings:
 }
 
 func generateModuleFile(sitePath string, module TUIModule) error {
-	content := fmt.Sprintf(`---
+	var builder strings.Builder
+
+	fmt.Fprintf(&builder, `---
 title: %s
 parent: TUI
 ---
@@ -277,23 +279,18 @@ parent: TUI
 `, module.Title, module.Title)
 
 	if len(module.KeyBindings) > 0 {
-		content += "| Key | Action |\n|-----|--------|\n"
-		var builder strings.Builder
+		builder.WriteString("| Key | Action |\n|-----|--------|\n")
 		for _, binding := range module.KeyBindings {
-			builder.WriteString(fmt.Sprintf("| `%s` | %s |\n", binding.Key, binding.Description))
+			fmt.Fprintf(&builder, "| `%s` | %s |\n", binding.Key, binding.Description)
 		}
-		content += builder.String()
 	} else {
-		content += "Standard key bindings apply (see main TUI documentation).\n"
+		builder.WriteString("Standard key bindings apply (see main TUI documentation).\n")
 	}
 
-	content += `
-
-
-`
+	builder.WriteString("\n\n")
 
 	filename := module.Name + ".md"
-	return os.WriteFile(filepath.Join(sitePath, filename), []byte(content), 0o644)
+	return os.WriteFile(filepath.Join(sitePath, filename), []byte(builder.String()), 0o644)
 }
 
 func GenerateTUIDocumentation() error {
