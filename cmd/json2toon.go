@@ -6,7 +6,7 @@ import (
 	"os"
 
 	"github.com/hannes-sistemica/toon"
-	"github.com/skatkov/devtui/tui/jsontoon"
+	"github.com/skatkov/devtui/tui/json2toon"
 	"github.com/spf13/cobra"
 )
 
@@ -30,7 +30,7 @@ reduced token usage (typically 30-60% fewer tokens than JSON).`,
 		}
 
 		// Parse delimiter flag
-		delimiter := ","
+		var delimiter string
 		switch json2toonDelimiter {
 		case "comma":
 			delimiter = ","
@@ -48,7 +48,7 @@ reduced token usage (typically 30-60% fewer tokens than JSON).`,
 			LengthMarker: json2toonLengthMarker,
 		}
 
-		result, err := jsontoon.ConvertWithOptions(string(data), opts)
+		result, err := json2toon.ConvertWithOptions(string(data), opts)
 		if err != nil {
 			return err
 		}
