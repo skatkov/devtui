@@ -27,6 +27,7 @@ import (
 	"github.com/skatkov/devtui/tui/jsonrepair"
 	"github.com/skatkov/devtui/tui/jsonstruct"
 	"github.com/skatkov/devtui/tui/jsontoml"
+	"github.com/skatkov/devtui/tui/jsontoon"
 	"github.com/skatkov/devtui/tui/markdown"
 	"github.com/skatkov/devtui/tui/numbers"
 	"github.com/skatkov/devtui/tui/toml"
@@ -168,6 +169,11 @@ func getMenuOptions(common *ui.CommonModel) []MenuOption {
 			id:    "jsontoml",
 			title: jsontoml.Title,
 			model: func() tea.Model { return jsontoml.NewJsonTomlModel(common) },
+		},
+		{
+			id:    "jsontoon",
+			title: jsontoon.Title,
+			model: func() tea.Model { return jsontoon.NewJsonToonModel(common) },
 		},
 		{
 			id:    "toml",
