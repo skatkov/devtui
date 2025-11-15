@@ -22,6 +22,21 @@ reduced token usage (typically 30-60% fewer tokens than JSON).`,
   devtui json2toon -l '#' < example.json             # Add length marker prefix
   cat example.json | devtui json2toon > output.toon  # Pipe and save to file`,
 	Args: cobra.NoArgs,
+	PreRunE: func(cmd *cobra.Command, args []string) error {
+		// Validate indent flag
+		if json2toonIndent < 0 {
+			return fmt.Errorf("invalid indent: %d (must be non-negative)", json2toonIndent)
+		}
+
+		// Validate delimiter flag
+		validDelimiters := []string{"comma", "tab", "pipe"}
+		for _, valid := range validDelimiters {
+			if json2toonDelimiter == valid {
+				return nil
+			}
+		}
+		return fmt.Errorf("invalid delimiter: %s (must be comma, tab, or pipe)", json2toonDelimiter)
+	},
 	RunE: func(cmd *cobra.Command, args []string) error {
 		data, err := io.ReadAll(cmd.InOrStdin())
 		if err != nil {
@@ -37,8 +52,6 @@ reduced token usage (typically 30-60% fewer tokens than JSON).`,
 			delimiter = "\t"
 		case "pipe":
 			delimiter = "|"
-		default:
-			return fmt.Errorf("invalid delimiter: %s (must be comma, tab, or pipe)", json2toonDelimiter)
 		}
 
 		opts := toon.EncodeOptions{
