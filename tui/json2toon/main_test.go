@@ -193,10 +193,6 @@ func TestNewJsonToonModel(t *testing.T) {
 		t.Errorf("NewJsonToonModel() default indent = %v, want 2", model.indent)
 	}
 
-	if model.delimiter != "," {
-		t.Errorf("NewJsonToonModel() default delimiter = %v, want ,", model.delimiter)
-	}
-
 	if model.lengthMarker != "" {
 		t.Errorf("NewJsonToonModel() default lengthMarker = %v, want empty string", model.lengthMarker)
 	}
@@ -232,28 +228,7 @@ func TestConvertWithOptions(t *testing.T) {
 			wantContain: "users[#2]{id,name}:",
 			wantErr:     false,
 		},
-		{
-			name:  "tab delimiter",
-			input: `{"tags":["foo","bar","baz"]}`,
-			opts: toon.EncodeOptions{
-				Indent:       2,
-				Delimiter:    "\t",
-				LengthMarker: "",
-			},
-			wantContain: "tags[3\t]:",
-			wantErr:     false,
-		},
-		{
-			name:  "pipe delimiter",
-			input: `{"tags":["foo","bar","baz"]}`,
-			opts: toon.EncodeOptions{
-				Indent:       2,
-				Delimiter:    "|",
-				LengthMarker: "",
-			},
-			wantContain: "tags[3|]:",
-			wantErr:     false,
-		},
+
 		{
 			name:  "indent 4 spaces",
 			input: `{"user":{"id":1,"name":"Alice"}}`,
@@ -305,19 +280,6 @@ func TestModelOptions(t *testing.T) {
 	err = model.SetContent(testJSON)
 	if err != nil {
 		t.Errorf("SetContent() with indent=4 failed: %v", err)
-	}
-
-	// Test changing delimiter
-	model.delimiter = "\t"
-	err = model.SetContent(testJSON)
-	if err != nil {
-		t.Errorf("SetContent() with tab delimiter failed: %v", err)
-	}
-
-	model.delimiter = "|"
-	err = model.SetContent(testJSON)
-	if err != nil {
-		t.Errorf("SetContent() with pipe delimiter failed: %v", err)
 	}
 
 	// Test changing length marker

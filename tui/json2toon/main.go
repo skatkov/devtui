@@ -19,7 +19,6 @@ const Title = "JSON to TOON Converter"
 type JsonToonModel struct {
 	ui.BasePagerModel
 	indent       int
-	delimiter    string
 	lengthMarker string
 }
 
@@ -27,7 +26,6 @@ func NewJsonToonModel(common *ui.CommonModel) JsonToonModel {
 	model := JsonToonModel{
 		BasePagerModel: ui.NewBasePagerModel(common, Title),
 		indent:         2,
-		delimiter:      ",",
 		lengthMarker:   "",
 	}
 
@@ -64,25 +62,6 @@ func (m JsonToonModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 					cmds = append(cmds, m.ShowErrorMessage(err.Error()))
 				} else {
 					cmds = append(cmds, m.ShowStatusMessage(fmt.Sprintf("Indent: %d spaces", m.indent)))
-				}
-			}
-		case "D":
-			// Cycle through delimiter options: comma, tab, pipe
-			switch m.delimiter {
-			case ",":
-				m.delimiter = "\t"
-			case "\t":
-				m.delimiter = "|"
-			case "|":
-				m.delimiter = ","
-			}
-			if m.Content != "" {
-				err := m.SetContent(m.Content)
-				if err != nil {
-					cmds = append(cmds, m.ShowErrorMessage(err.Error()))
-				} else {
-					delimName := map[string]string{",": "comma", "\t": "tab", "|": "pipe"}[m.delimiter]
-					cmds = append(cmds, m.ShowStatusMessage("Delimiter: "+delimName))
 				}
 			}
 		case "l":
@@ -162,7 +141,7 @@ func (m *JsonToonModel) SetContent(content string) error {
 
 	opts := toon.EncodeOptions{
 		Indent:       m.indent,
-		Delimiter:    m.delimiter,
+		Delimiter:    ",",
 		LengthMarker: m.lengthMarker,
 	}
 
@@ -181,7 +160,6 @@ func (m *JsonToonModel) SetContent(content string) error {
 }
 
 func (m JsonToonModel) helpView() (s string) {
-	delimName := map[string]string{",": "comma", "\t": "tab", "|": "pipe"}[m.delimiter]
 	lengthStatus := "off"
 	if m.lengthMarker != "" {
 		lengthStatus = "on"
@@ -193,7 +171,6 @@ func (m JsonToonModel) helpView() (s string) {
 		"v              paste JSON to convert",
 		fmt.Sprintf("i              toggle indent (current: %d)", m.indent),
 		fmt.Sprintf("l              toggle length marker (current: %s)", lengthStatus),
-		fmt.Sprintf("shift+d        toggle delimiter (current: %s)", delimName),
 		"q/ctrl+c       quit",
 	}
 
@@ -203,8 +180,7 @@ func (m JsonToonModel) helpView() (s string) {
 	s += "b/pgup   page up             " + col1[2] + "\n"
 	s += "f/pgdn   page down           " + col1[3] + "\n"
 	s += "u        ½ page up           " + col1[4] + "\n"
-	s += "d        ½ page down         " + col1[5] + "\n"
-	s += "                             " + col1[6]
+	s += "d        ½ page down         " + col1[5]
 
 	s = ui.Indent(s, 2)
 

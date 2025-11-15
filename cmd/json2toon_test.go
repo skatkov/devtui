@@ -32,22 +32,6 @@ func TestJson2toonCmd(t *testing.T) {
 			description: "Should add length marker prefix",
 		},
 		{
-			name:        "with tab delimiter",
-			input:       `{"tags":["foo","bar","baz"]}`,
-			args:        []string{"-d", "tab"},
-			wantContain: "foo\tbar\tbaz",
-			wantErr:     false,
-			description: "Should use tab delimiter",
-		},
-		{
-			name:        "with pipe delimiter",
-			input:       `{"tags":["foo","bar","baz"]}`,
-			args:        []string{"-d", "pipe"},
-			wantContain: "foo|bar|baz",
-			wantErr:     false,
-			description: "Should use pipe delimiter",
-		},
-		{
 			name:        "with 4-space indent",
 			input:       `{"user":{"id":1}}`,
 			args:        []string{"-i", "4"},
@@ -58,18 +42,10 @@ func TestJson2toonCmd(t *testing.T) {
 		{
 			name:        "combined options",
 			input:       `{"items":[{"id":1},{"id":2}]}`,
-			args:        []string{"-l", "#", "-d", "pipe", "-i", "4"},
-			wantContain: "items[#2|]{id}:",
+			args:        []string{"-l", "#", "-i", "4"},
+			wantContain: "items[#2]{id}:",
 			wantErr:     false,
 			description: "Should combine all options",
-		},
-		{
-			name:        "invalid delimiter",
-			input:       `{"test":"value"}`,
-			args:        []string{"-d", "invalid"},
-			wantContain: "",
-			wantErr:     true,
-			description: "Should error on invalid delimiter",
 		},
 		{
 			name:        "invalid JSON",
@@ -79,13 +55,20 @@ func TestJson2toonCmd(t *testing.T) {
 			wantErr:     true,
 			description: "Should error on invalid JSON",
 		},
+		{
+			name:        "invalid indent - negative",
+			input:       `{"test":"value"}`,
+			args:        []string{"-i", "-1"},
+			wantContain: "",
+			wantErr:     true,
+			description: "Should error on negative indent",
+		},
 	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			// Reset global flags
 			json2toonIndent = 2
-			json2toonDelimiter = "comma"
 			json2toonLengthMarker = ""
 
 			// Create fresh command and root for each test
@@ -138,7 +121,6 @@ func TestJson2toonCmdHelp(t *testing.T) {
 	expectedStrings := []string{
 		"Convert JSON to TOON",
 		"--indent",
-		"--delimiter",
 		"--length-marker",
 	}
 
