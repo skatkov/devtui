@@ -24,10 +24,10 @@ import (
 	"github.com/skatkov/devtui/tui/html"
 	"github.com/skatkov/devtui/tui/iban"
 	js "github.com/skatkov/devtui/tui/json"
+	"github.com/skatkov/devtui/tui/json2toon"
 	"github.com/skatkov/devtui/tui/jsonrepair"
 	"github.com/skatkov/devtui/tui/jsonstruct"
 	"github.com/skatkov/devtui/tui/jsontoml"
-	"github.com/skatkov/devtui/tui/jsontoon"
 	"github.com/skatkov/devtui/tui/markdown"
 	"github.com/skatkov/devtui/tui/numbers"
 	"github.com/skatkov/devtui/tui/toml"
@@ -171,9 +171,9 @@ func getMenuOptions(common *ui.CommonModel) []MenuOption {
 			model: func() tea.Model { return jsontoml.NewJsonTomlModel(common) },
 		},
 		{
-			id:    "jsontoon",
-			title: jsontoon.Title,
-			model: func() tea.Model { return jsontoon.NewJsonToonModel(common) },
+			id:    "json2toon",
+			title: json2toon.Title,
+			model: func() tea.Model { return json2toon.NewJsonToonModel(common) },
 		},
 		{
 			id:    "toml",

@@ -1,4 +1,4 @@
-package jsontoon
+package json2toon
 
 import (
 	"bytes"
@@ -82,7 +82,7 @@ func (m JsonToonModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 					cmds = append(cmds, m.ShowErrorMessage(err.Error()))
 				} else {
 					delimName := map[string]string{",": "comma", "\t": "tab", "|": "pipe"}[m.delimiter]
-					cmds = append(cmds, m.ShowStatusMessage(fmt.Sprintf("Delimiter: %s", delimName)))
+					cmds = append(cmds, m.ShowStatusMessage("Delimiter: "+delimName))
 				}
 			}
 		case "l":
@@ -101,7 +101,7 @@ func (m JsonToonModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 					if m.lengthMarker != "" {
 						status = "on"
 					}
-					cmds = append(cmds, m.ShowStatusMessage(fmt.Sprintf("Length marker: %s", status)))
+					cmds = append(cmds, m.ShowStatusMessage("Length marker: "+status))
 				}
 			}
 		case "v":

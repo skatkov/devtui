@@ -1,4 +1,4 @@
-package jsontoon
+package json2toon
 
 import (
 	"strings"
