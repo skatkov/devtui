@@ -1,13 +1,13 @@
 package cmd
 
 import (
+	"context"
 	"os"
 
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/fang"
 	"github.com/skatkov/devtui/tui/root"
 	"github.com/spf13/cobra"
-	"golang.org/x/net/context"
 )
 
 var rootCmd = &cobra.Command{
