@@ -4,6 +4,7 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/hannes-sistemica/toon"
 	"github.com/skatkov/devtui/internal/ui"
 )
 
@@ -185,5 +186,148 @@ func TestNewJsonToonModel(t *testing.T) {
 
 	if model.Common != common {
 		t.Errorf("NewJsonToonModel() common model not set correctly")
+	}
+
+	// Check default options
+	if model.indent != 2 {
+		t.Errorf("NewJsonToonModel() default indent = %v, want 2", model.indent)
+	}
+
+	if model.delimiter != "," {
+		t.Errorf("NewJsonToonModel() default delimiter = %v, want ,", model.delimiter)
+	}
+
+	if model.lengthMarker != "" {
+		t.Errorf("NewJsonToonModel() default lengthMarker = %v, want empty string", model.lengthMarker)
+	}
+}
+
+func TestConvertWithOptions(t *testing.T) {
+	tests := []struct {
+		name        string
+		input       string
+		opts        toon.EncodeOptions
+		wantContain string
+		wantErr     bool
+	}{
+		{
+			name:  "default options",
+			input: `{"users":[{"id":1,"name":"Alice"},{"id":2,"name":"Bob"}]}`,
+			opts: toon.EncodeOptions{
+				Indent:       2,
+				Delimiter:    ",",
+				LengthMarker: "",
+			},
+			wantContain: "users[2]{id,name}:",
+			wantErr:     false,
+		},
+		{
+			name:  "with length marker",
+			input: `{"users":[{"id":1,"name":"Alice"},{"id":2,"name":"Bob"}]}`,
+			opts: toon.EncodeOptions{
+				Indent:       2,
+				Delimiter:    ",",
+				LengthMarker: "#",
+			},
+			wantContain: "users[#2]{id,name}:",
+			wantErr:     false,
+		},
+		{
+			name:  "tab delimiter",
+			input: `{"tags":["foo","bar","baz"]}`,
+			opts: toon.EncodeOptions{
+				Indent:       2,
+				Delimiter:    "\t",
+				LengthMarker: "",
+			},
+			wantContain: "tags[3\t]:",
+			wantErr:     false,
+		},
+		{
+			name:  "pipe delimiter",
+			input: `{"tags":["foo","bar","baz"]}`,
+			opts: toon.EncodeOptions{
+				Indent:       2,
+				Delimiter:    "|",
+				LengthMarker: "",
+			},
+			wantContain: "tags[3|]:",
+			wantErr:     false,
+		},
+		{
+			name:  "indent 4 spaces",
+			input: `{"user":{"id":1,"name":"Alice"}}`,
+			opts: toon.EncodeOptions{
+				Indent:       4,
+				Delimiter:    ",",
+				LengthMarker: "",
+			},
+			wantContain: "user:",
+			wantErr:     false,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			result, err := ConvertWithOptions(tt.input, tt.opts)
+
+			if (err != nil) != tt.wantErr {
+				t.Errorf("ConvertWithOptions() error = %v, wantErr %v", err, tt.wantErr)
+				return
+			}
+
+			if err == nil && tt.wantContain != "" {
+				if !strings.Contains(result, tt.wantContain) {
+					t.Errorf("ConvertWithOptions() result does not contain %q\nGot: %s", tt.wantContain, result)
+				}
+			}
+		})
+	}
+}
+
+func TestModelOptions(t *testing.T) {
+	common := &ui.CommonModel{
+		Width:  80,
+		Height: 24,
+	}
+
+	model := NewJsonToonModel(common)
+	testJSON := `{"users":[{"id":1,"name":"Alice"}]}`
+
+	// Set initial content
+	err := model.SetContent(testJSON)
+	if err != nil {
+		t.Fatalf("SetContent() failed: %v", err)
+	}
+
+	// Test changing indent
+	model.indent = 4
+	err = model.SetContent(testJSON)
+	if err != nil {
+		t.Errorf("SetContent() with indent=4 failed: %v", err)
+	}
+
+	// Test changing delimiter
+	model.delimiter = "\t"
+	err = model.SetContent(testJSON)
+	if err != nil {
+		t.Errorf("SetContent() with tab delimiter failed: %v", err)
+	}
+
+	model.delimiter = "|"
+	err = model.SetContent(testJSON)
+	if err != nil {
+		t.Errorf("SetContent() with pipe delimiter failed: %v", err)
+	}
+
+	// Test changing length marker
+	model.lengthMarker = "#"
+	err = model.SetContent(testJSON)
+	if err != nil {
+		t.Errorf("SetContent() with length marker failed: %v", err)
+	}
+
+	if !strings.Contains(model.FormattedContent, "#") {
+		t.Errorf("SetContent() with length marker should contain '#' in output")
 	}
 }

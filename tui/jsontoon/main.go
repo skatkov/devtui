@@ -18,11 +18,17 @@ const Title = "JSON to TOON Converter"
 
 type JsonToonModel struct {
 	ui.BasePagerModel
+	indent       int
+	delimiter    string
+	lengthMarker string
 }
 
 func NewJsonToonModel(common *ui.CommonModel) JsonToonModel {
 	model := JsonToonModel{
 		BasePagerModel: ui.NewBasePagerModel(common, Title),
+		indent:         2,
+		delimiter:      ",",
+		lengthMarker:   "",
 	}
 
 	return model
@@ -45,6 +51,59 @@ func (m JsonToonModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		switch msg.String() {
 		case "e":
 			return m, editor.OpenEditor(m.Content, "json")
+		case "i":
+			// Cycle through indent options: 2, 4
+			if m.indent == 2 {
+				m.indent = 4
+			} else {
+				m.indent = 2
+			}
+			if m.Content != "" {
+				err := m.SetContent(m.Content)
+				if err != nil {
+					cmds = append(cmds, m.ShowErrorMessage(err.Error()))
+				} else {
+					cmds = append(cmds, m.ShowStatusMessage(fmt.Sprintf("Indent: %d spaces", m.indent)))
+				}
+			}
+		case "D":
+			// Cycle through delimiter options: comma, tab, pipe
+			switch m.delimiter {
+			case ",":
+				m.delimiter = "\t"
+			case "\t":
+				m.delimiter = "|"
+			case "|":
+				m.delimiter = ","
+			}
+			if m.Content != "" {
+				err := m.SetContent(m.Content)
+				if err != nil {
+					cmds = append(cmds, m.ShowErrorMessage(err.Error()))
+				} else {
+					delimName := map[string]string{",": "comma", "\t": "tab", "|": "pipe"}[m.delimiter]
+					cmds = append(cmds, m.ShowStatusMessage(fmt.Sprintf("Delimiter: %s", delimName)))
+				}
+			}
+		case "l":
+			// Toggle length marker: "" or "#"
+			if m.lengthMarker == "" {
+				m.lengthMarker = "#"
+			} else {
+				m.lengthMarker = ""
+			}
+			if m.Content != "" {
+				err := m.SetContent(m.Content)
+				if err != nil {
+					cmds = append(cmds, m.ShowErrorMessage(err.Error()))
+				} else {
+					status := "off"
+					if m.lengthMarker != "" {
+						status = "on"
+					}
+					cmds = append(cmds, m.ShowStatusMessage(fmt.Sprintf("Length marker: %s", status)))
+				}
+			}
 		case "v":
 			c := clipboard.New()
 			content, err := c.PasteText()
@@ -101,7 +160,13 @@ func (m JsonToonModel) View() string {
 func (m *JsonToonModel) SetContent(content string) error {
 	m.Content = content
 
-	toonStr, err := Convert(content)
+	opts := toon.EncodeOptions{
+		Indent:       m.indent,
+		Delimiter:    m.delimiter,
+		LengthMarker: m.lengthMarker,
+	}
+
+	toonStr, err := ConvertWithOptions(content, opts)
 
 	if err != nil {
 		return fmt.Errorf("error converting JSON to TOON: %v", err)
@@ -116,10 +181,19 @@ func (m *JsonToonModel) SetContent(content string) error {
 }
 
 func (m JsonToonModel) helpView() (s string) {
+	delimName := map[string]string{",": "comma", "\t": "tab", "|": "pipe"}[m.delimiter]
+	lengthStatus := "off"
+	if m.lengthMarker != "" {
+		lengthStatus = "on"
+	}
+
 	col1 := []string{
 		"c              copy TOON",
 		"e              edit JSON",
 		"v              paste JSON to convert",
+		fmt.Sprintf("i              toggle indent (current: %d)", m.indent),
+		fmt.Sprintf("l              toggle length marker (current: %s)", lengthStatus),
+		fmt.Sprintf("shift+d        toggle delimiter (current: %s)", delimName),
 		"q/ctrl+c       quit",
 	}
 
@@ -128,12 +202,9 @@ func (m JsonToonModel) helpView() (s string) {
 	s += "j/↓      down                " + col1[1] + "\n"
 	s += "b/pgup   page up             " + col1[2] + "\n"
 	s += "f/pgdn   page down           " + col1[3] + "\n"
-	s += "u        ½ page up           " + "\n"
-	s += "d        ½ page down         "
-
-	if len(col1) > 5 {
-		s += col1[5]
-	}
+	s += "u        ½ page up           " + col1[4] + "\n"
+	s += "d        ½ page down         " + col1[5] + "\n"
+	s += "                             " + col1[6]
 
 	s = ui.Indent(s, 2)
 
@@ -152,6 +223,15 @@ func (m JsonToonModel) helpView() (s string) {
 }
 
 func Convert(jsonContent string) (string, error) {
+	opts := toon.EncodeOptions{
+		Indent:       2,
+		Delimiter:    ",",
+		LengthMarker: "",
+	}
+	return ConvertWithOptions(jsonContent, opts)
+}
+
+func ConvertWithOptions(jsonContent string, opts toon.EncodeOptions) (string, error) {
 	// Parse JSON using toon's ParseJSON which preserves key order
 	data, err := toon.ParseJSON(strings.NewReader(jsonContent))
 	if err != nil {
@@ -164,8 +244,8 @@ func Convert(jsonContent string) (string, error) {
 		return "", fmt.Errorf("JSON parsing error: %s", err.Error())
 	}
 
-	// Encode to TOON format with default options
-	toonStr, err := toon.Encode(data)
+	// Encode to TOON format with specified options
+	toonStr, err := toon.EncodeWithOptions(data, opts)
 	if err != nil {
 		return "", fmt.Errorf("TOON encoding error: %s", err.Error())
 	}
