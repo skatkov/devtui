@@ -3,7 +3,6 @@ package cmd
 import (
 	"fmt"
 	"io"
-	"os"
 
 	"github.com/hannes-sistemica/toon"
 	"github.com/skatkov/devtui/tui/json2toon"
@@ -24,7 +23,7 @@ reduced token usage (typically 30-60% fewer tokens than JSON).`,
   cat example.json | devtui json2toon > output.toon  # Pipe and save to file`,
 	Args: cobra.NoArgs,
 	RunE: func(cmd *cobra.Command, args []string) error {
-		data, err := io.ReadAll(os.Stdin)
+		data, err := io.ReadAll(cmd.InOrStdin())
 		if err != nil {
 			return err
 		}
