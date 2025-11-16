@@ -80,9 +80,45 @@ release:
     owner: skatkov
     name: devtui
   name_template: "devtui-{{ .Tag }}"
-homebrew_casks:
+brews:
   - description: "A Swiss Army knife for developers"
     name: devtui
     repository:
       owner: skatkov
       name: homebrew-tap
+    caveats: |
+      def caveats
+        return unless OS.linux?
+
+        session_type = ENV['XDG_SESSION_TYPE']
+
+        message = <<~EOS
+          Clipboard support on Linux requires additional dependencies:
+        EOS
+
+        case session_type
+        when 'wayland'
+          message += <<~EOS
+            Linux with Wayland session type requires additional dependency
+
+            Install: brew install wl-clipboard
+          EOS
+        when 'x11'
+          message += <<~EOS
+            Linux with X11 session type requires additional dependency
+
+            Install: brew install xclip
+            (Alternative: brew install xsel)
+          EOS
+        else
+          message += <<~EOS
+
+            • Wayland: brew install wl-clipboard
+            • X11: brew install xclip (or xsel)
+
+            To check your session type: echo $XDG_SESSION_TYPE
+          EOS
+        end
+
+        message
+      end
