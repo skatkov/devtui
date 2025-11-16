@@ -6,7 +6,10 @@ layout: minimal
 search: false
 ---
 
-# **DevTUI** - _A Swiss-army app for developers_
+![DevTUI ASCII Art](/assets/img/ascii-art-text.png)
+{: .text-center}
+
+# A Swiss-army app for developers
 {: .fw-700}
 
 {:.fs-6 .fw-300 .mt-5}

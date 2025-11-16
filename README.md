@@ -1,4 +1,7 @@
-# **DevTUI** - A Swiss-army app for developers
+![DevTUI ASCII Art](/site/assets/img/ascii-art-text.png)
+{: .text-center}
+
+# A Swiss-army app for developers
 
 All-in-one terminal toolkit that consolidates everyday developer utilities into a unified TUI and CLI interfaces.
 
