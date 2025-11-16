@@ -12,7 +12,7 @@ import (
 	"github.com/pelletier/go-toml/v2"
 	"github.com/skatkov/devtui/internal/editor"
 	"github.com/skatkov/devtui/internal/ui"
-	"github.com/tiagomelo/go-clipboard/clipboard"
+	"github.com/skatkov/devtui/internal/clipboard"
 )
 
 const Title = "JSON to TOML Converter"
@@ -49,8 +49,7 @@ func (m JsonTomlModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		case "e":
 			return m, editor.OpenEditor(m.Content, "json")
 		case "v":
-			c := clipboard.New()
-			content, err := c.PasteText()
+			content, err := clipboard.Paste()
 			if err != nil {
 				cmds = append(cmds, m.ShowErrorMessage(err.Error()))
 			} else {

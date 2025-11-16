@@ -9,9 +9,9 @@ import (
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/mattn/go-runewidth"
 	"github.com/skatkov/devtui/internal/base64"
+	"github.com/skatkov/devtui/internal/clipboard"
 	"github.com/skatkov/devtui/internal/editor"
 	"github.com/skatkov/devtui/internal/ui"
-	"github.com/tiagomelo/go-clipboard/clipboard"
 )
 
 const Title = "Base64 Decoder"
@@ -47,8 +47,7 @@ func (m Base64Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		case "e":
 			return m, editor.OpenEditor(m.Content, "base64")
 		case "v":
-			c := clipboard.New()
-			content, err := c.PasteText()
+			content, err := clipboard.Paste()
 			if err == nil {
 				err = m.SetContent(content)
 			}
