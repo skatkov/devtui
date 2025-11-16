@@ -60,9 +60,10 @@ func TestBase64CLI(t *testing.T) {
 			hasErr: true,
 		},
 		{
-			name:   "no input provided",
-			args:   []string{"base64"},
-			hasErr: true,
+			name:  "empty stdin should encode to empty",
+			args:  []string{"base64"},
+			input: "",
+			want:  "",
 		},
 	}
 
@@ -139,13 +140,21 @@ func TestBase64CLIWithFiles(t *testing.T) {
 				t.Skipf("File %s not found", base64Path)
 			}
 
-			// Encode the text file
-			cmd := exec.Command(binary, "base64", textPath)
+			// Read text file content
+			textContent, err := os.ReadFile(textPath)
+			if err != nil {
+				t.Errorf("Failed to read %s: %v", textPath, err)
+				return
+			}
+
+			// Encode using stdin
+			cmd := exec.Command(binary, "base64")
+			cmd.Stdin = bytes.NewReader(textContent)
 			var stdout, stderr bytes.Buffer
 			cmd.Stdout = &stdout
 			cmd.Stderr = &stderr
 
-			err := cmd.Run()
+			err = cmd.Run()
 			if err != nil {
 				t.Errorf("Failed to encode %s: %v\nStderr: %s", textPath, err, stderr.String())
 				return
@@ -178,13 +187,21 @@ func TestBase64CLIWithFiles(t *testing.T) {
 				t.Skipf("File %s not found", base64Path)
 			}
 
-			// Decode the base64 file
-			cmd := exec.Command(binary, "base64", base64Path, "--decode")
+			// Read base64 file content
+			base64Content, err := os.ReadFile(base64Path)
+			if err != nil {
+				t.Errorf("Failed to read %s: %v", base64Path, err)
+				return
+			}
+
+			// Decode using stdin
+			cmd := exec.Command(binary, "base64", "--decode")
+			cmd.Stdin = bytes.NewReader(base64Content)
 			var stdout, stderr bytes.Buffer
 			cmd.Stdout = &stdout
 			cmd.Stderr = &stderr
 
-			err := cmd.Run()
+			err = cmd.Run()
 			if err != nil {
 				t.Errorf("Failed to decode %s: %v\nStderr: %s", base64Path, err, stderr.String())
 				return
@@ -242,8 +259,9 @@ func TestBase64CLIRoundTrip(t *testing.T) {
 				return
 			}
 
-			// Step 1: Encode
-			encodeCmd := exec.Command(binary, "base64", filePath)
+			// Step 1: Encode using stdin
+			encodeCmd := exec.Command(binary, "base64")
+			encodeCmd.Stdin = bytes.NewReader(original)
 			var encodedOut, encodeErr bytes.Buffer
 			encodeCmd.Stdout = &encodedOut
 			encodeCmd.Stderr = &encodeErr
@@ -256,7 +274,7 @@ func TestBase64CLIRoundTrip(t *testing.T) {
 
 			encoded := encodedOut.String()
 
-			// Step 2: Decode
+			// Step 2: Decode using stdin
 			decodeCmd := exec.Command(binary, "base64", "--decode")
 			decodeCmd.Stdin = strings.NewReader(encoded)
 			var decodedOut, decodeErrBuf bytes.Buffer
@@ -297,13 +315,20 @@ func TestBase64CLIInvalidData(t *testing.T) {
 		t.Skip("invalid.base64 not found, skipping invalid data test")
 	}
 
-	// Try to decode invalid base64 file - should fail
-	cmd := exec.Command(binary, "base64", invalidFile, "--decode")
+	// Read invalid base64 content
+	invalidContent, err := os.ReadFile(invalidFile)
+	if err != nil {
+		t.Fatalf("Failed to read invalid.base64: %v", err)
+	}
+
+	// Try to decode invalid base64 using stdin - should fail
+	cmd := exec.Command(binary, "base64", "--decode")
+	cmd.Stdin = bytes.NewReader(invalidContent)
 	var stdout, stderr bytes.Buffer
 	cmd.Stdout = &stdout
 	cmd.Stderr = &stderr
 
-	err := cmd.Run()
+	err = cmd.Run()
 	if err == nil {
 		t.Errorf("Expected error when decoding invalid base64 file, but command succeeded")
 	}
