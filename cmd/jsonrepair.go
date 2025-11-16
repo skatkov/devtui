@@ -3,8 +3,8 @@ package cmd
 import (
 	"errors"
 	"fmt"
-	"io"
 
+	"github.com/skatkov/devtui/internal/input"
 	"github.com/skatkov/devtui/tui/jsonrepair"
 	"github.com/spf13/cobra"
 )
@@ -37,7 +37,7 @@ This tool can fix various JSON issues including:
 	`,
 	Args: cobra.NoArgs,
 	RunE: func(cmd *cobra.Command, args []string) error {
-		data, err := io.ReadAll(cmd.InOrStdin())
+		data, err := input.ReadFromStdin(cmd)
 		if err != nil {
 			return fmt.Errorf("error reading from stdin: %w", err)
 		}

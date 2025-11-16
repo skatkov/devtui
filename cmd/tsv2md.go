@@ -17,6 +17,7 @@ var tsv2mdCmd = &cobra.Command{
 	Example: `  devtui tsv2md -t < example.tsv          # convert tsv from stdin and view result in stdout
 	devtui tsv2md < example.tsv > output.md # convert tsv from stdin and write result in new file
 	cat example.tsv | devtui tsv2md         # convert tsv from stdin and view result in stdout`,
+	Args: cobra.NoArgs,
 	RunE: func(cmd *cobra.Command, args []string) error {
 		tsvReader := csv.NewReader(cmd.InOrStdin())
 		tsvReader.Comma = '\t'

@@ -10,6 +10,7 @@ var cssminCmd = &cobra.Command{
 	Short:   "Minify CSS files",
 	Long:    "Minify CSS files",
 	Example: "cssmin < testdata/bootstrap.min.css",
+	Args:    cobra.NoArgs,
 	RunE: func(cmd *cobra.Command, args []string) error {
 		cssformat := csstool.NewCSSFormat(0, false, nil)
 		cssformat.AlwaysSemicolon = false

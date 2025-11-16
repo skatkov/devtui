@@ -2,11 +2,10 @@ package cmd
 
 import (
 	"fmt"
-	"io"
-	"os"
 	"strings"
 
 	tea "github.com/charmbracelet/bubbletea"
+	"github.com/skatkov/devtui/internal/input"
 	"github.com/skatkov/devtui/internal/ui"
 	graphqlquery "github.com/skatkov/devtui/tui/graphql-query"
 	"github.com/spf13/cobra"
@@ -25,9 +24,10 @@ var gqlfmtCmd = &cobra.Command{
 	gqlquery --indent "    " --with-comments --with-descriptions < testdata/query.graphql # With formatting options
 	gqlquery < testdata/query.graphql --tui # Show results in a TUI
 	`,
+	Args: cobra.NoArgs,
 	RunE: func(cmd *cobra.Command, args []string) error {
 		// Read all input data from stdin
-		data, err := io.ReadAll(os.Stdin)
+		data, err := input.ReadFromStdin(cmd)
 		if err != nil {
 			return err
 		}

@@ -20,6 +20,7 @@ var xmlfmtCmd = &cobra.Command{
 	xmlfmt < testdata/sample.xml > output.xml # Output formatted XML to file
 	xmlfmt < testdata/sample.xml --tui # Open XML formatter in TUI
 	`,
+	Args: cobra.NoArgs,
 	RunE: func(cmd *cobra.Command, args []string) error {
 		// Read all input data from stdin
 		data, err := input.ReadFromStdin(cmd)
