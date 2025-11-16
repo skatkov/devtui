@@ -80,7 +80,7 @@ release:
     owner: skatkov
     name: devtui
   name_template: "devtui-{{ .Tag }}"
-brews:
+homebrew_casks:
   - description: "A Swiss Army knife for developers"
     name: devtui
     repository:
