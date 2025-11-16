@@ -40,7 +40,6 @@ and --header to add a main heading (h1) to the output.`,
   devtui csv2md -t "Results" -a < data.csv`,
 	Args: cobra.MaximumNArgs(1),
 	RunE: func(cmd *cobra.Command, args []string) error {
-
 		data, err := input.ReadBytesFromArgsOrStdin(cmd, args)
 		if err != nil {
 			return err
