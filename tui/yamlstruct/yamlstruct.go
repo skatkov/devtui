@@ -9,6 +9,7 @@ import (
 	"github.com/alecthomas/chroma/quick"
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/mattn/go-runewidth"
+
 	"github.com/skatkov/devtui/internal/clipboard"
 	"github.com/skatkov/devtui/internal/editor"
 	"github.com/skatkov/devtui/internal/ui"
