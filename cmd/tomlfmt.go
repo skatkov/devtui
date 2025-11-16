@@ -11,10 +11,30 @@ import (
 )
 
 var tomlfmtCmd = &cobra.Command{
-	Use:   "tomlfmt",
-	Short: "Format TOML files",
-	Long:  "Format TOML files",
-	Args:  cobra.MaximumNArgs(1),
+	Use:   "tomlfmt [string or file]",
+	Short: "Format and prettify TOML files",
+	Long: `Format and prettify TOML (Tom's Obvious Minimal Language) files with proper indentation.
+
+Input can be a string argument or piped from stdin. Use --tui flag to view results
+in an interactive terminal interface.`,
+	Example: `  # Format TOML from stdin
+  devtui tomlfmt < config.toml
+  cat app.toml | devtui tomlfmt
+
+  # Format TOML string argument
+  devtui tomlfmt '[package]\nname = "myapp"'
+
+  # Output to file
+  devtui tomlfmt < input.toml > formatted.toml
+  cat config.toml | devtui tomlfmt > pretty.toml
+
+  # Show results in interactive TUI
+  devtui tomlfmt --tui < config.toml
+  devtui tomlfmt -t < config.toml
+
+  # Chain with other commands
+  curl -s https://example.com/config.toml | devtui tomlfmt`,
+	Args: cobra.MaximumNArgs(1),
 	RunE: func(cmd *cobra.Command, args []string) error {
 		data, err := input.ReadBytesFromArgsOrStdin(cmd, args)
 		if err != nil {

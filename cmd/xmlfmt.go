@@ -12,14 +12,41 @@ import (
 )
 
 var xmlfmtCmd = &cobra.Command{
-	Use:   "xmlfmt",
-	Short: "Format XML",
-	Long:  "Format XML",
-	Example: `
-	xmlfmt < testdata/sample.xml   # Format XML from stdin
-	xmlfmt < testdata/sample.xml > output.xml # Output formatted XML to file
-	xmlfmt < testdata/sample.xml --tui # Open XML formatter in TUI
-	`,
+	Use:   "xmlfmt [string or file]",
+	Short: "Format and prettify XML files",
+	Long: `Format and prettify XML files with customizable indentation and formatting options.
+
+By default, uses 2-space indentation. Customize with --indent, --prefix, and --nested flags.
+Input can be a string argument or piped from stdin.`,
+	Example: `  # Format XML from stdin
+  devtui xmlfmt < document.xml
+  cat unformatted.xml | devtui xmlfmt
+
+  # Format XML string argument
+  devtui xmlfmt '<root><item>value</item></root>'
+
+  # Output to file
+  devtui xmlfmt < input.xml > formatted.xml
+  cat document.xml | devtui xmlfmt > pretty.xml
+
+  # Custom indentation
+  devtui xmlfmt --indent "    " < document.xml
+  devtui xmlfmt -i "\t" < document.xml
+
+  # Add prefix to each line
+  devtui xmlfmt --prefix "  " < document.xml
+  devtui xmlfmt -p "  " < document.xml
+
+  # Handle nested tags in comments
+  devtui xmlfmt --nested < document.xml
+  devtui xmlfmt -n < document.xml
+
+  # Show results in interactive TUI
+  devtui xmlfmt --tui < document.xml
+  devtui xmlfmt -t < document.xml
+
+  # Chain with other commands
+  curl -s https://example.com/feed.xml | devtui xmlfmt`,
 	Args: cobra.MaximumNArgs(1),
 	RunE: func(cmd *cobra.Command, args []string) error {
 		// Read all input data from stdin or args

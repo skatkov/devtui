@@ -5,22 +5,37 @@ parent: CLI
 
 ## devtui csv2md
 
-Convert CSV to Markdown Table
+Convert CSV to Markdown table format
 
 ### Synopsis
 
-Convert CSV to Markdown Table
+Convert CSV (Comma-Separated Values) to Markdown table format for documentation.
+
+Input can be piped from stdin or read from a file. Use --align to align column widths
+and --header to add a main heading (h1) to the output.
 
 ```bash
-devtui csv2md [flags]
+devtui csv2md [string or file] [flags]
 ```
 
 ### Examples
 
 ```bash
-devtui csv2md -t < example.tsv          - convert tsv from stdin and view result in stdout
-devtui csv2md < example.tsv > output.md - convert tsv from stdin and write result in new file
-cat example.tsv | devtui csv2md         - convert tsv from stdin and view result in stdout
+# Convert CSV from stdin
+devtui csv2md < example.csv
+cat data.csv | devtui csv2md
+# Output to file
+devtui csv2md < input.csv > output.md
+cat data.csv | devtui csv2md > table.md
+# Add main header to output
+devtui csv2md --header "User Data" < users.csv
+devtui csv2md -t "Sales Report" < sales.csv
+# Align column widths for better readability
+devtui csv2md --align < data.csv
+devtui csv2md -a < data.csv
+# Combine options
+devtui csv2md --header "Results" --align < data.csv
+devtui csv2md -t "Results" -a < data.csv
 ```
 
 ### Options

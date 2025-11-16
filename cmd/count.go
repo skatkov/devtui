@@ -12,15 +12,30 @@ import (
 )
 
 var countCmd = &cobra.Command{
-	Use:   "count",
-	Short: "Character, spaces and word counter",
-	Long:  "Count characters, spaces and words in a string",
+	Use:   "count [string or file]",
+	Short: "Count characters, spaces, and words in text",
+	Long: `Count characters, spaces, and words in text input.
+
+Provides detailed statistics including character count, space count, and word count
+in a formatted table. Input can be a string argument or piped from stdin.`,
 	Example: `  # Count text from a string
   devtui count "test me please"
+  devtui count "hello world"
 
   # Count text from stdin
-  cat testdata/example.csv | devtui count
-  echo "hello world" | devtui count`,
+  echo "hello world" | devtui count
+  cat document.txt | devtui count
+
+  # Count text from file
+  devtui count < document.txt
+  cat README.md | devtui count
+
+  # Output to file
+  devtui count "sample text" > stats.txt
+
+  # Chain with other commands
+  curl -s https://example.com | devtui count
+  cat article.txt | devtui count`,
 	Args: cobra.MaximumNArgs(1),
 	RunE: func(cmd *cobra.Command, args []string) error {
 		text, err := input.ReadFromArgsOrStdin(cmd, args)

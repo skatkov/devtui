@@ -1,6 +1,6 @@
 module github.com/skatkov/devtui
 
-go 1.25.3
+go 1.25.4
 
 require (
 	github.com/RealAlexandreAI/json-repair v0.0.14

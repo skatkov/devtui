@@ -13,12 +13,31 @@ import (
 //   @see https://git.axenov.dev/anthony/csv2md/src/branch/master
 
 var tsv2mdCmd = &cobra.Command{
-	Use:   "tsv2md",
-	Short: "Convert TSV to Markdown Table",
-	Long:  "Convert TSV to Markdown Table",
-	Example: `  devtui tsv2md -t < example.tsv          # convert tsv from stdin and view result in stdout
-	devtui tsv2md < example.tsv > output.md # convert tsv from stdin and write result in new file
-	cat example.tsv | devtui tsv2md         # convert tsv from stdin and view result in stdout`,
+	Use:   "tsv2md [string or file]",
+	Short: "Convert TSV to Markdown table format",
+	Long: `Convert TSV (Tab-Separated Values) to Markdown table format for documentation.
+
+Input can be piped from stdin or read from a file. Use --align to align column widths
+and --header to add a main heading (h1) to the output.`,
+	Example: `  # Convert TSV from stdin
+  devtui tsv2md < example.tsv
+  cat data.tsv | devtui tsv2md
+
+  # Output to file
+  devtui tsv2md < input.tsv > output.md
+  cat data.tsv | devtui tsv2md > table.md
+
+  # Add main header to output
+  devtui tsv2md --header "User Data" < users.tsv
+  devtui tsv2md -t "Sales Report" < sales.tsv
+
+  # Align column widths for better readability
+  devtui tsv2md --align < data.tsv
+  devtui tsv2md -a < data.tsv
+
+  # Combine options
+  devtui tsv2md --header "Results" --align < data.tsv
+  devtui tsv2md -t "Results" -a < data.tsv`,
 	Args: cobra.MaximumNArgs(1),
 	RunE: func(cmd *cobra.Command, args []string) error {
 		// Read from args or stdin - the function handles both cases

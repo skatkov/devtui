@@ -9,13 +9,26 @@ import (
 )
 
 var jsonfmtCmd = &cobra.Command{
-	Use:   "jsonfmt",
-	Short: "Format JSON",
-	Long:  "Format JSON",
-	Example: `
-	devtui jsonfmt < testdata/example.json # Format and output to stdout
- 	devtui jsonfmt < testdata/example.json > formatted.json # Output to file
-	`,
+	Use:   "jsonfmt [string or file]",
+	Short: "Format and prettify JSON",
+	Long: `Format and prettify JSON input with proper indentation and syntax highlighting.
+
+Input can be a string argument, piped from stdin, or read from a file.
+The output is always valid, properly indented JSON.`,
+	Example: `  # Format JSON from stdin
+  devtui jsonfmt < example.json
+  echo '{"name":"John","age":30}' | devtui jsonfmt
+
+  # Format JSON string argument
+  devtui jsonfmt '{"name":"John","age":30}'
+
+  # Output to file
+  devtui jsonfmt < input.json > formatted.json
+  cat compact.json | devtui jsonfmt > pretty.json
+
+  # Chain with other commands
+  curl -s https://api.example.com/data | devtui jsonfmt
+  devtui jsonrepair < broken.json | devtui jsonfmt`,
 	Args: cobra.MaximumNArgs(1),
 	RunE: func(cmd *cobra.Command, args []string) error {
 		data, err := input.ReadBytesFromArgsOrStdin(cmd, args)
