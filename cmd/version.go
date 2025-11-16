@@ -13,9 +13,9 @@ var (
 	date    = "unknown"
 )
 
-// GetVersionString returns a formatted version string with all version information.
-func GetVersionString() string {
-	return fmt.Sprintf("Version: %s\nCommit:  %s\nDate:    %s", version, commit, date)
+// GetVersionShort returns a short version string suitable for single-line output.
+func GetVersionShort() string {
+	return fmt.Sprintf("%s (commit: %s, built: %s)", version, commit, date)
 }
 
 var versionCmd = &cobra.Command{
@@ -23,7 +23,7 @@ var versionCmd = &cobra.Command{
 	Short: "Print version information",
 	Long:  "Print version, commit and date of release for this software",
 	RunE: func(_ *cobra.Command, _ []string) error {
-		fmt.Print(GetVersionString())
+		fmt.Print("devtui version " + GetVersionShort())
 		return nil
 	},
 }

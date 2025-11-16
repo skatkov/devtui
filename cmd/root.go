@@ -2,7 +2,6 @@ package cmd
 
 import (
 	"context"
-	"fmt"
 	"os"
 
 	tea "github.com/charmbracelet/bubbletea"
@@ -17,10 +16,6 @@ var rootCmd = &cobra.Command{
 	Long: `devtui is a collection of small developer apps that help with day to day work.
 It includes tools like hash generator, unix timestamp converter, and number base converter and multiple others.`,
 	RunE: func(cmd *cobra.Command, args []string) error {
-		if flagVersion {
-			fmt.Println(GetVersionString())
-			return nil
-		}
 		p := tea.NewProgram(root.RootScreen(), tea.WithAltScreen())
 		if _, err := p.Run(); err != nil {
 			return err
@@ -29,13 +24,14 @@ It includes tools like hash generator, unix timestamp converter, and number base
 	},
 }
 
-var (
-	flagTUI     bool
-	flagVersion bool
-)
+var flagTUI bool
 
 func Execute() {
-	err := fang.Execute(context.Background(), rootCmd)
+	err := fang.Execute(
+		context.Background(),
+		rootCmd,
+		fang.WithVersion(GetVersionShort()),
+	)
 	if err != nil {
 		os.Exit(1)
 	}
@@ -46,5 +42,6 @@ func GetRootCmd() *cobra.Command {
 }
 
 func init() {
-	rootCmd.Flags().BoolVarP(&flagVersion, "version", "v", false, "Print version information")
+	// fang.Execute automatically adds --version flag
+	// We configure it via fang.WithVersion() in Execute()
 }
