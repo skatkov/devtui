@@ -24,10 +24,9 @@ var gqlfmtCmd = &cobra.Command{
 	gqlquery --indent "    " --with-comments --with-descriptions < testdata/query.graphql # With formatting options
 	gqlquery < testdata/query.graphql --tui # Show results in a TUI
 	`,
-	Args: cobra.NoArgs,
+	Args: cobra.MaximumNArgs(1),
 	RunE: func(cmd *cobra.Command, args []string) error {
-		// Read all input data from stdin
-		data, err := input.ReadFromStdin(cmd)
+		data, err := input.ReadBytesFromArgsOrStdin(cmd, args)
 		if err != nil {
 			return err
 		}

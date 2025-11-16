@@ -16,9 +16,9 @@ var jsonfmtCmd = &cobra.Command{
 	devtui jsonfmt < testdata/example.json # Format and output to stdout
  	devtui jsonfmt < testdata/example.json > formatted.json # Output to file
 	`,
-	Args: cobra.NoArgs,
+	Args: cobra.MaximumNArgs(1),
 	RunE: func(cmd *cobra.Command, args []string) error {
-		data, err := input.ReadFromStdin(cmd)
+		data, err := input.ReadBytesFromArgsOrStdin(cmd, args)
 		if err != nil {
 			return err
 		}

@@ -2,8 +2,10 @@ package cmd
 
 import (
 	"encoding/csv"
+	"strings"
 
 	"github.com/skatkov/devtui/internal/csv2md"
+	"github.com/skatkov/devtui/internal/input"
 	"github.com/spf13/cobra"
 )
 
@@ -17,9 +19,15 @@ var tsv2mdCmd = &cobra.Command{
 	Example: `  devtui tsv2md -t < example.tsv          # convert tsv from stdin and view result in stdout
 	devtui tsv2md < example.tsv > output.md # convert tsv from stdin and write result in new file
 	cat example.tsv | devtui tsv2md         # convert tsv from stdin and view result in stdout`,
-	Args: cobra.NoArgs,
+	Args: cobra.MaximumNArgs(1),
 	RunE: func(cmd *cobra.Command, args []string) error {
-		tsvReader := csv.NewReader(cmd.InOrStdin())
+		// Read from args or stdin - the function handles both cases
+		data, err := input.ReadBytesFromArgsOrStdin(cmd, args)
+		if err != nil {
+			return err
+		}
+
+		tsvReader := csv.NewReader(strings.NewReader(string(data)))
 		tsvReader.Comma = '\t'
 
 		records, err := tsvReader.ReadAll()

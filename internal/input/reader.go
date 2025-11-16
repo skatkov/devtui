@@ -6,31 +6,27 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// ReadFromStdin reads all input from the command's stdin (or actual stdin if not overridden).
-// This is the standard pattern for formatter/transformer commands that only accept stdin.
-//
-// Example usage:
-//
-//	data, err := input.ReadFromStdin(cmd)
-//	if err != nil {
-//	    return err
-//	}
-func ReadFromStdin(cmd *cobra.Command) ([]byte, error) {
-	return io.ReadAll(cmd.InOrStdin())
-}
-
 // ReadFromArgsOrStdin reads input from either:
 // 1. The first argument (if provided), or
 // 2. Stdin (if no arguments)
 //
-// This is the standard pattern for commands that accept quick string arguments
-// but can also work as filters with piped input.
+// This is the standard pattern for all DevTUI formatter/converter commands.
+// Commands should use Args: cobra.MaximumNArgs(1) to enforce 0 or 1 arguments.
+//
+// Returns string, which is suitable for text-based commands.
 //
 // Example usage:
 //
-//	content, err := input.ReadFromArgsOrStdin(cmd, args)
-//	if err != nil {
-//	    return err
+//	var myCmd = &cobra.Command{
+//	    Args: cobra.MaximumNArgs(1),
+//	    RunE: func(cmd *cobra.Command, args []string) error {
+//	        content, err := input.ReadFromArgsOrStdin(cmd, args)
+//	        if err != nil {
+//	            return err
+//	        }
+//	        // Process content...
+//	        return nil
+//	    },
 //	}
 func ReadFromArgsOrStdin(cmd *cobra.Command, args []string) (string, error) {
 	if len(args) > 0 {
@@ -47,14 +43,24 @@ func ReadFromArgsOrStdin(cmd *cobra.Command, args []string) (string, error) {
 	return string(data), nil
 }
 
-// ReadBytesFromArgsOrStdin is like ReadFromArgsOrStdin but returns bytes.
-// Useful for commands that need to preserve binary data.
+// ReadBytesFromArgsOrStdin reads input from either args or stdin, returning bytes.
+// This is identical to ReadFromArgsOrStdin but returns []byte instead of string.
+//
+// Use this when you need to preserve binary data or pass data to APIs that expect []byte.
+// Commands should use Args: cobra.MaximumNArgs(1) to enforce 0 or 1 arguments.
 //
 // Example usage:
 //
-//	data, err := input.ReadBytesFromArgsOrStdin(cmd, args)
-//	if err != nil {
-//	    return err
+//	var myCmd = &cobra.Command{
+//	    Args: cobra.MaximumNArgs(1),
+//	    RunE: func(cmd *cobra.Command, args []string) error {
+//	        data, err := input.ReadBytesFromArgsOrStdin(cmd, args)
+//	        if err != nil {
+//	            return err
+//	        }
+//	        // Process data...
+//	        return nil
+//	    },
 //	}
 func ReadBytesFromArgsOrStdin(cmd *cobra.Command, args []string) ([]byte, error) {
 	if len(args) > 0 {

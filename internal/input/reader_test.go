@@ -7,57 +7,6 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func TestReadFromStdin(t *testing.T) {
-	tests := []struct {
-		name    string
-		input   string
-		want    string
-		wantErr bool
-	}{
-		{
-			name:    "simple text",
-			input:   "hello world",
-			want:    "hello world",
-			wantErr: false,
-		},
-		{
-			name:    "empty input",
-			input:   "",
-			want:    "",
-			wantErr: false,
-		},
-		{
-			name:    "multiline input",
-			input:   "line1\nline2\nline3",
-			want:    "line1\nline2\nline3",
-			wantErr: false,
-		},
-		{
-			name:    "json input",
-			input:   `{"key":"value"}`,
-			want:    `{"key":"value"}`,
-			wantErr: false,
-		},
-	}
-
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			cmd := &cobra.Command{}
-			cmd.SetIn(strings.NewReader(tt.input))
-
-			got, err := ReadFromStdin(cmd)
-			if (err != nil) != tt.wantErr {
-				t.Errorf("ReadFromStdin() error = %v, wantErr %v", err, tt.wantErr)
-				return
-			}
-
-			if string(got) != tt.want {
-				t.Errorf("ReadFromStdin() = %q, want %q", string(got), tt.want)
-			}
-		})
-	}
-}
-
 func TestReadFromArgsOrStdin(t *testing.T) {
 	tests := []struct {
 		name    string

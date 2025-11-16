@@ -19,7 +19,7 @@ reduced token usage (typically 30-60% fewer tokens than JSON).`,
   devtui json2toon -i 4 < example.json               # Use 4-space indent
   devtui json2toon -l '#' < example.json             # Add length marker prefix
   cat example.json | devtui json2toon > output.toon  # Pipe and save to file`,
-	Args: cobra.NoArgs,
+	Args: cobra.MaximumNArgs(1),
 	PreRunE: func(cmd *cobra.Command, args []string) error {
 		// Validate indent flag
 		if json2toonIndent < 0 {
@@ -28,7 +28,7 @@ reduced token usage (typically 30-60% fewer tokens than JSON).`,
 		return nil
 	},
 	RunE: func(cmd *cobra.Command, args []string) error {
-		data, err := input.ReadFromStdin(cmd)
+		data, err := input.ReadBytesFromArgsOrStdin(cmd, args)
 		if err != nil {
 			return err
 		}

@@ -1,6 +1,8 @@
 package cmd
 
 import (
+	"strings"
+
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/client9/csstool"
 	"github.com/skatkov/devtui/internal/input"
@@ -17,10 +19,10 @@ var cssfmtCmd = &cobra.Command{
 	cssfmt < testdata/bootstrap.min.css
 	cssfmt < testdata/bootstrap.min.css --tui # Show results in a TUI
 	`,
-	Args: cobra.NoArgs,
+	Args: cobra.MaximumNArgs(1),
 	RunE: func(cmd *cobra.Command, args []string) error {
 		if flagTui {
-			data, err := input.ReadFromStdin(cmd)
+			data, err := input.ReadBytesFromArgsOrStdin(cmd, args)
 			if err != nil {
 				return err
 			}
@@ -53,7 +55,13 @@ var cssfmtCmd = &cobra.Command{
 		}
 		cssformat := csstool.NewCSSFormat(flagIndent, flagTab, nil)
 		cssformat.AlwaysSemicolon = flagSemicolon
-		err := cssformat.Format(cmd.InOrStdin(), cmd.OutOrStdout())
+
+		data, err := input.ReadBytesFromArgsOrStdin(cmd, args)
+		if err != nil {
+			return err
+		}
+
+		err = cssformat.Format(strings.NewReader(string(data)), cmd.OutOrStdout())
 		if err != nil {
 			return err
 		}

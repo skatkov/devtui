@@ -35,9 +35,9 @@ This tool can fix various JSON issues including:
 	# Chain with other commands
 	cat llm-output.txt | devtui jsonrepair | devtui jsonfmt
 	`,
-	Args: cobra.NoArgs,
+	Args: cobra.MaximumNArgs(1),
 	RunE: func(cmd *cobra.Command, args []string) error {
-		data, err := input.ReadFromStdin(cmd)
+		data, err := input.ReadBytesFromArgsOrStdin(cmd, args)
 		if err != nil {
 			return fmt.Errorf("error reading from stdin: %w", err)
 		}
