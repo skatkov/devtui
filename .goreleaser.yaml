@@ -34,7 +34,7 @@ builds:
         goarm: "7"
 changelog:
   sort: asc
-  use: github
+  use: git
   format: '{{ replace (replace .Message "feat: " "") "fix: " "" }}'
   filters:
     exclude:
