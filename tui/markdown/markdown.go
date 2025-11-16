@@ -1,42 +1,32 @@
 package markdown
 
 import (
+	"bytes"
 	"fmt"
-	"math"
 	"strings"
-	"time"
 
-	"github.com/charmbracelet/bubbles/viewport"
+	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/glamour"
 	"github.com/mattn/go-runewidth"
-	"github.com/muesli/ansi"
-	"github.com/muesli/reflow/truncate"
 	"github.com/skatkov/devtui/internal/editor"
 	"github.com/skatkov/devtui/internal/ui"
 	"github.com/tiagomelo/go-clipboard/clipboard"
-
-	tea "github.com/charmbracelet/bubbletea"
 )
 
 const Title = "Markdown Renderer"
 
-var pagerHelpHeight int
-
 type MarkdownModel struct {
-	common *ui.CommonModel
+	ui.BasePagerModel
+}
 
-	content  string
-	viewport viewport.Model
-	showHelp bool
-	ready    bool
-	state    ui.PagerState
-
-	statusMessage     string
-	statusMessageTime *time.Timer
+func NewMarkdownModel(common *ui.CommonModel) MarkdownModel {
+	return MarkdownModel{
+		BasePagerModel: ui.NewBasePagerModel(common, Title),
+	}
 }
 
 func (m MarkdownModel) Init() tea.Cmd {
-	return nil
+	return m.BasePagerModel.Init()
 }
 
 func (m MarkdownModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
@@ -47,67 +37,49 @@ func (m MarkdownModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 	switch msg := msg.(type) {
 	case tea.KeyMsg:
+		// First check common keys
+		if cmd, handled := m.HandleCommonKeys(msg); handled {
+			return m, cmd
+		}
+
+		// Then handle module-specific keys
 		switch msg.String() {
 		case "e":
-			return m, editor.OpenEditor(m.content, "md")
-		case "ctrl+c", "q":
-			return m, tea.Quit
-		case "esc":
-			return m, func() tea.Msg {
-				return ui.ReturnToListMsg{
-					Common: m.common,
-				}
-			}
+			return m, editor.OpenEditor(m.Content, "md")
 		case "v":
 			c := clipboard.New()
 			content, err := c.PasteText()
 			if err != nil {
-				cmds = append(cmds, m.showErrorMessage(ui.PagerStatusMsg{Message: err.Error()}))
+				cmds = append(cmds, m.ShowErrorMessage(err.Error()))
 			} else {
-				m.setContent(content)
-				cmds = append(cmds, m.showStatusMessage(ui.PagerStatusMsg{Message: "Pasted contents"}))
+				err = m.SetContent(content)
+				if err != nil {
+					cmds = append(cmds, m.ShowErrorMessage(err.Error()))
+				} else {
+					cmds = append(cmds, m.ShowStatusMessage("Pasted contents"))
+				}
 			}
-		case "c":
-			c := clipboard.New()
-			if err := c.CopyText(m.content); err != nil {
-				cmds = append(cmds, m.showErrorMessage(ui.PagerStatusMsg{Message: err.Error()}))
-			} else {
-				cmds = append(cmds, m.showStatusMessage(ui.PagerStatusMsg{Message: "Markdown content copied"}))
-			}
-		case "?":
-			m.toggleHelp()
 		}
 	case ui.StatusMessageTimeoutMsg:
-		m.state = ui.PagerStateBrowse
+		m.State = ui.PagerStateBrowse
+
 	case editor.EditorFinishedMsg:
 		if msg.Err != nil {
-			cmds = append(cmds, m.showErrorMessage(ui.PagerStatusMsg{Message: msg.Err.Error()}))
+			cmds = append(cmds, m.ShowErrorMessage(msg.Err.Error()))
 		} else {
-			m.setContent(msg.Content)
-			cmds = append(cmds, m.showStatusMessage(ui.PagerStatusMsg{Message: "Markdown content edited"}))
+			err := m.SetContent(msg.Content)
+			if err != nil {
+				cmds = append(cmds, m.ShowErrorMessage(err.Error()))
+			} else {
+				cmds = append(cmds, m.ShowStatusMessage("Markdown content edited"))
+			}
 		}
 	case tea.WindowSizeMsg:
-		m.common.Width = msg.Width
-		m.common.Height = msg.Height
-
-		m.setSize(msg.Width, msg.Height)
-
-		if !m.ready {
-			// Since this program is using the full size of the viewport we
-			// need to wait until we've received the window dimensions before
-			// we can initialize the viewport. The initial dimensions come in
-			// quickly, though asynchronously, which is why we wait for them
-			// here.
-			m.viewport = viewport.New(msg.Width, msg.Height-ui.StatusBarHeight)
-			m.viewport.YPosition = 0
-			m.viewport.SetContent(m.content)
-			m.ready = true
-		} else {
-			m.setSize(msg.Width, msg.Height)
-		}
+		cmd = m.HandleWindowSizeMsg(msg)
+		cmds = append(cmds, cmd)
 	}
 
-	m.viewport, cmd = m.viewport.Update(msg)
+	m.Viewport, cmd = m.Viewport.Update(msg)
 	cmds = append(cmds, cmd)
 
 	return m, tea.Batch(cmds...)
@@ -116,167 +88,49 @@ func (m MarkdownModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 func (m MarkdownModel) View() string {
 	var b strings.Builder
 
-	fmt.Fprint(&b, m.viewport.View()+"\n")
+	fmt.Fprint(&b, m.Viewport.View()+"\n")
+	fmt.Fprint(&b, m.StatusBarView())
 
-	m.statusBarView(&b)
-
-	if m.showHelp {
+	if m.ShowHelp {
 		fmt.Fprint(&b, "\n"+m.helpView())
 	}
 
 	return b.String()
 }
 
-func (m *MarkdownModel) setContent(content string) {
+func (m *MarkdownModel) SetContent(content string) error {
+	m.Content = content
+
+	if content == "" {
+		m.FormattedContent = ""
+		m.Viewport.SetContent("")
+		return nil
+	}
+
+	// Render markdown with glamour
 	out, err := glamour.Render(content, "dark")
 	if err != nil {
 		// If rendering fails, just show the raw content
 		out = content
 	}
-	m.content = content
-	m.viewport.SetContent(out)
+
+	m.FormattedContent = out
+
+	// Set content in viewport
+	var buf bytes.Buffer
+	buf.WriteString(m.FormattedContent)
+	m.Viewport.SetContent(buf.String())
+
+	return nil
 }
 
-func (m *MarkdownModel) toggleHelp() {
-	m.showHelp = !m.showHelp
-	m.setSize(m.common.Width, m.common.Height)
-
-	if m.viewport.PastBottom() {
-		m.viewport.GotoBottom()
-	}
-}
-
-func NewMarkdownModel(common *ui.CommonModel) MarkdownModel {
-	model := MarkdownModel{
-		content: "",
-		ready:   false,
-		common:  common,
-		state:   ui.PagerStateBrowse,
-	}
-
-	model.setSize(common.Width, common.Height)
-
-	return model
-}
-
-func (m *MarkdownModel) showStatusMessage(msg ui.PagerStatusMsg) tea.Cmd {
-	m.state = ui.PagerStateStatusMessage
-	m.statusMessage = msg.Message
-
-	if m.statusMessageTime != nil {
-		m.statusMessageTime.Stop()
-	}
-
-	m.statusMessageTime = time.NewTimer(ui.StatusMessageTimeout)
-
-	return ui.WaitForStatusMessageTimeout(m.statusMessageTime)
-}
-
-func (m *MarkdownModel) showErrorMessage(msg ui.PagerStatusMsg) tea.Cmd {
-	m.state = ui.PagerStateErrorMessage
-	m.statusMessage = msg.Message
-
-	if m.statusMessageTime != nil {
-		m.statusMessageTime.Stop()
-	}
-
-	m.statusMessageTime = time.NewTimer(ui.StatusMessageTimeout)
-
-	return ui.WaitForStatusMessageTimeout(m.statusMessageTime)
-}
-
-func (m *MarkdownModel) statusBarView(b *strings.Builder) {
-	const (
-		minPercent               float64 = 0.0
-		maxPercent               float64 = 1.0
-		percentToStringMagnitude float64 = 100.0
-	)
-	showStatusMessage := m.state == ui.PagerStateStatusMessage
-	showErrorMessage := m.state == ui.PagerStateErrorMessage
-	appName := ui.AppNameStyle(" " + Title + " ")
-
-	// Scroll percent
-	scrollPercent := ""
-	if m.content != "" {
-		percent := math.Max(minPercent, math.Min(maxPercent, m.viewport.ScrollPercent()))
-		scrollPercent = fmt.Sprintf(" %3.f%% ", percent*percentToStringMagnitude)
-		scrollPercent = ui.StatusBarScrollPosStyle(scrollPercent)
-	}
-	var helpNote string
-	if showErrorMessage {
-		helpNote = ui.StatusBarErrorHelpStyle(" ? Help ")
-	} else if showStatusMessage {
-		helpNote = ui.StatusBarMessageHelpStyle(" ? Help ")
-	} else {
-		helpNote = ui.StatusBarHelpStyle(" ? Help ")
-	}
-
-	var note string
-	if showStatusMessage || showErrorMessage {
-		note = m.statusMessage
-	} else if m.content == "" {
-		note = "Press 'v' to paste markdown text"
-	}
-
-	note = truncate.StringWithTail(" "+note+" ", uint(max(0,
-		m.common.Width-
-			ansi.PrintableRuneWidth(appName)-
-			ansi.PrintableRuneWidth(scrollPercent)-
-			ansi.PrintableRuneWidth(helpNote),
-	)), ui.Ellipsis)
-
-	if showErrorMessage {
-		note = ui.StatusBarErrorStyle(note)
-	} else if showStatusMessage {
-		note = ui.StatusBarMessageStyle(note)
-	} else {
-		note = ui.StatusBarNoteStyle(note)
-	}
-
-	// Empty space
-	padding := max(0,
-		m.common.Width-
-			ansi.PrintableRuneWidth(appName)-
-			ansi.PrintableRuneWidth(note)-
-			ansi.PrintableRuneWidth(scrollPercent)-
-			ansi.PrintableRuneWidth(helpNote),
-	)
-	emptySpace := strings.Repeat(" ", padding)
-	if showErrorMessage {
-		emptySpace = ui.StatusBarErrorStyle(emptySpace)
-	} else if showStatusMessage {
-		emptySpace = ui.StatusBarMessageStyle(emptySpace)
-	} else {
-		emptySpace = ui.StatusBarNoteStyle(emptySpace)
-	}
-
-	fmt.Fprintf(b, "%s%s%s%s%s",
-		appName,
-		note,
-		emptySpace,
-		scrollPercent,
-		helpNote,
-	)
-}
-
-func (m *MarkdownModel) setSize(w, h int) {
-	m.viewport.Width = w
-	m.viewport.Height = h - ui.StatusBarHeight
-
-	if m.showHelp {
-		if pagerHelpHeight == 0 {
-			pagerHelpHeight = strings.Count(m.helpView(), "\n")
-		}
-		m.viewport.Height -= (ui.StatusBarHeight + pagerHelpHeight)
-	}
-}
-
-func (m *MarkdownModel) helpView() (s string) {
+func (m MarkdownModel) helpView() (s string) {
 	col1 := []string{
-		"c              copy",
-		"e              edit",
-		"v              paste",
+		"c              copy rendered markdown",
+		"e              edit markdown",
+		"v              paste markdown",
 		"q/ctrl+c       quit",
+		"esc            return to menu",
 	}
 
 	s += "\n"
@@ -284,7 +138,7 @@ func (m *MarkdownModel) helpView() (s string) {
 	s += "j/↓      down                " + col1[1] + "\n"
 	s += "b/pgup   page up             " + col1[2] + "\n"
 	s += "f/pgdn   page down           " + col1[3] + "\n"
-	s += "u        ½ page up           " + "\n"
+	s += "u        ½ page up           " + col1[4] + "\n"
 	s += "d        ½ page down         "
 
 	if len(col1) > 5 {
@@ -294,11 +148,11 @@ func (m *MarkdownModel) helpView() (s string) {
 	s = ui.Indent(s, 2)
 
 	// Fill up empty cells with spaces for background coloring
-	if m.common.Width > 0 {
+	if m.Common.Width > 0 {
 		lines := strings.Split(s, "\n")
 		for i := range lines {
 			l := runewidth.StringWidth(lines[i])
-			n := max(m.common.Width-l, 0)
+			n := max(m.Common.Width-l, 0)
 			lines[i] += strings.Repeat(" ", n)
 		}
 
