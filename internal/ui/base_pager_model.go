@@ -12,7 +12,7 @@ import (
 	"github.com/mattn/go-runewidth"
 	"github.com/muesli/ansi"
 	"github.com/muesli/reflow/truncate"
-	"github.com/tiagomelo/go-clipboard/clipboard"
+	"github.com/skatkov/devtui/internal/clipboard"
 )
 
 // BasePagerModel provides common functionality for pager-based TUI views. There is a lot of common
@@ -60,8 +60,7 @@ func (m *BasePagerModel) HandleCommonKeys(msg tea.KeyMsg) (tea.Cmd, bool) {
 		m.ToggleHelp()
 		return nil, true
 	case "c":
-		c := clipboard.New()
-		err := c.CopyText(m.FormattedContent)
+		err := clipboard.Copy(m.FormattedContent)
 		if err != nil {
 			return m.ShowErrorMessage(err.Error()), true
 		}

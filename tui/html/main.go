@@ -10,7 +10,7 @@ import (
 	"github.com/mattn/go-runewidth"
 	"github.com/skatkov/devtui/internal/editor"
 	"github.com/skatkov/devtui/internal/ui"
-	"github.com/tiagomelo/go-clipboard/clipboard"
+	"github.com/skatkov/devtui/internal/clipboard"
 	"github.com/yosssi/gohtml"
 )
 
@@ -46,8 +46,7 @@ func (m HTMLFormatterModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		case "e":
 			return m, editor.OpenEditor(m.Content, "html")
 		case "v":
-			c := clipboard.New()
-			content, err := c.PasteText()
+			content, err := clipboard.Paste()
 			if err == nil {
 				err = m.SetContent(content)
 			}
