@@ -1,14 +1,14 @@
 ---
-title: YAML to Go Struct Converter
+title: 
 parent: TUI
 ---
 
-# YAML to Go Struct Converter
+# 
 
 ## Usage
 
 1. Run `devtui` to open the main menu
-2. Select "YAML to Go Struct Converter" from the list
+2. Select "" from the list
 3. Use the key bindings below to interact with the tool
 4. Press `q` or `Ctrl+C` to return to the main menu
 
@@ -16,9 +16,10 @@ parent: TUI
 
 | Key | Action |
 |-----|--------|
-| `c` | copy Go struct |
-| `e` | edit JSON |
-| `v` | paste JSON to convert |
+| `c` | copy URLs |
+| `e` | edit text |
+| `v` | paste text to extract |
+| `s` | toggle mode (current: %s) |
 | `q/ctrl+c` | quit |
 
 

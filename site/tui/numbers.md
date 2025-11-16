@@ -17,4 +17,3 @@ parent: TUI
 Standard key bindings apply (see main TUI documentation).
 
 
-

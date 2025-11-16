@@ -18,8 +18,11 @@ devtui count [flags]
 ### Examples
 
 ```bash
-count < testdata/example.csv
-count "test me please"
+# Count text from a string
+devtui count "test me please"
+# Count text from stdin
+cat testdata/example.csv | devtui count
+echo "hello world" | devtui count
 ```
 
 ### Options
