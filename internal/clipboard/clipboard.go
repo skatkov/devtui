@@ -49,5 +49,5 @@ func enhanceError(originalErr error, operation string) error {
 		helpMsg = `clipboard manager was not found on this system`
 	}
 
-	return fmt.Errorf("clipboard %s failed: %w%s", operation, originalErr, helpMsg)
+	return fmt.Errorf("clipboard %s failed: %s", operation, helpMsg)
 }
