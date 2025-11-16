@@ -9,9 +9,9 @@ import (
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/hannes-sistemica/toon"
 	"github.com/mattn/go-runewidth"
+	"github.com/skatkov/devtui/internal/clipboard"
 	"github.com/skatkov/devtui/internal/editor"
 	"github.com/skatkov/devtui/internal/ui"
-	"github.com/skatkov/devtui/internal/clipboard"
 )
 
 const Title = "JSON to TOON Converter"

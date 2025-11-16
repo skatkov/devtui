@@ -11,9 +11,9 @@ import (
 	"github.com/mattn/go-runewidth"
 
 	"github.com/skatkov/devtui/internal/base64"
+	"github.com/skatkov/devtui/internal/clipboard"
 	"github.com/skatkov/devtui/internal/editor"
 	"github.com/skatkov/devtui/internal/ui"
-	"github.com/skatkov/devtui/internal/clipboard"
 )
 
 const Title = "Base64 Encoder"
