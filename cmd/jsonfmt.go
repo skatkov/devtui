@@ -3,7 +3,6 @@ package cmd
 import (
 	"fmt"
 	"io"
-	"os"
 
 	"github.com/skatkov/devtui/tui/json"
 	"github.com/spf13/cobra"
@@ -19,7 +18,7 @@ var jsonfmtCmd = &cobra.Command{
 	`,
 	Args: cobra.NoArgs,
 	RunE: func(cmd *cobra.Command, args []string) error {
-		data, err := io.ReadAll(os.Stdin)
+		data, err := io.ReadAll(cmd.InOrStdin())
 		if err != nil {
 			return err
 		}

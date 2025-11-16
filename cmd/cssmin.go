@@ -1,8 +1,6 @@
 package cmd
 
 import (
-	"os"
-
 	"github.com/client9/csstool"
 	"github.com/spf13/cobra"
 )
@@ -15,7 +13,7 @@ var cssminCmd = &cobra.Command{
 	RunE: func(cmd *cobra.Command, args []string) error {
 		cssformat := csstool.NewCSSFormat(0, false, nil)
 		cssformat.AlwaysSemicolon = false
-		err := cssformat.Format(os.Stdin, os.Stdout)
+		err := cssformat.Format(cmd.InOrStdin(), cmd.OutOrStdout())
 		if err != nil {
 			return err
 		}

@@ -3,7 +3,6 @@ package cmd
 import (
 	"fmt"
 	"io"
-	"os"
 
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/go-xmlfmt/xmlfmt"
@@ -23,7 +22,7 @@ var xmlfmtCmd = &cobra.Command{
 	`,
 	RunE: func(cmd *cobra.Command, args []string) error {
 		// Read all input data from stdin
-		data, err := io.ReadAll(os.Stdin)
+		data, err := io.ReadAll(cmd.InOrStdin())
 		if err != nil {
 			return err
 		}

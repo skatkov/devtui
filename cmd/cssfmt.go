@@ -21,7 +21,7 @@ var cssfmtCmd = &cobra.Command{
 	`,
 	RunE: func(cmd *cobra.Command, args []string) error {
 		if flagTui {
-			input, err := io.ReadAll(os.Stdin)
+			input, err := io.ReadAll(cmd.InOrStdin())
 			if err != nil {
 				return err
 			}

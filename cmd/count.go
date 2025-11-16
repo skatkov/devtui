@@ -1,9 +1,8 @@
 package cmd
 
 import (
-	"bufio"
 	"fmt"
-	"os"
+	"io"
 	"strconv"
 
 	"github.com/charmbracelet/lipgloss"
@@ -16,20 +15,25 @@ var countCmd = &cobra.Command{
 	Use:   "count",
 	Short: "Character, spaces and word counter",
 	Long:  "Count characters, spaces and words in a string",
-	Example: `count < testdata/example.csv
-	count "test me please"`,
+	Example: `  # Count text from a string
+  devtui count "test me please"
+
+  # Count text from stdin
+  cat testdata/example.csv | devtui count
+  echo "hello world" | devtui count`,
 	RunE: func(cmd *cobra.Command, args []string) error {
 		var text string
-		var err error
 
 		if len(args) > 0 {
+			// Use string argument
 			text = args[0]
 		} else {
-			reader := bufio.NewReader(os.Stdin)
-			text, err = reader.ReadString('\n')
+			// Read from stdin
+			data, err := io.ReadAll(cmd.InOrStdin())
 			if err != nil {
 				return err
 			}
+			text = string(data)
 		}
 
 		stats, err := textanalyzer.Analyze(text)
