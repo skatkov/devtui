@@ -30,8 +30,10 @@ All-in-one terminal toolkit that consolidates everyday developer utilities into 
  - 🌐 **Offline support** – No internet? No problem. DevTUI works perfectly offline, so you can keep coding anywhere, anytime.
  - ⌨️ **Built for the terminal** – No need to reach for your mouse or browser. Stay in your terminal where you're most productive.
 {: .mt-5}
+---
 
-
+[Install](start#install){: .btn .btn-blue .fs-5 .mt-4 .mb-md-0 .mr-2 } [See docs](cli){: .btn .fs-5 .mt-4 .mb-md-0 .mr-2}
+{: .text-center}
 ---
 
 Built by [Stanislav (Stas) Katkov](https://skatkov.com)
