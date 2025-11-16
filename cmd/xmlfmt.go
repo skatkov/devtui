@@ -2,10 +2,10 @@ package cmd
 
 import (
 	"fmt"
-	"io"
 
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/go-xmlfmt/xmlfmt"
+	"github.com/skatkov/devtui/internal/input"
 	"github.com/skatkov/devtui/internal/ui"
 	"github.com/skatkov/devtui/tui/xml"
 	"github.com/spf13/cobra"
@@ -22,7 +22,7 @@ var xmlfmtCmd = &cobra.Command{
 	`,
 	RunE: func(cmd *cobra.Command, args []string) error {
 		// Read all input data from stdin
-		data, err := io.ReadAll(cmd.InOrStdin())
+		data, err := input.ReadFromStdin(cmd)
 		if err != nil {
 			return err
 		}

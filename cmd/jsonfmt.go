@@ -2,8 +2,8 @@ package cmd
 
 import (
 	"fmt"
-	"io"
 
+	"github.com/skatkov/devtui/internal/input"
 	"github.com/skatkov/devtui/tui/json"
 	"github.com/spf13/cobra"
 )
@@ -18,7 +18,7 @@ var jsonfmtCmd = &cobra.Command{
 	`,
 	Args: cobra.NoArgs,
 	RunE: func(cmd *cobra.Command, args []string) error {
-		data, err := io.ReadAll(cmd.InOrStdin())
+		data, err := input.ReadFromStdin(cmd)
 		if err != nil {
 			return err
 		}

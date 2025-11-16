@@ -2,9 +2,9 @@ package cmd
 
 import (
 	"fmt"
-	"io"
 
 	tea "github.com/charmbracelet/bubbletea"
+	"github.com/skatkov/devtui/internal/input"
 	"github.com/skatkov/devtui/internal/ui"
 	"github.com/skatkov/devtui/tui/toml"
 	"github.com/spf13/cobra"
@@ -15,7 +15,7 @@ var tomlfmtCmd = &cobra.Command{
 	Short: "Format TOML files",
 	Long:  "Format TOML files",
 	RunE: func(cmd *cobra.Command, args []string) error {
-		data, err := io.ReadAll(cmd.InOrStdin())
+		data, err := input.ReadFromStdin(cmd)
 		if err != nil {
 			return err
 		}

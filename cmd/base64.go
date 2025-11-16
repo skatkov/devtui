@@ -2,9 +2,9 @@ package cmd
 
 import (
 	"fmt"
-	"io"
 
 	"github.com/skatkov/devtui/internal/base64"
+	"github.com/skatkov/devtui/internal/input"
 	"github.com/spf13/cobra"
 )
 
@@ -33,32 +33,24 @@ Input can be a string argument or piped from stdin.`,
 
   # Chain with other commands
   cat file.txt | devtui base64 | devtui base64 --decode`,
+	Args: cobra.MaximumNArgs(1),
 	RunE: func(cmd *cobra.Command, args []string) error {
-		var input []byte
-
-		if len(args) > 0 {
-			// Use string argument
-			input = []byte(args[0])
-		} else {
-			// Read from stdin
-			data, err := io.ReadAll(cmd.InOrStdin())
-			if err != nil {
-				return err
-			}
-			input = data
+		data, err := input.ReadBytesFromArgsOrStdin(cmd, args)
+		if err != nil {
+			return err
 		}
 
 		// Perform encoding or decoding
 		if base64Decode {
 			// Decode base64
-			decoded, err := base64.DecodeToString(string(input))
+			decoded, err := base64.DecodeToString(string(data))
 			if err != nil {
 				return err
 			}
 			fmt.Print(decoded)
 		} else {
 			// Encode to base64
-			encoded := base64.Encode(input)
+			encoded := base64.Encode(data)
 			fmt.Print(encoded)
 		}
 

@@ -2,9 +2,9 @@ package cmd
 
 import (
 	"fmt"
-	"io"
 
 	"github.com/hannes-sistemica/toon"
+	"github.com/skatkov/devtui/internal/input"
 	"github.com/skatkov/devtui/tui/json2toon"
 	"github.com/spf13/cobra"
 )
@@ -28,7 +28,7 @@ reduced token usage (typically 30-60% fewer tokens than JSON).`,
 		return nil
 	},
 	RunE: func(cmd *cobra.Command, args []string) error {
-		data, err := io.ReadAll(cmd.InOrStdin())
+		data, err := input.ReadFromStdin(cmd)
 		if err != nil {
 			return err
 		}
