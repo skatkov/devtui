@@ -2,9 +2,9 @@ package cmd
 
 import (
 	"fmt"
-	"io"
 	"strings"
 
+	"github.com/skatkov/devtui/internal/input"
 	"github.com/spf13/cobra"
 	"mvdan.cc/xurls/v2"
 )
@@ -30,19 +30,11 @@ Input can be a string argument or piped from stdin.`,
   # Chain with other commands
   curl -s https://example.com | devtui urls
   cat file.txt | devtui urls > extracted_urls.txt`,
+	Args: cobra.MaximumNArgs(1),
 	RunE: func(cmd *cobra.Command, args []string) error {
-		var content string
-
-		if len(args) > 0 {
-			// Use string argument
-			content = args[0]
-		} else {
-			// Read from stdin
-			data, err := io.ReadAll(cmd.InOrStdin())
-			if err != nil {
-				return err
-			}
-			content = string(data)
+		content, err := input.ReadFromArgsOrStdin(cmd, args)
+		if err != nil {
+			return err
 		}
 
 		// Extract URLs based on mode

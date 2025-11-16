@@ -2,11 +2,11 @@ package cmd
 
 import (
 	"fmt"
-	"io"
 	"strconv"
 
 	"github.com/charmbracelet/lipgloss"
 	"github.com/charmbracelet/lipgloss/table"
+	"github.com/skatkov/devtui/internal/input"
 	"github.com/skatkov/devtui/internal/textanalyzer"
 	"github.com/spf13/cobra"
 )
@@ -21,19 +21,11 @@ var countCmd = &cobra.Command{
   # Count text from stdin
   cat testdata/example.csv | devtui count
   echo "hello world" | devtui count`,
+	Args: cobra.MaximumNArgs(1),
 	RunE: func(cmd *cobra.Command, args []string) error {
-		var text string
-
-		if len(args) > 0 {
-			// Use string argument
-			text = args[0]
-		} else {
-			// Read from stdin
-			data, err := io.ReadAll(cmd.InOrStdin())
-			if err != nil {
-				return err
-			}
-			text = string(data)
+		text, err := input.ReadFromArgsOrStdin(cmd, args)
+		if err != nil {
+			return err
 		}
 
 		stats, err := textanalyzer.Analyze(text)
