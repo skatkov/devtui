@@ -14,6 +14,7 @@ var tomlfmtCmd = &cobra.Command{
 	Use:   "tomlfmt",
 	Short: "Format TOML files",
 	Long:  "Format TOML files",
+	Args:  cobra.NoArgs,
 	RunE: func(cmd *cobra.Command, args []string) error {
 		data, err := input.ReadFromStdin(cmd)
 		if err != nil {
