@@ -7,30 +7,30 @@ All-in-one terminal toolkit that consolidates everyday developer utilities into 
 
 ![devtui](/site/assets/img/devtui.png)
 
-## 💡 Why DevTUI?
+## Why DevTUI?
 
- - 🧰 Unified experience – Replace scattered tools with a single app
- - 🔒 Privacy-focused – Everything runs locally, no data ever leaves your computer
- - 🌐 Offline support – No internet? No problem
- - ⌨️ Built for the terminal – No need to reach for your mouse or browser
+ - Unified experience – Replace scattered tools with a single app
+ - Privacy-focused – Everything runs locally, no data ever leaves your computer
+ - Offline support – No internet? No problem
+ - Built for the terminal – No need to reach for your mouse or browser
 
 ---
 
-## 📦 Install
-### 🧃 Homebrew
+## Install
+### Homebrew
 ```
 brew install skatkov/tap/devtui
 ```
-### 📥 Download Executable
+### Download Executable
 
 Or download executable from [GitHub Releases](https://github.com/skatkov/devtui/releases)
 
-## 🚀 Docs
+## Docs
 -> [devtui.com/start](https://devtui.com/start)
 
 ---
 
-## 📚 Documentation Generator
+## Documentation Generator
 
 DevTUI includes automated documentation generators for both CLI and TUI interfaces (not complete yet, though).
 
