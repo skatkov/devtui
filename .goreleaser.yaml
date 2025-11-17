@@ -86,8 +86,9 @@ brews:
     repository:
       owner: skatkov
       name: homebrew-tap
+    # This is a small workaround to inject ruby code into brew definition.
     caveats: |
-      def caveats
+      EOS
         return unless OS.linux?
 
         session_type = ENV['XDG_SESSION_TYPE']
@@ -121,4 +122,4 @@ brews:
         end
 
         message
-      end
+      <<~EOS

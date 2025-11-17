@@ -15,7 +15,6 @@ require (
 	github.com/charmbracelet/x/editor v0.1.0
 	github.com/client9/csstool v0.2.2
 	github.com/go-xmlfmt/xmlfmt v1.1.3
-	github.com/goccy/go-yaml v1.18.0
 	github.com/google/uuid v1.6.0
 	github.com/hannes-sistemica/toon v0.0.0-20251027210156-1425a7c03d9a
 	github.com/jacoelho/banking v1.8.1
@@ -29,6 +28,7 @@ require (
 	github.com/twpayne/go-jsonstruct/v3 v3.3.0
 	github.com/vektah/gqlparser/v2 v2.5.31
 	github.com/yosssi/gohtml v0.0.0-20201013000340-ee4748c638f4
+	gopkg.in/yaml.v3 v3.0.1
 	mvdan.cc/xurls/v2 v2.6.0
 )
 
@@ -92,5 +92,4 @@ require (
 	golang.org/x/term v0.37.0 // indirect
 	golang.org/x/text v0.31.0 // indirect
 	gopkg.in/check.v1 v1.0.0-20190902080502-41f04d3bba15 // indirect
-	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
