@@ -88,9 +88,11 @@ homebrew_casks:
       owner: skatkov
       name: homebrew-tap
     caveats: |
-      Linux user need to install additional dependencies.
+      <<EOF
+        Linux user need to install additional dependencies.
 
-      • Wayland: brew install wl-clipboard
-      • X11: brew install xclip (or xsel)
+        • Wayland: brew install wl-clipboard
+        • X11: brew install xclip (or xsel)
 
-      To check your session type: echo $XDG_SESSION_TYPE
+        To check your session type: echo $XDG_SESSION_TYPE
+      EOF
