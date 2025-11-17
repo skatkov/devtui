@@ -1,5 +1,4 @@
 ![DevTUI ASCII Art](/site/assets/img/ascii-art-text.png)
-{: .text-center}
 
 # A Swiss-army app for developers
 
