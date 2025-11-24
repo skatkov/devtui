@@ -117,8 +117,8 @@ github.com/hexops/gotextdiff v1.0.3/go.mod h1:pSWU5MAI3yDq+fZBTazCSJysOMbxWL1BSo
 github.com/inconshreveable/mousetrap v1.0.0/go.mod h1:PxqpIevigyE2G7u3NXJIT2ANytuPF1OarO4DADm73n8=
 github.com/inconshreveable/mousetrap v1.1.0 h1:wN+x4NVGpMsO7ErUn/mUI3vEoE6Jt13X2s0bqwp9tc8=
 github.com/inconshreveable/mousetrap v1.1.0/go.mod h1:vpF70FUmC8bwa3OWnCshd2FqLfsEA9PFc4w1p2J65bw=
-github.com/jacoelho/banking v1.8.1 h1:YxnWh/8Ynm1J1yRy1WZT8Jydk29PgFnL8C3fYMuDUQk=
-github.com/jacoelho/banking v1.8.1/go.mod h1:eLtVX3f638I/syDUKD4UOnjY98FGQqx0cu7fZDYa514=
+github.com/jacoelho/banking v1.9.0 h1:sQyVp1IfXLIhOWC2Rl8CDbIRYhOk4iGOedbnHAWtT74=
+github.com/jacoelho/banking v1.9.0/go.mod h1:5Lw43sn19K1uDNCBvlWpgLL8o926MI/JBTRrD7P9XoU=
 github.com/josharian/intern v1.0.0/go.mod h1:5DoeVV0s6jJacbCEi61lwdGj/aVlrQvzHFFd8Hwg//Y=
 github.com/kr/pretty v0.3.1 h1:flRD4NNwYAUpkphVc1HcthR4KEIFJ65n8Mw5qdRn3LE=
 github.com/kr/pretty v0.3.1/go.mod h1:hoEshYVHaxMs3cyo3Yncou5ZscifuDolrwPKZanG3xk=
