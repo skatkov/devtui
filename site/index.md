@@ -22,13 +22,13 @@ All-in-one terminal toolkit that consolidates everyday developer utilities into 
 
 ---
 
-## 💡 Why DevTUI?
+## Why DevTUI?
 {: .fw-700}
 
- - 🧰 **Unified experience** – Replace scattered tools with a single app that brings together everything you need in your development workflow.
- - 🔒 **Privacy-focused** – Everything runs locally, no data ever leaves your computer. Your code and information stay completely private.
- - 🌐 **Offline support** – No internet? No problem. DevTUI works perfectly offline, so you can keep coding anywhere, anytime.
- - ⌨️ **Built for the terminal** – No need to reach for your mouse or browser. Stay in your terminal where you're most productive.
+ - **Unified experience** – Replace scattered tools with a single app that brings together everything you need in your development workflow.
+ - **Privacy-focused** – Everything runs locally, no data ever leaves your computer. Your code and information stay completely private.
+ - **Offline support** – No internet? No problem. DevTUI works perfectly offline, so you can keep coding anywhere, anytime.
+ - **Built for the terminal** – No need to reach for your mouse or browser. Stay in your terminal where you're most productive.
 {: .mt-5}
 ---
 
