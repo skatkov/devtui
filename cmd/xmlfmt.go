@@ -49,7 +49,6 @@ Input can be a string argument or piped from stdin.`,
   curl -s https://example.com/feed.xml | devtui xmlfmt`,
 	Args: cobra.MaximumNArgs(1),
 	RunE: func(cmd *cobra.Command, args []string) error {
-		// Read all input data from stdin or args
 		data, err := input.ReadBytesFromArgsOrStdin(cmd, args)
 		if err != nil {
 			return err
@@ -73,7 +72,6 @@ Input can be a string argument or piped from stdin.`,
 			return nil
 		}
 
-		// Process the XML
 		result := xmlfmt.FormatXML(string(data),
 			xmlPrefix, xmlIndent, xmlNested)
 

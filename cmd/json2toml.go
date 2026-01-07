@@ -5,6 +5,7 @@ import (
 	"fmt"
 
 	tea "github.com/charmbracelet/bubbletea"
+	"github.com/skatkov/devtui/internal/cmderror"
 	"github.com/skatkov/devtui/internal/input"
 	"github.com/skatkov/devtui/internal/ui"
 	"github.com/skatkov/devtui/tui/jsontoml"
@@ -66,9 +67,10 @@ results in an interactive terminal interface.`,
 			return nil
 		}
 
-		result, err := jsontoml.Convert(string(data))
+		inputStr := string(data)
+		result, err := jsontoml.Convert(inputStr)
 		if err != nil {
-			return err
+			return cmderror.FormatParseError("JSON", "json2toml", inputStr, err)
 		}
 
 		_, err = fmt.Fprintln(cmd.OutOrStdout(), result)

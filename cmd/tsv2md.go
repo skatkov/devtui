@@ -4,6 +4,7 @@ import (
 	"encoding/csv"
 	"strings"
 
+	"github.com/skatkov/devtui/internal/cmderror"
 	"github.com/skatkov/devtui/internal/csv2md"
 	"github.com/skatkov/devtui/internal/input"
 	"github.com/spf13/cobra"
@@ -46,12 +47,13 @@ and --header to add a main heading (h1) to the output.`,
 			return err
 		}
 
-		tsvReader := csv.NewReader(strings.NewReader(string(data)))
+		inputStr := string(data)
+		tsvReader := csv.NewReader(strings.NewReader(inputStr))
 		tsvReader.Comma = '\t'
 
 		records, err := tsvReader.ReadAll()
 		if err != nil {
-			return err
+			return cmderror.FormatParseError("TSV", "tsv2md", inputStr, err)
 		}
 
 		csv2md.Print(csv2md.Convert(tsv2mdHeader, records, tsv2mdAlignColumns))

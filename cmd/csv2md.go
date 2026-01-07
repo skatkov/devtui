@@ -4,6 +4,7 @@ import (
 	"encoding/csv"
 	"strings"
 
+	"github.com/skatkov/devtui/internal/cmderror"
 	"github.com/skatkov/devtui/internal/csv2md"
 	"github.com/skatkov/devtui/internal/input"
 	"github.com/spf13/cobra"
@@ -45,10 +46,11 @@ and --header to add a main heading (h1) to the output.`,
 			return err
 		}
 
-		csvReader := csv.NewReader(strings.NewReader(string(data)))
+		inputStr := string(data)
+		csvReader := csv.NewReader(strings.NewReader(inputStr))
 		records, err := csvReader.ReadAll()
 		if err != nil {
-			return err
+			return cmderror.FormatParseError("CSV", "csv2md", inputStr, err)
 		}
 
 		csv2md.Print(csv2md.Convert(csv2mdHeader, records, csv2mdAlignColumns))

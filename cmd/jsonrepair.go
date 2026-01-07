@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 
+	"github.com/skatkov/devtui/internal/cmderror"
 	"github.com/skatkov/devtui/internal/input"
 	"github.com/skatkov/devtui/tui/jsonrepair"
 	"github.com/spf13/cobra"
@@ -46,9 +47,10 @@ This tool can fix various JSON issues including:
 			return errors.New("no input provided. Pipe JSON input to this command")
 		}
 
-		result, err := jsonrepair.RepairJSON(string(data))
+		inputStr := string(data)
+		result, err := jsonrepair.RepairJSON(inputStr)
 		if err != nil {
-			return fmt.Errorf("failed to repair JSON: %w", err)
+			return cmderror.FormatParseError("JSON", "jsonrepair", inputStr, err)
 		}
 
 		_, err = fmt.Fprintln(cmd.OutOrStdout(), result)
