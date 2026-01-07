@@ -50,7 +50,7 @@ This tool can fix various JSON issues including:
 		inputStr := string(data)
 		result, err := jsonrepair.RepairJSON(inputStr)
 		if err != nil {
-			return cmderror.FormatParseError("JSON", "jsonrepair", inputStr, err)
+			return cmderror.FormatParseError("jsonrepair", inputStr, err)
 		}
 
 		_, err = fmt.Fprintln(cmd.OutOrStdout(), result)

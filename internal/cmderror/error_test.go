@@ -60,7 +60,6 @@ func TestFormatParseError(t *testing.T) {
 
 	tests := []struct {
 		name        string
-		format      string
 		command     string
 		input       string
 		wantContain []string
@@ -68,11 +67,9 @@ func TestFormatParseError(t *testing.T) {
 	}{
 		{
 			name:    "file path shows hint",
-			format:  "JSON",
 			command: "json2toml",
 			input:   "config.json",
 			wantContain: []string{
-				"JSON parsing error",
 				"invalid character",
 				"looks like a file path",
 				"devtui json2toml < config.json",
@@ -81,11 +78,9 @@ func TestFormatParseError(t *testing.T) {
 		},
 		{
 			name:    "actual content no hint",
-			format:  "JSON",
 			command: "json2toml",
 			input:   `{"invalid": }`,
 			wantContain: []string{
-				"JSON parsing error",
 				"invalid character",
 			},
 			wantExclude: []string{
@@ -94,34 +89,28 @@ func TestFormatParseError(t *testing.T) {
 			},
 		},
 		{
-			name:    "TOML format capitalization",
-			format:  "TOML",
+			name:    "toml2json hint",
 			command: "toml2json",
 			input:   "config.toml",
 			wantContain: []string{
-				"TOML parsing error",
 				"devtui toml2json < config.toml",
 			},
 			wantExclude: []string{},
 		},
 		{
-			name:    "GraphQL format capitalization",
-			format:  "GraphQL",
+			name:    "gqlquery hint",
 			command: "gqlquery",
 			input:   "query.gql",
 			wantContain: []string{
-				"GraphQL parsing error",
 				"devtui gqlquery < query.gql",
 			},
 			wantExclude: []string{},
 		},
 		{
-			name:    "CSS format capitalization",
-			format:  "CSS",
+			name:    "cssfmt hint",
 			command: "cssfmt",
 			input:   "style.css",
 			wantContain: []string{
-				"CSS parsing error",
 				"devtui cssfmt < style.css",
 			},
 			wantExclude: []string{},
@@ -130,7 +119,7 @@ func TestFormatParseError(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			err := FormatParseError(tt.format, tt.command, tt.input, baseErr)
+			err := FormatParseError(tt.command, tt.input, baseErr)
 			errStr := err.Error()
 
 			for _, want := range tt.wantContain {

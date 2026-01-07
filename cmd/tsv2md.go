@@ -53,7 +53,7 @@ and --header to add a main heading (h1) to the output.`,
 
 		records, err := tsvReader.ReadAll()
 		if err != nil {
-			return cmderror.FormatParseError("TSV", "tsv2md", inputStr, err)
+			return cmderror.FormatParseError("tsv2md", inputStr, err)
 		}
 
 		csv2md.Print(csv2md.Convert(tsv2mdHeader, records, tsv2mdAlignColumns))

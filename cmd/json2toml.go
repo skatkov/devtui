@@ -70,7 +70,7 @@ results in an interactive terminal interface.`,
 		inputStr := string(data)
 		result, err := jsontoml.Convert(inputStr)
 		if err != nil {
-			return cmderror.FormatParseError("JSON", "json2toml", inputStr, err)
+			return cmderror.FormatParseError("json2toml", inputStr, err)
 		}
 
 		_, err = fmt.Fprintln(cmd.OutOrStdout(), result)
