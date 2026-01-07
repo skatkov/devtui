@@ -3,6 +3,7 @@ package cmderror
 import (
 	"fmt"
 	"path/filepath"
+	"slices"
 	"strings"
 )
 
@@ -29,23 +30,14 @@ func LooksLikeFilePath(input string) bool {
 	}
 
 	ext := strings.ToLower(filepath.Ext(trimmed))
-	for _, knownExt := range knownExtensions {
-		if ext == knownExt {
-			return true
-		}
-	}
-
-	return false
+	return slices.Contains(knownExtensions, ext)
 }
 
 func FormatParseError(command, input string, err error) error {
-	// Trim whitespace for file path detection and display
-	trimmedInput := strings.TrimSpace(input)
-
-	if !LooksLikeFilePath(trimmedInput) {
+	if !LooksLikeFilePath(input) {
 		return err
 	}
 
-	return fmt.Errorf("%w\n\nHint: '%s' looks like a file path.\n\nTo read from a file, use:\n  devtui %s < %s",
-		err, trimmedInput, command, trimmedInput)
+	return fmt.Errorf("%w\n\nHint: '%s' looks like a file path. \n\n To read from a file, use:\n  devtui %s < %s",
+		err, input, command, input)
 }
