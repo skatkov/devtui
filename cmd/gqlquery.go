@@ -5,6 +5,7 @@ import (
 	"strings"
 
 	tea "github.com/charmbracelet/bubbletea"
+	"github.com/skatkov/devtui/internal/cmderror"
 	"github.com/skatkov/devtui/internal/input"
 	"github.com/skatkov/devtui/internal/ui"
 	graphqlquery "github.com/skatkov/devtui/tui/graphql-query"
@@ -87,12 +88,13 @@ or piped from stdin.`,
 		}
 
 		// Parse the GraphQL query
+		inputStr := string(data)
 		query, err := parser.ParseQuery(&ast.Source{
-			Input: string(data),
+			Input: inputStr,
 			Name:  "stdin",
 		})
 		if err != nil {
-			return err
+			return cmderror.FormatParseError("GraphQL", "gqlquery", inputStr, err)
 		}
 
 		// Configure formatter options

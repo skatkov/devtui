@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	tea "github.com/charmbracelet/bubbletea"
+	"github.com/skatkov/devtui/internal/cmderror"
 	"github.com/skatkov/devtui/internal/input"
 	"github.com/skatkov/devtui/internal/ui"
 	"github.com/skatkov/devtui/tui/toml"
@@ -60,9 +61,10 @@ in an interactive terminal interface.`,
 			return nil
 		}
 
-		result, err := toml.Convert(string(data))
+		inputStr := string(data)
+		result, err := toml.Convert(inputStr)
 		if err != nil {
-			return err
+			return cmderror.FormatParseError("TOML", "tomlfmt", inputStr, err)
 		}
 
 		_, err = fmt.Fprintln(cmd.OutOrStdout(), result)

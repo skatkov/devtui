@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/hannes-sistemica/toon"
+	"github.com/skatkov/devtui/internal/cmderror"
 	"github.com/skatkov/devtui/internal/input"
 	"github.com/skatkov/devtui/tui/json2toon"
 	"github.com/spf13/cobra"
@@ -39,9 +40,10 @@ reduced token usage (typically 30-60% fewer tokens than JSON).`,
 			LengthMarker: json2toonLengthMarker,
 		}
 
-		result, err := json2toon.ConvertWithOptions(string(data), opts)
+		inputStr := string(data)
+		result, err := json2toon.ConvertWithOptions(inputStr, opts)
 		if err != nil {
-			return err
+			return cmderror.FormatParseError("JSON", "json2toon", inputStr, err)
 		}
 
 		_, err = fmt.Fprint(cmd.OutOrStdout(), result)

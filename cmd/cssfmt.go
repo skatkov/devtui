@@ -5,6 +5,7 @@ import (
 
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/client9/csstool"
+	"github.com/skatkov/devtui/internal/cmderror"
 	"github.com/skatkov/devtui/internal/input"
 	"github.com/skatkov/devtui/internal/ui"
 	"github.com/skatkov/devtui/tui/css"
@@ -83,9 +84,10 @@ custom spacing. Input can be a string argument or piped from stdin.`,
 			return err
 		}
 
-		err = cssformat.Format(strings.NewReader(string(data)), cmd.OutOrStdout())
+		inputStr := string(data)
+		err = cssformat.Format(strings.NewReader(inputStr), cmd.OutOrStdout())
 		if err != nil {
-			return err
+			return cmderror.FormatParseError("CSS", "cssfmt", inputStr, err)
 		}
 
 		return nil
