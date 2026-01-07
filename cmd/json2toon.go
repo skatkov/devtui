@@ -43,7 +43,7 @@ reduced token usage (typically 30-60% fewer tokens than JSON).`,
 		inputStr := string(data)
 		result, err := json2toon.ConvertWithOptions(inputStr, opts)
 		if err != nil {
-			return cmderror.FormatParseError("JSON", "json2toon", inputStr, err)
+			return cmderror.FormatParseError("json2toon", inputStr, err)
 		}
 
 		_, err = fmt.Fprint(cmd.OutOrStdout(), result)

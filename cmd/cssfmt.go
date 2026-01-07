@@ -87,7 +87,7 @@ custom spacing. Input can be a string argument or piped from stdin.`,
 		inputStr := string(data)
 		err = cssformat.Format(strings.NewReader(inputStr), cmd.OutOrStdout())
 		if err != nil {
-			return cmderror.FormatParseError("CSS", "cssfmt", inputStr, err)
+			return cmderror.FormatParseError("cssfmt", inputStr, err)
 		}
 
 		return nil

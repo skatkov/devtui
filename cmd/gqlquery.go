@@ -94,7 +94,7 @@ or piped from stdin.`,
 			Name:  "stdin",
 		})
 		if err != nil {
-			return cmderror.FormatParseError("GraphQL", "gqlquery", inputStr, err)
+			return cmderror.FormatParseError("gqlquery", inputStr, err)
 		}
 
 		// Configure formatter options

@@ -64,7 +64,7 @@ in an interactive terminal interface.`,
 		inputStr := string(data)
 		result, err := toml.Convert(inputStr)
 		if err != nil {
-			return cmderror.FormatParseError("TOML", "tomlfmt", inputStr, err)
+			return cmderror.FormatParseError("tomlfmt", inputStr, err)
 		}
 
 		_, err = fmt.Fprintln(cmd.OutOrStdout(), result)

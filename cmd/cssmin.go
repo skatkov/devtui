@@ -43,7 +43,7 @@ Input can be a string argument or piped from stdin.`,
 		inputStr := string(data)
 		err = cssformat.Format(strings.NewReader(inputStr), cmd.OutOrStdout())
 		if err != nil {
-			return cmderror.FormatParseError("CSS", "cssmin", inputStr, err)
+			return cmderror.FormatParseError("cssmin", inputStr, err)
 		}
 
 		return nil

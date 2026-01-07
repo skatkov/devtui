@@ -38,11 +38,14 @@ func LooksLikeFilePath(input string) bool {
 	return false
 }
 
-func FormatParseError(format, command, input string, err error) error {
-	if !LooksLikeFilePath(input) {
-		return fmt.Errorf("%s parsing error: %w", format, err)
+func FormatParseError(command, input string, err error) error {
+	// Trim whitespace for file path detection and display
+	trimmedInput := strings.TrimSpace(input)
+
+	if !LooksLikeFilePath(trimmedInput) {
+		return err
 	}
 
-	return fmt.Errorf("%s parsing error: %w\n\nHint: '%s' looks like a file path.\n\nTo read from a file, use:\n  devtui %s < %s",
-		format, err, input, command, input)
+	return fmt.Errorf("%w\n\nHint: '%s' looks like a file path.\n\nTo read from a file, use:\n  devtui %s < %s",
+		err, trimmedInput, command, trimmedInput)
 }

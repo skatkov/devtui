@@ -64,7 +64,7 @@ in an interactive terminal interface.`,
 		inputStr := string(data)
 		result, err := tomljson.Convert(inputStr)
 		if err != nil {
-			return cmderror.FormatParseError("TOML", "toml2json", inputStr, err)
+			return cmderror.FormatParseError("toml2json", inputStr, err)
 		}
 
 		_, err = fmt.Fprintln(cmd.OutOrStdout(), result)

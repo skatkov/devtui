@@ -50,7 +50,7 @@ and --header to add a main heading (h1) to the output.`,
 		csvReader := csv.NewReader(strings.NewReader(inputStr))
 		records, err := csvReader.ReadAll()
 		if err != nil {
-			return cmderror.FormatParseError("CSV", "csv2md", inputStr, err)
+			return cmderror.FormatParseError("csv2md", inputStr, err)
 		}
 
 		csv2md.Print(csv2md.Convert(csv2mdHeader, records, csv2mdAlignColumns))
