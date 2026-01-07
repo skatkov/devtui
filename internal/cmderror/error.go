@@ -43,6 +43,6 @@ func FormatParseError(format, command, input string, err error) error {
 		return fmt.Errorf("%s parsing error: %w", format, err)
 	}
 
-	return fmt.Errorf("%s parsing error: %w\n\nHint: '%s' looks like a file path. To read from a file, use:\n  devtui %s < %s",
+	return fmt.Errorf("%s parsing error: %w\n\nHint: '%s' looks like a file path.\n\nTo read from a file, use:\n  devtui %s < %s",
 		format, err, input, command, input)
 }
