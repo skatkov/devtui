@@ -4,11 +4,9 @@ import (
 	"errors"
 	"fmt"
 
-	tea "github.com/charmbracelet/bubbletea"
 	"github.com/skatkov/devtui/internal/cmderror"
 	"github.com/skatkov/devtui/internal/input"
-	"github.com/skatkov/devtui/internal/ui"
-	"github.com/skatkov/devtui/tui/xml"
+	"github.com/skatkov/devtui/internal/xml"
 	"github.com/spf13/cobra"
 )
 
@@ -17,8 +15,7 @@ var xml2jsonCmd = &cobra.Command{
 	Short: "Convert XML to JSON format",
 	Long: `Convert XML (Extensible Markup Language) to JSON (JavaScript Object Notation) format.
 
-Input can be a string argument or piped from stdin. Use --tui flag to view
-results in an interactive terminal interface.`,
+Input can be a string argument or piped from stdin.`,
 	Example: `  # Convert XML from stdin
   devtui xml2json < data.xml
   cat feed.xml | devtui xml2json
@@ -28,9 +25,6 @@ results in an interactive terminal interface.`,
 
   # Output to file
   devtui xml2json < input.xml > output.json
-
-  # Show results in interactive TUI
-  devtui xml2json --tui < data.xml
 
   # Chain with other commands
   curl -s https://api.example.com/data.xml | devtui xml2json`,
@@ -43,25 +37,6 @@ results in an interactive terminal interface.`,
 
 		if len(data) == 0 {
 			return errors.New("no input provided. Pipe XML input to this command")
-		}
-
-		if flagTUI {
-			common := &ui.CommonModel{
-				Width:  0,
-				Height: 0,
-			}
-
-			model := xml.NewXMLFormatterModel(common)
-			err = model.SetContent(string(data))
-			if err != nil {
-				return err
-			}
-
-			p := tea.NewProgram(model, tea.WithAltScreen())
-			if _, err := p.Run(); err != nil {
-				return err
-			}
-			return nil
 		}
 
 		inputStr := string(data)
@@ -81,5 +56,4 @@ results in an interactive terminal interface.`,
 
 func init() {
 	rootCmd.AddCommand(xml2jsonCmd)
-	xml2jsonCmd.Flags().BoolVarP(&flagTUI, "tui", "t", false, "Show output in TUI")
 }

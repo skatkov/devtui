@@ -4,11 +4,9 @@ import (
 	"errors"
 	"fmt"
 
-	tea "github.com/charmbracelet/bubbletea"
 	"github.com/skatkov/devtui/internal/cmderror"
 	"github.com/skatkov/devtui/internal/input"
-	"github.com/skatkov/devtui/internal/ui"
-	"github.com/skatkov/devtui/tui/yaml"
+	"github.com/skatkov/devtui/internal/yaml"
 	"github.com/spf13/cobra"
 )
 
@@ -17,8 +15,7 @@ var json2yamlCmd = &cobra.Command{
 	Short: "Convert JSON to YAML format",
 	Long: `Convert JSON (JavaScript Object Notation) to YAML (YAML Ain't Markup Language) format.
 
-Input can be a string argument or piped from stdin. Use --tui flag to view
-results in an interactive terminal interface.`,
+Input can be a string argument or piped from stdin.`,
 	Example: `  # Convert JSON from stdin
   devtui json2yaml < config.json
   cat app.json | devtui json2yaml
@@ -28,9 +25,6 @@ results in an interactive terminal interface.`,
 
   # Output to file
   devtui json2yaml < input.json > output.yaml
-
-  # Show results in interactive TUI
-  devtui json2yaml --tui < config.json
 
   # Chain with other commands
   curl -s https://api.example.com/config | devtui json2yaml`,
@@ -43,25 +37,6 @@ results in an interactive terminal interface.`,
 
 		if len(data) == 0 {
 			return errors.New("no input provided. Pipe JSON input to this command")
-		}
-
-		if flagTUI {
-			common := &ui.CommonModel{
-				Width:  0,
-				Height: 0,
-			}
-
-			model := yaml.NewYamlModel(common)
-			err = model.SetContent(string(data))
-			if err != nil {
-				return err
-			}
-
-			p := tea.NewProgram(model, tea.WithAltScreen())
-			if _, err := p.Run(); err != nil {
-				return err
-			}
-			return nil
 		}
 
 		inputStr := string(data)
@@ -81,5 +56,4 @@ results in an interactive terminal interface.`,
 
 func init() {
 	rootCmd.AddCommand(json2yamlCmd)
-	json2yamlCmd.Flags().BoolVarP(&flagTUI, "tui", "t", false, "Show output in TUI")
 }
