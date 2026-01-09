@@ -16,9 +16,10 @@ parent: TUI
 
 | Key | Action |
 |-----|--------|
-| `c` | copy |
-| `e` | edit |
-| `v` | paste |
+| `c` | copy rendered markdown |
+| `e` | edit markdown |
+| `v` | paste markdown |
 | `q/ctrl+c` | quit |
+| `esc` | return to menu |
 
 
