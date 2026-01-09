@@ -1,4 +1,4 @@
-package jsontoml
+package json2toml
 
 import (
 	"bytes"

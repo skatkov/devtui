@@ -13,6 +13,7 @@ require (
 	github.com/charmbracelet/huh v0.8.0
 	github.com/charmbracelet/lipgloss v1.1.1-0.20250404203927-76690c660834
 	github.com/charmbracelet/x/editor v0.1.0
+	github.com/charmbracelet/x/term v0.2.2
 	github.com/client9/csstool v0.2.2
 	github.com/go-xmlfmt/xmlfmt v1.1.3
 	github.com/google/uuid v1.6.0
@@ -49,7 +50,6 @@ require (
 	github.com/charmbracelet/x/exp/color v0.0.0-20251006100439-2151805163c8 // indirect
 	github.com/charmbracelet/x/exp/slice v0.0.0-20251114205511-64e30b5ee1c5 // indirect
 	github.com/charmbracelet/x/exp/strings v0.0.0-20251114205511-64e30b5ee1c5 // indirect
-	github.com/charmbracelet/x/term v0.2.2 // indirect
 	github.com/charmbracelet/x/termios v0.1.1 // indirect
 	github.com/charmbracelet/x/windows v0.2.2 // indirect
 	github.com/clbanning/mxj/v2 v2.7.0 // indirect

@@ -7,7 +7,7 @@ import (
 	"github.com/skatkov/devtui/internal/cmderror"
 	"github.com/skatkov/devtui/internal/input"
 	"github.com/skatkov/devtui/internal/ui"
-	"github.com/skatkov/devtui/tui/tomljson"
+	"github.com/skatkov/devtui/tui/toml2json"
 	"github.com/spf13/cobra"
 )
 
@@ -48,7 +48,7 @@ in an interactive terminal interface.`,
 				Height: 0,
 			}
 
-			model := tomljson.NewTomlJsonModel(common)
+			model := toml2json.NewTomlJsonModel(common)
 			err = model.SetContent(string(data))
 			if err != nil {
 				return err
@@ -62,7 +62,7 @@ in an interactive terminal interface.`,
 		}
 
 		inputStr := string(data)
-		result, err := tomljson.Convert(inputStr)
+		result, err := toml2json.Convert(inputStr)
 		if err != nil {
 			return cmderror.FormatParseError("toml2json", inputStr, err)
 		}
