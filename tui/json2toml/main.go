@@ -2,23 +2,20 @@ package json2toml
 
 import (
 	"bytes"
-	"encoding/json"
 	"fmt"
 	"strings"
 
 	"github.com/alecthomas/chroma/quick"
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/mattn/go-runewidth"
-	"github.com/pelletier/go-toml/v2"
 
 	"github.com/skatkov/devtui/internal/clipboard"
+	"github.com/skatkov/devtui/internal/converter"
 	"github.com/skatkov/devtui/internal/editor"
 	"github.com/skatkov/devtui/internal/ui"
 )
 
 const Title = "JSON to TOML Converter"
-
-var useJsonNumber = true // Enable JSON number handling
 
 type JsonTomlModel struct {
 	ui.BasePagerModel
@@ -155,34 +152,5 @@ func (m JsonTomlModel) helpView() (s string) {
 }
 
 func Convert(jsonContent string) (string, error) {
-	var v any
-
-	// Create a decoder that uses JSON numbers
-	decoder := json.NewDecoder(strings.NewReader(jsonContent))
-	if useJsonNumber {
-		decoder.UseNumber()
-	}
-
-	// Decode JSON
-	err := decoder.Decode(&v)
-	if err != nil {
-		return "", fmt.Errorf("JSON parsing error: %s", err.Error())
-	}
-
-	// Create a buffer to hold the TOML output
-	var buf bytes.Buffer
-
-	// Create a TOML encoder
-	encoder := toml.NewEncoder(&buf)
-	if useJsonNumber {
-		encoder.SetMarshalJsonNumbers(true)
-	}
-
-	// Encode to TOML
-	err = encoder.Encode(v)
-	if err != nil {
-		return "", fmt.Errorf("TOML encoding error: %s", err.Error())
-	}
-
-	return buf.String(), nil
+	return converter.JSONToTOML(jsonContent)
 }

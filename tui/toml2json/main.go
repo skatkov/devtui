@@ -2,17 +2,15 @@ package toml2json
 
 import (
 	"bytes"
-	"encoding/json"
-	"errors"
 	"fmt"
 	"strings"
 
 	"github.com/alecthomas/chroma/quick"
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/mattn/go-runewidth"
-	"github.com/pelletier/go-toml/v2"
 
 	"github.com/skatkov/devtui/internal/clipboard"
+	"github.com/skatkov/devtui/internal/converter"
 	"github.com/skatkov/devtui/internal/editor"
 	"github.com/skatkov/devtui/internal/ui"
 )
@@ -114,7 +112,6 @@ func (m *TomlJsonModel) SetContent(content string) error {
 		return err
 	}
 	m.Viewport.SetContent(buf.String())
-
 	return nil
 }
 
@@ -155,21 +152,5 @@ func (m TomlJsonModel) helpView() (s string) {
 }
 
 func Convert(tomlContent string) (string, error) {
-	var v any
-
-	err := toml.Unmarshal([]byte(tomlContent), &v)
-	if err != nil {
-		var derr *toml.DecodeError
-		if errors.As(err, &derr) {
-			return "", fmt.Errorf("TOML parsing error: %s", err.Error())
-		}
-		return "", err
-	}
-
-	bytes, err := json.MarshalIndent(v, "", "  ")
-	if err != nil {
-		return "", fmt.Errorf("JSON encoding error: %s", err.Error())
-	}
-
-	return string(bytes), nil
+	return converter.TOMLToJSON(tomlContent)
 }

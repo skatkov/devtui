@@ -10,6 +10,7 @@ func TestXml2jsonCmd(t *testing.T) {
 	tests := []struct {
 		name        string
 		input       string
+		args        []string
 		wantContain string
 		wantErr     bool
 		description string
@@ -17,6 +18,7 @@ func TestXml2jsonCmd(t *testing.T) {
 		{
 			name:        "simple element conversion",
 			input:       `<root><item>value</item></root>`,
+			args:        []string{},
 			wantContain: `"item": "value"`,
 			wantErr:     false,
 			description: "Should convert simple XML to JSON",
@@ -24,6 +26,7 @@ func TestXml2jsonCmd(t *testing.T) {
 		{
 			name:        "nested elements conversion",
 			input:       `<root><child><value>data</value></child></root>`,
+			args:        []string{},
 			wantContain: `"child"`,
 			wantErr:     false,
 			description: "Should convert nested XML elements to JSON objects",
@@ -31,6 +34,7 @@ func TestXml2jsonCmd(t *testing.T) {
 		{
 			name:        "attributes to elements",
 			input:       `<root><item id="1">value</item></root>`,
+			args:        []string{},
 			wantContain: `"item"`,
 			wantErr:     false,
 			description: "Should convert XML with attributes to JSON",
@@ -38,6 +42,7 @@ func TestXml2jsonCmd(t *testing.T) {
 		{
 			name:        "multiple elements",
 			input:       `<root><item>first</item><item>second</item></root>`,
+			args:        []string{},
 			wantContain: `"item"`,
 			wantErr:     false,
 			description: "Should convert XML with multiple elements to JSON arrays",
@@ -45,6 +50,7 @@ func TestXml2jsonCmd(t *testing.T) {
 		{
 			name:        "invalid XML input",
 			input:       `<invalid>xml</unclosed`,
+			args:        []string{},
 			wantContain: "",
 			wantErr:     true,
 			description: "Should error on invalid XML",
@@ -52,6 +58,7 @@ func TestXml2jsonCmd(t *testing.T) {
 		{
 			name:        "empty root",
 			input:       `<root></root>`,
+			args:        []string{},
 			wantContain: `"root"`,
 			wantErr:     false,
 			description: "Should handle empty XML element",
@@ -67,6 +74,7 @@ func TestXml2jsonCmd(t *testing.T) {
 			cmd.SetIn(strings.NewReader(tt.input))
 
 			args := []string{"xml2json"}
+			args = append(args, tt.args...)
 			cmd.SetArgs(args)
 
 			err := cmd.Execute()

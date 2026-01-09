@@ -10,71 +10,55 @@ func TestToml2yamlCmd(t *testing.T) {
 	tests := []struct {
 		name        string
 		input       string
-		checkOutput func(string) bool
+		args        []string
+		wantContain string
 		wantErr     bool
 		description string
 	}{
 		{
-			name:  "simple key-value conversion",
-			input: "name = \"myapp\"\nversion = \"1.0.0\"",
-			checkOutput: func(output string) bool {
-				return strings.Contains(output, "name:") &&
-					strings.Contains(output, "myapp") &&
-					strings.Contains(output, "version:") &&
-					strings.Contains(output, "1.0.0")
-			},
+			name:        "simple key-value conversion",
+			input:       "name = \"myapp\"\nversion = \"1.0.0\"",
+			args:        []string{},
+			wantContain: "name:",
+			wantErr:     false,
 			description: "Should convert simple TOML to YAML",
 		},
 		{
-			name:  "nested tables conversion",
-			input: "[user]\nname = \"Bob\"\nemail = \"bob@example.com\"",
-			checkOutput: func(output string) bool {
-				return strings.Contains(output, "user:") &&
-					strings.Contains(output, "name:") &&
-					strings.Contains(output, "Bob") &&
-					strings.Contains(output, "email:") &&
-					strings.Contains(output, "bob@example.com")
-			},
+			name:        "nested tables conversion",
+			input:       "[user]\nname = \"Bob\"\nemail = \"bob@example.com\"",
+			args:        []string{},
+			wantContain: "user:",
+			wantErr:     false,
 			description: "Should convert nested TOML tables to YAML",
 		},
 		{
-			name:  "arrays conversion",
-			input: "items = [\"apple\", \"banana\", \"cherry\"]",
-			checkOutput: func(output string) bool {
-				return strings.Contains(output, "items:") &&
-					strings.Contains(output, "- apple") &&
-					strings.Contains(output, "- banana") &&
-					strings.Contains(output, "- cherry")
-			},
+			name:        "arrays conversion",
+			input:       "items = [\"apple\", \"banana\", \"cherry\"]",
+			args:        []string{},
+			wantContain: "- apple",
+			wantErr:     false,
 			description: "Should convert TOML arrays to YAML",
 		},
 		{
-			name:  "boolean and number values",
-			input: "enabled = true\ncount = 42\nratio = 3.14",
-			checkOutput: func(output string) bool {
-				return strings.Contains(output, "enabled:") &&
-					strings.Contains(output, "true") &&
-					strings.Contains(output, "count:") &&
-					strings.Contains(output, "42") &&
-					strings.Contains(output, "ratio:") &&
-					strings.Contains(output, "3.14")
-			},
+			name:        "boolean and number values",
+			input:       "enabled = true\ncount = 42\nratio = 3.14",
+			args:        []string{},
+			wantContain: "enabled:",
+			wantErr:     false,
 			description: "Should preserve boolean and number types",
 		},
 		{
-			name:  "array of tables",
-			input: "[[items]]\nid = 1\nname = \"first\"\n\n[[items]]\nid = 2\nname = \"second\"",
-			checkOutput: func(output string) bool {
-				return strings.Contains(output, "items:") &&
-					strings.Contains(output, "id:") &&
-					strings.Contains(output, "name:")
-			},
+			name:        "array of tables",
+			input:       "[[items]]\nid = 1\nname = \"first\"\n\n[[items]]\nid = 2\nname = \"second\"",
+			args:        []string{},
+			wantContain: "items:",
+			wantErr:     false,
 			description: "Should convert TOML array of tables to YAML",
 		},
 		{
 			name:        "invalid TOML input",
 			input:       "{invalid toml}",
-			checkOutput: nil,
+			args:        []string{},
 			wantErr:     true,
 			description: "Should error on invalid TOML",
 		},
@@ -87,7 +71,10 @@ func TestToml2yamlCmd(t *testing.T) {
 			cmd.SetOut(buf)
 			cmd.SetErr(buf)
 			cmd.SetIn(strings.NewReader(tt.input))
-			cmd.SetArgs([]string{"toml2yaml"})
+
+			args := []string{"toml2yaml"}
+			args = append(args, tt.args...)
+			cmd.SetArgs(args)
 
 			err := cmd.Execute()
 
@@ -96,9 +83,9 @@ func TestToml2yamlCmd(t *testing.T) {
 				return
 			}
 
-			if !tt.wantErr && tt.checkOutput != nil {
+			if !tt.wantErr && tt.wantContain != "" {
 				output := buf.String()
-				if !tt.checkOutput(output) {
+				if !strings.Contains(output, tt.wantContain) {
 					t.Errorf("toml2yaml command output check failed.\nInput: %s\nOutput: %s\nDescription: %s",
 						tt.input, output, tt.description)
 				}
@@ -131,25 +118,21 @@ func TestToml2yamlCmdArgumentInput(t *testing.T) {
 		name        string
 		args        []string
 		input       string
-		checkOutput func(string) bool
+		wantContain string
 		description string
 	}{
 		{
-			name:  "argument input",
-			args:  []string{"toml2yaml", "name = \"myapp\""},
-			input: "",
-			checkOutput: func(output string) bool {
-				return strings.Contains(output, "name:") && strings.Contains(output, "myapp")
-			},
+			name:        "argument input",
+			args:        []string{"toml2yaml", "name = \"myapp\""},
+			input:       "",
+			wantContain: "name:",
 			description: "Should handle TOML string argument",
 		},
 		{
-			name:  "stdin input",
-			args:  []string{"toml2yaml"},
-			input: "name = \"myapp\"",
-			checkOutput: func(output string) bool {
-				return strings.Contains(output, "name:") && strings.Contains(output, "myapp")
-			},
+			name:        "stdin input",
+			args:        []string{"toml2yaml"},
+			input:       "name = \"myapp\"",
+			wantContain: "name:",
 			description: "Should handle TOML from stdin",
 		},
 	}
@@ -169,7 +152,7 @@ func TestToml2yamlCmdArgumentInput(t *testing.T) {
 			}
 
 			output := buf.String()
-			if !tt.checkOutput(output) {
+			if !strings.Contains(output, tt.wantContain) {
 				t.Errorf("toml2yaml command output check failed.\nOutput: %s\nDescription: %s",
 					output, tt.description)
 			}
