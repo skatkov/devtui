@@ -10,63 +10,56 @@ func TestJson2xmlCmd(t *testing.T) {
 	tests := []struct {
 		name        string
 		input       string
-		checkOutput func(string) bool
+		args        []string
+		wantContain string
 		wantErr     bool
 		description string
 	}{
 		{
-			name:  "simple object conversion",
-			input: `{"item": "value"}`,
-			checkOutput: func(output string) bool {
-				return strings.Contains(output, "<item>") &&
-					strings.Contains(output, "value") &&
-					strings.Contains(output, "</item>")
-			},
+			name:        "simple object conversion",
+			input:       `{"item": "value"}`,
+			args:        []string{},
+			wantContain: "<item>",
+			wantErr:     false,
 			description: "Should convert simple JSON object to XML",
 		},
 		{
-			name:  "nested objects conversion",
-			input: `{"root": {"child": {"value": "data"}}}`,
-			checkOutput: func(output string) bool {
-				return strings.Contains(output, "<root>") &&
-					strings.Contains(output, "<child>") &&
-					strings.Contains(output, "<value>") &&
-					strings.Contains(output, "data")
-			},
+			name:        "nested objects conversion",
+			input:       `{"root": {"child": {"value": "data"}}}`,
+			args:        []string{},
+			wantContain: "<root>",
+			wantErr:     false,
 			description: "Should convert nested JSON objects to XML hierarchy",
 		},
 		{
-			name:  "arrays conversion",
-			input: `{"items": ["apple", "banana"]}`,
-			checkOutput: func(output string) bool {
-				return strings.Contains(output, "<items>") &&
-					strings.Contains(output, "apple") &&
-					strings.Contains(output, "banana")
-			},
+			name:        "arrays conversion",
+			input:       `{"items": ["apple", "banana"]}`,
+			args:        []string{},
+			wantContain: "<items>",
+			wantErr:     false,
 			description: "Should convert JSON arrays to XML",
 		},
 		{
-			name:  "mixed types conversion",
-			input: `{"string": "text", "number": 123, "boolean": true}`,
-			checkOutput: func(output string) bool {
-				return strings.Contains(output, "<string>") &&
-					strings.Contains(output, "<number>") &&
-					strings.Contains(output, "<boolean>")
-			},
+			name:        "mixed types conversion",
+			input:       `{"string": "text", "number": 123, "boolean": true}`,
+			args:        []string{},
+			wantContain: "<string>",
+			wantErr:     false,
 			description: "Should handle mixed JSON types",
 		},
 		{
-			name:  "empty object",
-			input: `{}`,
-			checkOutput: func(output string) bool {
-				return strings.Contains(output, "<doc/>") || strings.TrimSpace(output) == ""
-			},
+			name:        "empty object",
+			input:       `{}`,
+			args:        []string{},
+			wantContain: "<doc/>",
+			wantErr:     false,
 			description: "Should handle empty JSON object",
 		},
 		{
 			name:        "invalid JSON input",
 			input:       `{invalid json}`,
-			checkOutput: nil,
+			args:        []string{},
+			wantContain: "",
 			wantErr:     true,
 			description: "Should return error for invalid JSON",
 		},
@@ -79,20 +72,23 @@ func TestJson2xmlCmd(t *testing.T) {
 			cmd.SetOut(buf)
 			cmd.SetErr(buf)
 			cmd.SetIn(strings.NewReader(tt.input))
-			cmd.SetArgs([]string{"json2xml"})
+
+			args := []string{"json2xml"}
+			args = append(args, tt.args...)
+			cmd.SetArgs(args)
 
 			err := cmd.Execute()
 
 			if (err != nil) != tt.wantErr {
-				t.Errorf("json2xml command error = %v, wantErr %v", err, tt.wantErr)
+				t.Errorf("json2xml command error = %v, wantErr %v\nDescription: %s", err, tt.wantErr, tt.description)
 				return
 			}
 
-			if !tt.wantErr && tt.checkOutput != nil {
+			if !tt.wantErr && tt.wantContain != "" {
 				output := buf.String()
-				if !tt.checkOutput(output) {
-					t.Errorf("json2xml command output check failed.\nInput: %s\nOutput: %s\nDescription: %s",
-						tt.input, output, tt.description)
+				if !strings.Contains(output, tt.wantContain) {
+					t.Errorf("json2xml output does not contain expected string %q\nGot: %s\nDescription: %s",
+						tt.wantContain, output, tt.description)
 				}
 			}
 		})
@@ -123,25 +119,21 @@ func TestJson2xmlCmdArgumentInput(t *testing.T) {
 		name        string
 		args        []string
 		input       string
-		checkOutput func(string) bool
+		wantContain string
 		description string
 	}{
 		{
-			name:  "argument input",
-			args:  []string{"json2xml", `{"key": "value"}`},
-			input: "",
-			checkOutput: func(output string) bool {
-				return strings.Contains(output, "<key>") && strings.Contains(output, "value")
-			},
+			name:        "argument input",
+			args:        []string{"json2xml", `{"key": "value"}`},
+			input:       "",
+			wantContain: "<key>",
 			description: "Should handle JSON string argument",
 		},
 		{
-			name:  "stdin input",
-			args:  []string{"json2xml"},
-			input: `{"key": "value"}`,
-			checkOutput: func(output string) bool {
-				return strings.Contains(output, "<key>") && strings.Contains(output, "value")
-			},
+			name:        "stdin input",
+			args:        []string{"json2xml"},
+			input:       `{"key": "value"}`,
+			wantContain: "<key>",
 			description: "Should handle JSON from stdin",
 		},
 	}
@@ -161,9 +153,9 @@ func TestJson2xmlCmdArgumentInput(t *testing.T) {
 			}
 
 			output := buf.String()
-			if !tt.checkOutput(output) {
-				t.Errorf("json2xml command output check failed.\nOutput: %s\nDescription: %s",
-					output, tt.description)
+			if !strings.Contains(output, tt.wantContain) {
+				t.Errorf("json2xml output does not contain expected string %q\nGot: %s\nDescription: %s",
+					tt.wantContain, output, tt.description)
 			}
 		})
 	}

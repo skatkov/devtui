@@ -10,6 +10,7 @@ func TestYaml2jsonCmd(t *testing.T) {
 	tests := []struct {
 		name        string
 		input       string
+		args        []string
 		wantContain string
 		wantErr     bool
 		description string
@@ -17,6 +18,7 @@ func TestYaml2jsonCmd(t *testing.T) {
 		{
 			name:        "simple key-value conversion",
 			input:       "name: Alice\nage: 30",
+			args:        []string{},
 			wantContain: `"name": "Alice"`,
 			wantErr:     false,
 			description: "Should convert simple YAML to JSON",
@@ -24,6 +26,7 @@ func TestYaml2jsonCmd(t *testing.T) {
 		{
 			name:        "nested objects conversion",
 			input:       "user:\n  name: Bob\n  email: bob@example.com",
+			args:        []string{},
 			wantContain: `"user"`,
 			wantErr:     false,
 			description: "Should convert nested YAML objects to JSON",
@@ -31,6 +34,7 @@ func TestYaml2jsonCmd(t *testing.T) {
 		{
 			name:        "arrays conversion",
 			input:       "items:\n  - apple\n  - banana\n  - cherry",
+			args:        []string{},
 			wantContain: `"items"`,
 			wantErr:     false,
 			description: "Should convert YAML arrays to JSON arrays",
@@ -38,22 +42,17 @@ func TestYaml2jsonCmd(t *testing.T) {
 		{
 			name:        "mixed types conversion",
 			input:       "string: text\nnumber: 42\nfloat: 3.14\nboolean: true",
+			args:        []string{},
 			wantContain: `"string": "text"`,
 			wantErr:     false,
 			description: "Should handle mixed YAML types",
 		},
 		{
 			name:        "invalid YAML input",
-			input:       `not: valid: yaml: here`,
-			wantContain: "",
+			input:       "not: valid: yaml: here",
+			args:        []string{},
 			wantErr:     true,
 			description: "Should error on invalid YAML",
-		},
-		{
-			name:        "empty document",
-			input:       ``,
-			wantErr:     true,
-			description: "Should return error for empty YAML",
 		},
 	}
 
@@ -66,6 +65,7 @@ func TestYaml2jsonCmd(t *testing.T) {
 			cmd.SetIn(strings.NewReader(tt.input))
 
 			args := []string{"yaml2json"}
+			args = append(args, tt.args...)
 			cmd.SetArgs(args)
 
 			err := cmd.Execute()

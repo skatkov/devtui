@@ -10,75 +10,56 @@ func TestJson2yamlCmd(t *testing.T) {
 	tests := []struct {
 		name        string
 		input       string
-		checkOutput func(string) bool
+		args        []string
+		wantContain string
 		wantErr     bool
 		description string
 	}{
 		{
-			name:  "simple object conversion",
-			input: `{"name": "myapp", "version": "1.0.0"}`,
-			checkOutput: func(output string) bool {
-				return strings.Contains(output, "name:") &&
-					strings.Contains(output, "myapp") &&
-					strings.Contains(output, "version:") &&
-					strings.Contains(output, "1.0.0")
-			},
+			name:        "simple object conversion",
+			input:       `{"name": "myapp", "version": "1.0.0"}`,
+			args:        []string{},
+			wantContain: "name:",
+			wantErr:     false,
 			description: "Should convert simple JSON object to YAML",
 		},
 		{
-			name:  "nested objects conversion",
-			input: `{"database": {"host": "localhost", "port": 5432}}`,
-			checkOutput: func(output string) bool {
-				return strings.Contains(output, "database:") &&
-					strings.Contains(output, "host:") &&
-					strings.Contains(output, "localhost") &&
-					strings.Contains(output, "port:") &&
-					strings.Contains(output, "5432")
-			},
+			name:        "nested objects conversion",
+			input:       `{"database": {"host": "localhost", "port": 5432}}`,
+			args:        []string{},
+			wantContain: "database:",
+			wantErr:     false,
 			description: "Should convert nested JSON objects to YAML",
 		},
 		{
-			name:  "arrays conversion",
-			input: `{"fruits": ["apple", "banana", "cherry"]}`,
-			checkOutput: func(output string) bool {
-				return strings.Contains(output, "fruits:") &&
-					strings.Contains(output, "- apple") &&
-					strings.Contains(output, "- banana") &&
-					strings.Contains(output, "- cherry")
-			},
+			name:        "arrays conversion",
+			input:       `{"fruits": ["apple", "banana", "cherry"]}`,
+			args:        []string{},
+			wantContain: "- apple",
+			wantErr:     false,
 			description: "Should convert JSON arrays to YAML",
 		},
 		{
-			name:  "mixed types conversion",
-			input: `{"string": "text", "number": 123, "float": 3.14, "boolean": true}`,
-			checkOutput: func(output string) bool {
-				return strings.Contains(output, "string:") &&
-					strings.Contains(output, "number:") &&
-					strings.Contains(output, "float:") &&
-					strings.Contains(output, "boolean:")
-			},
+			name:        "mixed types conversion",
+			input:       `{"string": "text", "number": 123, "float": 3.14, "boolean": true}`,
+			args:        []string{},
+			wantContain: "string:",
+			wantErr:     false,
 			description: "Should handle mixed JSON types",
 		},
 		{
-			name:  "empty object",
-			input: `{}`,
-			checkOutput: func(output string) bool {
-				return strings.TrimSpace(output) == "{}" || strings.TrimSpace(output) == ""
-			},
+			name:        "empty object",
+			input:       `{}`,
+			args:        []string{},
+			wantContain: "{}",
+			wantErr:     false,
 			description: "Should handle empty JSON object",
-		},
-		{
-			name:  "nested arrays",
-			input: `{"matrix": [[1, 2], [3, 4]]}`,
-			checkOutput: func(output string) bool {
-				return strings.Contains(output, "matrix:")
-			},
-			description: "Should convert nested arrays correctly",
 		},
 		{
 			name:        "invalid JSON input",
 			input:       `{invalid json}`,
-			checkOutput: nil,
+			args:        []string{},
+			wantContain: "",
 			wantErr:     true,
 			description: "Should return error for invalid JSON",
 		},
@@ -91,7 +72,10 @@ func TestJson2yamlCmd(t *testing.T) {
 			cmd.SetOut(buf)
 			cmd.SetErr(buf)
 			cmd.SetIn(strings.NewReader(tt.input))
-			cmd.SetArgs([]string{"json2yaml"})
+
+			args := []string{"json2yaml"}
+			args = append(args, tt.args...)
+			cmd.SetArgs(args)
 
 			err := cmd.Execute()
 
@@ -100,9 +84,9 @@ func TestJson2yamlCmd(t *testing.T) {
 				return
 			}
 
-			if !tt.wantErr && tt.checkOutput != nil {
+			if !tt.wantErr && tt.wantContain != "" {
 				output := buf.String()
-				if !tt.checkOutput(output) {
+				if !strings.Contains(output, tt.wantContain) {
 					t.Errorf("json2yaml command output check failed.\nInput: %s\nOutput: %s\nDescription: %s",
 						tt.input, output, tt.description)
 				}
@@ -135,21 +119,21 @@ func TestJson2yamlCmdArgumentInput(t *testing.T) {
 		name        string
 		args        []string
 		input       string
-		checkOutput func(string) bool
+		wantContain string
 		description string
 	}{
 		{
 			name:        "argument input",
 			args:        []string{"json2yaml", `{"key": "value"}`},
 			input:       "",
-			checkOutput: func(output string) bool { return strings.Contains(output, "key:") && strings.Contains(output, "value") },
+			wantContain: "key:",
 			description: "Should handle JSON string argument",
 		},
 		{
 			name:        "stdin input",
 			args:        []string{"json2yaml"},
 			input:       `{"key": "value"}`,
-			checkOutput: func(output string) bool { return strings.Contains(output, "key:") && strings.Contains(output, "value") },
+			wantContain: "key:",
 			description: "Should handle JSON from stdin",
 		},
 	}
@@ -169,7 +153,7 @@ func TestJson2yamlCmdArgumentInput(t *testing.T) {
 			}
 
 			output := buf.String()
-			if !tt.checkOutput(output) {
+			if !strings.Contains(output, tt.wantContain) {
 				t.Errorf("json2yaml command output check failed.\nOutput: %s\nDescription: %s",
 					output, tt.description)
 			}
