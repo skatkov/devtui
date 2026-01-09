@@ -18,20 +18,20 @@ import (
 	base64encoder "github.com/skatkov/devtui/tui/base64-encoder"
 	cron "github.com/skatkov/devtui/tui/cron"
 	"github.com/skatkov/devtui/tui/css"
+	"github.com/skatkov/devtui/tui/csv2json"
 	"github.com/skatkov/devtui/tui/csv2md"
-	"github.com/skatkov/devtui/tui/csvjson"
 	graphqlquery "github.com/skatkov/devtui/tui/graphql-query"
 	"github.com/skatkov/devtui/tui/html"
 	"github.com/skatkov/devtui/tui/iban"
 	js "github.com/skatkov/devtui/tui/json"
+	"github.com/skatkov/devtui/tui/json2toml"
 	"github.com/skatkov/devtui/tui/json2toon"
 	"github.com/skatkov/devtui/tui/jsonrepair"
 	"github.com/skatkov/devtui/tui/jsonstruct"
-	"github.com/skatkov/devtui/tui/jsontoml"
 	"github.com/skatkov/devtui/tui/markdown"
 	"github.com/skatkov/devtui/tui/numbers"
 	"github.com/skatkov/devtui/tui/toml"
-	"github.com/skatkov/devtui/tui/tomljson"
+	"github.com/skatkov/devtui/tui/toml2json"
 	"github.com/skatkov/devtui/tui/tsv2md"
 	urlextractor "github.com/skatkov/devtui/tui/url-extractor"
 	uuiddecode "github.com/skatkov/devtui/tui/uuid-decode"
@@ -156,19 +156,19 @@ func getMenuOptions(common *ui.CommonModel) []MenuOption {
 			model: func() tea.Model { return yamlstruct.NewYamlStructModel(common) },
 		},
 		{
-			id:    "csvjson",
-			title: csvjson.Title,
-			model: func() tea.Model { return csvjson.NewCSVJsonModel(common) },
+			id:    "csv2json",
+			title: csv2json.Title,
+			model: func() tea.Model { return csv2json.NewCSVJsonModel(common) },
 		},
 		{
-			id:    "tomljson",
-			title: tomljson.Title,
-			model: func() tea.Model { return tomljson.NewTomlJsonModel(common) },
+			id:    "toml2json",
+			title: toml2json.Title,
+			model: func() tea.Model { return toml2json.NewTomlJsonModel(common) },
 		},
 		{
-			id:    "jsontoml",
-			title: jsontoml.Title,
-			model: func() tea.Model { return jsontoml.NewJsonTomlModel(common) },
+			id:    "json2toml",
+			title: json2toml.Title,
+			model: func() tea.Model { return json2toml.NewJsonTomlModel(common) },
 		},
 		{
 			id:    "json2toon",

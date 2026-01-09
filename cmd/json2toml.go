@@ -8,7 +8,7 @@ import (
 	"github.com/skatkov/devtui/internal/cmderror"
 	"github.com/skatkov/devtui/internal/input"
 	"github.com/skatkov/devtui/internal/ui"
-	"github.com/skatkov/devtui/tui/jsontoml"
+	"github.com/skatkov/devtui/tui/json2toml"
 	"github.com/spf13/cobra"
 )
 
@@ -54,7 +54,7 @@ results in an interactive terminal interface.`,
 				Height: 0,
 			}
 
-			model := jsontoml.NewJsonTomlModel(common)
+			model := json2toml.NewJsonTomlModel(common)
 			err = model.SetContent(string(data))
 			if err != nil {
 				return err
@@ -68,7 +68,7 @@ results in an interactive terminal interface.`,
 		}
 
 		inputStr := string(data)
-		result, err := jsontoml.Convert(inputStr)
+		result, err := json2toml.Convert(inputStr)
 		if err != nil {
 			return cmderror.FormatParseError("json2toml", inputStr, err)
 		}

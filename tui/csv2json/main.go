@@ -1,4 +1,4 @@
-package csvjson
+package csv2json
 
 import (
 	"bytes"

@@ -1,4 +1,4 @@
-package tomljson
+package toml2json
 
 import (
 	"bytes"
