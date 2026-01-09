@@ -5,8 +5,8 @@ import (
 	"fmt"
 
 	"github.com/skatkov/devtui/internal/cmderror"
+	"github.com/skatkov/devtui/internal/converter"
 	"github.com/skatkov/devtui/internal/input"
-	"github.com/skatkov/devtui/internal/yaml"
 	"github.com/spf13/cobra"
 )
 
@@ -40,7 +40,7 @@ Input can be a string argument or piped from stdin.`,
 		}
 
 		inputStr := string(data)
-		result, err := yaml.JSONToYAML(inputStr)
+		result, err := converter.JSONToYAML(inputStr)
 		if err != nil {
 			return cmderror.FormatParseError("json2yaml", inputStr, err)
 		}
