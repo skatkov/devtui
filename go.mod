@@ -12,14 +12,16 @@ require (
 	github.com/charmbracelet/glamour v0.10.0
 	github.com/charmbracelet/huh v0.8.0
 	github.com/charmbracelet/lipgloss v1.1.1-0.20250404203927-76690c660834
-	github.com/charmbracelet/x/editor v0.1.0
+	github.com/charmbracelet/x/editor v0.2.0
 	github.com/charmbracelet/x/term v0.2.2
+	github.com/clbanning/mxj/v2 v2.7.0
 	github.com/client9/csstool v0.2.2
 	github.com/go-xmlfmt/xmlfmt v1.1.3
 	github.com/google/uuid v1.6.0
 	github.com/hannes-sistemica/toon v0.0.0-20251027210156-1425a7c03d9a
 	github.com/jacoelho/banking v1.9.1
 	github.com/lnquy/cron v1.1.1
+	github.com/mattn/go-isatty v0.0.20
 	github.com/mattn/go-runewidth v0.0.19
 	github.com/muesli/ansi v0.0.0-20230316100256-276c6243b2f6
 	github.com/muesli/reflow v0.3.0
@@ -52,7 +54,6 @@ require (
 	github.com/charmbracelet/x/exp/strings v0.0.0-20251114205511-64e30b5ee1c5 // indirect
 	github.com/charmbracelet/x/termios v0.1.1 // indirect
 	github.com/charmbracelet/x/windows v0.2.2 // indirect
-	github.com/clbanning/mxj/v2 v2.7.0 // indirect
 	github.com/clipperhouse/displaywidth v0.5.0 // indirect
 	github.com/clipperhouse/stringish v0.1.1 // indirect
 	github.com/clipperhouse/uax29/v2 v2.3.0 // indirect
@@ -62,12 +63,12 @@ require (
 	github.com/erikgeiser/coninput v0.0.0-20211004153227-1c3628e74d0f // indirect
 	github.com/fatih/camelcase v1.0.0 // indirect
 	github.com/fatih/structtag v1.2.0 // indirect
+	github.com/google/go-cmp v0.7.0 // indirect
 	github.com/gorilla/css v1.0.1 // indirect
 	github.com/inconshreveable/mousetrap v1.1.0 // indirect
 	github.com/kr/pretty v0.3.1 // indirect
 	github.com/lucasb-eyer/go-colorful v1.3.0 // indirect
 	github.com/mailru/easyjson v0.7.7 // indirect
-	github.com/mattn/go-isatty v0.0.20 // indirect
 	github.com/mattn/go-localereader v0.0.1 // indirect
 	github.com/microcosm-cc/bluemonday v1.0.27 // indirect
 	github.com/mitchellh/hashstructure/v2 v2.0.2 // indirect
