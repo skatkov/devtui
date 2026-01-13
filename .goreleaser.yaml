@@ -81,9 +81,9 @@ release:
     name: devtui
   name_template: "devtui-{{ .Tag }}"
   mode: keep-existing
-homebrew_casks:
-  - description: "A Swiss Army knife for developers"
-    name: devtui
+brews:
+  - name: devtui
+    homepage: https://devtui.com
     repository:
       owner: skatkov
       name: homebrew-tap
