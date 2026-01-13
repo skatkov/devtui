@@ -27,6 +27,31 @@ url: "https://devtui.com" # the base hostname & protocol for your site, e.g. htt
 twitter_username: 5katkov
 github_username: skatkov
 
+author:
+  fullname: Stanislav Katkov
+  github: skatkov
+  twitter: 5katkov
+
+keep_files: ["assets/images/og"]
+
+og_image:
+  collections: ["pages"]
+  output_dir: "assets/images/og"
+  domain: "devtui.com"
+  canvas:
+    width: 1200
+    height: 630
+    background_color: "#ffffff"
+  header:
+    font_family: "monospace"
+    color: "#1f2937"
+  content:
+    font_family: "sans-serif"
+    color: "#6b7280"
+  border_bottom:
+    width: 8
+    fill: ["#1f2937"]
+
 defaults:
   - values:
       layout: "default"
@@ -35,6 +60,8 @@ defaults:
 theme: just-the-docs
 plugins:
   - jekyll-feed
+  - jekyll-seo-tag
+  - jekyll-og-image
 # Exclude from processing.
 # The following items will not be processed, by default.
 # Any item listed under the `exclude:` key here will be automatically added to
