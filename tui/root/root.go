@@ -12,9 +12,31 @@ type RootModel struct {
 	listModel   *listModel
 }
 
+// RootScreen creates the root model using the default renderer.
+// This is used for local terminal execution.
 func RootScreen() RootModel {
 	common := ui.CommonModel{LastSelectedItem: 0}
 	common.Lg = lipgloss.DefaultRenderer()
+	common.Styles = ui.NewStyle(common.Lg)
+
+	listModel := newListModel(&common)
+	return RootModel{
+		common:      &common,
+		currentView: listModel,
+		listModel:   listModel,
+	}
+}
+
+// RootScreenWithRenderer creates the root model using a custom renderer.
+// This is used for SSH sessions where the renderer must be session-aware
+// to properly detect the client's terminal capabilities.
+func RootScreenWithRenderer(lg *lipgloss.Renderer, width, height int) RootModel {
+	common := ui.CommonModel{
+		LastSelectedItem: 0,
+		Width:            width,
+		Height:           height,
+	}
+	common.Lg = lg
 	common.Styles = ui.NewStyle(common.Lg)
 
 	listModel := newListModel(&common)
