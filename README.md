@@ -20,6 +20,10 @@ All-in-one terminal toolkit that consolidates everyday developer utilities into 
 ```
 brew install skatkov/tap/devtui
 ```
+### FreeBSD
+```
+pkg install devtui
+```
 ### Download Executable
 
 Or download executable from [GitHub Releases](https://github.com/skatkov/devtui/releases)
