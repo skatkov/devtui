@@ -21,6 +21,7 @@ All-in-one terminal toolkit that consolidates everyday developer utilities into 
 brew install skatkov/tap/devtui
 ```
 ### FreeBSD
+Maintained by nice people (here)[https://cgit.freebsd.org/ports/tree/sysutils/devtui/Makefile]
 ```
 pkg install devtui
 ```
