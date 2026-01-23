@@ -34,6 +34,16 @@ Or download executable from [GitHub Releases](https://github.com/skatkov/devtui/
 
 ---
 
+## MCP
+
+Run DevTUI as an MCP server over stdio:
+
+```bash
+devtui mcp
+```
+
+---
+
 ## Documentation Generator
 
 DevTUI includes automated documentation generators for both CLI and TUI interfaces (not complete yet, though).
