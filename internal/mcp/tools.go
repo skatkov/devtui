@@ -7,12 +7,25 @@ import (
 	"github.com/spf13/pflag"
 )
 
+var blockedToolNames = map[string]struct{}{
+	"devtui.completion.bash":       {},
+	"devtui.completion.fish":       {},
+	"devtui.completion.powershell": {},
+	"devtui.completion.zsh":        {},
+	"devtui.mcp":                   {},
+	"devtui.serve":                 {},
+	"devtui.version":               {},
+}
+
 func BuildTools(root *cobra.Command) []ToolSchema {
 	var tools []ToolSchema
 	var walk func(cmd *cobra.Command, path []string)
 	walk = func(cmd *cobra.Command, path []string) {
 		if cmd.IsAvailableCommand() && !cmd.HasSubCommands() {
 			name := "devtui." + strings.Join(path, ".")
+			if isBlockedTool(name) {
+				return
+			}
 			tools = append(tools, ToolSchema{
 				Name:        name,
 				Description: cmd.Short,
@@ -34,6 +47,11 @@ func BuildTools(root *cobra.Command) []ToolSchema {
 	}
 
 	return tools
+}
+
+func isBlockedTool(name string) bool {
+	_, exists := blockedToolNames[name]
+	return exists
 }
 
 func buildSchema(cmd *cobra.Command) JSONSchema {

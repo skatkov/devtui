@@ -11,6 +11,9 @@ import (
 )
 
 func ExecuteTool(root *cobra.Command, params CallParams) (output string, err error) {
+	if isBlockedTool(params.Name) {
+		return "", fmt.Errorf("tool not available")
+	}
 	cmdPath := strings.TrimPrefix(params.Name, "devtui.")
 	args := []string{}
 	if cmdPath != "" {
