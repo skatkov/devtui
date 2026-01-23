@@ -3,4 +3,4 @@ dist/*
 _site/*
 devtui
 .idea
-.worktree/*
+.worktrees
