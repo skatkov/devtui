@@ -20,3 +20,19 @@ func TestMCPCommandListsTools(t *testing.T) {
 		t.Fatalf("expected output")
 	}
 }
+
+func TestMCPCommandInitialize(t *testing.T) {
+	cmd := GetRootCmd()
+	buf := new(bytes.Buffer)
+	cmd.SetOut(buf)
+	cmd.SetErr(buf)
+	cmd.SetIn(bytes.NewBufferString("{\"id\":1,\"method\":\"initialize\"}\n"))
+	cmd.SetArgs([]string{"mcp"})
+
+	if err := cmd.Execute(); err != nil {
+		t.Fatalf("execute failed: %v", err)
+	}
+	if buf.Len() == 0 {
+		t.Fatalf("expected output")
+	}
+}

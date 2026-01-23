@@ -14,3 +14,8 @@ type ToolSchema struct {
 	Description string     `json:"description,omitempty"`
 	InputSchema JSONSchema `json:"inputSchema"`
 }
+
+type ServerInfo struct {
+	Name    string `json:"name"`
+	Version string `json:"version"`
+}

@@ -12,7 +12,11 @@ var mcpCmd = &cobra.Command{
 		tools := mcp.BuildTools(GetRootCmd())
 		server := mcp.NewServer(mcp.ServerConfig{
 			Tools: tools,
-			Call: func(name string, params mcp.CallParams) (string, error) {
+			ServerInfo: mcp.ServerInfo{
+				Name:    "devtui",
+				Version: GetVersion(),
+			},
+			Call: func(_ string, params mcp.CallParams) (string, error) {
 				root := GetRootCmd()
 				return mcp.ExecuteTool(root, params)
 			},
