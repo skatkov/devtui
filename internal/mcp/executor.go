@@ -10,7 +10,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func ExecuteTool(root *cobra.Command, params CallParams) (string, error) {
+func ExecuteTool(root *cobra.Command, params CallParams) (output string, err error) {
 	cmdPath := strings.TrimPrefix(params.Name, "devtui.")
 	args := []string{}
 	if cmdPath != "" {
@@ -28,14 +28,24 @@ func ExecuteTool(root *cobra.Command, params CallParams) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	defer stdoutReader.Close()
+	defer func() {
+		if closeErr := stdoutReader.Close(); closeErr != nil && err == nil {
+			err = closeErr
+		}
+	}()
 
 	stderrReader, stderrWriter, err := os.Pipe()
 	if err != nil {
-		stdoutWriter.Close()
+		if closeErr := stdoutWriter.Close(); closeErr != nil {
+			return "", closeErr
+		}
 		return "", err
 	}
-	defer stderrReader.Close()
+	defer func() {
+		if closeErr := stderrReader.Close(); closeErr != nil && err == nil {
+			err = closeErr
+		}
+	}()
 
 	stdoutDone := make(chan error, 1)
 	stderrDone := make(chan error, 1)
@@ -60,8 +70,12 @@ func ExecuteTool(root *cobra.Command, params CallParams) (string, error) {
 
 	execErr := root.Execute()
 
-	_ = stdoutWriter.Close()
-	_ = stderrWriter.Close()
+	if closeErr := stdoutWriter.Close(); closeErr != nil && err == nil {
+		err = closeErr
+	}
+	if closeErr := stderrWriter.Close(); closeErr != nil && err == nil {
+		err = closeErr
+	}
 	os.Stdout = origStdout
 	os.Stderr = origStderr
 
