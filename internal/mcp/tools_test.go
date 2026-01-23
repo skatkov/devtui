@@ -1,14 +1,15 @@
-package mcp
+package mcp_test
 
 import (
 	"testing"
 
 	"github.com/skatkov/devtui/cmd"
+	"github.com/skatkov/devtui/internal/mcp"
 )
 
 func TestBuildToolsFromCobra(t *testing.T) {
 	root := cmd.GetRootCmd()
-	tools := BuildTools(root)
+	tools := mcp.BuildTools(root)
 
 	if len(tools) == 0 {
 		t.Fatalf("expected tools")
