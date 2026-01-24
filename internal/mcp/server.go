@@ -28,6 +28,17 @@ type CallParams struct {
 	Flags map[string]string `json:"flags,omitempty"`
 }
 
+type ToolCallParams struct {
+	Name      string            `json:"name"`
+	Arguments ToolCallArguments `json:"arguments,omitempty"`
+}
+
+type ToolCallArguments struct {
+	Input string            `json:"input,omitempty"`
+	Args  []string          `json:"args,omitempty"`
+	Flags map[string]string `json:"flags,omitempty"`
+}
+
 type ServerConfig struct {
 	Tools           []ToolSchema
 	Call            func(name string, args CallParams) (string, error)
@@ -85,12 +96,18 @@ func (s *Server) HandleRequest(req Request) Response {
 			},
 		}}
 	case "tools/call":
-		var params CallParams
-		if err := json.Unmarshal(req.Params, &params); err != nil {
+		var toolParams ToolCallParams
+		if err := json.Unmarshal(req.Params, &toolParams); err != nil {
 			return Response{JSONRPC: "2.0", ID: req.ID, Error: &ErrorObject{Code: -32602, Message: "invalid params"}}
 		}
 		if s.call == nil {
 			return Response{JSONRPC: "2.0", ID: req.ID, Error: &ErrorObject{Code: -32603, Message: "call not configured"}}
+		}
+		params := CallParams{
+			Name:  toolParams.Name,
+			Input: toolParams.Arguments.Input,
+			Args:  toolParams.Arguments.Args,
+			Flags: toolParams.Arguments.Flags,
 		}
 		result, err := s.call(params.Name, params)
 		if err != nil {

@@ -24,6 +24,10 @@ func ExecuteTool(root *cobra.Command, params CallParams) (output string, err err
 	}
 	args = append(args, params.Args...)
 
+	if cmdPath == "count" {
+		args = append(args, "--json")
+	}
+
 	stdoutBuf := &bytes.Buffer{}
 	stderrBuf := &bytes.Buffer{}
 

@@ -36,8 +36,11 @@ func TestHandleToolsCall(t *testing.T) {
 		},
 	})
 
-	params := CallParams{Name: "devtui.base64", Input: "hello"}
-	data, _ := json.Marshal(params)
+	toolCallParams := ToolCallParams{
+		Name:      "devtui.base64",
+		Arguments: ToolCallArguments{Input: "hello"},
+	}
+	data, _ := json.Marshal(toolCallParams)
 	resp := server.HandleRequest(Request{ID: 2, Method: "tools/call", Params: data})
 
 	if resp.Error != nil {

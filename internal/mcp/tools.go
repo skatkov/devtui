@@ -63,7 +63,11 @@ func buildSchema(cmd *cobra.Command) JSONSchema {
 	schema.Properties["args"] = JSONSchema{Type: "array"}
 
 	cmd.Flags().VisitAll(func(flag *pflag.Flag) {
-		schema.Properties[flag.Name] = JSONSchema{
+		flagName := flag.Name
+		if flagName == "json" {
+			return
+		}
+		schema.Properties[flagName] = JSONSchema{
 			Type:        flagType(flag.Value.Type()),
 			Description: flag.Usage,
 			Default:     flag.DefValue,
