@@ -5,6 +5,7 @@ import (
 	"testing"
 
 	"github.com/google/uuid"
+	"github.com/skatkov/devtui/internal/uuidutil"
 )
 
 func TestExtractUUIDData(t *testing.T) {
@@ -70,7 +71,7 @@ func TestExtractUUIDData(t *testing.T) {
 	// Run tests
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got := extractUUIDData(tt.uuid)
+			got := uuidutil.FieldsToRows(uuidutil.Decode(tt.uuid))
 			if !reflect.DeepEqual(got, tt.expected) {
 				t.Errorf("\nTest: %s\nGot:\n", tt.name)
 				for _, row := range got {

@@ -12,7 +12,7 @@ import (
 	"github.com/skatkov/devtui/internal/clipboard"
 	"github.com/skatkov/devtui/internal/editor"
 	"github.com/skatkov/devtui/internal/ui"
-	"gopkg.in/yaml.v3"
+	"github.com/skatkov/devtui/internal/yamlfmt"
 )
 
 const Title = "YAML Formatter"
@@ -98,11 +98,11 @@ func (m YamlModel) View() string {
 
 func (m *YamlModel) SetContent(content string) error {
 	m.Content = content
-	var err error
-	m.FormattedContent, err = formatYAML(content)
+	formattedContent, err := yamlfmt.Format(content)
 	if err != nil {
 		return err
 	}
+	m.FormattedContent = formattedContent
 	var buf bytes.Buffer
 
 	err = quick.Highlight(&buf, m.FormattedContent, "yaml", "terminal", "nord")
@@ -148,21 +148,4 @@ func (m YamlModel) helpView() (s string) {
 	}
 
 	return ui.HelpViewStyle(s)
-}
-
-func formatYAML(content string) (string, error) {
-	var data any
-	if err := yaml.Unmarshal([]byte(content), &data); err != nil {
-		return "", err
-	}
-
-	var buf bytes.Buffer
-	// Create encoder with buffer as the output writer
-	formatter := yaml.NewEncoder(&buf)
-
-	if err := formatter.Encode(data); err != nil {
-		return "", err
-	}
-
-	return buf.String(), nil
 }

@@ -11,6 +11,7 @@ import (
 	"github.com/charmbracelet/lipgloss/table"
 	"github.com/google/uuid"
 	"github.com/skatkov/devtui/internal/ui"
+	"github.com/skatkov/devtui/internal/uuidutil"
 
 	tea "github.com/charmbracelet/bubbletea"
 )
@@ -132,7 +133,7 @@ func (m *UUIDGenerate) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 		if m.form.State == huh.StateCompleted {
 			var err error
-			m.generatedUUID, err = m.generateUUID()
+			m.generatedUUID, err = uuidutil.Generate(m.version, m.namespace)
 			if err != nil {
 				// Handle error appropriately
 				fmt.Println("Error generating UUID:", err)
@@ -140,25 +141,4 @@ func (m *UUIDGenerate) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		}
 	}
 	return m, cmd
-}
-
-func (m *UUIDGenerate) generateUUID() (uuid.UUID, error) {
-	switch m.version {
-	case 1:
-		return uuid.NewUUID()
-	case 2:
-		return uuid.NewDCEGroup()
-	case 3:
-		return uuid.NewMD5(uuid.NameSpaceURL, []byte(m.namespace)), nil
-	case 4:
-		return uuid.NewRandom()
-	case 5:
-		return uuid.NewSHA1(uuid.NameSpaceURL, []byte(m.namespace)), nil
-	case 6:
-		return uuid.NewV6()
-	case 7:
-		return uuid.NewV7()
-	default:
-		return uuid.Nil, fmt.Errorf("unsupported UUID version: %d", m.version)
-	}
 }

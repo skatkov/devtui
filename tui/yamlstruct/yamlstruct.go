@@ -3,7 +3,6 @@ package yamlstruct
 import (
 	"bytes"
 	"fmt"
-	"io"
 	"strings"
 
 	"github.com/alecthomas/chroma/quick"
@@ -12,8 +11,8 @@ import (
 
 	"github.com/skatkov/devtui/internal/clipboard"
 	"github.com/skatkov/devtui/internal/editor"
+	structgen "github.com/skatkov/devtui/internal/structgen"
 	"github.com/skatkov/devtui/internal/ui"
-	"github.com/twpayne/go-jsonstruct/v3"
 )
 
 const Title = "YAML to Go Struct Converter"
@@ -101,13 +100,11 @@ func (m YamlStructModel) View() string {
 
 func (m *YamlStructModel) SetContent(content string) error {
 	m.Content = content
-	contentReader := strings.NewReader(content)
-	convertedBytes, err := yaml2Struct(contentReader)
+	converted, err := structgen.YAMLToGoStruct(strings.NewReader(content))
 	if err != nil {
 		return err
-	} else {
-		m.FormattedContent = string(convertedBytes)
 	}
+	m.FormattedContent = converted
 	var buf bytes.Buffer
 
 	err = quick.Highlight(&buf, m.FormattedContent, "go", "terminal", "nord")
@@ -152,22 +149,4 @@ func (m YamlStructModel) helpView() (s string) {
 	}
 
 	return ui.HelpViewStyle(s)
-}
-
-func yaml2Struct(input io.Reader) ([]byte, error) {
-	options := []jsonstruct.GeneratorOption{
-		jsonstruct.WithSkipUnparsableProperties(true),
-		jsonstruct.WithStructTagName("yaml"),
-		jsonstruct.WithGoFormat(true),
-		jsonstruct.WithOmitEmptyTags(jsonstruct.OmitEmptyTagsAuto),
-		jsonstruct.WithTypeName("Root"),
-	}
-
-	generator := jsonstruct.NewGenerator(options...)
-
-	if err := generator.ObserveYAMLReader(input); err != nil {
-		return nil, err
-	}
-
-	return generator.Generate()
 }

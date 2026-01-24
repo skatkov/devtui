@@ -11,8 +11,8 @@ import (
 
 	"github.com/skatkov/devtui/internal/clipboard"
 	"github.com/skatkov/devtui/internal/editor"
+	"github.com/skatkov/devtui/internal/htmlfmt"
 	"github.com/skatkov/devtui/internal/ui"
-	"github.com/yosssi/gohtml"
 )
 
 const Title = "HTML Formatter"
@@ -98,7 +98,7 @@ func (m HTMLFormatterModel) View() string {
 
 func (m *HTMLFormatterModel) SetContent(content string) error {
 	m.Content = content
-	m.FormattedContent = gohtml.Format(content)
+	m.FormattedContent = htmlfmt.Format(content)
 
 	var buf bytes.Buffer
 	err := quick.Highlight(&buf, m.FormattedContent, "html", "terminal", "nord")
