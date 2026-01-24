@@ -5,11 +5,11 @@ parent: CLI
 
 ## devtui json2toon
 
-Convert JSON to TOON (Token-Oriented Object Notation)
+Convert JSON to TOON
 
 ### Synopsis
 
-Convert JSON to TOON (Token-Oriented Object Notation) - a compact, human-readable
+Convert JSON to TOON - a compact, human-readable
 format designed for passing structured data to Large Language Models with significantly
 reduced token usage (typically 30-60% fewer tokens than JSON).
 

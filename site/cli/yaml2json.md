@@ -9,7 +9,7 @@ Convert YAML to JSON format
 
 ### Synopsis
 
-Convert YAML (YAML Ain't Markup Language) to JSON (JavaScript Object Notation) format.
+Convert YAML to JSON format.
 
 Input can be a string argument or piped from stdin.
 

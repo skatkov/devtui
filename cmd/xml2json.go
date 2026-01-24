@@ -13,7 +13,7 @@ import (
 var xml2jsonCmd = &cobra.Command{
 	Use:   "xml2json [string or file]",
 	Short: "Convert XML to JSON format",
-	Long: `Convert XML (Extensible Markup Language) to JSON (JavaScript Object Notation) format.
+	Long: `Convert XML to JSON format.
 
 Input can be a string argument or piped from stdin.`,
 	Example: `  # Convert XML from stdin

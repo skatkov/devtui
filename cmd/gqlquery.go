@@ -18,7 +18,7 @@ import (
 var gqlfmtCmd = &cobra.Command{
 	Use:   "gqlquery [string or file]",
 	Short: "Format and prettify GraphQL queries",
-	Long: `Format and prettify GraphQL queries for better readability with customizable formatting options.
+	Long: `Format and prettify GraphQL queries for better readability.
 
 By default, uses 2-space indentation and omits descriptions. Use flags to customize
 indentation, include comments, or include descriptions. Input can be a string argument

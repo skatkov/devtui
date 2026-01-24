@@ -9,7 +9,7 @@ Format and prettify TOML files
 
 ### Synopsis
 
-Format and prettify TOML (Tom's Obvious Minimal Language) files with proper indentation.
+Format and prettify TOML files with proper indentation.
 
 Input can be a string argument or piped from stdin. Use --tui flag to view results
 in an interactive terminal interface.

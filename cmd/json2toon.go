@@ -12,8 +12,8 @@ import (
 
 var json2toonCmd = &cobra.Command{
 	Use:   "json2toon",
-	Short: "Convert JSON to TOON (Token-Oriented Object Notation)",
-	Long: `Convert JSON to TOON (Token-Oriented Object Notation) - a compact, human-readable
+	Short: "Convert JSON to TOON",
+	Long: `Convert JSON to TOON - a compact, human-readable
 format designed for passing structured data to Large Language Models with significantly
 reduced token usage (typically 30-60% fewer tokens than JSON).`,
 	Example: `  devtui json2toon < example.json                    # Convert with defaults

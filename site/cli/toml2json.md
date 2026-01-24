@@ -9,7 +9,7 @@ Convert TOML to JSON format
 
 ### Synopsis
 
-Convert TOML (Tom's Obvious Minimal Language) to JSON format.
+Convert TOML to JSON format.
 
 Input can be a string argument or piped from stdin. Use --tui flag to view results
 in an interactive terminal interface.

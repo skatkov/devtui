@@ -9,7 +9,7 @@ Convert JSON to XML format
 
 ### Synopsis
 
-Convert JSON (JavaScript Object Notation) to XML (Extensible Markup Language) format.
+Convert JSON to XML format.
 
 Input can be a string argument or piped from stdin.
 

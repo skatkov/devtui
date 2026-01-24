@@ -13,7 +13,7 @@ import (
 var toml2yamlCmd = &cobra.Command{
 	Use:   "toml2yaml [string or file]",
 	Short: "Convert TOML to YAML format",
-	Long: `Convert TOML (Tom's Obvious Minimal Language) to YAML (YAML Ain't Markup Language) format.
+	Long: `Convert TOML to YAML format.
 
 Input can be a string argument or piped from stdin.`,
 	Example: `  # Convert TOML from stdin

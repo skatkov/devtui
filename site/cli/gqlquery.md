@@ -9,7 +9,7 @@ Format and prettify GraphQL queries
 
 ### Synopsis
 
-Format and prettify GraphQL queries for better readability with customizable formatting options.
+Format and prettify GraphQL queries for better readability.
 
 By default, uses 2-space indentation and omits descriptions. Use flags to customize
 indentation, include comments, or include descriptions. Input can be a string argument

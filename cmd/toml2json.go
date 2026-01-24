@@ -14,7 +14,7 @@ import (
 var toml2jsonCmd = &cobra.Command{
 	Use:   "toml2json [string or file]",
 	Short: "Convert TOML to JSON format",
-	Long: `Convert TOML (Tom's Obvious Minimal Language) to JSON format.
+	Long: `Convert TOML to JSON format.
 
 Input can be a string argument or piped from stdin. Use --tui flag to view results
 in an interactive terminal interface.`,
