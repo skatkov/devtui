@@ -10,6 +10,7 @@ import (
 	"github.com/charmbracelet/huh"
 	"github.com/charmbracelet/lipgloss"
 	"github.com/charmbracelet/lipgloss/table"
+	"github.com/skatkov/devtui/internal/numbers"
 	"github.com/skatkov/devtui/internal/ui"
 
 	tea "github.com/charmbracelet/bubbletea"
@@ -20,52 +21,44 @@ const Title = "Number Base Converter"
 type NumbersModel struct {
 	common *ui.CommonModel
 	form   *huh.Form
-	value  int64
-	base   NumberBase
+	base   numbers.Base
 	input  string
+	result numbers.Result
 }
-
-type NumberBase struct {
-	title string
-	base  int
-}
-
-var (
-	Base2            = NumberBase{title: "Base 2 (binary)", base: 2}
-	Base8            = NumberBase{title: "Base 8 (octal)", base: 8}
-	Base10           = NumberBase{title: "Base 10 (decimal)", base: 10}
-	Base16           = NumberBase{title: "Base 16 (hexadecimal)", base: 16}
-	ReturnedBaseList = []NumberBase{Base2, Base8, Base10, Base16}
-)
 
 func NewNumberModel(common *ui.CommonModel) NumbersModel {
 	m := NumbersModel{
 		common: common,
+		base:   numbers.DefaultBase(),
 	}
 	accessible, _ := strconv.ParseBool(os.Getenv("ACCESSIBLE"))
 
+	options := make([]huh.Option[numbers.Base], 0, len(numbers.Bases))
+	defaultBase := numbers.DefaultBase()
+	for _, base := range numbers.Bases {
+		option := huh.NewOption(base.Label, base)
+		if base.Base == defaultBase.Base {
+			option = option.Selected(true)
+		}
+		options = append(options, option)
+	}
+
 	m.form = huh.NewForm(
 		huh.NewGroup(
-			huh.NewSelect[NumberBase]().
+			huh.NewSelect[numbers.Base]().
 				Key("base").
-				Options(
-					huh.NewOption(Base2.title, Base2),
-					huh.NewOption(Base8.title, Base8),
-					huh.NewOption(Base10.title, Base10).Selected(true),
-					huh.NewOption(Base16.title, Base16),
-				).
+				Options(options...).
 				Title("Select Base").Value(&m.base),
 			huh.NewInput().
 				Key("input").
-				Placeholder(fmt.Sprintf("Enter a %s number", m.base.title)).
+				Placeholder(fmt.Sprintf("Enter a %s number", m.base.Label)).
 				Title("Enter a number").
 				Validate(func(s string) error {
 					if len(s) == 0 {
 						return errors.New("number cannot be empty")
 					}
-					_, err := strconv.ParseInt(s, m.base.base, 64)
-					if err != nil {
-						return fmt.Errorf("please enter a valid %s number", m.base.title)
+					if _, err := numbers.Parse(s, m.base.Base); err != nil {
+						return fmt.Errorf("please enter a valid %s number", m.base.Label)
 					}
 					return nil
 				}).Value(&m.input),
@@ -107,9 +100,10 @@ func (m NumbersModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 		// If the form is completed, parse the input value
 		if m.form.State == huh.StateCompleted {
-			if base, ok := m.form.Get("base").(NumberBase); ok {
-				if val, err := strconv.ParseInt(m.form.GetString("input"), base.base, 64); err == nil {
-					m.value = val
+			if base, ok := m.form.Get("base").(numbers.Base); ok {
+				result, err := numbers.Convert(m.form.GetString("input"), base.Base)
+				if err == nil {
+					m.result = result
 				}
 			}
 		}
@@ -124,11 +118,11 @@ func (m NumbersModel) View() string {
 	s := m.common.Styles
 	switch m.form.State {
 	case huh.StateCompleted:
-		rows := make([][]string, len(ReturnedBaseList))
-		for i, numberBase := range ReturnedBaseList {
+		rows := make([][]string, len(m.result.Conversions))
+		for i, conversion := range m.result.Conversions {
 			rows[i] = []string{
-				numberBase.title,
-				strconv.FormatInt(m.value, numberBase.base),
+				conversion.Label,
+				conversion.Value,
 			}
 		}
 		t := table.New().
