@@ -25,13 +25,7 @@ builds:
     goos:
       - darwin
       - linux
-      - windows
     binary: devtui
-    ignore:
-      - goos: windows
-        goarch: arm64
-      - goos: windows
-        goarm: "7"
 changelog:
   sort: asc
   use: git
@@ -66,8 +60,6 @@ archives:
       {{- else }}{{ .Arch }}{{ end }}
       {{- if .Arm }}v{{ .Arm }}{{ end }}
     format_overrides:
-      - goos: windows
-        formats: ["zip"]
 
 snapshot:
   version_template: "{{ incpatch .Version }}-next"
