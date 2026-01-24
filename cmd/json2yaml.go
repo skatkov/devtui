@@ -13,7 +13,7 @@ import (
 var json2yamlCmd = &cobra.Command{
 	Use:   "json2yaml [string or file]",
 	Short: "Convert JSON to YAML format",
-	Long: `Convert JSON (JavaScript Object Notation) to YAML (YAML Ain't Markup Language) format.
+	Long: `Convert JSON to YAML format.
 
 Input can be a string argument or piped from stdin.`,
 	Example: `  # Convert JSON from stdin

@@ -15,7 +15,7 @@ import (
 var json2tomlCmd = &cobra.Command{
 	Use:   "json2toml [string or file]",
 	Short: "Convert JSON to TOML format",
-	Long: `Convert JSON (JavaScript Object Notation) to TOML (Tom's Obvious Minimal Language) format.
+	Long: `Convert JSON to TOML format.
 
 Input can be a string argument or piped from stdin. JSON numbers are preserved
 as integers when appropriate (not converted to floats). Use --tui flag to view

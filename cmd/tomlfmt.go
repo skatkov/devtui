@@ -14,7 +14,7 @@ import (
 var tomlfmtCmd = &cobra.Command{
 	Use:   "tomlfmt [string or file]",
 	Short: "Format and prettify TOML files",
-	Long: `Format and prettify TOML (Tom's Obvious Minimal Language) files with proper indentation.
+	Long: `Format and prettify TOML files with proper indentation.
 
 Input can be a string argument or piped from stdin. Use --tui flag to view results
 in an interactive terminal interface.`,

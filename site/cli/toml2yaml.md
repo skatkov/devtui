@@ -9,7 +9,7 @@ Convert TOML to YAML format
 
 ### Synopsis
 
-Convert TOML (Tom's Obvious Minimal Language) to YAML (YAML Ain't Markup Language) format.
+Convert TOML to YAML format.
 
 Input can be a string argument or piped from stdin.
 

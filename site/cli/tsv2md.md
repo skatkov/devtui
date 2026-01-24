@@ -9,7 +9,7 @@ Convert TSV to Markdown table format
 
 ### Synopsis
 
-Convert TSV (Tab-Separated Values) to Markdown table format for documentation.
+Convert TSV to Markdown table format for documentation.
 
 Input can be piped from stdin or read from a file. Use --align to align column widths
 and --header to add a main heading (h1) to the output.

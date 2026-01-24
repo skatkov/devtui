@@ -16,7 +16,7 @@ import (
 var tsv2mdCmd = &cobra.Command{
 	Use:   "tsv2md [string or file]",
 	Short: "Convert TSV to Markdown table format",
-	Long: `Convert TSV (Tab-Separated Values) to Markdown table format for documentation.
+	Long: `Convert TSV to Markdown table format for documentation.
 
 Input can be piped from stdin or read from a file. Use --align to align column widths
 and --header to add a main heading (h1) to the output.`,

@@ -13,7 +13,7 @@ import (
 var csv2jsonCmd = &cobra.Command{
 	Use:   "csv2json [string or file]",
 	Short: "Convert CSV to JSON",
-	Long: `Convert CSV (Comma-Separated Values) into formatted JSON.
+	Long: `Convert CSV into formatted JSON.
 
 Input can be a string argument or piped from stdin.`,
 	Example: `  # Convert CSV from stdin
