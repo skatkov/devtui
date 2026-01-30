@@ -1,7 +1,9 @@
+//go:build mcp
+
 package cmd
 
 import (
-	"github.com/skatkov/devtui/internal/mcp"
+	mcp "github.com/skatkov/devtui-mcp"
 	"github.com/spf13/cobra"
 )
 

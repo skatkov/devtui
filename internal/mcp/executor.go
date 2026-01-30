@@ -102,3 +102,10 @@ func ExecuteTool(root *cobra.Command, params CallParams) (output string, err err
 
 	return stdoutBuf.String(), nil
 }
+
+func isBlockedTool(name string) bool {
+	if name == "devtui.completion" || strings.HasPrefix(name, "devtui.completion.") {
+		return true
+	}
+	return name == "devtui.version"
+}

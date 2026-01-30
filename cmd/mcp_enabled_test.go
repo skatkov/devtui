@@ -1,3 +1,5 @@
+//go:build mcp
+
 package cmd
 
 import (
