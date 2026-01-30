@@ -11,42 +11,35 @@ func TestBuildToolsFromCobra(t *testing.T) {
 	root := cmd.GetRootCmd()
 	tools := mcp.BuildTools(root)
 
-	if len(tools) == 0 {
-		t.Fatalf("expected tools")
+	if len(tools) != 2 {
+		t.Fatalf("expected 2 tools, got %d", len(tools))
 	}
 
-	found := false
+	seen := map[string]bool{}
 	for _, tool := range tools {
-		if tool.Name == "devtui.jsonfmt" {
-			found = true
-			if tool.InputSchema.Type != "object" {
-				t.Fatalf("expected object schema")
-			}
+		seen[tool.Name] = true
+		if tool.InputSchema.Type != "object" {
+			t.Fatalf("expected object schema")
 		}
 	}
 
-	if !found {
-		t.Fatalf("expected devtui.jsonfmt tool")
+	if !seen["devtui.json2toon"] || !seen["devtui.jsonrepair"] {
+		t.Fatalf("expected json2toon and jsonrepair tools")
 	}
 }
 
-func TestBuildToolsFiltersBlocked(t *testing.T) {
+func TestBuildToolsUsesAllowList(t *testing.T) {
 	root := cmd.GetRootCmd()
 	tools := mcp.BuildTools(root)
 
-	blocked := map[string]struct{}{
-		"devtui.completion.bash":       {},
-		"devtui.completion.fish":       {},
-		"devtui.completion.powershell": {},
-		"devtui.completion.zsh":        {},
-		"devtui.mcp":                   {},
-		"devtui.serve":                 {},
-		"devtui.version":               {},
+	allowed := map[string]struct{}{
+		"devtui.json2toon":  {},
+		"devtui.jsonrepair": {},
 	}
 
 	for _, tool := range tools {
-		if _, exists := blocked[tool.Name]; exists {
-			t.Fatalf("expected %s to be filtered", tool.Name)
+		if _, exists := allowed[tool.Name]; !exists {
+			t.Fatalf("unexpected tool %s", tool.Name)
 		}
 	}
 }
