@@ -42,6 +42,13 @@ Run DevTUI as an MCP server over stdio:
 devtui mcp
 ```
 
+### MCP build
+To include the MCP server, build with:
+
+```bash
+go build -tags mcp ./...
+```
+
 ### Claude Code
 
 Add DevTUI as an MCP server in `~/.claude/claude.json`:
