@@ -120,6 +120,9 @@ or piped from stdin.`,
 		f := formatter.NewFormatter(&buf, opts...)
 		f.FormatQueryDocument(query)
 		result := buf.String()
+		if outputJSON {
+			return writeJSONValue(cmd.OutOrStdout(), result)
+		}
 
 		// Write the result to stdout
 		_, err = fmt.Fprintln(cmd.OutOrStdout(), result)

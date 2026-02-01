@@ -11,7 +11,7 @@ import (
 
 func TestNumbersCmd(t *testing.T) {
 	numbersBase = 10
-	numbersJSONOutput = false
+	outputJSON = false
 
 	cmd := GetRootCmd()
 	buf := new(bytes.Buffer)
@@ -33,7 +33,7 @@ func TestNumbersCmd(t *testing.T) {
 
 func TestNumbersCmdJSON(t *testing.T) {
 	numbersBase = 10
-	numbersJSONOutput = false
+	outputJSON = false
 
 	cmd := GetRootCmd()
 	buf := new(bytes.Buffer)

@@ -50,7 +50,7 @@ Input can be provided as an argument or piped from stdin.`,
 		}
 
 		fields := uuidutil.Decode(parsed)
-		if uuiddecodeJSONOutput {
+		if outputJSON {
 			payload := uuidDecodeJSON{
 				UUID:   parsed.String(),
 				Fields: fields,
@@ -73,9 +73,6 @@ Input can be provided as an argument or piped from stdin.`,
 	},
 }
 
-var uuiddecodeJSONOutput bool
-
 func init() {
 	rootCmd.AddCommand(uuiddecodeCmd)
-	uuiddecodeCmd.Flags().BoolVar(&uuiddecodeJSONOutput, "json", false, "output decoded fields as JSON")
 }
