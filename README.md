@@ -34,6 +34,40 @@ Or download executable from [GitHub Releases](https://github.com/skatkov/devtui/
 
 ---
 
+## MCP
+
+Run DevTUI as an MCP server over stdio:
+
+```bash
+devtui mcp
+```
+
+### MCP build
+To include the MCP server, build with:
+
+```bash
+go build -tags mcp ./...
+```
+
+### Claude Code
+
+Add DevTUI as an MCP server in `~/.claude/claude.json`:
+
+```json
+{
+  "mcpServers": {
+    "devtui": {
+      "command": "devtui",
+      "args": ["mcp"]
+    }
+  }
+}
+```
+
+Make sure `devtui` is on your PATH, then restart Claude Code.
+
+---
+
 ## Documentation Generator
 
 DevTUI includes automated documentation generators for both CLI and TUI interfaces (not complete yet, though).
