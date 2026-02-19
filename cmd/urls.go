@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"encoding/json"
 	"errors"
 	"fmt"
 	"io"
@@ -24,6 +25,9 @@ Input can be a string, file path, or piped from stdin.`,
 
   # Extract URLs in strict mode (requires valid schemes)
   devtui urls "Visit google.com and https://example.com" --strict
+
+  # Extract URLs as JSON array
+  devtui urls "Visit https://google.com and http://example.com" --json
 
   # Extract URLs from a file
   devtui urls /path/to/file.html
@@ -88,6 +92,15 @@ Input can be a string, file path, or piped from stdin.`,
 		}
 
 		// Output results
+		if flagJSON {
+			jsonBytes, err := json.Marshal(uniqueURLs)
+			if err != nil {
+				return err
+			}
+			fmt.Println(string(jsonBytes))
+			return nil
+		}
+
 		if len(uniqueURLs) > 0 {
 			fmt.Print(strings.Join(uniqueURLs, "\n"))
 			fmt.Print("\n")

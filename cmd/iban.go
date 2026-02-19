@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"encoding/json"
 	"errors"
 	"fmt"
 	"strings"
@@ -23,6 +24,9 @@ Use the --formatted flag to output the IBAN in paper format with spaces.`,
   devtui iban DE --format
   devtui iban DE -f
 
+  # Generate IBAN for France with JSON output
+  devtui iban FR --json
+
   # Generate IBAN for France
   devtui iban FR`,
 	Args: cobra.ExactArgs(1),
@@ -37,6 +41,23 @@ Use the --formatted flag to output the IBAN in paper format with spaces.`,
 		generatedIban, err := iban.Generate(countryCode)
 		if err != nil {
 			return fmt.Errorf("failed to generate IBAN for country code '%s': %v", countryCode, err)
+		}
+
+		// JSON output
+		if flagJSON {
+			output := map[string]string{
+				"country_code": countryCode,
+				"iban":         generatedIban,
+			}
+			if ibanFormatted {
+				output["formatted"] = iban.PaperFormat(generatedIban)
+			}
+			jsonBytes, err := json.Marshal(output)
+			if err != nil {
+				return err
+			}
+			fmt.Println(string(jsonBytes))
+			return nil
 		}
 
 		// Format output based on flag

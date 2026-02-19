@@ -3,3 +3,5 @@ dist/*
 _site/*
 devtui
 .idea
+# Nightshift plan artifacts (keep out of version control)
+.nightshift-plan

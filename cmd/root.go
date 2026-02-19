@@ -24,8 +24,12 @@ It includes tools like hash generator, unix timestamp converter, and number base
 	},
 }
 
-var flagTUI bool
+var (
+	flagTUI   bool
+	flagJSON  bool
+)
 
+// Execute runs the root command
 func Execute() {
 	err := fang.Execute(context.Background(), rootCmd)
 	if err != nil {
@@ -33,10 +37,12 @@ func Execute() {
 	}
 }
 
+// GetRootCmd returns the root command instance
 func GetRootCmd() *cobra.Command {
 	return rootCmd
 }
 
 func init() {
-	// Add persistent flags here if needed
+	// Add persistent flags available to all subcommands
+	rootCmd.PersistentFlags().BoolVarP(&flagJSON, "json", "j", false, "Output results in JSON format")
 }
