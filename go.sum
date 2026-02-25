@@ -210,8 +210,8 @@ github.com/tiagomelo/go-clipboard v0.1.2 h1:Ph2icR0vZRIj3v5ExvsGweBwsbbDUTlS6HoF
 github.com/tiagomelo/go-clipboard v0.1.2/go.mod h1:kXtjJBIMimZaGbxmcKZ8+JqK+acSNf5tAJiChlZBOr8=
 github.com/twpayne/go-jsonstruct/v3 v3.3.0 h1:LaxH/CPO2mUnvnsIe+0E/WS2RN/PiUWEjoHlGI31ogY=
 github.com/twpayne/go-jsonstruct/v3 v3.3.0/go.mod h1:Ep6oLjT0GADi6TmsIDASia0cfw3Nja3rBz+GIfYlC/A=
-github.com/vektah/gqlparser/v2 v2.5.31 h1:YhWGA1mfTjID7qJhd1+Vxhpk5HTgydrGU9IgkWBTJ7k=
-github.com/vektah/gqlparser/v2 v2.5.31/go.mod h1:c1I28gSOVNzlfc4WuDlqU7voQnsqI6OG2amkBAFmgts=
+github.com/vektah/gqlparser/v2 v2.5.32 h1:k9QPJd4sEDTL+qB4ncPLflqTJ3MmjB9SrVzJrawpFSc=
+github.com/vektah/gqlparser/v2 v2.5.32/go.mod h1:c1I28gSOVNzlfc4WuDlqU7voQnsqI6OG2amkBAFmgts=
 github.com/wk8/go-ordered-map/v2 v2.1.8 h1:5h/BUHu93oj4gIdvHHHGsScSTMijfx5PeYkE/fJgbpc=
 github.com/wk8/go-ordered-map/v2 v2.1.8/go.mod h1:5nJHM5DyteebpVlHnWMV0rPz6Zp7+xBAnxjb1X5vnTw=
 github.com/xo/terminfo v0.0.0-20220910002029-abceb7e1c41e h1:JVG44RsyaB9T2KIHavMF/ppJZNG9ZpyihvCd0w101no=

@@ -30,7 +30,7 @@ require (
 	github.com/spf13/cobra v1.10.2
 	github.com/tiagomelo/go-clipboard v0.1.2
 	github.com/twpayne/go-jsonstruct/v3 v3.3.0
-	github.com/vektah/gqlparser/v2 v2.5.31
+	github.com/vektah/gqlparser/v2 v2.5.32
 	github.com/yosssi/gohtml v0.0.0-20201013000340-ee4748c638f4
 	gopkg.in/yaml.v3 v3.0.1
 	mvdan.cc/xurls/v2 v2.6.0
