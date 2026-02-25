@@ -7,7 +7,7 @@ import (
 	"os"
 	"strings"
 
-	tea "github.com/charmbracelet/bubbletea"
+	tea "charm.land/bubbletea/v2"
 	"github.com/charmbracelet/fang"
 	"github.com/charmbracelet/x/term"
 	"github.com/skatkov/devtui/tui/root"
@@ -20,7 +20,7 @@ var rootCmd = &cobra.Command{
 	Long: `devtui is a collection of small developer apps that help with day to day work.
 It includes tools like hash generator, unix timestamp converter, and number base converter and multiple others.`,
 	RunE: func(cmd *cobra.Command, args []string) error {
-		p := tea.NewProgram(root.RootScreen(), tea.WithAltScreen())
+		p := tea.NewProgram(root.RootScreen())
 		if _, err := p.Run(); err != nil {
 			return err
 		}

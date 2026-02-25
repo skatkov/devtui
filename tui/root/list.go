@@ -9,10 +9,10 @@ import (
 	"sort"
 	"strings"
 
+	"charm.land/bubbles/v2/list"
+	tea "charm.land/bubbletea/v2"
+	"charm.land/lipgloss/v2"
 	"github.com/adrg/xdg"
-	"github.com/charmbracelet/bubbles/list"
-	tea "github.com/charmbracelet/bubbletea"
-	"github.com/charmbracelet/lipgloss"
 	"github.com/skatkov/devtui/internal/ui"
 	base64decoder "github.com/skatkov/devtui/tui/base64-decoder"
 	base64encoder "github.com/skatkov/devtui/tui/base64-encoder"
@@ -53,8 +53,8 @@ type listModel struct {
 var (
 	itemStyle         = lipgloss.NewStyle().PaddingLeft(4)
 	selectedItemStyle = lipgloss.NewStyle().PaddingLeft(2).Foreground(lipgloss.Color("170"))
-	paginationStyle   = list.DefaultStyles().PaginationStyle.PaddingLeft(4)
-	helpStyle         = list.DefaultStyles().HelpStyle.PaddingLeft(2).PaddingBottom(1)
+	paginationStyle   = list.DefaultStyles(true).PaginationStyle.PaddingLeft(4)
+	helpStyle         = list.DefaultStyles(true).HelpStyle.PaddingLeft(2).PaddingBottom(1)
 )
 
 type MenuOption struct {
@@ -255,7 +255,6 @@ func newListModel(common *ui.CommonModel) *listModel {
 	l.SetShowStatusBar(false)
 	l.SetFilteringEnabled(true)
 	l.Styles.Title = l.Styles.Title.MarginTop(1)
-	l.FilterInput.PromptStyle = l.FilterInput.PromptStyle.MarginTop(1)
 
 	l.Styles.PaginationStyle = paginationStyle
 	l.Styles.HelpStyle = helpStyle
@@ -279,7 +278,7 @@ func (m *listModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		m.list.SetSize(msg.Width, msg.Height)
 		return m, nil
 
-	case tea.KeyMsg:
+	case tea.KeyPressMsg:
 		switch keypress := msg.String(); keypress {
 		case "q", "ctrl+c":
 			return m, tea.Quit
@@ -311,11 +310,11 @@ func (m *listModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	return m, cmd
 }
 
-func (m listModel) View() string {
+func (m listModel) View() tea.View {
 	if m.err != "" {
-		return lipgloss.NewStyle().Padding(2).Render(m.err)
+		return ui.AltScreenView(lipgloss.NewStyle().Padding(2).Render(m.err))
 	}
-	return m.list.View()
+	return ui.AltScreenView(m.list.View())
 }
 
 func (m *listModel) RefreshOrder() {

@@ -6,13 +6,14 @@ import (
 	"strconv"
 	"strings"
 
+	"charm.land/lipgloss/v2"
+	"charm.land/lipgloss/v2/table"
 	"github.com/charmbracelet/huh"
-	"github.com/charmbracelet/lipgloss"
-	"github.com/charmbracelet/lipgloss/table"
 	"github.com/jacoelho/banking/iban"
+	"github.com/skatkov/devtui/internal/teacompat"
 	"github.com/skatkov/devtui/internal/ui"
 
-	tea "github.com/charmbracelet/bubbletea"
+	tea "charm.land/bubbletea/v2"
 )
 
 const Title = "IBAN Generator"
@@ -162,10 +163,10 @@ func NewIBANGenerateModel(common *ui.CommonModel) *IBANGenerate {
 }
 
 func (m *IBANGenerate) Init() tea.Cmd {
-	return m.form.Init()
+	return teacompat.Cmd(m.form.Init())
 }
 
-func (m *IBANGenerate) View() string {
+func (m *IBANGenerate) View() tea.View {
 	s := m.common.Styles
 	switch m.form.State {
 	case huh.StateCompleted:
@@ -200,10 +201,10 @@ func (m *IBANGenerate) View() string {
 			lipgloss.NewStyle().Bold(true).Render(Title),
 		))
 
-		results := m.common.Lg.NewStyle().Margin(1, 0).Render(tableOutput.String())
+		results := lipgloss.NewStyle().Margin(1, 0).Render(tableOutput.String())
 		body := lipgloss.JoinVertical(lipgloss.Top, results)
 
-		return s.Base.Render(header + "\n" + body)
+		return ui.AltScreenView(s.Base.Render(header + "\n" + body))
 	default:
 		header := s.Title.Render(lipgloss.JoinHorizontal(lipgloss.Left,
 			Title,
@@ -211,7 +212,7 @@ func (m *IBANGenerate) View() string {
 			lipgloss.NewStyle().Bold(true).Render(Title),
 		))
 		v := strings.TrimSuffix(m.form.View(), "\n\n")
-		form := m.common.Lg.NewStyle().Margin(1, 0).Render(v)
+		form := lipgloss.NewStyle().Margin(1, 0).Render(v)
 		body := lipgloss.JoinVertical(
 			lipgloss.Top,
 			form,
@@ -221,7 +222,7 @@ func (m *IBANGenerate) View() string {
 				m.form.Help().ShortHelpView(m.form.KeyBinds()),
 			),
 		)
-		return s.Base.Render(header + "\n" + body)
+		return ui.AltScreenView(s.Base.Render(header + "\n" + body))
 	}
 }
 
@@ -231,7 +232,7 @@ func (m *IBANGenerate) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	case tea.WindowSizeMsg:
 		m.common.Width = msg.Width
 		m.common.Height = msg.Height
-	case tea.KeyMsg:
+	case tea.KeyPressMsg:
 		switch msg.String() {
 		case "q", "ctrl+c":
 			return m, tea.Quit
@@ -252,7 +253,7 @@ func (m *IBANGenerate) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			m.generateIBAN()
 		}
 	}
-	return m, cmd
+	return m, teacompat.Cmd(cmd)
 }
 
 func (m *IBANGenerate) generateIBAN() {

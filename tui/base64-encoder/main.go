@@ -6,8 +6,8 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/charmbracelet/bubbles/viewport"
-	tea "github.com/charmbracelet/bubbletea"
+	"charm.land/bubbles/v2/viewport"
+	tea "charm.land/bubbletea/v2"
 	"github.com/mattn/go-runewidth"
 
 	"github.com/skatkov/devtui/internal/base64"
@@ -40,7 +40,7 @@ func (m Base64Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		cmds []tea.Cmd
 	)
 	switch msg := msg.(type) {
-	case tea.KeyMsg:
+	case tea.KeyPressMsg:
 		if cmd, handled := m.HandleCommonKeys(msg); handled {
 			return m, cmd
 		}
@@ -83,7 +83,10 @@ func (m Base64Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		m.SetSize(msg.Width, msg.Height)
 
 		if !m.Ready {
-			m.Viewport = viewport.New(msg.Width, msg.Height-ui.StatusBarHeight)
+			m.Viewport = viewport.New(
+				viewport.WithWidth(msg.Width),
+				viewport.WithHeight(msg.Height-ui.StatusBarHeight),
+			)
 			m.Viewport.YPosition = 0
 			m.Ready = true
 		} else {
@@ -105,7 +108,7 @@ func (m Base64Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	return m, tea.Batch(cmds...)
 }
 
-func (m Base64Model) View() string {
+func (m Base64Model) View() tea.View {
 	var b strings.Builder
 
 	fmt.Fprint(&b, m.Viewport.View()+"\n")
@@ -115,7 +118,7 @@ func (m Base64Model) View() string {
 		fmt.Fprint(&b, "\n"+m.helpView())
 	}
 
-	return b.String()
+	return m.NewView(b.String())
 }
 
 func (m *Base64Model) SetContent(content string) error {

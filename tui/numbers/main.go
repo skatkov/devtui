@@ -7,13 +7,14 @@ import (
 	"strconv"
 	"strings"
 
+	"charm.land/lipgloss/v2"
+	"charm.land/lipgloss/v2/table"
 	"github.com/charmbracelet/huh"
-	"github.com/charmbracelet/lipgloss"
-	"github.com/charmbracelet/lipgloss/table"
 	"github.com/skatkov/devtui/internal/numbers"
+	"github.com/skatkov/devtui/internal/teacompat"
 	"github.com/skatkov/devtui/internal/ui"
 
-	tea "github.com/charmbracelet/bubbletea"
+	tea "charm.land/bubbletea/v2"
 )
 
 const Title = "Number Base Converter"
@@ -69,7 +70,7 @@ func NewNumberModel(common *ui.CommonModel) NumbersModel {
 }
 
 func (m NumbersModel) Init() tea.Cmd {
-	return m.form.Init()
+	return teacompat.Cmd(m.form.Init())
 }
 
 func (m NumbersModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
@@ -78,7 +79,7 @@ func (m NumbersModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	case tea.WindowSizeMsg:
 		m.common.Width = msg.Width
 		m.common.Height = msg.Height
-	case tea.KeyMsg:
+	case tea.KeyPressMsg:
 		switch msg.String() {
 		case "esc":
 			return m, func() tea.Msg {
@@ -108,13 +109,13 @@ func (m NumbersModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			}
 		}
 
-		cmds = append(cmds, cmd)
+		cmds = append(cmds, teacompat.Cmd(cmd))
 	}
 
 	return m, tea.Batch(cmds...)
 }
 
-func (m NumbersModel) View() string {
+func (m NumbersModel) View() tea.View {
 	s := m.common.Styles
 	switch m.form.State {
 	case huh.StateCompleted:
@@ -130,7 +131,7 @@ func (m NumbersModel) View() string {
 			Width(100).
 			Headers("Base", "Value").
 			Rows(rows...)
-		return s.Base.Render(t.String())
+		return ui.AltScreenView(s.Base.Render(t.String()))
 	default:
 		header := s.Title.Render(lipgloss.JoinHorizontal(lipgloss.Left,
 			ui.AppTitle,
@@ -138,7 +139,7 @@ func (m NumbersModel) View() string {
 			lipgloss.NewStyle().Bold(true).Render(Title),
 		))
 		v := strings.TrimSuffix(m.form.View(), "\n\n")
-		form := m.common.Lg.NewStyle().Margin(1, 0).Render(v)
+		form := lipgloss.NewStyle().Margin(1, 0).Render(v)
 		body := lipgloss.JoinVertical(
 			lipgloss.Top,
 			form,
@@ -148,6 +149,6 @@ func (m NumbersModel) View() string {
 				m.form.Help().ShortHelpView(m.form.KeyBinds()),
 			),
 		)
-		return s.Base.Render(header + "\n" + body)
+		return ui.AltScreenView(s.Base.Render(header + "\n" + body))
 	}
 }

@@ -6,8 +6,8 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/charmbracelet/lipgloss"
-	"github.com/charmbracelet/lipgloss/table"
+	"charm.land/lipgloss/v2"
+	"charm.land/lipgloss/v2/table"
 	"github.com/google/uuid"
 	"github.com/skatkov/devtui/internal/input"
 	"github.com/skatkov/devtui/internal/uuidutil"

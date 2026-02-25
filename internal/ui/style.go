@@ -1,20 +1,23 @@
 package ui
 
-import "github.com/charmbracelet/lipgloss"
+import (
+	"charm.land/lipgloss/v2"
+	"charm.land/lipgloss/v2/compat"
+)
 
 var (
 	green           = lipgloss.Color("#04B575")
-	mintGreen       = lipgloss.AdaptiveColor{Light: "#89F0CB", Dark: "#89F0CB"}
-	darkGreen       = lipgloss.AdaptiveColor{Light: "#1C8760", Dark: "#1C8760"}
-	statusBarNoteFg = lipgloss.AdaptiveColor{Light: "#656565", Dark: "#7D7D7D"}
-	statusBarBg     = lipgloss.AdaptiveColor{Light: "#E6E6E6", Dark: "#242424"}
-	lineNumberFg    = lipgloss.AdaptiveColor{Light: "#656565", Dark: "#7D7D7D"}
-	lightRed        = lipgloss.AdaptiveColor{Light: "#FFAAAA", Dark: "#FFAAAA"}
-	darkRed         = lipgloss.AdaptiveColor{Light: "#CC0000", Dark: "#AA0000"}
+	mintGreen       = compat.AdaptiveColor{Light: lipgloss.Color("#89F0CB"), Dark: lipgloss.Color("#89F0CB")}
+	darkGreen       = compat.AdaptiveColor{Light: lipgloss.Color("#1C8760"), Dark: lipgloss.Color("#1C8760")}
+	statusBarNoteFg = compat.AdaptiveColor{Light: lipgloss.Color("#656565"), Dark: lipgloss.Color("#7D7D7D")}
+	statusBarBg     = compat.AdaptiveColor{Light: lipgloss.Color("#E6E6E6"), Dark: lipgloss.Color("#242424")}
+	lineNumberFg    = compat.AdaptiveColor{Light: lipgloss.Color("#656565"), Dark: lipgloss.Color("#7D7D7D")}
+	lightRed        = compat.AdaptiveColor{Light: lipgloss.Color("#FFAAAA"), Dark: lipgloss.Color("#FFAAAA")}
+	darkRed         = compat.AdaptiveColor{Light: lipgloss.Color("#CC0000"), Dark: lipgloss.Color("#AA0000")}
 
 	HelpViewStyle = lipgloss.NewStyle().
 			Foreground(statusBarNoteFg).
-			Background(lipgloss.AdaptiveColor{Light: "#f2f2f2", Dark: "#1B1B1B"}).
+			Background(compat.AdaptiveColor{Light: lipgloss.Color("#f2f2f2"), Dark: lipgloss.Color("#1B1B1B")}).
 			Render
 
 	StatusBarNoteStyle = lipgloss.NewStyle().
@@ -36,10 +39,10 @@ var (
 
 	StatusBarHelpStyle = lipgloss.NewStyle().
 				Foreground(statusBarNoteFg).
-				Background(lipgloss.AdaptiveColor{Light: "#DCDCDC", Dark: "#323232"}).Render
+				Background(compat.AdaptiveColor{Light: lipgloss.Color("#DCDCDC"), Dark: lipgloss.Color("#323232")}).Render
 
 	StatusBarScrollPosStyle = lipgloss.NewStyle().
-				Foreground(lipgloss.AdaptiveColor{Light: "#949494", Dark: "#5A5A5A"}).
+				Foreground(compat.AdaptiveColor{Light: lipgloss.Color("#949494"), Dark: lipgloss.Color("#5A5A5A")}).
 				Background(statusBarBg).
 				Render
 	StatusBarMessageStyle = lipgloss.NewStyle().
@@ -62,14 +65,14 @@ type Styles struct {
 	Help lipgloss.Style
 }
 
-func NewStyle(lg *lipgloss.Renderer) *Styles {
+func NewStyle() *Styles {
 	s := Styles{
-		Base: lg.NewStyle().Padding(1, 4, 1, 2),
-		Title: lg.NewStyle().
+		Base: lipgloss.NewStyle().Padding(1, 4, 1, 2),
+		Title: lipgloss.NewStyle().
 			Background(lipgloss.Color("62")).
 			Foreground(lipgloss.Color("230")).
 			Padding(0, 1),
-		Help: lg.NewStyle().Foreground(lipgloss.Color("240")),
+		Help: lipgloss.NewStyle().Foreground(lipgloss.Color("240")),
 	}
 	return &s
 }

@@ -6,12 +6,13 @@ import (
 	"regexp"
 	"strings"
 
+	"charm.land/lipgloss/v2"
 	"github.com/charmbracelet/huh"
-	"github.com/charmbracelet/lipgloss"
 	"github.com/lnquy/cron"
+	"github.com/skatkov/devtui/internal/teacompat"
 	"github.com/skatkov/devtui/internal/ui"
 
-	tea "github.com/charmbracelet/bubbletea"
+	tea "charm.land/bubbletea/v2"
 )
 
 const Title = "Cron Job Parser"
@@ -85,7 +86,7 @@ func NewCronModel(common *ui.CommonModel) *CronModel {
 }
 
 func (m *CronModel) Init() tea.Cmd {
-	return m.form.Init()
+	return teacompat.Cmd(m.form.Init())
 }
 
 func (m *CronModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
@@ -94,7 +95,7 @@ func (m *CronModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	case tea.WindowSizeMsg:
 		m.common.Width = msg.Width
 		m.common.Height = msg.Height
-	case tea.KeyMsg:
+	case tea.KeyPressMsg:
 		switch msg.String() {
 		case "esc":
 			return m, func() tea.Msg {
@@ -111,10 +112,10 @@ func (m *CronModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	if f, ok := form.(*huh.Form); ok {
 		m.form = f
 	}
-	return m, cmd
+	return m, teacompat.Cmd(cmd)
 }
 
-func (m *CronModel) View() string {
+func (m *CronModel) View() tea.View {
 	s := m.common.Styles
 	switch m.form.State {
 	case huh.StateCompleted:
@@ -123,14 +124,14 @@ func (m *CronModel) View() string {
 			cron.DayOfWeekStartsAtOne(true),
 		)
 		if err != nil {
-			return lipgloss.NewStyle().Padding(2).
-				Render(fmt.Sprintf("Error parsing cron expression: %v", err))
+			return ui.AltScreenView(lipgloss.NewStyle().Padding(2).
+				Render(fmt.Sprintf("Error parsing cron expression: %v", err)))
 		}
 
 		desc, err := expr.ToDescription(m.cronExpression, cron.Locale_en)
 		if err != nil {
-			return lipgloss.NewStyle().Padding(2).
-				Render(fmt.Sprintf("Error parsing cron expression: %v", err))
+			return ui.AltScreenView(lipgloss.NewStyle().Padding(2).
+				Render(fmt.Sprintf("Error parsing cron expression: %v", err)))
 		}
 		titleStyle := lipgloss.NewStyle().
 			Foreground(lipgloss.Color("#FF69B4")).
@@ -141,7 +142,7 @@ func (m *CronModel) View() string {
 
 		output := titleStyle.Render(m.cronExpression) + " \n\n" + valueStyle.Render(desc)
 
-		return s.Base.Render(output)
+		return ui.AltScreenView(s.Base.Render(output))
 	default:
 		header := s.Title.Render(lipgloss.JoinHorizontal(lipgloss.Left,
 			ui.AppTitle,
@@ -149,7 +150,7 @@ func (m *CronModel) View() string {
 			lipgloss.NewStyle().Bold(true).Render(Title),
 		))
 		v := strings.TrimSuffix(m.form.View(), "\n\n")
-		form := m.common.Lg.NewStyle().Margin(1, 0).Render(v)
+		form := lipgloss.NewStyle().Margin(1, 0).Render(v)
 		body := lipgloss.JoinVertical(
 			lipgloss.Top,
 			form,
@@ -159,6 +160,6 @@ func (m *CronModel) View() string {
 				m.form.Help().ShortHelpView(m.form.KeyBinds()),
 			),
 		)
-		return s.Base.Render(header + "\n" + body)
+		return ui.AltScreenView(s.Base.Render(header + "\n" + body))
 	}
 }

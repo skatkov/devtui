@@ -3,7 +3,7 @@ package cmd
 import (
 	"strings"
 
-	tea "github.com/charmbracelet/bubbletea"
+	tea "charm.land/bubbletea/v2"
 	"github.com/client9/csstool"
 	"github.com/skatkov/devtui/internal/cmderror"
 	"github.com/skatkov/devtui/internal/input"
@@ -62,8 +62,6 @@ custom spacing. Input can be a string argument or piped from stdin.`,
 			}
 			p := tea.NewProgram(
 				model,
-				tea.WithAltScreen(),       // Use alternate screen buffer
-				tea.WithMouseCellMotion(), // Enable mouse support
 			)
 
 			if _, err := p.Run(); err != nil {

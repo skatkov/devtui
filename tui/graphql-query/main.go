@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"strings"
 
+	tea "charm.land/bubbletea/v2"
 	"github.com/alecthomas/chroma/quick"
-	tea "github.com/charmbracelet/bubbletea"
 	"github.com/mattn/go-runewidth"
 
 	"github.com/skatkov/devtui/internal/clipboard"
@@ -41,7 +41,7 @@ func (m GraphQLQueryModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		cmds []tea.Cmd
 	)
 	switch msg := msg.(type) {
-	case tea.KeyMsg:
+	case tea.KeyPressMsg:
 		if cmd, handled := m.HandleCommonKeys(msg); handled {
 			return m, cmd
 		}
@@ -90,7 +90,7 @@ func (m GraphQLQueryModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	return m, tea.Batch(cmds...)
 }
 
-func (m GraphQLQueryModel) View() string {
+func (m GraphQLQueryModel) View() tea.View {
 	var b strings.Builder
 
 	fmt.Fprint(&b, m.Viewport.View()+"\n")
@@ -100,7 +100,9 @@ func (m GraphQLQueryModel) View() string {
 		fmt.Fprint(&b, "\n"+m.helpView())
 	}
 
-	return b.String()
+	v := m.NewView(b.String())
+	v.MouseMode = tea.MouseModeCellMotion
+	return v
 }
 
 func (m *GraphQLQueryModel) SetContent(content string) error {

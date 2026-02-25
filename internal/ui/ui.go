@@ -5,8 +5,8 @@ import (
 	"strings"
 	"time"
 
-	tea "github.com/charmbracelet/bubbletea"
-	"github.com/charmbracelet/lipgloss"
+	tea "charm.land/bubbletea/v2"
+	"charm.land/lipgloss/v2"
 )
 
 const AppTitle = "DevTUI"
@@ -21,7 +21,6 @@ type CommonModel struct {
 
 	LastSelectedItem int
 
-	Lg     *lipgloss.Renderer
 	Styles *Styles
 }
 
@@ -53,6 +52,17 @@ func WaitForStatusMessageTimeout(t *time.Timer) tea.Cmd {
 		<-t.C
 		return StatusMessageTimeoutMsg{}
 	}
+}
+
+func AltScreenView(content string) tea.View {
+	v := tea.NewView(content)
+	v.AltScreen = true
+	return v
+}
+
+func WithAltScreen(v tea.View) tea.View {
+	v.AltScreen = true
+	return v
 }
 
 func Indent(s string, n int) string {

@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"strings"
 
+	tea "charm.land/bubbletea/v2"
 	"github.com/alecthomas/chroma/quick"
-	tea "github.com/charmbracelet/bubbletea"
 	"github.com/go-xmlfmt/xmlfmt"
 	"github.com/mattn/go-runewidth"
 
@@ -39,7 +39,7 @@ func (m XMLFormatterModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		cmds []tea.Cmd
 	)
 	switch msg := msg.(type) {
-	case tea.KeyMsg:
+	case tea.KeyPressMsg:
 		if cmd, handled := m.HandleCommonKeys(msg); handled {
 			return m, cmd
 		}
@@ -84,7 +84,7 @@ func (m XMLFormatterModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	return m, tea.Batch(cmds...)
 }
 
-func (m XMLFormatterModel) View() string {
+func (m XMLFormatterModel) View() tea.View {
 	var b strings.Builder
 
 	fmt.Fprint(&b, m.Viewport.View()+"\n")
@@ -94,7 +94,7 @@ func (m XMLFormatterModel) View() string {
 		fmt.Fprint(&b, "\n"+m.helpView())
 	}
 
-	return b.String()
+	return m.NewView(b.String())
 }
 
 func (m *XMLFormatterModel) SetContent(content string) error {
