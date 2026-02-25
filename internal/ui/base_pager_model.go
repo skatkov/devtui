@@ -7,8 +7,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/charmbracelet/bubbles/viewport"
-	tea "github.com/charmbracelet/bubbletea"
+	"charm.land/bubbles/v2/viewport"
+	tea "charm.land/bubbletea/v2"
 	"github.com/mattn/go-runewidth"
 	"github.com/muesli/ansi"
 	"github.com/muesli/reflow/truncate"
@@ -46,7 +46,7 @@ func (m BasePagerModel) Init() tea.Cmd {
 	return nil
 }
 
-func (m *BasePagerModel) HandleCommonKeys(msg tea.KeyMsg) (tea.Cmd, bool) {
+func (m *BasePagerModel) HandleCommonKeys(msg tea.KeyPressMsg) (tea.Cmd, bool) {
 	switch msg.String() {
 	case "ctrl+c", "q":
 		return tea.Quit, true
@@ -69,6 +69,12 @@ func (m *BasePagerModel) HandleCommonKeys(msg tea.KeyMsg) (tea.Cmd, bool) {
 	return nil, false
 }
 
+func (m BasePagerModel) NewView(content string) tea.View {
+	v := tea.NewView(content)
+	v.AltScreen = true
+	return v
+}
+
 func (m *BasePagerModel) HandleWindowSizeMsg(msg tea.WindowSizeMsg) tea.Cmd {
 	m.Common.Width = msg.Width
 	m.Common.Height = msg.Height
@@ -76,7 +82,10 @@ func (m *BasePagerModel) HandleWindowSizeMsg(msg tea.WindowSizeMsg) tea.Cmd {
 	m.SetSize(msg.Width, msg.Height)
 
 	if !m.Ready {
-		m.Viewport = viewport.New(msg.Width, msg.Height-StatusBarHeight)
+		m.Viewport = viewport.New(
+			viewport.WithWidth(msg.Width),
+			viewport.WithHeight(msg.Height-StatusBarHeight),
+		)
 		m.Viewport.YPosition = 0
 		m.Viewport.SetContent(m.Content)
 		m.Ready = true
@@ -124,8 +133,8 @@ func (m *BasePagerModel) SetSize(w, h int) {
 		viewportHeight -= helpHeight
 	}
 
-	m.Viewport.Width = m.Common.Width
-	m.Viewport.Height = viewportHeight
+	m.Viewport.SetWidth(m.Common.Width)
+	m.Viewport.SetHeight(viewportHeight)
 }
 
 func (m *BasePagerModel) ToggleHelp() {

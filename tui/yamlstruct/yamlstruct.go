@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"strings"
 
+	tea "charm.land/bubbletea/v2"
 	"github.com/alecthomas/chroma/quick"
-	tea "github.com/charmbracelet/bubbletea"
 	"github.com/mattn/go-runewidth"
 
 	"github.com/skatkov/devtui/internal/clipboard"
@@ -40,7 +40,7 @@ func (m YamlStructModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	)
 
 	switch msg := msg.(type) {
-	case tea.KeyMsg:
+	case tea.KeyPressMsg:
 		if cmd, handled := m.HandleCommonKeys(msg); handled {
 			return m, cmd
 		}
@@ -85,7 +85,7 @@ func (m YamlStructModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	return m, tea.Batch(cmds...)
 }
 
-func (m YamlStructModel) View() string {
+func (m YamlStructModel) View() tea.View {
 	var b strings.Builder
 
 	fmt.Fprint(&b, m.Viewport.View()+"\n")
@@ -95,7 +95,7 @@ func (m YamlStructModel) View() string {
 		fmt.Fprint(&b, "\n"+m.helpView())
 	}
 
-	return b.String()
+	return m.NewView(b.String())
 }
 
 func (m *YamlStructModel) SetContent(content string) error {

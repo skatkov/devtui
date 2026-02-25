@@ -11,15 +11,12 @@ import (
 	"syscall"
 	"time"
 
-	tea "github.com/charmbracelet/bubbletea"
-	"github.com/charmbracelet/lipgloss"
+	tea "charm.land/bubbletea/v2"
 	"github.com/charmbracelet/log"
 	"github.com/charmbracelet/ssh"
 	"github.com/charmbracelet/wish"
 	"github.com/charmbracelet/wish/activeterm"
-	"github.com/charmbracelet/wish/bubbletea"
 	"github.com/charmbracelet/wish/logging"
-	"github.com/skatkov/devtui/internal/ui"
 	"github.com/skatkov/devtui/tui/root"
 	"github.com/spf13/cobra"
 )
@@ -70,7 +67,7 @@ func runServer() error {
 		wish.WithAddress(sshAddr),
 		wish.WithHostKeyPath(serveHostKey),
 		wish.WithMiddleware(
-			bubbletea.Middleware(teaHandler),
+			bubbleteaMiddlewareV2(teaHandler),
 			activeterm.Middleware(), // Bubble Tea apps require a PTY
 			logging.Middleware(),
 		),
@@ -134,19 +131,75 @@ func runServer() error {
 }
 
 // teaHandler creates a new Bubble Tea model for each SSH session.
-// It uses the session-aware renderer for proper color support.
 func teaHandler(s ssh.Session) (tea.Model, []tea.ProgramOption) {
 	// Get PTY info for initial window size
 	pty, _, _ := s.Pty()
 
-	// Create session-aware renderer
-	// This ensures colors are rendered correctly for the client's terminal
-	renderer := bubbletea.MakeRenderer(s)
+	model := root.RootScreenWithSize(pty.Window.Width, pty.Window.Height)
 
-	// Create the root screen with the session-aware renderer
-	model := root.RootScreenWithRenderer(renderer, pty.Window.Width, pty.Window.Height)
+	return model, nil
+}
 
-	return model, []tea.ProgramOption{tea.WithAltScreen()}
+type teaHandlerFunc func(sess ssh.Session) (tea.Model, []tea.ProgramOption)
+
+func bubbleteaMiddlewareV2(handler teaHandlerFunc) wish.Middleware {
+	return func(next ssh.Handler) ssh.Handler {
+		return func(sess ssh.Session) {
+			model, opts := handler(sess)
+			if model == nil {
+				next(sess)
+				return
+			}
+
+			pty, windowChanges, ok := sess.Pty()
+			if !ok {
+				wish.Fatalln(sess, "no active terminal, skipping")
+				return
+			}
+
+			opts = append(opts, makeTeaOptions(sess)...)
+			env := append(sess.Environ(), "TERM="+pty.Term)
+			opts = append(opts, tea.WithEnvironment(env))
+
+			program := tea.NewProgram(model, opts...)
+
+			ctx, cancel := context.WithCancel(sess.Context())
+			go func() {
+				for {
+					select {
+					case <-ctx.Done():
+						program.Quit()
+						return
+					case w := <-windowChanges:
+						program.Send(tea.WindowSizeMsg{Width: w.Width, Height: w.Height})
+					}
+				}
+			}()
+
+			if _, err := program.Run(); err != nil {
+				log.Error("app exit with error", "error", err)
+			}
+
+			program.Kill()
+			cancel()
+			next(sess)
+		}
+	}
+}
+
+func makeTeaOptions(sess ssh.Session) []tea.ProgramOption {
+	pty, _, ok := sess.Pty()
+	if !ok || sess.EmulatedPty() {
+		return []tea.ProgramOption{
+			tea.WithInput(sess),
+			tea.WithOutput(sess),
+		}
+	}
+
+	return []tea.ProgramOption{
+		tea.WithInput(pty.Slave),
+		tea.WithOutput(pty.Slave),
+	}
 }
 
 // landingPageHandler serves a simple landing page for web browsers
@@ -306,10 +359,4 @@ func landingPageHandler(w http.ResponseWriter, r *http.Request) {
 </html>`, domain, domain, domain, domain)
 
 	_, _ = w.Write([]byte(html))
-}
-
-// StylesForRenderer creates styles using a session-aware renderer.
-// This is used by SSH sessions to ensure proper color rendering.
-func StylesForRenderer(lg *lipgloss.Renderer) *ui.Styles {
-	return ui.NewStyle(lg)
 }

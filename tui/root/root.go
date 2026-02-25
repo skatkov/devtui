@@ -1,8 +1,7 @@
 package root
 
 import (
-	tea "github.com/charmbracelet/bubbletea"
-	"github.com/charmbracelet/lipgloss"
+	tea "charm.land/bubbletea/v2"
 	"github.com/skatkov/devtui/internal/ui"
 )
 
@@ -16,8 +15,7 @@ type RootModel struct {
 // This is used for local terminal execution.
 func RootScreen() RootModel {
 	common := ui.CommonModel{LastSelectedItem: 0}
-	common.Lg = lipgloss.DefaultRenderer()
-	common.Styles = ui.NewStyle(common.Lg)
+	common.Styles = ui.NewStyle()
 
 	listModel := newListModel(&common)
 	return RootModel{
@@ -27,17 +25,14 @@ func RootScreen() RootModel {
 	}
 }
 
-// RootScreenWithRenderer creates the root model using a custom renderer.
-// This is used for SSH sessions where the renderer must be session-aware
-// to properly detect the client's terminal capabilities.
-func RootScreenWithRenderer(lg *lipgloss.Renderer, width, height int) RootModel {
+// RootScreenWithSize creates the root model with an initial window size.
+func RootScreenWithSize(width, height int) RootModel {
 	common := ui.CommonModel{
 		LastSelectedItem: 0,
 		Width:            width,
 		Height:           height,
 	}
-	common.Lg = lg
-	common.Styles = ui.NewStyle(common.Lg)
+	common.Styles = ui.NewStyle()
 
 	listModel := newListModel(&common)
 	return RootModel{
@@ -45,6 +40,11 @@ func RootScreenWithRenderer(lg *lipgloss.Renderer, width, height int) RootModel 
 		currentView: listModel,
 		listModel:   listModel,
 	}
+}
+
+// RootScreenWithRenderer preserves backward compatibility with old call sites.
+func RootScreenWithRenderer(_ any, width, height int) RootModel {
+	return RootScreenWithSize(width, height)
 }
 
 func (m RootModel) Init() tea.Cmd {
@@ -76,6 +76,6 @@ func (m RootModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	return m, cmd
 }
 
-func (m RootModel) View() string {
-	return m.currentView.View()
+func (m RootModel) View() tea.View {
+	return ui.WithAltScreen(m.currentView.View())
 }

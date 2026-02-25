@@ -5,14 +5,15 @@ import (
 	"strconv"
 	"strings"
 
+	"charm.land/lipgloss/v2"
+	"charm.land/lipgloss/v2/table"
 	"github.com/charmbracelet/huh"
-	"github.com/charmbracelet/lipgloss"
-	"github.com/charmbracelet/lipgloss/table"
 	"github.com/google/uuid"
+	"github.com/skatkov/devtui/internal/teacompat"
 	"github.com/skatkov/devtui/internal/ui"
 	"github.com/skatkov/devtui/internal/uuidutil"
 
-	tea "github.com/charmbracelet/bubbletea"
+	tea "charm.land/bubbletea/v2"
 )
 
 const Title = "UUID Decoder"
@@ -43,10 +44,10 @@ func NewUUIDDecodeModel(common *ui.CommonModel) *UUIDDecode {
 }
 
 func (m *UUIDDecode) Init() tea.Cmd {
-	return m.form.Init()
+	return teacompat.Cmd(m.form.Init())
 }
 
-func (m *UUIDDecode) View() string {
+func (m *UUIDDecode) View() tea.View {
 	s := m.common.Styles
 	switch m.form.State {
 	case huh.StateCompleted:
@@ -58,7 +59,7 @@ func (m *UUIDDecode) View() string {
 			Width(100).
 			Rows(uuidutil.FieldsToRows(fields)...)
 
-		return s.Base.Render(tableOutput.String())
+		return ui.AltScreenView(s.Base.Render(tableOutput.String()))
 	default:
 		header := s.Title.Render(lipgloss.JoinHorizontal(lipgloss.Left,
 			ui.AppTitle,
@@ -66,7 +67,7 @@ func (m *UUIDDecode) View() string {
 			lipgloss.NewStyle().Bold(true).Render(Title),
 		))
 		v := strings.TrimSuffix(m.form.View(), "\n\n")
-		form := m.common.Lg.NewStyle().Margin(1, 0).Render(v)
+		form := lipgloss.NewStyle().Margin(1, 0).Render(v)
 		body := lipgloss.JoinVertical(
 			lipgloss.Top,
 			form,
@@ -76,7 +77,7 @@ func (m *UUIDDecode) View() string {
 				m.form.Help().ShortHelpView(m.form.KeyBinds()),
 			),
 		)
-		return s.Base.Render(header + "\n" + body)
+		return ui.AltScreenView(s.Base.Render(header + "\n" + body))
 	}
 }
 
@@ -86,7 +87,7 @@ func (m *UUIDDecode) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	case tea.WindowSizeMsg:
 		m.common.Width = msg.Width
 		m.common.Height = msg.Height
-	case tea.KeyMsg:
+	case tea.KeyPressMsg:
 		switch msg.String() {
 		case "esc":
 			return m, func() tea.Msg {
@@ -103,5 +104,5 @@ func (m *UUIDDecode) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	if f, ok := form.(*huh.Form); ok {
 		m.form = f
 	}
-	return m, cmd
+	return m, teacompat.Cmd(cmd)
 }

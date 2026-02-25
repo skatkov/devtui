@@ -8,7 +8,7 @@ import (
 	"fmt"
 	"strings"
 
-	tea "github.com/charmbracelet/bubbletea"
+	tea "charm.land/bubbletea/v2"
 	"github.com/mattn/go-runewidth"
 
 	"github.com/skatkov/devtui/internal/clipboard"
@@ -43,7 +43,7 @@ func (m CSV2MDModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		cmds []tea.Cmd
 	)
 	switch msg := msg.(type) {
-	case tea.KeyMsg:
+	case tea.KeyPressMsg:
 		if cmd, handled := m.HandleCommonKeys(msg); handled {
 			return m, cmd
 		}
@@ -101,7 +101,7 @@ func (m CSV2MDModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	return m, tea.Batch(cmds...)
 }
 
-func (m CSV2MDModel) View() string {
+func (m CSV2MDModel) View() tea.View {
 	var b strings.Builder
 
 	fmt.Fprint(&b, m.Viewport.View()+"\n")
@@ -111,7 +111,7 @@ func (m CSV2MDModel) View() string {
 		fmt.Fprint(&b, "\n"+m.helpView())
 	}
 
-	return b.String()
+	return m.NewView(b.String())
 }
 
 func (m *CSV2MDModel) SetContent(content string) error {
