@@ -13,6 +13,11 @@ var (
 	date    = "unknown"
 )
 
+// GetVersion returns the raw version string.
+func GetVersion() string {
+	return version
+}
+
 // GetVersionShort returns a short version string suitable for single-line output.
 func GetVersionShort() string {
 	return fmt.Sprintf("%s (commit: %s, built: %s)", version, commit, date)
