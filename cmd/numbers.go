@@ -46,7 +46,7 @@ Input can be a number argument or piped from stdin.`,
 			return err
 		}
 
-		if numbersJSONOutput {
+		if outputJSON {
 			bytes, err := json.MarshalIndent(result, "", "  ")
 			if err != nil {
 				return err
@@ -66,12 +66,10 @@ Input can be a number argument or piped from stdin.`,
 }
 
 var (
-	numbersBase       int
-	numbersJSONOutput bool
+	numbersBase int
 )
 
 func init() {
 	rootCmd.AddCommand(numbersCmd)
 	numbersCmd.Flags().IntVarP(&numbersBase, "base", "b", 10, "input number base (2, 8, 10, 16)")
-	numbersCmd.Flags().BoolVar(&numbersJSONOutput, "json", false, "output conversions as JSON")
 }

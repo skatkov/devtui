@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"encoding/csv"
+	"fmt"
 	"strings"
 
 	"github.com/skatkov/devtui/internal/cmderror"
@@ -56,7 +57,15 @@ and --header to add a main heading (h1) to the output.`,
 			return cmderror.FormatParseError("tsv2md", inputStr, err)
 		}
 
-		csv2md.Print(csv2md.Convert(tsv2mdHeader, records, tsv2mdAlignColumns))
+		rows := csv2md.Convert(tsv2mdHeader, records, tsv2mdAlignColumns)
+		if outputJSON {
+			return writeJSONValue(cmd.OutOrStdout(), strings.Join(rows, "\n"))
+		}
+		for _, row := range rows {
+			if _, err := fmt.Fprintln(cmd.OutOrStdout(), row); err != nil {
+				return err
+			}
+		}
 
 		return nil
 	},

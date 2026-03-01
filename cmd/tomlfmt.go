@@ -66,6 +66,9 @@ in an interactive terminal interface.`,
 		if err != nil {
 			return cmderror.FormatParseError("tomlfmt", inputStr, err)
 		}
+		if outputJSON {
+			return writeJSONValue(cmd.OutOrStdout(), result)
+		}
 
 		_, err = fmt.Fprintln(cmd.OutOrStdout(), result)
 		if err != nil {
