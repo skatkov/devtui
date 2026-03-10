@@ -172,7 +172,7 @@ func (m Base64Model) helpView() (s string) {
 	s += "j/↓      down                " + col1[1] + "\n"
 	s += "b/pgup   page up             " + col1[2] + "\n"
 	s += "f/pgdn   page down           " + col1[3] + "\n"
-	s += "u        ½ page up           " + col1[4] + "\n"
+	s += "u        ½ page up           " + "\n"
 	s += "d        ½ page down         "
 
 	if len(col1) > 5 {
