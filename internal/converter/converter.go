@@ -3,7 +3,10 @@ package converter
 import (
 	"bytes"
 	"encoding/json"
+	"encoding/xml"
+	"errors"
 	"fmt"
+	"io"
 
 	"github.com/clbanning/mxj/v2"
 	"github.com/pelletier/go-toml/v2"
@@ -77,7 +80,13 @@ func JSONToTOML(jsonContent string) (string, error) {
 		return "", fmt.Errorf("TOML encoding error: %w", err)
 	}
 
-	return buf.String(), nil
+	tomlContent := buf.String()
+	var validation any
+	if err := toml.Unmarshal([]byte(tomlContent), &validation); err != nil {
+		return "", fmt.Errorf("TOML encoding error: %w", err)
+	}
+
+	return tomlContent, nil
 }
 
 func XMLToJSON(xmlContent string) (string, error) {
@@ -105,6 +114,30 @@ func JSONToXML(jsonContent string) (string, error) {
 		return "", fmt.Errorf("XML encoding error: %w", err)
 	}
 
+	if len(bytes.TrimSpace(xmlBytes)) == 0 {
+		return "", errors.New("XML encoding error: empty XML output")
+	}
+
+	decoder := xml.NewDecoder(bytes.NewReader(xmlBytes))
+	seenStart := false
+	for {
+		tok, err := decoder.Token()
+		if err != nil {
+			if err == io.EOF {
+				break
+			}
+			return "", fmt.Errorf("XML encoding error: %w", err)
+		}
+
+		if _, ok := tok.(xml.StartElement); ok {
+			seenStart = true
+		}
+	}
+
+	if !seenStart {
+		return "", errors.New("XML encoding error: empty XML output")
+	}
+
 	var buf bytes.Buffer
 	buf.Write(xmlBytes)
 	return buf.String(), nil
@@ -127,7 +160,13 @@ func YAMLToTOML(yamlContent string) (string, error) {
 		return "", fmt.Errorf("TOML encoding error: %w", err)
 	}
 
-	return buf.String(), nil
+	tomlContent := buf.String()
+	var validation any
+	if err := toml.Unmarshal([]byte(tomlContent), &validation); err != nil {
+		return "", fmt.Errorf("TOML encoding error: %w", err)
+	}
+
+	return tomlContent, nil
 }
 
 func TOMLToYAML(tomlContent string) (string, error) {

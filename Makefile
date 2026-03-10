@@ -1,4 +1,4 @@
-.PHONY: help build run test test-race lint clean deps tidy docs site release snapshot install
+.PHONY: help build run test test-race test-coverage lint fmt vet check fuzz fuzz-nightly clean deps tidy update-deps generate docs site release snapshot install verify all
 
 # Default target
 .DEFAULT_GOAL := help
@@ -9,6 +9,8 @@ VERSION?=$(shell git describe --tags --always --dirty 2>/dev/null || echo "dev")
 COMMIT?=$(shell git rev-parse --short HEAD 2>/dev/null || echo "unknown")
 DATE?=$(shell date -u +"%Y-%m-%dT%H:%M:%SZ")
 LDFLAGS=-ldflags "-X github.com/skatkov/devtui/cmd.version=$(VERSION) -X github.com/skatkov/devtui/cmd.commit=$(COMMIT) -X github.com/skatkov/devtui/cmd.date=$(DATE)"
+FUZZTIME?=5s
+NIGHTLY_FUZZTIME?=45s
 
 help: ## Display this help message
 	@echo "DevTUI - Development targets:"
@@ -32,6 +34,29 @@ test: ## Run all tests
 test-race: ## Run tests with race detection (what CI uses)
 	@echo "Running tests with race detection..."
 	go test -v -failfast -race ./...
+
+fuzz: ## Run fuzz tests (set FUZZTIME=30s for deeper runs)
+	@echo "Running fuzz tests (FUZZTIME=$(FUZZTIME))..."
+	go test ./internal/base64 -run=^$$ -fuzz=FuzzBase64RoundTrip -fuzztime=$(FUZZTIME)
+	go test ./internal/base64 -run=^$$ -fuzz=FuzzDecodeMatchesStdlibBehavior -fuzztime=$(FUZZTIME)
+	go test ./internal/csv2json -run=^$$ -fuzz=FuzzConvertDoesNotPanic -fuzztime=$(FUZZTIME)
+	go test ./internal/converter -run=^$$ -fuzz=FuzzYAMLToJSON -fuzztime=$(FUZZTIME)
+	go test ./internal/converter -run=^$$ -fuzz=FuzzJSONToYAML -fuzztime=$(FUZZTIME)
+	go test ./internal/converter -run=^$$ -fuzz=FuzzTOMLToJSON -fuzztime=$(FUZZTIME)
+	go test ./internal/converter -run=^$$ -fuzz=FuzzJSONToTOML -fuzztime=$(FUZZTIME)
+	go test ./internal/converter -run=^$$ -fuzz=FuzzXMLToJSON -fuzztime=$(FUZZTIME)
+	go test ./internal/converter -run=^$$ -fuzz=FuzzJSONToXML -fuzztime=$(FUZZTIME)
+	go test ./internal/converter -run=^$$ -fuzz=FuzzYAMLToTOML -fuzztime=$(FUZZTIME)
+	go test ./internal/converter -run=^$$ -fuzz=FuzzTOMLToYAML -fuzztime=$(FUZZTIME)
+	go test ./internal/yamlfmt -run=^$$ -fuzz=FuzzFormatYAML -fuzztime=$(FUZZTIME)
+	go test ./internal/htmlfmt -run=^$$ -fuzz=FuzzFormatHTML -fuzztime=$(FUZZTIME)
+	go test ./tui/jsonrepair -run=^$$ -fuzz=FuzzRepairJSONProducesValidJSON -fuzztime=$(FUZZTIME)
+	go test ./tui/json2toon -run=^$$ -fuzz=FuzzConvertNoPanic -fuzztime=$(FUZZTIME)
+	go test ./tui/json2toon -run=^$$ -fuzz=FuzzConvertWithOptionsNoPanic -fuzztime=$(FUZZTIME)
+
+fuzz-nightly: ## Run extended fuzz tests (default NIGHTLY_FUZZTIME=45s)
+	@echo "Running nightly fuzz tests (NIGHTLY_FUZZTIME=$(NIGHTLY_FUZZTIME))..."
+	$(MAKE) fuzz FUZZTIME=$(NIGHTLY_FUZZTIME)
 
 test-coverage: ## Run tests with coverage report
 	@echo "Running tests with coverage..."

@@ -108,7 +108,7 @@ func arrayContentMatch(str string) (string, int) {
 	i := strings.Index(str, "[")
 	if i >= 0 {
 		j := strings.Index(str, "]")
-		if j >= 0 {
+		if j > i {
 			index, err := strconv.Atoi(str[i+1 : j])
 			if err != nil {
 				return str, -1

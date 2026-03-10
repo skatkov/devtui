@@ -1,0 +1,33 @@
+name: nightly-fuzz
+
+on:
+  schedule:
+    - cron: "17 2 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  fuzz:
+    name: nightly-fuzz
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-go@v6
+        with:
+          go-version-file: "go.mod"
+          cache: true
+
+      - name: Run nightly fuzz suite
+        run: make fuzz-nightly NIGHTLY_FUZZTIME=45s
+
+      - name: Upload failing fuzz corpus
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: nightly-fuzz-corpus
+          path: |
+            **/testdata/fuzz/**
+          if-no-files-found: ignore
