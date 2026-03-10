@@ -42,26 +42,54 @@ func rowsToJSON(rows [][]string) (string, error) {
 					if internal[key] == nil {
 						internal[key] = []any{}
 					}
-					internalArray := internal[key].([]any)
+
+					internalArray, ok := internal[key].([]any)
+					if !ok {
+						return "", fmt.Errorf("invalid CSV header %q: key %q is used as both object and array", attribute, key)
+					}
+
 					if index == len(objectSlice)-1 {
 						internalArray = append(internalArray, value)
 						internal[key] = internalArray
 						break
 					}
-					if arrayIndex >= len(internalArray) {
+
+					for arrayIndex >= len(internalArray) {
 						internalArray = append(internalArray, map[string]any{})
 					}
+
+					if internalArray[arrayIndex] == nil {
+						internalArray[arrayIndex] = map[string]any{}
+					}
+
+					nextInternal, ok := internalArray[arrayIndex].(map[string]any)
+					if !ok {
+						return "", fmt.Errorf("invalid CSV header %q: key %q[%d] is used as both scalar and object", attribute, key, arrayIndex)
+					}
+
 					internal[key] = internalArray
-					internal = internalArray[arrayIndex].(map[string]any)
+					internal = nextInternal
 				} else {
 					if index == len(objectSlice)-1 {
+						if existing, exists := internal[key]; exists {
+							switch existing.(type) {
+							case map[string]any, []any:
+								return "", fmt.Errorf("invalid CSV header %q: key %q is used as both scalar and nested value", attribute, key)
+							}
+						}
 						internal[key] = value
 						break
 					}
 					if internal[key] == nil {
 						internal[key] = map[string]any{}
 					}
-					internal = internal[key].(map[string]any)
+
+					nextInternal, ok := internal[key].(map[string]any)
+					if !ok {
+						return "", fmt.Errorf("invalid CSV header %q: key %q is used as both scalar and object", attribute, key)
+					}
+
+					internal = nextInternal
 				}
 			}
 		}
@@ -81,7 +109,10 @@ func arrayContentMatch(str string) (string, int) {
 	if i >= 0 {
 		j := strings.Index(str, "]")
 		if j >= 0 {
-			index, _ := strconv.Atoi(str[i+1 : j])
+			index, err := strconv.Atoi(str[i+1 : j])
+			if err != nil {
+				return str, -1
+			}
 			return str[0:i], index
 		}
 	}
