@@ -95,9 +95,9 @@ func TestConvertMalformedArrayHeaderDoesNotPanic(t *testing.T) {
 }
 
 func FuzzConvertDoesNotPanic(f *testing.F) {
-	f.Add("name,age\\nAlice,30\\n")
-	f.Add("a,a.b\\n1,2\\n")
-	f.Add("items[2].name\\nhello\\n")
+	f.Add("name,age\nAlice,30\n")
+	f.Add("a,a.b\n1,2\n")
+	f.Add("items[2].name\nhello\n")
 	f.Add("")
 	addCSVSeedsFromFiles(f, "example.csv")
 
