@@ -2,6 +2,8 @@ package converter
 
 import (
 	"encoding/json"
+	"os"
+	"path/filepath"
 	"testing"
 
 	"github.com/clbanning/mxj/v2"
@@ -9,11 +11,25 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
+const fuzzSeedDir = "../../testdata"
+
+func addStringSeedFiles(f *testing.F, fileNames ...string) {
+	for _, fileName := range fileNames {
+		content, err := os.ReadFile(filepath.Join(fuzzSeedDir, fileName))
+		if err != nil {
+			continue
+		}
+
+		f.Add(string(content))
+	}
+}
+
 func FuzzYAMLToJSON(f *testing.F) {
 	f.Add("name: Alice\nage: 30\n")
 	f.Add("items:\n  - one\n  - two\n")
 	f.Add("{not: valid")
 	f.Add("")
+	addStringSeedFiles(f, "example.yaml", "nested.yaml")
 
 	f.Fuzz(func(t *testing.T, input string) {
 		if len(input) > 4096 {
@@ -36,6 +52,7 @@ func FuzzJSONToYAML(f *testing.F) {
 	f.Add(`[1,2,3]`)
 	f.Add(`{invalid`)
 	f.Add("")
+	addStringSeedFiles(f, "example.json", "nested.json", "json-with-urls.json")
 
 	f.Fuzz(func(t *testing.T, input string) {
 		if len(input) > 4096 {
@@ -59,6 +76,7 @@ func FuzzTOMLToJSON(f *testing.F) {
 	f.Add("[user]\nname = \"Bob\"\n")
 	f.Add("[[items]]\nname = \"one\"\n")
 	f.Add("")
+	addStringSeedFiles(f, "example.toml")
 
 	f.Fuzz(func(t *testing.T, input string) {
 		if len(input) > 4096 {
@@ -81,6 +99,7 @@ func FuzzJSONToTOML(f *testing.F) {
 	f.Add(`{"items":[{"name":"one"}]}`)
 	f.Add(`[]`)
 	f.Add("")
+	addStringSeedFiles(f, "example.json", "nested.json", "json-with-urls.json")
 
 	f.Fuzz(func(t *testing.T, input string) {
 		if len(input) > 4096 {
@@ -104,6 +123,7 @@ func FuzzXMLToJSON(f *testing.F) {
 	f.Add("<root attr=\"x\"><item>1</item></root>")
 	f.Add("<root>")
 	f.Add("")
+	addStringSeedFiles(f, "example.xml")
 
 	f.Fuzz(func(t *testing.T, input string) {
 		if len(input) > 4096 {
@@ -126,6 +146,7 @@ func FuzzJSONToXML(f *testing.F) {
 	f.Add(`{"root":{"items":[1,2,3]}}`)
 	f.Add(`[]`)
 	f.Add("")
+	addStringSeedFiles(f, "example.json", "nested.json", "json-with-urls.json")
 
 	f.Fuzz(func(t *testing.T, input string) {
 		if len(input) > 4096 {
@@ -148,6 +169,7 @@ func FuzzYAMLToTOML(f *testing.F) {
 	f.Add("items:\n  - one\n  - two\n")
 	f.Add("{not: valid")
 	f.Add("")
+	addStringSeedFiles(f, "example.yaml", "nested.yaml")
 
 	f.Fuzz(func(t *testing.T, input string) {
 		if len(input) > 4096 {
@@ -171,6 +193,7 @@ func FuzzTOMLToYAML(f *testing.F) {
 	f.Add("[user]\nname = \"Bob\"\n")
 	f.Add("[[items]]\nname = \"one\"\n")
 	f.Add("")
+	addStringSeedFiles(f, "example.toml")
 
 	f.Fuzz(func(t *testing.T, input string) {
 		if len(input) > 4096 {

@@ -3,15 +3,42 @@ package base64
 import (
 	"bytes"
 	stdbase64 "encoding/base64"
+	"os"
+	"path/filepath"
 	"strings"
 	"testing"
 )
+
+const fuzzSeedDir = "../../testdata"
+
+func addByteSeedsFromFiles(f *testing.F, fileNames ...string) {
+	for _, fileName := range fileNames {
+		content, err := os.ReadFile(filepath.Join(fuzzSeedDir, fileName))
+		if err != nil {
+			continue
+		}
+
+		f.Add(content)
+	}
+}
+
+func addStringSeedsFromFiles(f *testing.F, fileNames ...string) {
+	for _, fileName := range fileNames {
+		content, err := os.ReadFile(filepath.Join(fuzzSeedDir, fileName))
+		if err != nil {
+			continue
+		}
+
+		f.Add(string(content))
+	}
+}
 
 func FuzzBase64RoundTrip(f *testing.F) {
 	f.Add([]byte(""))
 	f.Add([]byte("hello world"))
 	f.Add([]byte("\x00\x01\x02\xff\xfe"))
 	f.Add([]byte("ñáéíóú 中文 🚀"))
+	addByteSeedsFromFiles(f, "sample.txt", "json.txt", "binary.txt", "example.json", "example.yaml")
 
 	f.Fuzz(func(t *testing.T, data []byte) {
 		encoded := Encode(data)
@@ -42,6 +69,7 @@ func FuzzDecodeMatchesStdlibBehavior(f *testing.F) {
 	f.Add(" SGVsbG8= ")
 	f.Add("%%%")
 	f.Add("YWJj\n")
+	addStringSeedsFromFiles(f, "sample.base64", "json.base64", "binary.base64", "invalid.base64")
 
 	f.Fuzz(func(t *testing.T, input string) {
 		trimmed := strings.TrimSpace(input)

@@ -2,9 +2,22 @@ package csv2json
 
 import (
 	"encoding/json"
+	"os"
+	"path/filepath"
 	"strings"
 	"testing"
 )
+
+func addCSVSeedsFromFiles(f *testing.F, fileNames ...string) {
+	for _, fileName := range fileNames {
+		content, err := os.ReadFile(filepath.Join("../../testdata", fileName))
+		if err != nil {
+			continue
+		}
+
+		f.Add(string(content))
+	}
+}
 
 func convertNoPanic(t *testing.T, input string) (result string, err error) {
 	t.Helper()
@@ -86,6 +99,7 @@ func FuzzConvertDoesNotPanic(f *testing.F) {
 	f.Add("a,a.b\\n1,2\\n")
 	f.Add("items[2].name\\nhello\\n")
 	f.Add("")
+	addCSVSeedsFromFiles(f, "example.csv")
 
 	f.Fuzz(func(t *testing.T, input string) {
 		defer func() {

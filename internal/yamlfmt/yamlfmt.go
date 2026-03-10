@@ -2,6 +2,7 @@ package yamlfmt
 
 import (
 	"bytes"
+	"fmt"
 
 	"gopkg.in/yaml.v3"
 )
@@ -22,5 +23,11 @@ func Format(content string) (string, error) {
 		return "", err
 	}
 
-	return buf.String(), nil
+	formatted := buf.String()
+	var validation any
+	if err := yaml.Unmarshal([]byte(formatted), &validation); err != nil {
+		return "", fmt.Errorf("formatted YAML is invalid: %w", err)
+	}
+
+	return formatted, nil
 }
