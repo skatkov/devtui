@@ -7,11 +7,10 @@ import (
 	"strconv"
 	"strings"
 
+	"charm.land/huh/v2"
 	"charm.land/lipgloss/v2"
 	"charm.land/lipgloss/v2/table"
-	"github.com/charmbracelet/huh"
 	"github.com/skatkov/devtui/internal/numbers"
-	"github.com/skatkov/devtui/internal/teacompat"
 	"github.com/skatkov/devtui/internal/ui"
 
 	tea "charm.land/bubbletea/v2"
@@ -64,13 +63,13 @@ func NewNumberModel(common *ui.CommonModel) NumbersModel {
 					return nil
 				}).Value(&m.input),
 		),
-	).WithTheme(huh.ThemeCharm()).WithAccessible(accessible).WithShowHelp(false)
+	).WithTheme(huh.ThemeFunc(huh.ThemeCharm)).WithAccessible(accessible).WithShowHelp(false)
 
 	return m
 }
 
 func (m NumbersModel) Init() tea.Cmd {
-	return teacompat.Cmd(m.form.Init())
+	return m.form.Init()
 }
 
 func (m NumbersModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
@@ -109,7 +108,7 @@ func (m NumbersModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			}
 		}
 
-		cmds = append(cmds, teacompat.Cmd(cmd))
+		cmds = append(cmds, cmd)
 	}
 
 	return m, tea.Batch(cmds...)

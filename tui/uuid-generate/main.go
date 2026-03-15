@@ -6,11 +6,10 @@ import (
 	"strconv"
 	"strings"
 
+	"charm.land/huh/v2"
 	"charm.land/lipgloss/v2"
 	"charm.land/lipgloss/v2/table"
-	"github.com/charmbracelet/huh"
 	"github.com/google/uuid"
-	"github.com/skatkov/devtui/internal/teacompat"
 	"github.com/skatkov/devtui/internal/ui"
 	"github.com/skatkov/devtui/internal/uuidutil"
 
@@ -51,7 +50,7 @@ func NewUUIDGenerateModel(common *ui.CommonModel) *UUIDGenerate {
 				Title("Namespace").
 				Value(&m.namespace),
 		).WithHideFunc(func() bool { return m.hideNamespace() }),
-	).WithTheme(huh.ThemeCharm()).WithAccessible(accessible).WithShowHelp(false)
+	).WithTheme(huh.ThemeFunc(huh.ThemeCharm)).WithAccessible(accessible).WithShowHelp(false)
 
 	return &m
 }
@@ -68,7 +67,7 @@ func (m *UUIDGenerate) hideNamespace() bool {
 }
 
 func (m *UUIDGenerate) Init() tea.Cmd {
-	return teacompat.Cmd(m.form.Init())
+	return m.form.Init()
 }
 
 func (m *UUIDGenerate) View() tea.View {
@@ -141,5 +140,5 @@ func (m *UUIDGenerate) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			}
 		}
 	}
-	return m, teacompat.Cmd(cmd)
+	return m, cmd
 }

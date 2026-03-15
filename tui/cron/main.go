@@ -6,10 +6,9 @@ import (
 	"regexp"
 	"strings"
 
+	"charm.land/huh/v2"
 	"charm.land/lipgloss/v2"
-	"github.com/charmbracelet/huh"
 	"github.com/lnquy/cron"
-	"github.com/skatkov/devtui/internal/teacompat"
 	"github.com/skatkov/devtui/internal/ui"
 
 	tea "charm.land/bubbletea/v2"
@@ -80,13 +79,13 @@ func NewCronModel(common *ui.CommonModel) *CronModel {
 					return valueStyle.Render(desc)
 				}, &m.cronExpression),
 		),
-	).WithTheme(huh.ThemeCharm()).WithShowHelp(false)
+	).WithTheme(huh.ThemeFunc(huh.ThemeCharm)).WithShowHelp(false)
 
 	return m
 }
 
 func (m *CronModel) Init() tea.Cmd {
-	return teacompat.Cmd(m.form.Init())
+	return m.form.Init()
 }
 
 func (m *CronModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
@@ -112,7 +111,7 @@ func (m *CronModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	if f, ok := form.(*huh.Form); ok {
 		m.form = f
 	}
-	return m, teacompat.Cmd(cmd)
+	return m, cmd
 }
 
 func (m *CronModel) View() tea.View {
