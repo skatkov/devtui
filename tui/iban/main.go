@@ -6,11 +6,10 @@ import (
 	"strconv"
 	"strings"
 
+	"charm.land/huh/v2"
 	"charm.land/lipgloss/v2"
 	"charm.land/lipgloss/v2/table"
-	"github.com/charmbracelet/huh"
 	"github.com/jacoelho/banking/iban"
-	"github.com/skatkov/devtui/internal/teacompat"
 	"github.com/skatkov/devtui/internal/ui"
 
 	tea "charm.land/bubbletea/v2"
@@ -157,13 +156,13 @@ func NewIBANGenerateModel(common *ui.CommonModel) *IBANGenerate {
 				Height(10).
 				Value(&m.countryCode),
 		),
-	).WithTheme(huh.ThemeCharm()).WithAccessible(accessible).WithShowHelp(false)
+	).WithTheme(huh.ThemeFunc(huh.ThemeCharm)).WithAccessible(accessible).WithShowHelp(false)
 
 	return &m
 }
 
 func (m *IBANGenerate) Init() tea.Cmd {
-	return teacompat.Cmd(m.form.Init())
+	return m.form.Init()
 }
 
 func (m *IBANGenerate) View() tea.View {
@@ -253,7 +252,7 @@ func (m *IBANGenerate) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			m.generateIBAN()
 		}
 	}
-	return m, teacompat.Cmd(cmd)
+	return m, cmd
 }
 
 func (m *IBANGenerate) generateIBAN() {

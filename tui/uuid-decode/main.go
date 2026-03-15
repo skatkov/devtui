@@ -5,11 +5,10 @@ import (
 	"strconv"
 	"strings"
 
+	"charm.land/huh/v2"
 	"charm.land/lipgloss/v2"
 	"charm.land/lipgloss/v2/table"
-	"github.com/charmbracelet/huh"
 	"github.com/google/uuid"
-	"github.com/skatkov/devtui/internal/teacompat"
 	"github.com/skatkov/devtui/internal/ui"
 	"github.com/skatkov/devtui/internal/uuidutil"
 
@@ -38,13 +37,13 @@ func NewUUIDDecodeModel(common *ui.CommonModel) *UUIDDecode {
 					return err
 				}).Value(&m.uuid),
 		),
-	).WithTheme(huh.ThemeCharm()).WithAccessible(accessible).WithShowHelp(false)
+	).WithTheme(huh.ThemeFunc(huh.ThemeCharm)).WithAccessible(accessible).WithShowHelp(false)
 
 	return &m
 }
 
 func (m *UUIDDecode) Init() tea.Cmd {
-	return teacompat.Cmd(m.form.Init())
+	return m.form.Init()
 }
 
 func (m *UUIDDecode) View() tea.View {
@@ -104,5 +103,5 @@ func (m *UUIDDecode) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	if f, ok := form.(*huh.Form); ok {
 		m.form = f
 	}
-	return m, teacompat.Cmd(cmd)
+	return m, cmd
 }
