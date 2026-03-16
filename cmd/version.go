@@ -22,9 +22,13 @@ var versionCmd = &cobra.Command{
 	Use:   "version",
 	Short: "Print version information",
 	Long:  "Print version, commit and date of release for this software",
-	RunE: func(_ *cobra.Command, _ []string) error {
-		fmt.Print("devtui version " + GetVersionShort())
-		return nil
+	RunE: func(cmd *cobra.Command, _ []string) error {
+		output := "devtui version " + GetVersionShort()
+		if outputJSON {
+			return writeJSONValue(cmd.OutOrStdout(), output)
+		}
+		_, err := fmt.Fprint(cmd.OutOrStdout(), output)
+		return err
 	},
 }
 
