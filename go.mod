@@ -5,12 +5,12 @@ go 1.25.8
 require (
 	charm.land/bubbles/v2 v2.0.0
 	charm.land/bubbletea/v2 v2.0.2
+	charm.land/fang/v2 v2.0.0
 	charm.land/huh/v2 v2.0.3
 	charm.land/lipgloss/v2 v2.0.2
 	github.com/RealAlexandreAI/json-repair v0.0.15
 	github.com/adrg/xdg v0.5.3
 	github.com/alecthomas/chroma v0.10.0
-	github.com/charmbracelet/fang v1.0.0
 	github.com/charmbracelet/glamour v1.0.0
 	github.com/charmbracelet/x/editor v0.2.0
 	github.com/charmbracelet/x/term v0.2.2
