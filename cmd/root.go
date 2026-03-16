@@ -8,7 +8,7 @@ import (
 	"strings"
 
 	tea "charm.land/bubbletea/v2"
-	"github.com/charmbracelet/fang"
+	"charm.land/fang/v2"
 	"github.com/charmbracelet/x/term"
 	"github.com/skatkov/devtui/tui/root"
 	"github.com/spf13/cobra"
