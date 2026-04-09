@@ -2,12 +2,22 @@ require 'fileutils'
 require 'pathname'
 
 module MarkdownForLlms
-  module_function
+  extend self
 
   MARKDOWN_EXTENSIONS = ['.md', '.markdown'].freeze
   MARKDOWN_LINK_PATTERN = /(?<!!)(\[[^\]]+\]\()(?<destination>[^)\s]+)(?<suffix>\))/
   STANDALONE_ATTR_LIST_PATTERN = /^\{:\s*([^}]+)\}\s*$/
   INLINE_ATTR_LIST_PATTERN = /\{:\s*[^}]+\}/
+  GUIDES = [
+    ['Home', '/index.md', 'Project overview and docs entry point.'],
+    ['Getting started', '/start.md', 'Installation notes and platform requirements.'],
+    ['CLI', '/cli/index.md', 'CLI overview with shell completion notes.'],
+    ['TUI', '/tui/index.md', 'TUI overview and shared key bindings.']
+  ].freeze
+  OPTIONAL_LINKS = [
+    ['GitHub repository', 'https://github.com/skatkov/devtui', 'Source code, issues, and project metadata.'],
+    ['GitHub releases', 'https://github.com/skatkov/devtui/releases', 'Binary downloads and release history.']
+  ].freeze
 
   def markdown_source_page?(site, page)
     return false unless MARKDOWN_EXTENSIONS.include?(File.extname(page.path).downcase)
@@ -67,6 +77,10 @@ module MarkdownForLlms
         map[canonical.sub(/\.html\z/, '')] = export_url
       end
     end
+  end
+
+  def markdown_pages(site)
+    site.pages.select { |page| markdown_source_page?(site, page) }
   end
 
   def strip_front_matter(content)
@@ -129,19 +143,78 @@ module MarkdownForLlms
   def export_markdown(site)
     link_map = build_link_map(site)
 
-    site.pages.each do |page|
-      next unless markdown_source_page?(site, page)
-
+    markdown_pages(site).each do |page|
       content = File.read(source_path(site, page), encoding: 'UTF-8')
       content = strip_front_matter(content)
       content = sanitize_markdown(content)
       content = rewrite_markdown_links(content, page.url, link_map)
       content = "#{content.rstrip}\n"
 
-      output_path = File.join(site.dest, page.data.fetch('llm_markdown_url').delete_prefix('/'))
-      FileUtils.mkdir_p(File.dirname(output_path))
-      File.write(output_path, content)
+      write_output(site, page.data.fetch('llm_markdown_url'), content)
     end
+  end
+
+  def export_llms_txt(site)
+    lines = [
+      '# DevTUI',
+      '',
+      '> DevTUI is an all-in-one terminal toolkit for developers with both a CLI and an interactive TUI for formatting, transforming, and inspecting common developer data.',
+      '',
+      "Prefer the Markdown URLs below over the HTML pages. Each link points to an LLM-friendly Markdown export generated from the site's source pages.",
+      ''
+    ]
+
+    append_named_links(lines, 'Guides', GUIDES) do |title, path, description|
+      "- [#{title}](#{absolute_url(site, path)}): #{description}"
+    end
+
+    append_named_links(lines, 'CLI Commands', llm_index_pages(site, 'CLI')) do |page|
+      title = page.data.fetch('title')
+      "- [#{title}](#{absolute_url(site,
+                                   page.data.fetch('llm_markdown_url'))}): Command reference for `devtui #{title}`."
+    end
+
+    append_named_links(lines, 'TUI Tools', llm_index_pages(site, 'TUI')) do |page|
+      title = page.data.fetch('title')
+      "- [#{title}](#{absolute_url(site,
+                                   page.data.fetch('llm_markdown_url'))}): TUI documentation for the #{title} tool."
+    end
+
+    append_named_links(lines, 'Optional', OPTIONAL_LINKS) do |title, url, description|
+      "- [#{title}](#{url}): #{description}"
+    end
+
+    write_output(site, '/llms.txt', "#{lines.join("\n")}\n")
+  end
+
+  def append_named_links(lines, heading, entries)
+    lines << "## #{heading}"
+    lines << ''
+
+    entries.each do |entry|
+      lines << yield(*Array(entry))
+    end
+
+    lines << ''
+  end
+
+  def llm_index_pages(site, parent)
+    markdown_pages(site)
+      .select { |page| page.data['parent'].to_s == parent && page.data['llm_index_entry'] }
+      .sort_by { |page| page.data['title'].to_s.downcase }
+  end
+
+  def absolute_url(site, path)
+    root = site.config.fetch('url', '').to_s.sub(%r{/*\z}, '')
+    baseurl = site.config.fetch('baseurl', '').to_s
+
+    "#{root}#{normalize_site_path("#{baseurl}/#{path}")}"
+  end
+
+  def write_output(site, url, content)
+    output_path = File.join(site.dest, url.delete_prefix('/'))
+    FileUtils.mkdir_p(File.dirname(output_path))
+    File.write(output_path, content)
   end
 
   class Generator < Jekyll::Generator
@@ -156,4 +229,5 @@ end
 
 Jekyll::Hooks.register :site, :post_write do |site|
   MarkdownForLlms.export_markdown(site)
+  MarkdownForLlms.export_llms_txt(site)
 end
