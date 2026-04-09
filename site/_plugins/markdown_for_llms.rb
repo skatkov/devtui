@@ -8,16 +8,6 @@ module MarkdownForLlms
   MARKDOWN_LINK_PATTERN = /(?<!!)(\[[^\]]+\]\()(?<destination>[^)\s]+)(?<suffix>\))/
   STANDALONE_ATTR_LIST_PATTERN = /^\{:\s*([^}]+)\}\s*$/
   INLINE_ATTR_LIST_PATTERN = /\{:\s*[^}]+\}/
-  GUIDES = [
-    ['Home', '/index.md', 'Project overview and docs entry point.'],
-    ['Getting started', '/start.md', 'Installation notes and platform requirements.'],
-    ['CLI', '/cli/index.md', 'CLI overview with shell completion notes.'],
-    ['TUI', '/tui/index.md', 'TUI overview and shared key bindings.']
-  ].freeze
-  OPTIONAL_LINKS = [
-    ['GitHub repository', 'https://github.com/skatkov/devtui', 'Source code, issues, and project metadata.'],
-    ['GitHub releases', 'https://github.com/skatkov/devtui/releases', 'Binary downloads and release history.']
-  ].freeze
 
   def markdown_source_page?(site, page)
     return false unless MARKDOWN_EXTENSIONS.include?(File.extname(page.path).downcase)
@@ -27,6 +17,14 @@ module MarkdownForLlms
 
   def source_path(site, page)
     File.join(site.source, page.path)
+  end
+
+  def plugin_config(site)
+    site.config.fetch('markdown_for_llms', {})
+  end
+
+  def llms_txt_config(site)
+    plugin_config(site).fetch('llms_txt', {})
   end
 
   def llm_markdown_url(url)
@@ -48,22 +46,11 @@ module MarkdownForLlms
   end
 
   def build_link_map(site)
-    seen_index_entries = {}
-
     site.pages.sort_by(&:path).each_with_object({}) do |page, map|
       next unless markdown_source_page?(site, page)
 
       export_url = llm_markdown_url(page.url)
       page.data['llm_markdown_url'] = export_url
-
-      title = page.data['title'].to_s.strip
-      parent = page.data['parent'].to_s.strip
-      entry_key = [parent, title]
-      page.data.delete('llm_index_entry')
-      if !title.empty? && !parent.empty? && !seen_index_entries[entry_key]
-        page.data['llm_index_entry'] = true
-        seen_index_entries[entry_key] = true
-      end
 
       canonical = normalize_site_path(page.url)
       map[canonical] = export_url
@@ -80,7 +67,7 @@ module MarkdownForLlms
   end
 
   def markdown_pages(site)
-    site.pages.select { |page| markdown_source_page?(site, page) }
+    site.pages.select { |page| markdown_source_page?(site, page) }.sort_by(&:path)
   end
 
   def strip_front_matter(content)
@@ -155,53 +142,156 @@ module MarkdownForLlms
   end
 
   def export_llms_txt(site)
-    lines = [
-      '# DevTUI',
-      '',
-      '> DevTUI is an all-in-one terminal toolkit for developers with both a CLI and an interactive TUI for formatting, transforming, and inspecting common developer data.',
-      '',
-      "Prefer the Markdown URLs below over the HTML pages. Each link points to an LLM-friendly Markdown export generated from the site's source pages.",
-      ''
-    ]
+    config = llms_txt_config(site)
+    return unless config['enabled']
 
-    append_named_links(lines, 'Guides', GUIDES) do |title, path, description|
-      "- [#{title}](#{absolute_url(site, path)}): #{description}"
+    sections = Array(config['sections'])
+    return if sections.empty?
+
+    lines = []
+
+    title = config.fetch('title', site.config['title']).to_s.strip
+    unless title.empty?
+      lines << "# #{title}"
+      lines << ''
     end
 
-    append_named_links(lines, 'CLI Commands', llm_index_pages(site, 'CLI')) do |page|
-      title = page.data.fetch('title')
-      "- [#{title}](#{absolute_url(site,
-                                   page.data.fetch('llm_markdown_url'))}): Command reference for `devtui #{title}`."
+    summary = config['summary'].to_s.strip
+    unless summary.empty?
+      lines << "> #{summary}"
+      lines << ''
     end
 
-    append_named_links(lines, 'TUI Tools', llm_index_pages(site, 'TUI')) do |page|
-      title = page.data.fetch('title')
-      "- [#{title}](#{absolute_url(site,
-                                   page.data.fetch('llm_markdown_url'))}): TUI documentation for the #{title} tool."
+    intro = config['intro'].to_s.strip
+    unless intro.empty?
+      lines << intro
+      lines << ''
     end
 
-    append_named_links(lines, 'Optional', OPTIONAL_LINKS) do |title, url, description|
-      "- [#{title}](#{url}): #{description}"
+    sections.each do |section|
+      section_lines = render_section(site, section)
+      next if section_lines.empty?
+
+      lines.concat(section_lines)
     end
 
-    write_output(site, '/llms.txt', "#{lines.join("\n")}\n")
+    write_output(site, config.fetch('path', '/llms.txt'), "#{lines.join("\n").rstrip}\n")
   end
 
-  def append_named_links(lines, heading, entries)
-    lines << "## #{heading}"
-    lines << ''
+  def render_section(site, section)
+    entries = render_section_entries(site, section)
+    return [] if entries.empty?
 
-    entries.each do |entry|
-      lines << yield(*Array(entry))
+    lines = []
+    heading = section['title'].to_s.strip
+    unless heading.empty?
+      lines << "## #{heading}"
+      lines << ''
     end
 
+    lines.concat(entries)
     lines << ''
   end
 
-  def llm_index_pages(site, parent)
-    markdown_pages(site)
-      .select { |page| page.data['parent'].to_s == parent && page.data['llm_index_entry'] }
-      .sort_by { |page| page.data['title'].to_s.downcase }
+  def render_section_entries(site, section)
+    links = Array(section['links']).filter_map do |link|
+      render_link_entry(site, link)
+    end
+    return links unless links.empty?
+
+    page_config = section['pages']
+    return [] unless page_config.is_a?(Hash)
+
+    section_pages(site, page_config).filter_map do |page|
+      render_page_entry(site, page, page_config)
+    end
+  end
+
+  def render_link_entry(site, link)
+    title = link.fetch('title', '').to_s.strip
+    url = resolve_link_url(site, link)
+    return nil if title.empty? || url.empty?
+
+    description = link['description'].to_s.strip
+    return "- [#{title}](#{url})" if description.empty?
+
+    "- [#{title}](#{url}): #{description}"
+  end
+
+  def resolve_link_url(site, link)
+    external_url = link['url'].to_s.strip
+    return external_url unless external_url.empty?
+
+    path = link['path'].to_s.strip
+    return '' if path.empty?
+
+    absolute_url(site, path)
+  end
+
+  def section_pages(site, page_config)
+    pages = markdown_pages(site)
+    pages = pages.select { |page| page_matches?(page, page_config['where'] || {}) }
+    pages = dedupe_pages(pages, page_config['dedupe_by']) if page_config['dedupe_by']
+
+    sort_key = page_config['sort_by']
+    return pages unless sort_key
+
+    pages.sort_by { |page| page_value(page, sort_key).to_s.downcase }
+  end
+
+  def page_matches?(page, filters)
+    filters.all? do |key, expected|
+      values_match?(page_value(page, key), expected)
+    end
+  end
+
+  def values_match?(value, expected)
+    return Array(expected).any? { |item| values_match?(value, item) } if expected.is_a?(Array)
+
+    value.to_s == expected.to_s
+  end
+
+  def dedupe_pages(pages, dedupe_by)
+    keys = Array(dedupe_by).map(&:to_s)
+    seen = {}
+
+    pages.each_with_object([]) do |page, result|
+      identity = keys.map { |key| page_value(page, key).to_s }
+      next if seen[identity]
+
+      seen[identity] = true
+      result << page
+    end
+  end
+
+  def render_page_entry(site, page, page_config)
+    label = render_page_template(page_config.fetch('label', '%{title}'), page).strip
+    url = absolute_url(site, page.data.fetch('llm_markdown_url'))
+    return nil if label.empty? || url.empty?
+
+    description = render_page_template(page_config['description'].to_s, page).strip
+    return "- [#{label}](#{url})" if description.empty?
+
+    "- [#{label}](#{url}): #{description}"
+  end
+
+  def render_page_template(template, page)
+    template.to_s.gsub(/%\{([^}]+)\}/) do
+      page_value(page, Regexp.last_match(1)).to_s
+    end
+  end
+
+  def page_value(page, key)
+    case key.to_s
+    when 'url'
+      page.url
+    when 'path'
+      page.path
+    when 'llm_markdown_url'
+      page.data['llm_markdown_url']
+    else
+      page.data[key.to_s]
+    end
   end
 
   def absolute_url(site, path)

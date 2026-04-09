@@ -34,6 +34,53 @@ author:
 
 keep_files: ["assets/images/og"]
 
+markdown_for_llms:
+  llms_txt:
+    enabled: true
+    path: /llms.txt
+    title: DevTUI
+    summary: >-
+      DevTUI is an all-in-one terminal toolkit for developers with both a CLI and an interactive TUI for formatting, transforming, and inspecting common developer data.
+    intro: >-
+      Prefer the Markdown URLs below over the HTML pages. Each link points to an LLM-friendly Markdown export generated from the site's source pages.
+    sections:
+      - title: Guides
+        links:
+          - title: Home
+            path: /index.md
+            description: Project overview and docs entry point.
+          - title: Getting started
+            path: /start.md
+            description: Installation notes and platform requirements.
+          - title: CLI
+            path: /cli/index.md
+            description: CLI overview with shell completion notes.
+          - title: TUI
+            path: /tui/index.md
+            description: TUI overview and shared key bindings.
+      - title: CLI Commands
+        pages:
+          where:
+            parent: CLI
+          sort_by: title
+          dedupe_by: title
+          description: "Command reference for `devtui %{title}`."
+      - title: TUI Tools
+        pages:
+          where:
+            parent: TUI
+          sort_by: title
+          dedupe_by: title
+          description: "TUI documentation for the %{title} tool."
+      - title: Optional
+        links:
+          - title: GitHub repository
+            url: https://github.com/skatkov/devtui
+            description: Source code, issues, and project metadata.
+          - title: GitHub releases
+            url: https://github.com/skatkov/devtui/releases
+            description: Binary downloads and release history.
+
 og_image:
   collections: ["pages"]
   output_dir: "assets/images/og"
