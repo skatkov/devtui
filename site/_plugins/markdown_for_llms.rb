@@ -4,6 +4,7 @@ require 'pathname'
 module MarkdownForLlms
   extend self
 
+  DEFAULT_LLM_INTRO = 'Prefer the Markdown URLs below over the HTML pages when both are available.'.freeze
   MARKDOWN_EXTENSIONS = ['.md', '.markdown'].freeze
   MARKDOWN_LINK_PATTERN = /(?<!!)(\[[^\]]+\]\()(?<destination>[^)\s]+)(?<suffix>\))/
   STANDALONE_ATTR_LIST_PATTERN = /^\{:\s*([^}]+)\}\s*$/
@@ -25,6 +26,10 @@ module MarkdownForLlms
 
   def llms_txt_config(site)
     plugin_config(site).fetch('llms_txt', {})
+  end
+
+  def root_section_title(config)
+    config.fetch('root_section_title', 'Pages').to_s.strip
   end
 
   def llm_markdown_url(url)
@@ -145,7 +150,7 @@ module MarkdownForLlms
     config = llms_txt_config(site)
     return unless config['enabled']
 
-    sections = Array(config['sections'])
+    sections = llms_sections(site, config)
     return if sections.empty?
 
     lines = []
@@ -156,13 +161,13 @@ module MarkdownForLlms
       lines << ''
     end
 
-    summary = config['summary'].to_s.strip
+    summary = config.fetch('summary', site.config['description']).to_s.strip
     unless summary.empty?
       lines << "> #{summary}"
       lines << ''
     end
 
-    intro = config['intro'].to_s.strip
+    intro = config.fetch('intro', DEFAULT_LLM_INTRO).to_s.strip
     unless intro.empty?
       lines << intro
       lines << ''
@@ -176,6 +181,52 @@ module MarkdownForLlms
     end
 
     write_output(site, config.fetch('path', '/llms.txt'), "#{lines.join("\n").rstrip}\n")
+  end
+
+  def llms_sections(site, config)
+    sections = Array(config['sections'])
+    return sections unless sections.empty?
+
+    auto_sections(site, config)
+  end
+
+  def auto_sections(site, config)
+    root_title = root_section_title(config)
+    grouped_pages = markdown_pages(site)
+                    .reject { |page| page.data['llm_exclude'] }
+                    .group_by do |page|
+                      auto_section_name(
+                        page, root_title
+                      )
+    end
+
+    grouped_pages.map do |title, pages|
+      {
+        'title' => title,
+        '_pages' => dedupe_pages(sort_auto_pages(pages), 'title')
+      }
+    end.sort_by do |section|
+      [section['title'] == root_title ? 0 : 1, section['title'].to_s.downcase]
+    end
+  end
+
+  def auto_section_name(page, root_title)
+    parent = page.data['parent'].to_s.strip
+    return root_title if parent.empty?
+
+    parent
+  end
+
+  def sort_auto_pages(pages)
+    pages.sort_by do |page|
+      [page.url == '/' ? 0 : 1, nav_order_value(page), page_title(page).downcase, page.url]
+    end
+  end
+
+  def nav_order_value(page)
+    Integer(page.data['nav_order'])
+  rescue StandardError
+    Float::INFINITY
   end
 
   def render_section(site, section)
@@ -194,6 +245,13 @@ module MarkdownForLlms
   end
 
   def render_section_entries(site, section)
+    auto_pages = Array(section['_pages'])
+    unless auto_pages.empty?
+      return auto_pages.filter_map do |page|
+        render_page_entry(site, page, section['pages'] || {})
+      end
+    end
+
     links = Array(section['links']).filter_map do |link|
       render_link_entry(site, link)
     end
@@ -283,6 +341,10 @@ module MarkdownForLlms
 
   def page_value(page, key)
     case key.to_s
+    when 'title'
+      page_title(page)
+    when 'description'
+      page_description(page)
     when 'url'
       page.url
     when 'path'
@@ -292,6 +354,23 @@ module MarkdownForLlms
     else
       page.data[key.to_s]
     end
+  end
+
+  def page_title(page)
+    title = page.data['title'].to_s.strip
+    return title unless title.empty?
+
+    path = page.path.to_s
+    basename = File.basename(path, File.extname(path))
+    basename = File.basename(File.dirname(path)) if basename == 'index'
+    basename.split(/[-_]/).map(&:capitalize).join(' ')
+  end
+
+  def page_description(page)
+    llm_description = page.data['llm_description'].to_s.strip
+    return llm_description unless llm_description.empty?
+
+    page.data['description'].to_s.strip
   end
 
   def absolute_url(site, path)
