@@ -1,3 +1,7 @@
+{% if page.llm_markdown_url %}
+<link rel="alternate" type="text/markdown" href="{{ page.llm_markdown_url | absolute_url }}">
+{% endif %}
+
 <script
     defer
     src="https://umami.skatkov.com/script.js"

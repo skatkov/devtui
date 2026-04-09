@@ -1,0 +1,39 @@
+---
+layout: null
+permalink: /llms.txt
+---
+# DevTUI
+
+> DevTUI is an all-in-one terminal toolkit for developers with both a CLI and an interactive TUI for formatting, transforming, and inspecting common developer data.
+
+Prefer the Markdown URLs below over the HTML pages. Each link points to an LLM-friendly Markdown export generated from the site's source pages.
+
+## Guides
+
+- [Home]({{ "/index.md" | absolute_url }}): Project overview and docs entry point.
+- [Getting started]({{ "/start.md" | absolute_url }}): Installation notes and platform requirements.
+- [CLI]({{ "/cli/index.md" | absolute_url }}): CLI overview with shell completion notes.
+- [TUI]({{ "/tui/index.md" | absolute_url }}): TUI overview and shared key bindings.
+
+{% assign cli_pages = site.pages | where: "parent", "CLI" | sort: "title" %}
+## CLI Commands
+
+{% for doc in cli_pages %}
+{% if doc.llm_index_entry %}
+- [{{ doc.title }}]({{ doc.llm_markdown_url | absolute_url }}): Command reference for `devtui {{ doc.title }}`.
+{% endif %}
+{% endfor %}
+
+{% assign tui_pages = site.pages | where: "parent", "TUI" | sort: "title" %}
+## TUI Tools
+
+{% for doc in tui_pages %}
+{% if doc.llm_index_entry %}
+- [{{ doc.title }}]({{ doc.llm_markdown_url | absolute_url }}): TUI documentation for the {{ doc.title }} tool.
+{% endif %}
+{% endfor %}
+
+## Optional
+
+- [GitHub repository](https://github.com/skatkov/devtui): Source code, issues, and project metadata.
+- [GitHub releases](https://github.com/skatkov/devtui/releases): Binary downloads and release history.
