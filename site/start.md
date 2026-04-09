@@ -5,13 +5,13 @@ nav_order: 2
 
 
 
-## 📦 Install
+## Install
 {: #install}
-### 🧃 Homebrew
+### Homebrew
 ```
 brew install skatkov/tap/devtui
 ```
-### 📥 Download Executable
+### Download Executable
 
 Or download executable from [GitHub Releases](https://github.com/skatkov/devtui/releases)
 
@@ -20,19 +20,14 @@ Or download executable from [GitHub Releases](https://github.com/skatkov/devtui/
 ## Requirements
 
 ### macOS
-- ✅ Works out of the box
+- Works out of the box
 
 ### Linux
 
-- 🖱 Wayland requires: `wl-clipboard`
-- 🧮 X11 requires: `xclip` or `xsel`
+- Wayland requires: `wl-clipboard`
+- X11 requires: `xclip` or `xsel`
 
 To check your session type:
 ```bash
 echo $XDG_SESSION_TYPE # Output: wayland or x11
 ```
-
-### Windows
-
-{: .warning }
-Not tested, but available. Please download executable from github.
