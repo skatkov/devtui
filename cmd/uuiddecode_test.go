@@ -8,7 +8,7 @@ import (
 )
 
 func TestUUIDDecodeCmd(t *testing.T) {
-	uuiddecodeJSONOutput = false
+	outputJSON = false
 	input := "4326ff5f-774d-4506-a18c-4bc50c761863"
 
 	cmd := GetRootCmd()
@@ -33,7 +33,7 @@ func TestUUIDDecodeCmd(t *testing.T) {
 }
 
 func TestUUIDDecodeCmdJSON(t *testing.T) {
-	uuiddecodeJSONOutput = false
+	outputJSON = false
 	input := "4326ff5f-774d-4506-a18c-4bc50c761863"
 
 	cmd := GetRootCmd()
@@ -61,7 +61,7 @@ func TestUUIDDecodeCmdJSON(t *testing.T) {
 }
 
 func TestUUIDDecodeCmdNoInput(t *testing.T) {
-	uuiddecodeJSONOutput = false
+	outputJSON = false
 	cmd := GetRootCmd()
 	buf := new(bytes.Buffer)
 	cmd.SetOut(buf)
