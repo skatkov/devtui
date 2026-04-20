@@ -7,7 +7,7 @@ require (
 	charm.land/bubbletea/v2 v2.0.6
 	charm.land/fang/v2 v2.0.1
 	charm.land/huh/v2 v2.0.3
-	charm.land/lipgloss/v2 v2.0.2
+	charm.land/lipgloss/v2 v2.0.3
 	github.com/RealAlexandreAI/json-repair v0.0.15
 	github.com/adrg/xdg v0.5.3
 	github.com/alecthomas/chroma v0.10.0
