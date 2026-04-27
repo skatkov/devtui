@@ -21,7 +21,7 @@ require (
 	github.com/hannes-sistemica/toon v0.0.0-20251027210156-1425a7c03d9a
 	github.com/jacoelho/banking v1.9.1
 	github.com/lnquy/cron v1.1.1
-	github.com/mattn/go-isatty v0.0.21
+	github.com/mattn/go-isatty v0.0.22
 	github.com/mattn/go-runewidth v0.0.23
 	github.com/muesli/ansi v0.0.0-20230316100256-276c6243b2f6
 	github.com/muesli/reflow v0.3.0
