@@ -24,13 +24,18 @@ const (
 	uppercase = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 	numbers   = "0123456789"
 	special   = "!@#$%^&*()_+-=[]{}|;:,.<>?"
+
+	charsetLowercase = "Lowercase (a-z)"
+	charsetUppercase = "Uppercase (A-Z)"
+	charsetNumbers   = "Numbers (0-9)"
+	charsetSpecial   = "Special (!@#$%^&*)"
 )
 
 var characterSetOptions = []huh.Option[string]{
-	{Key: "Lowercase (a-z)", Value: "Lowercase (a-z)"},
-	{Key: "Uppercase (A-Z)", Value: "Uppercase (A-Z)"},
-	{Key: "Numbers (0-9)", Value: "Numbers (0-9)"},
-	{Key: "Special (!@#$%^&*)", Value: "Special (!@#$%^&*)"},
+	{Key: charsetLowercase, Value: charsetLowercase},
+	{Key: charsetUppercase, Value: charsetUppercase},
+	{Key: charsetNumbers, Value: charsetNumbers},
+	{Key: charsetSpecial, Value: charsetSpecial},
 }
 
 func main() {
@@ -120,13 +125,13 @@ func generateSecurePassword(config *PasswordConfig) (string, error) {
 
 	for _, set := range config.CharacterSets {
 		switch set {
-		case "Lowercase (a-z)":
+		case charsetLowercase:
 			charPool.WriteString(lowercase)
-		case "Uppercase (A-Z)":
+		case charsetUppercase:
 			charPool.WriteString(uppercase)
-		case "Numbers (0-9)":
+		case charsetNumbers:
 			charPool.WriteString(numbers)
-		case "Special (!@#$%^&*)":
+		case charsetSpecial:
 			charPool.WriteString(special)
 		}
 	}
@@ -171,13 +176,13 @@ func ensureAllSetsIncluded(password []byte, config *PasswordConfig) error {
 	for i, set := range config.CharacterSets {
 		var chars string
 		switch set {
-		case "Lowercase (a-z)":
+		case charsetLowercase:
 			chars = lowercase
-		case "Uppercase (A-Z)":
+		case charsetUppercase:
 			chars = uppercase
-		case "Numbers (0-9)":
+		case charsetNumbers:
 			chars = numbers
-		case "Special (!@#$%^&*)":
+		case charsetSpecial:
 			chars = special
 		}
 
