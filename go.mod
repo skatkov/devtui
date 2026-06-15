@@ -29,7 +29,7 @@ require (
 	github.com/spf13/cobra v1.10.2
 	github.com/tiagomelo/go-clipboard v0.1.2
 	github.com/twpayne/go-jsonstruct/v3 v3.3.0
-	github.com/vektah/gqlparser/v2 v2.5.33
+	github.com/vektah/gqlparser/v2 v2.5.34
 	github.com/yosssi/gohtml v0.0.0-20201013000340-ee4748c638f4
 	gopkg.in/yaml.v3 v3.0.1
 	mvdan.cc/xurls/v2 v2.6.0
@@ -80,7 +80,6 @@ require (
 	github.com/rivo/uniseg v0.4.7 // indirect
 	github.com/russross/blackfriday/v2 v2.1.0 // indirect
 	github.com/sahilm/fuzzy v0.1.1 // indirect
-	github.com/sergi/go-diff v1.3.2-0.20230802210424-5b0b94c5c0d3 // indirect
 	github.com/spf13/pflag v1.0.10 // indirect
 	github.com/tdewolff/parse v2.3.4+incompatible // indirect
 	github.com/wk8/go-ordered-map/v2 v2.1.8 // indirect
@@ -94,5 +93,4 @@ require (
 	golang.org/x/sys v0.45.0 // indirect
 	golang.org/x/term v0.37.0 // indirect
 	golang.org/x/text v0.31.0 // indirect
-	gopkg.in/check.v1 v1.0.0-20190902080502-41f04d3bba15 // indirect
 )
