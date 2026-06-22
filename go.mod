@@ -19,7 +19,7 @@ require (
 	github.com/go-xmlfmt/xmlfmt v1.1.3
 	github.com/google/uuid v1.6.0
 	github.com/hannes-sistemica/toon v0.0.0-20251027210156-1425a7c03d9a
-	github.com/jacoelho/banking v1.9.1
+	github.com/jacoelho/banking v1.12.0
 	github.com/lnquy/cron v1.1.1
 	github.com/mattn/go-isatty v0.0.22
 	github.com/mattn/go-runewidth v0.0.23
