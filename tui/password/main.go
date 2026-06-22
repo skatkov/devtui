@@ -19,18 +19,17 @@ type PasswordConfig struct {
 	Continue      bool
 }
 
-const (
-	lowercase = "abcdefghijklmnopqrstuvwxyz"
-	uppercase = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-	numbers   = "0123456789"
-	special   = "!@#$%^&*()_+-=[]{}|;:,.<>?"
-)
+type passwordCharacterSet struct {
+	id    string
+	label string
+	chars string
+}
 
-var characterSetOptions = []huh.Option[string]{
-	{Key: "Lowercase (a-z)", Value: "Lowercase (a-z)"},
-	{Key: "Uppercase (A-Z)", Value: "Uppercase (A-Z)"},
-	{Key: "Numbers (0-9)", Value: "Numbers (0-9)"},
-	{Key: "Special (!@#$%^&*)", Value: "Special (!@#$%^&*)"},
+var passwordCharacterSets = []passwordCharacterSet{
+	{id: "lowercase", label: "Lowercase (a-z)", chars: "abcdefghijklmnopqrstuvwxyz"},
+	{id: "uppercase", label: "Uppercase (A-Z)", chars: "ABCDEFGHIJKLMNOPQRSTUVWXYZ"},
+	{id: "numbers", label: "Numbers (0-9)", chars: "0123456789"},
+	{id: "special", label: "Special (!@#$%^&*)", chars: "!@#$%^&*()_+-=[]{}|;:,.<>?"},
 }
 
 func main() {
@@ -58,7 +57,7 @@ func showInterface(config *PasswordConfig) error {
 				Value(&lengthStr),
 			huh.NewMultiSelect[string]().
 				Title("Select character sets to include").
-				Options(characterSetOptions...).
+				Options(characterSetOptions()...).
 				Value(&config.CharacterSets),
 		),
 	)
@@ -114,21 +113,38 @@ func showInterface(config *PasswordConfig) error {
 	return errorForm.Run()
 }
 
-func generateSecurePassword(config *PasswordConfig) (string, error) {
-	// Create the character pool based on selected options
-	var charPool strings.Builder
+func characterSetOptions() []huh.Option[string] {
+	options := make([]huh.Option[string], 0, len(passwordCharacterSets))
+	for _, set := range passwordCharacterSets {
+		options = append(options, huh.Option[string]{Key: set.label, Value: set.id})
+	}
 
-	for _, set := range config.CharacterSets {
-		switch set {
-		case "Lowercase (a-z)":
-			charPool.WriteString(lowercase)
-		case "Uppercase (A-Z)":
-			charPool.WriteString(uppercase)
-		case "Numbers (0-9)":
-			charPool.WriteString(numbers)
-		case "Special (!@#$%^&*)":
-			charPool.WriteString(special)
+	return options
+}
+
+func selectedCharacterSets(ids []string) []passwordCharacterSet {
+	sets := make([]passwordCharacterSet, 0, len(ids))
+	for _, id := range ids {
+		for _, set := range passwordCharacterSets {
+			if set.id == id {
+				sets = append(sets, set)
+				break
+			}
 		}
+	}
+
+	return sets
+}
+
+func generateSecurePassword(config *PasswordConfig) (string, error) {
+	selectedSets := selectedCharacterSets(config.CharacterSets)
+	if len(selectedSets) == 0 {
+		return "", errors.New("no valid character sets selected")
+	}
+
+	var charPool strings.Builder
+	for _, set := range selectedSets {
+		charPool.WriteString(set.chars)
 	}
 
 	pool := charPool.String()
@@ -145,7 +161,7 @@ func generateSecurePassword(config *PasswordConfig) (string, error) {
 	}
 
 	// Ensure at least one character from each selected set
-	err := ensureAllSetsIncluded(password, config)
+	err := ensureAllSetsIncluded(password, selectedSets)
 	if err != nil {
 		return "", err
 	}
@@ -153,13 +169,13 @@ func generateSecurePassword(config *PasswordConfig) (string, error) {
 	return string(password), nil
 }
 
-func ensureAllSetsIncluded(password []byte, config *PasswordConfig) error {
-	if len(password) < len(config.CharacterSets) {
+func ensureAllSetsIncluded(password []byte, selectedSets []passwordCharacterSet) error {
+	if len(password) < len(selectedSets) {
 		return errors.New("password length must be at least the number of character sets")
 	}
 
 	// For each selected character set, ensure at least one character is included
-	positions := make([]int, len(config.CharacterSets))
+	positions := make([]int, len(selectedSets))
 	for i := range positions {
 		n, err := rand.Int(rand.Reader, big.NewInt(int64(len(password))))
 		if err != nil {
@@ -168,26 +184,12 @@ func ensureAllSetsIncluded(password []byte, config *PasswordConfig) error {
 		positions[i] = int(n.Int64())
 	}
 
-	for i, set := range config.CharacterSets {
-		var chars string
-		switch set {
-		case "Lowercase (a-z)":
-			chars = lowercase
-		case "Uppercase (A-Z)":
-			chars = uppercase
-		case "Numbers (0-9)":
-			chars = numbers
-		case "Special (!@#$%^&*)":
-			chars = special
+	for i, set := range selectedSets {
+		n, err := rand.Int(rand.Reader, big.NewInt(int64(len(set.chars))))
+		if err != nil {
+			return err
 		}
-
-		if len(chars) > 0 {
-			n, err := rand.Int(rand.Reader, big.NewInt(int64(len(chars))))
-			if err != nil {
-				return err
-			}
-			password[positions[i]] = chars[n.Int64()]
-		}
+		password[positions[i]] = set.chars[n.Int64()]
 	}
 
 	return nil
