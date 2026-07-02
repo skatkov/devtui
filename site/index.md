@@ -36,5 +36,14 @@ All-in-one terminal toolkit that consolidates everyday developer utilities into 
 {: .text-center}
 ---
 
+## Support
+{: .fw-700}
+
+You're financial support will help keep this project maintained for everyone. Companies will get their logo and link featured on a website as a thank you.
+
+[Become a sponsor](https://github.com/sponsors/skatkov){: .btn .btn-blue .fs-5 .mt-4 .mb-md-0 .mr-2}
+{: .text-center}
+
+---
 Built by [Stanislav (Stas) Katkov](https://skatkov.com)
 {: .text-center}

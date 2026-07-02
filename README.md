@@ -69,3 +69,11 @@ Logo was done by [Andrei Kedrin](https://linktr.ee/andreikedrin).
 
 Figma original:
 https://www.figma.com/design/JTS0mzphMDiRuuC3xNprLu/Untitled?node-id=0-1&p=f&t=0LeB0uhXSUmZpE3Q-0
+
+---
+
+## Support
+
+You're financial support will help keep this project maintained for everyone. Companies will get their logo and link featured on a website as a thank you.
+
+[Become a sponsor](https://github.com/sponsors/skatkov)
