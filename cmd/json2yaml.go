@@ -44,6 +44,9 @@ Input can be a string argument or piped from stdin.`,
 		if err != nil {
 			return cmderror.FormatParseError("json2yaml", inputStr, err)
 		}
+		if outputJSON {
+			return writeJSONValue(cmd.OutOrStdout(), result)
+		}
 
 		_, err = fmt.Fprintln(cmd.OutOrStdout(), result)
 		if err != nil {
