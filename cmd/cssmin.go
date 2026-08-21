@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"bytes"
 	"strings"
 
 	"github.com/client9/csstool"
@@ -41,9 +42,17 @@ Input can be a string argument or piped from stdin.`,
 		}
 
 		inputStr := string(data)
-		err = cssformat.Format(strings.NewReader(inputStr), cmd.OutOrStdout())
+		var buffer bytes.Buffer
+		output := cmd.OutOrStdout()
+		if outputJSON {
+			output = &buffer
+		}
+		err = cssformat.Format(strings.NewReader(inputStr), output)
 		if err != nil {
 			return cmderror.FormatParseError("cssmin", inputStr, err)
+		}
+		if outputJSON {
+			return writeJSONValue(cmd.OutOrStdout(), buffer.String())
 		}
 
 		return nil

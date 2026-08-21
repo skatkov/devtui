@@ -47,6 +47,13 @@ in a formatted table. Input can be a string argument or piped from stdin.`,
 		if err != nil {
 			return err
 		}
+		if outputJSON {
+			return writeJSONValue(cmd.OutOrStdout(), map[string]int{
+				"characters": stats.Characters,
+				"spaces":     stats.Spaces,
+				"words":      stats.Words,
+			})
+		}
 
 		_, err = fmt.Fprintln(cmd.OutOrStdout(), table.New().Border(lipgloss.NormalBorder()).
 			Row("Characters", strconv.Itoa(stats.Characters)).
