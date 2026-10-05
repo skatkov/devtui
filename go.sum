@@ -115,8 +115,8 @@ github.com/hexops/gotextdiff v1.0.3/go.mod h1:pSWU5MAI3yDq+fZBTazCSJysOMbxWL1BSo
 github.com/inconshreveable/mousetrap v1.0.0/go.mod h1:PxqpIevigyE2G7u3NXJIT2ANytuPF1OarO4DADm73n8=
 github.com/inconshreveable/mousetrap v1.1.0 h1:wN+x4NVGpMsO7ErUn/mUI3vEoE6Jt13X2s0bqwp9tc8=
 github.com/inconshreveable/mousetrap v1.1.0/go.mod h1:vpF70FUmC8bwa3OWnCshd2FqLfsEA9PFc4w1p2J65bw=
-github.com/jacoelho/banking v1.12.0 h1:fSbW3wbwgnVeImXmBnhbKF5NOmSlQveMMRhztasykwo=
-github.com/jacoelho/banking v1.12.0/go.mod h1:5Lw43sn19K1uDNCBvlWpgLL8o926MI/JBTRrD7P9XoU=
+github.com/jacoelho/banking v1.13.0 h1:u0KvkPjOutqwB+glIU7PEE+nJFFrukq02lV94g8op48=
+github.com/jacoelho/banking v1.13.0/go.mod h1:5Lw43sn19K1uDNCBvlWpgLL8o926MI/JBTRrD7P9XoU=
 github.com/josharian/intern v1.0.0/go.mod h1:5DoeVV0s6jJacbCEi61lwdGj/aVlrQvzHFFd8Hwg//Y=
 github.com/kylelemons/godebug v1.1.0 h1:RPNrshWIDI6G2gRW9EHilWtl7Z6Sb1BR0xunSBf0SNc=
 github.com/kylelemons/godebug v1.1.0/go.mod h1:9/0rRGxNHcop5bhtWyNeEfOS8JIWk580+fNqagV/RAw=
