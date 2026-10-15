@@ -55,10 +55,18 @@ Input can be a string argument or piped from stdin.`,
 			}
 		}
 
+		if outputJSON {
+			return writeJSONValue(cmd.OutOrStdout(), uniqueURLs)
+		}
+
 		// Output results
 		if len(uniqueURLs) > 0 {
-			fmt.Print(strings.Join(uniqueURLs, "\n"))
-			fmt.Print("\n")
+			_, err = fmt.Fprint(cmd.OutOrStdout(), strings.Join(uniqueURLs, "\n"))
+			if err != nil {
+				return err
+			}
+			_, err = fmt.Fprint(cmd.OutOrStdout(), "\n")
+			return err
 		}
 
 		return nil

@@ -45,6 +45,9 @@ reduced token usage (typically 30-60% fewer tokens than JSON).`,
 		if err != nil {
 			return cmderror.FormatParseError("json2toon", inputStr, err)
 		}
+		if outputJSON {
+			return writeJSONValue(cmd.OutOrStdout(), result)
+		}
 
 		_, err = fmt.Fprint(cmd.OutOrStdout(), result)
 		if err != nil {

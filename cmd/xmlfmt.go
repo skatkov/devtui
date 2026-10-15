@@ -74,6 +74,9 @@ Input can be a string argument or piped from stdin.`,
 
 		result := xmlfmt.FormatXML(string(data),
 			xmlPrefix, xmlIndent, xmlNested)
+		if outputJSON {
+			return writeJSONValue(cmd.OutOrStdout(), result)
+		}
 
 		_, err = fmt.Fprintln(cmd.OutOrStdout(), result)
 		if err != nil {
