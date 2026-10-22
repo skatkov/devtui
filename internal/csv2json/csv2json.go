@@ -49,7 +49,15 @@ func rowsToJSON(rows [][]string) (string, error) {
 					}
 
 					if index == len(objectSlice)-1 {
-						internalArray = append(internalArray, value)
+						for arrayIndex >= len(internalArray) {
+							internalArray = append(internalArray, nil)
+						}
+
+						if nested, ok := internalArray[arrayIndex].(map[string]any); ok && len(nested) > 0 {
+							return "", fmt.Errorf("invalid CSV header %q: key %q[%d] is used as both object and scalar", attribute, key, arrayIndex)
+						}
+
+						internalArray[arrayIndex] = value
 						internal[key] = internalArray
 						break
 					}
@@ -110,7 +118,7 @@ func arrayContentMatch(str string) (string, int) {
 		j := strings.Index(str, "]")
 		if j > i {
 			index, err := strconv.Atoi(str[i+1 : j])
-			if err != nil {
+			if err != nil || index < 0 {
 				return str, -1
 			}
 			return str[0:i], index
