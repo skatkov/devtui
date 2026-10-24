@@ -6,7 +6,6 @@ import (
 	"time"
 
 	tea "charm.land/bubbletea/v2"
-	"charm.land/lipgloss/v2"
 )
 
 const AppTitle = "DevTUI"
@@ -23,8 +22,6 @@ type CommonModel struct {
 
 	Styles *Styles
 }
-
-var PagePaddingStyle = lipgloss.NewStyle().Padding(2)
 
 const StatusMessageTimeout = time.Second * 3 // how long to show status messages like "stashed!"
 

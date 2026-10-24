@@ -59,6 +59,10 @@ func TestConvertConflictingHeadersReturnError(t *testing.T) {
 			name:  "array_object_then_scalar",
 			input: "a[0].b,a[0]\n1,2\n",
 		},
+		{
+			name:  "object_then_array",
+			input: "a.b,a[0]\n1,2\n",
+		},
 	}
 
 	for _, tt := range tests {
@@ -123,6 +127,51 @@ func TestConvertArrayIndexes(t *testing.T) {
 			input: "a[-1]\nx\n",
 			want:  `[{"a[-1]":"x"}]`,
 		},
+		{
+			name:  "sparse_object_index_pads_with_empty_objects",
+			input: "items[2].name\nhello\n",
+			want:  `[{"items":[{},{},{"name":"hello"}]}]`,
+		},
+		{
+			name:  "object_indexes_out_of_column_order",
+			input: "a[1].b,a[0].c\nx,y\n",
+			want:  `[{"a":[{"c":"y"},{"b":"x"}]}]`,
+		},
+		{
+			name:  "object_in_null_padded_slot",
+			input: "a[2],a[0].b\nx,y\n",
+			want:  `[{"a":[{"b":"y"},null,"x"]}]`,
+		},
+		{
+			name:  "scalar_replaces_empty_padded_object",
+			input: "a[1].b,a[0]\nx,y\n",
+			want:  `[{"a":["y",{"b":"x"}]}]`,
+		},
+		{
+			name:  "index_without_key",
+			input: "[0]\nx\n",
+			want:  `[{"":["x"]}]`,
+		},
+		{
+			name:  "text_after_index_is_ignored",
+			input: "a[0]x\nv\n",
+			want:  `[{"a":["v"]}]`,
+		},
+		{
+			name:  "unclosed_index_is_a_plain_key",
+			input: "a[0\nx\n",
+			want:  `[{"a[0":"x"}]`,
+		},
+		{
+			name:  "closing_bracket_before_opening_is_a_plain_key",
+			input: "a]b[0]\nx\n",
+			want:  `[{"a]b[0]":"x"}]`,
+		},
+		{
+			name:  "non_numeric_index_is_a_plain_key",
+			input: "a[x]\nv\n",
+			want:  `[{"a[x]":"v"}]`,
+		},
 	}
 
 	for _, tt := range tests {
@@ -145,6 +194,44 @@ func TestConvertArrayIndexes(t *testing.T) {
 				t.Fatalf("Convert(%q) = %s, want %s", tt.input, output, tt.want)
 			}
 		})
+	}
+}
+
+func TestConvert(t *testing.T) {
+	t.Parallel()
+
+	tests := []struct {
+		name  string
+		input string
+		want  string
+	}{
+		{"rows in order", "name,age\nAlice,30\nBob,25\n", "[\n  {\n    \"age\": \"30\",\n    \"name\": \"Alice\"\n  },\n  {\n    \"age\": \"25\",\n    \"name\": \"Bob\"\n  }\n]"},
+		{"header only", "a,b\n", "[]"},
+		{"nested keys", "a.b,a.c\n1,2\n", "[\n  {\n    \"a\": {\n      \"b\": \"1\",\n      \"c\": \"2\"\n    }\n  }\n]"},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+
+			got, err := convertNoPanic(t, tt.input)
+			if err != nil {
+				t.Fatalf("Convert(%q) returned error: %v", tt.input, err)
+			}
+			if got != tt.want {
+				t.Fatalf("Convert(%q) = %q, want %q", tt.input, got, tt.want)
+			}
+		})
+	}
+}
+
+func TestConvertInvalidCSVReturnsError(t *testing.T) {
+	t.Parallel()
+
+	for _, input := range []string{"", "a,b\n1\n", "\"a\n"} {
+		if _, err := convertNoPanic(t, input); err == nil {
+			t.Fatalf("Convert(%q) expected error", input)
+		}
 	}
 }
 

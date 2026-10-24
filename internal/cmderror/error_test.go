@@ -43,6 +43,15 @@ func TestLooksLikeFilePath(t *testing.T) {
 		{"json-like but no braces", `key: value`, false},
 		{"mixed case extension", "CONFIG.JSON", true},
 		{"extension with spaces", " config.json ", true},
+		{"unix path without extension", "dir/file", true},
+		{"windows path without extension", `dir\file`, true},
+		{"path of 500 characters", strings.Repeat("a", 495) + ".json", true},
+		{"path of 501 characters", strings.Repeat("a", 496) + ".json", false},
+		{"json object with slash", `{"url": "a/b"}`, false},
+		{"json array with slash", `["a/b"]`, false},
+		{"xml with slash", `<a href="x/y">`, false},
+		{"markdown heading with slash", "# a/b", false},
+		{"brace after first character", "a/{b}", true},
 	}
 
 	for _, tt := range tests {

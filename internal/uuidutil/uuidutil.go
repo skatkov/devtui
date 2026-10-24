@@ -23,7 +23,7 @@ func Decode(id uuid.UUID) []Field {
 	}
 
 	var i big.Int
-	i.SetString(strings.ReplaceAll(id.String(), "-", ""), 16)
+	i.SetBytes(id[:])
 
 	fields := []Field{
 		{Name: "Standard String Format", Value: id.String()},
@@ -43,17 +43,10 @@ func Decode(id uuid.UUID) []Field {
 		fields = append(fields,
 			Field{Name: "Contents - Time", Value: timeStamp.UTC().Format("2006-01-02 15:04:05.999999999 UTC")},
 			Field{Name: "Contents - Clock", Value: strconv.Itoa(clockSeq)},
-			Field{Name: "Contents - Node", Value: fmt.Sprintf("%02x:%02x:%02x:%02x:%02x:%02x", node[0], node[1], node[2], node[3], node[4], node[5])},
+			Field{Name: "Contents - Node", Value: colonHex("% x", node)},
 		)
 	default:
-		formatted := strings.ToUpper(strings.ReplaceAll(id.String(), "-", ""))
-		pairs := make([]string, 0, len(formatted)/2)
-		for index := 0; index < len(formatted); index += 2 {
-			if index < len(formatted)-1 {
-				pairs = append(pairs, formatted[index:index+2])
-			}
-		}
-		fields = append(fields, Field{Name: "Contents", Value: strings.Join(pairs, ":")})
+		fields = append(fields, Field{Name: "Contents", Value: colonHex("% X", id[:])})
 	}
 
 	return fields
@@ -88,6 +81,11 @@ func Generate(version int, namespace string) (uuid.UUID, error) {
 	default:
 		return uuid.Nil, fmt.Errorf("unsupported uuid version: %d", version)
 	}
+}
+
+// colonHex prints b as colon-separated hex byte pairs; format is "% x" or "% X".
+func colonHex(format string, b []byte) string {
+	return strings.ReplaceAll(fmt.Sprintf(format, b), " ", ":")
 }
 
 func mapVariant(v uuid.Variant) string {

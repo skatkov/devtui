@@ -2,8 +2,8 @@
 package ui
 
 import (
+	"cmp"
 	"fmt"
-	"math"
 	"strings"
 	"time"
 
@@ -30,11 +30,12 @@ type BasePagerModel struct {
 	HelpHeight         int
 }
 
+var copyToClipboard = clipboard.Copy
+
 func NewBasePagerModel(common *CommonModel, title string) BasePagerModel {
 	model := BasePagerModel{
 		Common: common,
 		Title:  title,
-		Ready:  false,
 		State:  PagerStateBrowse,
 	}
 
@@ -60,7 +61,7 @@ func (m *BasePagerModel) HandleCommonKeys(msg tea.KeyPressMsg) (tea.Cmd, bool) {
 		m.ToggleHelp()
 		return nil, true
 	case "c":
-		err := clipboard.Copy(m.FormattedContent)
+		err := copyToClipboard(m.FormattedContent)
 		if err != nil {
 			return m.ShowErrorMessage(err.Error()), true
 		}
@@ -86,11 +87,8 @@ func (m *BasePagerModel) HandleWindowSizeMsg(msg tea.WindowSizeMsg) tea.Cmd {
 			viewport.WithWidth(msg.Width),
 			viewport.WithHeight(msg.Height-StatusBarHeight),
 		)
-		m.Viewport.YPosition = 0
 		m.Viewport.SetContent(m.Content)
 		m.Ready = true
-	} else {
-		m.SetSize(msg.Width, msg.Height)
 	}
 	return nil
 }
@@ -124,13 +122,8 @@ func (m *BasePagerModel) SetSize(w, h int) {
 	viewportHeight := m.Common.Height - StatusBarHeight
 
 	if m.ShowHelp {
-		// If help is shown, reduce viewport height
-		// Make sure HelpHeight is at least a minimum value (like 6 lines)
-		helpHeight := m.HelpHeight
-		if helpHeight == 0 {
-			helpHeight = 6 // Default if not calculated yet
-		}
-		viewportHeight -= helpHeight
+		// If help is shown, reduce viewport height; 6 lines until HelpHeight is calculated
+		viewportHeight -= cmp.Or(m.HelpHeight, 6)
 	}
 
 	m.Viewport.SetWidth(m.Common.Width)
@@ -147,82 +140,44 @@ func (m *BasePagerModel) ToggleHelp() {
 }
 
 func (m *BasePagerModel) StatusBarView() string {
-	var b strings.Builder
-
-	const (
-		minPercent               float64 = 0.0
-		maxPercent               float64 = 1.0
-		percentToStringMagnitude float64 = 100.0
-	)
-	showStatusMessage := m.State == PagerStateStatusMessage
-	showErrorMessage := m.State == PagerStateErrorMessage
 	appName := AppNameStyle(" " + m.Title + " ")
 
 	// Scroll percent
 	scrollPercent := ""
 	if m.Content != "" {
-		percent := math.Max(minPercent, math.Min(maxPercent, m.Viewport.ScrollPercent()))
-		scrollPercent = fmt.Sprintf(" %3.f%% ", percent*percentToStringMagnitude)
+		scrollPercent = fmt.Sprintf(" %3.f%% ", m.Viewport.ScrollPercent()*100)
 		scrollPercent = StatusBarScrollPosStyle(scrollPercent)
 	}
 
-	var helpNote string
-	if showErrorMessage {
-		helpNote = StatusBarErrorHelpStyle(" ? Help ")
-	} else if showStatusMessage {
-		helpNote = StatusBarMessageHelpStyle(" ? Help ")
-	} else {
-		helpNote = StatusBarHelpStyle(" ? Help ")
-	}
-
+	noteStyle, helpStyle := StatusBarNoteStyle, StatusBarHelpStyle
 	var note string
-	if showStatusMessage || showErrorMessage {
+	switch m.State {
+	case PagerStateStatusMessage:
+		noteStyle, helpStyle = StatusBarMessageStyle, StatusBarMessageHelpStyle
 		note = m.StatusMessage
-	} else if m.Content == "" {
-		note = "Press 'v' to paste"
+	case PagerStateErrorMessage:
+		noteStyle, helpStyle = StatusBarErrorStyle, StatusBarErrorHelpStyle
+		note = m.StatusMessage
+	default:
+		if m.Content == "" {
+			note = "Press 'v' to paste"
+		}
 	}
+	helpNote := helpStyle(" ? Help ")
 
-	note = truncate.StringWithTail(" "+note+" ", uint(max(0,
-		m.Common.Width-
-			ansi.PrintableRuneWidth(appName)-
-			ansi.PrintableRuneWidth(scrollPercent)-
-			ansi.PrintableRuneWidth(helpNote),
-	)), Ellipsis)
-
-	if showErrorMessage {
-		note = StatusBarErrorStyle(note)
-	} else if showStatusMessage {
-		note = StatusBarMessageStyle(note)
+	free := m.Common.Width -
+		ansi.PrintableRuneWidth(appName) -
+		ansi.PrintableRuneWidth(scrollPercent) -
+		ansi.PrintableRuneWidth(helpNote)
+	// Without free columns the note is left out, so the bar stays inside the window.
+	if free > 0 {
+		note = truncate.StringWithTail(" "+note+" ", uint(free), Ellipsis)
 	} else {
-		note = StatusBarNoteStyle(note)
+		note = ""
 	}
+	emptySpace := strings.Repeat(" ", max(0, free-ansi.PrintableRuneWidth(note)))
 
-	// Empty space
-	padding := max(0,
-		m.Common.Width-
-			ansi.PrintableRuneWidth(appName)-
-			ansi.PrintableRuneWidth(note)-
-			ansi.PrintableRuneWidth(scrollPercent)-
-			ansi.PrintableRuneWidth(helpNote),
-	)
-	emptySpace := strings.Repeat(" ", padding)
-	if showErrorMessage {
-		emptySpace = StatusBarErrorStyle(emptySpace)
-	} else if showStatusMessage {
-		emptySpace = StatusBarMessageStyle(emptySpace)
-	} else {
-		emptySpace = StatusBarNoteStyle(emptySpace)
-	}
-
-	fmt.Fprintf(&b, "%s%s%s%s%s",
-		appName,
-		note,
-		emptySpace,
-		scrollPercent,
-		helpNote,
-	)
-
-	return b.String()
+	return appName + noteStyle(note) + noteStyle(emptySpace) + scrollPercent + helpNote
 }
 
 // FormatHelpColumns formats the help view with columns
@@ -238,16 +193,11 @@ func (m *BasePagerModel) FormatHelpColumns(col1 []string) string {
 	s = Indent(s, 2)
 
 	// Fill up empty cells with spaces for background coloring
-	if m.Common.Width > 0 {
-		lines := strings.Split(s, "\n")
-		for i := range lines {
-			l := runewidth.StringWidth(lines[i])
-			n := max(m.Common.Width-l, 0)
-			lines[i] += strings.Repeat(" ", n)
-		}
-
-		s = strings.Join(lines, "\n")
+	lines := strings.Split(s, "\n")
+	for i := range lines {
+		lines[i] += strings.Repeat(" ", max(m.Common.Width-runewidth.StringWidth(lines[i]), 0))
 	}
+	s = strings.Join(lines, "\n")
 
 	return HelpViewStyle(s)
 }

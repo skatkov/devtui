@@ -18,11 +18,8 @@ func LooksLikeFilePath(input string) bool {
 	}
 
 	trimmed := strings.TrimSpace(input)
-	if len(trimmed) > 0 {
-		first := trimmed[0]
-		if first == '{' || first == '[' || first == '<' || first == '#' {
-			return false
-		}
+	if strings.IndexAny(trimmed, "{[<#") == 0 {
+		return false
 	}
 
 	if strings.Contains(input, "/") || strings.Contains(input, "\\") {
