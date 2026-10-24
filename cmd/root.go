@@ -20,15 +20,15 @@ var rootCmd = &cobra.Command{
 	Long: `devtui is a collection of small developer apps that help with day to day work.
 It includes tools like hash generator, unix timestamp converter, and number base converter and multiple others.`,
 	RunE: func(cmd *cobra.Command, args []string) error {
-		p := tea.NewProgram(root.RootScreen())
-		if _, err := p.Run(); err != nil {
-			return err
-		}
-		return nil
+		return runProgram(root.RootScreen())
 	},
 }
 
-var flagTUI bool
+// runProgram runs a TUI; tests replace it so they never open one.
+var runProgram = func(model tea.Model) error {
+	_, err := tea.NewProgram(model).Run()
+	return err
+}
 
 // customErrorHandler handles errors while preserving newlines for multiline messages.
 // The default fang error handler applies a fixed width that collapses newlines,
@@ -48,33 +48,30 @@ func customErrorHandler(w io.Writer, styles fang.Styles, err error) {
 	// (UnsetTransform prevents auto-capitalizing "devtui" to "Devtui")
 	baseStyle := styles.ErrorText.UnsetWidth().UnsetTransform()
 
-	// Split error message by double newlines to preserve paragraph breaks
-	errMsg := err.Error()
-	paragraphs := strings.Split(errMsg, "\n\n")
+	// The transform applies only to the first line of the first paragraph.
+	lineStyle := styles.ErrorText.UnsetWidth()
+	separator := ""
 
-	for i, para := range paragraphs {
-		// Render each paragraph separately to preserve structure
-		lines := strings.Split(para, "\n")
-		for j, line := range lines {
+	// Split error message by double newlines to preserve paragraph breaks
+	for _, para := range strings.Split(err.Error(), "\n\n") {
+		// Add blank line between paragraphs (but not after the last one)
+		_, _ = fmt.Fprint(w, separator)
+		separator = "\n"
+
+		for _, line := range strings.Split(para, "\n") {
+			style := lineStyle
+			lineStyle = baseStyle
 			if line == "" {
 				continue
 			}
-			// Apply transform only to first line of first paragraph
-			var styled string
-			if i == 0 && j == 0 {
-				styled = styles.ErrorText.UnsetWidth().Render(line)
-			} else {
-				styled = baseStyle.Render(line)
-			}
-			_, _ = fmt.Fprintln(w, styled)
-		}
-		// Add blank line between paragraphs (but not after the last one)
-		if i < len(paragraphs)-1 {
-			_, _ = fmt.Fprintln(w)
+			_, _ = fmt.Fprintln(w, style.Render(line))
 		}
 	}
 	_, _ = fmt.Fprintln(w)
 }
+
+// exit ends the process; tests replace it.
+var exit = os.Exit
 
 func Execute() {
 	err := fang.Execute(
@@ -84,7 +81,7 @@ func Execute() {
 		fang.WithErrorHandler(customErrorHandler),
 	)
 	if err != nil {
-		os.Exit(1)
+		exit(1)
 	}
 }
 

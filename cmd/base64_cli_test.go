@@ -2,24 +2,16 @@ package cmd
 
 import (
 	"bytes"
+	"io"
 	"os"
-	"os/exec"
 	"path/filepath"
 	"strings"
 	"testing"
+
+	"github.com/spf13/pflag"
 )
 
 func TestBase64CLI(t *testing.T) {
-	// Build the binary first
-	buildCmd := exec.Command("go", "build", "-o", "devtui_test")
-	buildCmd.Dir = ".."
-	if err := buildCmd.Run(); err != nil {
-		t.Fatalf("Failed to build devtui: %v", err)
-	}
-	defer os.Remove("../devtui_test")
-
-	binary := "../devtui_test"
-
 	tests := []struct {
 		name   string
 		args   []string
@@ -69,17 +61,7 @@ func TestBase64CLI(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			cmd := exec.Command(binary, tt.args...)
-
-			var stdout, stderr bytes.Buffer
-			cmd.Stdout = &stdout
-			cmd.Stderr = &stderr
-
-			if tt.input != "" {
-				cmd.Stdin = strings.NewReader(tt.input)
-			}
-
-			err := cmd.Run()
+			stdout, stderr, err := runDevtui(strings.NewReader(tt.input), tt.args...)
 
 			if tt.hasErr {
 				if err == nil {
@@ -102,15 +84,6 @@ func TestBase64CLI(t *testing.T) {
 }
 
 func TestBase64CLIWithFiles(t *testing.T) {
-	// Build the binary first
-	buildCmd := exec.Command("go", "build", "-o", "devtui_test")
-	buildCmd.Dir = ".."
-	if err := buildCmd.Run(); err != nil {
-		t.Fatalf("Failed to build devtui: %v", err)
-	}
-	defer os.Remove("../devtui_test")
-
-	binary := "../devtui_test"
 	testDataDir := "../testdata"
 
 	// Check if testdata directory exists
@@ -148,13 +121,7 @@ func TestBase64CLIWithFiles(t *testing.T) {
 			}
 
 			// Encode using stdin
-			cmd := exec.Command(binary, "base64")
-			cmd.Stdin = bytes.NewReader(textContent)
-			var stdout, stderr bytes.Buffer
-			cmd.Stdout = &stdout
-			cmd.Stderr = &stderr
-
-			err = cmd.Run()
+			stdout, stderr, err := runDevtui(bytes.NewReader(textContent), "base64")
 			if err != nil {
 				t.Errorf("Failed to encode %s: %v\nStderr: %s", textPath, err, stderr.String())
 				return
@@ -195,13 +162,7 @@ func TestBase64CLIWithFiles(t *testing.T) {
 			}
 
 			// Decode using stdin
-			cmd := exec.Command(binary, "base64", "--decode")
-			cmd.Stdin = bytes.NewReader(base64Content)
-			var stdout, stderr bytes.Buffer
-			cmd.Stdout = &stdout
-			cmd.Stderr = &stderr
-
-			err = cmd.Run()
+			stdout, stderr, err := runDevtui(bytes.NewReader(base64Content), "base64", "--decode")
 			if err != nil {
 				t.Errorf("Failed to decode %s: %v\nStderr: %s", base64Path, err, stderr.String())
 				return
@@ -225,15 +186,6 @@ func TestBase64CLIWithFiles(t *testing.T) {
 }
 
 func TestBase64CLIRoundTrip(t *testing.T) {
-	// Build the binary first
-	buildCmd := exec.Command("go", "build", "-o", "devtui_test")
-	buildCmd.Dir = ".."
-	if err := buildCmd.Run(); err != nil {
-		t.Fatalf("Failed to build devtui: %v", err)
-	}
-	defer os.Remove("../devtui_test")
-
-	binary := "../devtui_test"
 	testDataDir := "../testdata"
 
 	// Check if testdata directory exists
@@ -260,13 +212,7 @@ func TestBase64CLIRoundTrip(t *testing.T) {
 			}
 
 			// Step 1: Encode using stdin
-			encodeCmd := exec.Command(binary, "base64")
-			encodeCmd.Stdin = bytes.NewReader(original)
-			var encodedOut, encodeErr bytes.Buffer
-			encodeCmd.Stdout = &encodedOut
-			encodeCmd.Stderr = &encodeErr
-
-			err = encodeCmd.Run()
+			encodedOut, encodeErr, err := runDevtui(bytes.NewReader(original), "base64")
 			if err != nil {
 				t.Errorf("Failed to encode %s: %v\nStderr: %s", filePath, err, encodeErr.String())
 				return
@@ -275,13 +221,7 @@ func TestBase64CLIRoundTrip(t *testing.T) {
 			encoded := encodedOut.String()
 
 			// Step 2: Decode using stdin
-			decodeCmd := exec.Command(binary, "base64", "--decode")
-			decodeCmd.Stdin = strings.NewReader(encoded)
-			var decodedOut, decodeErrBuf bytes.Buffer
-			decodeCmd.Stdout = &decodedOut
-			decodeCmd.Stderr = &decodeErrBuf
-
-			err = decodeCmd.Run()
+			decodedOut, decodeErrBuf, err := runDevtui(strings.NewReader(encoded), "base64", "--decode")
 			if err != nil {
 				t.Errorf("Failed to decode for %s: %v\nStderr: %s", filename, err, decodeErrBuf.String())
 				return
@@ -298,15 +238,6 @@ func TestBase64CLIRoundTrip(t *testing.T) {
 }
 
 func TestBase64CLIInvalidData(t *testing.T) {
-	// Build the binary first
-	buildCmd := exec.Command("go", "build", "-o", "devtui_test")
-	buildCmd.Dir = ".."
-	if err := buildCmd.Run(); err != nil {
-		t.Fatalf("Failed to build devtui: %v", err)
-	}
-	defer os.Remove("../devtui_test")
-
-	binary := "../devtui_test"
 	testDataDir := "../testdata"
 	invalidFile := filepath.Join(testDataDir, "invalid.base64")
 
@@ -322,13 +253,7 @@ func TestBase64CLIInvalidData(t *testing.T) {
 	}
 
 	// Try to decode invalid base64 using stdin - should fail
-	cmd := exec.Command(binary, "base64", "--decode")
-	cmd.Stdin = bytes.NewReader(invalidContent)
-	var stdout, stderr bytes.Buffer
-	cmd.Stdout = &stdout
-	cmd.Stderr = &stderr
-
-	err = cmd.Run()
+	_, stderr, err := runDevtui(bytes.NewReader(invalidContent), "base64", "--decode")
 	if err == nil {
 		t.Errorf("Expected error when decoding invalid base64 file, but command succeeded")
 	}
@@ -337,4 +262,25 @@ func TestBase64CLIInvalidData(t *testing.T) {
 	if stderr.Len() == 0 {
 		t.Errorf("Expected error message in stderr, but got none")
 	}
+}
+
+// runDevtui runs devtui in process with the given stdin, resetting the flags a
+// previous run set.
+func runDevtui(stdin io.Reader, args ...string) (*bytes.Buffer, *bytes.Buffer, error) {
+	cmd := GetRootCmd()
+	for _, sub := range cmd.Commands() {
+		sub.Flags().VisitAll(func(flag *pflag.Flag) {
+			_ = flag.Value.Set(flag.DefValue)
+			flag.Changed = false
+		})
+	}
+
+	var stdout, stderr bytes.Buffer
+	cmd.SetIn(stdin)
+	cmd.SetOut(&stdout)
+	cmd.SetErr(&stderr)
+	cmd.SetArgs(args)
+
+	err := cmd.Execute()
+	return &stdout, &stderr, err
 }

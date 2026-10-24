@@ -3,7 +3,6 @@ package cmd
 import (
 	"fmt"
 
-	tea "charm.land/bubbletea/v2"
 	"github.com/skatkov/devtui/internal/cmderror"
 	"github.com/skatkov/devtui/internal/input"
 	"github.com/skatkov/devtui/internal/ui"
@@ -42,11 +41,8 @@ in an interactive terminal interface.`,
 			return err
 		}
 
-		if flagTUI {
-			common := &ui.CommonModel{
-				Width:  0, // Will be set by tea.WindowSizeMsg
-				Height: 0,
-			}
+		if tomlfmtTUI {
+			common := &ui.CommonModel{}
 
 			model := toml.NewTomlFormatModel(common)
 			err = model.SetContent(string(data))
@@ -54,11 +50,7 @@ in an interactive terminal interface.`,
 				return err
 			}
 
-			p := tea.NewProgram(model)
-			if _, err := p.Run(); err != nil {
-				return err
-			}
-			return nil
+			return runProgram(model)
 		}
 
 		inputStr := string(data)
@@ -68,15 +60,13 @@ in an interactive terminal interface.`,
 		}
 
 		_, err = fmt.Fprintln(cmd.OutOrStdout(), result)
-		if err != nil {
-			return err
-		}
-
-		return nil
+		return err
 	},
 }
 
+var tomlfmtTUI bool
+
 func init() {
 	rootCmd.AddCommand(tomlfmtCmd)
-	tomlfmtCmd.Flags().BoolVarP(&flagTUI, "tui", "t", false, "Show output in TUI")
+	tomlfmtCmd.Flags().BoolVarP(&tomlfmtTUI, "tui", "t", false, "Show output in TUI")
 }

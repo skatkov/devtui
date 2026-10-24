@@ -57,3 +57,22 @@ func TestNumbersCmdJSON(t *testing.T) {
 		t.Fatalf("expected conversions in JSON output")
 	}
 }
+
+func TestNumbersCmdArgumentInput(t *testing.T) {
+	stdout, _, err := runDevtui(nil, "numbers", "42")
+	if err != nil {
+		t.Fatalf("numbers failed: %v", err)
+	}
+
+	output := stdout.String()
+	if !strings.HasPrefix(output, "┌") || !strings.Contains(output, "│Base 2 (binary)      │101010│") {
+		t.Fatalf("expected a table with decimal 42 in binary, got %q", output)
+	}
+}
+
+func TestNumbersCmdNoInput(t *testing.T) {
+	_, _, err := runDevtui(strings.NewReader(" \n"), "numbers")
+	if err == nil || !strings.Contains(err.Error(), "no input provided") {
+		t.Fatalf("expected a no input error, got %v", err)
+	}
+}

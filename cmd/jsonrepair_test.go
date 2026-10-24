@@ -156,3 +156,14 @@ func TestJSONRepairCmdChaining(t *testing.T) {
 		t.Error("jsonrepair command output is empty")
 	}
 }
+
+func TestJSONRepairCmdArgumentInput(t *testing.T) {
+	stdout, _, err := runDevtui(nil, "jsonrepair", "{'a': 1}")
+	if err != nil {
+		t.Fatalf("jsonrepair failed: %v", err)
+	}
+
+	if want := "{\"a\":1}\n"; stdout.String() != want {
+		t.Fatalf("expected %q, got %q", want, stdout.String())
+	}
+}

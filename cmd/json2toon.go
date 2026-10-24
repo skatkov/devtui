@@ -47,11 +47,7 @@ reduced token usage (typically 30-60% fewer tokens than JSON).`,
 		}
 
 		_, err = fmt.Fprint(cmd.OutOrStdout(), result)
-		if err != nil {
-			return err
-		}
-
-		return nil
+		return err
 	},
 }
 

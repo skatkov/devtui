@@ -73,4 +73,19 @@ func TestUUIDDecodeCmdNoInput(t *testing.T) {
 	if err == nil {
 		t.Fatal("uuiddecode command should return error when no input provided")
 	}
+	if !strings.Contains(err.Error(), "no input provided") {
+		t.Fatalf("expected a no input error, got %v", err)
+	}
+}
+
+func TestUUIDDecodeCmdArgumentInput(t *testing.T) {
+	stdout, _, err := runDevtui(nil, "uuiddecode", "4326ff5f-774d-4506-a18c-4bc50c761863")
+	if err != nil {
+		t.Fatalf("uuiddecode failed: %v", err)
+	}
+
+	output := stdout.String()
+	if !strings.HasPrefix(output, "┌") || !strings.Contains(output, "│Version               │4") {
+		t.Fatalf("expected a table with version 4, got %q", output)
+	}
 }

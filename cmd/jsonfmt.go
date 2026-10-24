@@ -55,11 +55,7 @@ The output is always valid, properly indented JSON.`,
 		result := json.FormatJSON(string(data))
 
 		_, err = fmt.Fprintln(cmd.OutOrStdout(), result)
-		if err != nil {
-			return err
-		}
-
-		return nil
+		return err
 	},
 }
 
