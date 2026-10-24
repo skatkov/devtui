@@ -1,86 +1,57 @@
-package main
+package generator
 
 import (
+	"bytes"
 	"fmt"
 	"log"
 	"os"
 	"path/filepath"
 	"strings"
 
-	"github.com/skatkov/devtui/cmd"
 	"github.com/spf13/cobra"
 	"github.com/spf13/cobra/doc"
 )
 
-func generateMarkdownForCommand(cmd *cobra.Command, isSubcommand bool) {
-	// Skip generating separate files for subcommands
-	if isSubcommand {
-		return
-	}
-
-	// Determine the correct path to site/cli
-	sitePath := "site/cli"
-	if _, err := os.Stat("site"); os.IsNotExist(err) {
-		sitePath = "../site/cli"
-	}
-
-	// Create a file
-	file, err := os.Create(filepath.Join(sitePath, cmd.Name()+".md"))
-	if err != nil {
-		log.Fatal(err)
-	}
+func generateMarkdownForCommand(cmd *cobra.Command, sitePath string) {
+	var buf bytes.Buffer
 
 	// Write front matter
-	_, err = fmt.Fprintf(file, `---
+	fmt.Fprintf(&buf, `---
 title: %s
 parent: CLI
 ---
 
 `, cmd.Name())
-	if err != nil {
-		log.Fatal(err)
-	}
 
 	// Generate the markdown content for main command
-	err = doc.GenMarkdown(cmd, file)
-	if err != nil {
+	if err := doc.GenMarkdown(cmd, &buf); err != nil {
 		log.Fatal(err)
 	}
 
-	// If the command has subcommands, add them to the same file
-	if cmd.HasSubCommands() {
-		for _, subCmd := range cmd.Commands() {
-			// Skip help command
-			if subCmd.Name() == "help" {
-				continue
-			}
+	// Add subcommands to the same file
+	for _, subCmd := range cmd.Commands() {
+		// Skip help command
+		if subCmd.Name() == "help" {
+			continue
+		}
 
-			// Add a separator and subcommand documentation
-			_, err = file.WriteString(string("\n---\n\n"))
-			if err != nil {
-				log.Fatal(err)
-			}
+		// Add a separator and subcommand documentation
+		buf.WriteString("\n---\n\n")
 
-			err = doc.GenMarkdown(subCmd, file)
-			if err != nil {
-				log.Fatal(err)
-			}
+		if err := doc.GenMarkdown(subCmd, &buf); err != nil {
+			log.Fatal(err)
 		}
 	}
 
-	// Close the file before reading it back
-	if err := file.Close(); err != nil {
-		log.Fatal(err)
-	}
-
-	// Read the file to process it
-	content, err := os.ReadFile(filepath.Join(sitePath, cmd.Name()+".md"))
+	err := os.WriteFile(filepath.Join(sitePath, cmd.Name()+".md"), []byte(cleanMarkdown(buf.String())), 0o644)
 	if err != nil {
 		log.Fatal(err)
 	}
+}
 
-	// Process content to remove duplicate title and clean up
-	lines := strings.Split(string(content), "\n")
+// cleanMarkdown removes the cobra title, footer and SEE ALSO section and tidies code blocks.
+func cleanMarkdown(content string) string {
+	lines := strings.Split(content, "\n")
 	processedLines := make([]string, 0, len(lines))
 	inSeeAlso := false
 	inCodeBlock := false
@@ -101,14 +72,12 @@ parent: CLI
 			inSeeAlso = true
 			continue
 		}
-		if inSeeAlso && (strings.HasPrefix(line, "### ") || strings.HasPrefix(line, "## ")) {
-			// End of SEE ALSO section, start processing again
-			inSeeAlso = false
-		}
-		if inSeeAlso {
+		if inSeeAlso && !strings.HasPrefix(line, "### ") && !strings.HasPrefix(line, "## ") && line != "---" {
 			// Skip lines in SEE ALSO section
 			continue
 		}
+		// Any heading or the subcommand separator ends the SEE ALSO section
+		inSeeAlso = false
 
 		// Track current section
 		if strings.HasPrefix(line, "### ") {
@@ -154,24 +123,18 @@ parent: CLI
 		processedLines = append(processedLines, line)
 	}
 
-	// Write the processed content back
-	err = os.WriteFile(filepath.Join(sitePath, cmd.Name()+".md"), []byte(strings.Join(processedLines, "\n")), 0o644)
-	if err != nil {
-		log.Fatal(err)
-	}
+	return strings.Join(processedLines, "\n")
 }
 
-func GenerateCLIDocumentation() {
-	rootCmd := cmd.GetRootCmd()
-
-	cmds := rootCmd.Commands()
-	for _, cmd := range cmds {
+// GenerateCLIDocumentation writes a page per root subcommand into sitePath, skipping version.
+func GenerateCLIDocumentation(rootCmd *cobra.Command, sitePath string) {
+	for _, cmd := range rootCmd.Commands() {
 		// Skip version command
 		if cmd.Name() == "version" {
 			continue
 		}
 
 		// Generate documentation for the command (including subcommands)
-		generateMarkdownForCommand(cmd, false)
+		generateMarkdownForCommand(cmd, sitePath)
 	}
 }

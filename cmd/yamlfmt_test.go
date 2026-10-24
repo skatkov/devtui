@@ -40,3 +40,14 @@ func TestYamlfmtCmdNoInput(t *testing.T) {
 		t.Fatal("yamlfmt command should return error when no input provided")
 	}
 }
+
+func TestYamlfmtCmdArgumentInput(t *testing.T) {
+	stdout, _, err := runDevtui(nil, "yamlfmt", "b:   2")
+	if err != nil {
+		t.Fatalf("yamlfmt failed: %v", err)
+	}
+
+	if want := "b: 2\n\n"; stdout.String() != want {
+		t.Fatalf("expected %q, got %q", want, stdout.String())
+	}
+}

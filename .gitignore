@@ -4,3 +4,5 @@ _site/*
 devtui
 .idea
 .worktrees
+.gooze-reports
+.gooze.log*

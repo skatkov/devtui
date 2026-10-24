@@ -17,8 +17,8 @@ parent: TUI
 | Key | Action |
 |-----|--------|
 | `c` | copy Go struct |
-| `e` | edit JSON |
-| `v` | paste JSON to convert |
+| `e` | edit YAML |
+| `v` | paste YAML to convert |
 | `q/ctrl+c` | quit |
 
 

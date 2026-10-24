@@ -1,10 +1,9 @@
 package cmd
 
 import (
-	"strings"
+	"bytes"
 
 	"github.com/client9/csstool"
-	"github.com/skatkov/devtui/internal/cmderror"
 	"github.com/skatkov/devtui/internal/input"
 	"github.com/spf13/cobra"
 )
@@ -40,13 +39,8 @@ Input can be a string argument or piped from stdin.`,
 			return err
 		}
 
-		inputStr := string(data)
-		err = cssformat.Format(strings.NewReader(inputStr), cmd.OutOrStdout())
-		if err != nil {
-			return cmderror.FormatParseError("cssmin", inputStr, err)
-		}
-
-		return nil
+		// csstool reports neither parse nor write errors, so there is no parse error to explain.
+		return cssformat.Format(bytes.NewReader(data), cmd.OutOrStdout())
 	},
 }
 

@@ -1,0 +1,116 @@
+name: mutation
+
+# Two shards with two workers each. Pull requests mutate only the lines they
+# change, and the merge job fails at a surviving mutant on them. Pushes to main
+# (and manual runs) mutate the whole module, reusing the :main baseline as a
+# cache for unchanged files, and publish the merged reports back to :main;
+# pull requests never write to the registry.
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  packages: read # pull the baseline from GHCR
+
+env:
+  REPORTS_REF: ghcr.io/${{ github.repository }}/gooze-reports:main
+  GOOZE_REGISTRY_USERNAME: ${{ github.actor }}
+  GOOZE_REGISTRY_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
+  # Diff runs write their shards under run/, full runs at the top level.
+  REPORTS_DIR: ${{ github.event_name == 'pull_request' && '.gooze-reports/run' || '.gooze-reports' }}
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [0, 1]
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0 # --diff needs the base branch history
+      - uses: actions/setup-go@v7
+        with:
+          go-version-file: 'go.mod'
+          cache: true
+
+      # gooze needs Go 1.27.3 to build. setup-go sets GOTOOLCHAIN=local, so pick
+      # the toolchain for this one command; the tests still run on the Go above.
+      - name: Install gooze
+        run: GOTOOLCHAIN=go1.27.3 go install gooze.dev/pkg/gooze@v1.4.1
+
+      # Full runs reuse main's results, so only changed files are tested again.
+      - name: Restore baseline from main
+        if: github.event_name != 'pull_request'
+        run: gooze report pull "$REPORTS_REF" || echo "no baseline yet"
+
+      # A shard stops at its first survivor (exit 3); the merge job gates.
+      - name: Mutation testing, shard ${{ matrix.shard }} (changed lines)
+        if: github.event_name == 'pull_request'
+        env:
+          BASE_REF: ${{ github.base_ref }}
+        run: gooze run -p 2 -s ${{ matrix.shard }}/2 --fail-fast first --diff "origin/$BASE_REF" ./... || [ $? -eq 3 ]
+
+      # The baseline needs every mutant, so a full run never stops early.
+      - name: Mutation testing, shard ${{ matrix.shard }} (whole module)
+        if: github.event_name != 'pull_request'
+        env:
+          GOOZE_RUN_FAIL_FAST: "off"
+        run: gooze run -p 2 -s ${{ matrix.shard }}/2 ./... || [ $? -eq 3 ]
+
+      - name: Archive shard reports
+        run: tar -czf "shard_${{ matrix.shard }}.tgz" -C "$REPORTS_DIR" "shard_${{ matrix.shard }}"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: shard_${{ matrix.shard }}
+          path: shard_${{ matrix.shard }}.tgz
+          if-no-files-found: error
+
+  merge:
+    needs: test
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write # push the main baseline; pull requests only read
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-go@v7
+        with:
+          go-version-file: 'go.mod'
+          cache: true
+      - name: Install gooze
+        run: GOTOOLCHAIN=go1.27.3 go install gooze.dev/pkg/gooze@v1.4.1
+
+      # Keep main's cached reports next to the shards' fresh ones.
+      - name: Restore baseline from main
+        if: github.event_name != 'pull_request'
+        run: gooze report pull "$REPORTS_REF" || echo "no baseline yet"
+
+      - uses: actions/download-artifact@v4
+        with:
+          path: shard-archives
+          pattern: shard_*
+          merge-multiple: true
+      - name: Merge shards
+        run: |
+          mkdir -p "$REPORTS_DIR"
+          for archive in shard-archives/*.tgz; do
+            tar -xzf "$archive" -C "$REPORTS_DIR"
+          done
+          gooze report merge -o "$REPORTS_DIR" || [ $? -eq 3 ] # the gates step below decides
+
+      # Surviving mutants as annotations on their lines, also when the gates pass.
+      - name: Report survivors
+        run: gooze report view -o "$REPORTS_DIR" --format github || [ $? -eq 3 ]
+
+      - name: Publish baseline
+        if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+        run: gooze report push "$REPORTS_REF"
+
+      # The gates of gooze.yaml: threshold.diff on pull requests, threshold on full runs.
+      - name: Quality gates
+        run: gooze report view -o "$REPORTS_DIR"

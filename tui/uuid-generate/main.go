@@ -18,12 +18,15 @@ import (
 
 const Title = "UUID Generator"
 
+type submittedMsg struct{}
+
 type UUIDGenerate struct {
 	common        *ui.CommonModel
 	form          *huh.Form
 	version       int
 	namespace     string
 	generatedUUID uuid.UUID
+	error         string
 }
 
 func NewUUIDGenerateModel(common *ui.CommonModel) *UUIDGenerate {
@@ -51,6 +54,7 @@ func NewUUIDGenerateModel(common *ui.CommonModel) *UUIDGenerate {
 				Value(&m.namespace),
 		).WithHideFunc(func() bool { return m.hideNamespace() }),
 	).WithTheme(huh.ThemeFunc(huh.ThemeCharm)).WithAccessible(accessible).WithShowHelp(false)
+	m.form.SubmitCmd = func() tea.Msg { return submittedMsg{} }
 
 	return &m
 }
@@ -79,7 +83,11 @@ func (m *UUIDGenerate) View() tea.View {
 		if m.namespace != "" {
 			rows = append(rows, []string{"Namespace", m.namespace})
 		}
-		rows = append(rows, []string{"Generated UUID", m.generatedUUID.String()})
+		if m.error != "" {
+			rows = append(rows, []string{"Error", m.error})
+		} else {
+			rows = append(rows, []string{"Generated UUID", m.generatedUUID.String()})
+		}
 
 		tableOutput := table.New().
 			Border(lipgloss.RoundedBorder()).
@@ -116,8 +124,13 @@ func (m *UUIDGenerate) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		m.common.Height = msg.Height
 	case tea.KeyPressMsg:
 		switch msg.String() {
-		case "q", "ctrl+c":
+		case "ctrl+c":
 			return m, tea.Quit
+		case "q":
+			// Let the namespace input receive the key.
+			if _, typing := m.form.GetFocusedField().(*huh.Input); !typing {
+				return m, tea.Quit
+			}
 		case "esc":
 			return m, func() tea.Msg {
 				return ui.ReturnToListMsg{
@@ -125,20 +138,24 @@ func (m *UUIDGenerate) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				}
 			}
 		}
+	case submittedMsg:
+		m.generateUUID()
+		return m, nil
 	}
 
 	form, cmd := m.form.Update(msg)
 	if f, ok := form.(*huh.Form); ok {
 		m.form = f
-
-		if m.form.State == huh.StateCompleted {
-			var err error
-			m.generatedUUID, err = uuidutil.Generate(m.version, m.namespace)
-			if err != nil {
-				// Handle error appropriately
-				fmt.Println("Error generating UUID:", err)
-			}
-		}
 	}
 	return m, cmd
+}
+
+func (m *UUIDGenerate) generateUUID() {
+	generated, err := uuidutil.Generate(m.version, m.namespace)
+	if err != nil {
+		m.error = fmt.Sprintf("Failed to generate UUID: %v", err)
+		return
+	}
+
+	m.generatedUUID = generated
 }

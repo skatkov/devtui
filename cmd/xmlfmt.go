@@ -3,7 +3,6 @@ package cmd
 import (
 	"fmt"
 
-	tea "charm.land/bubbletea/v2"
 	"github.com/go-xmlfmt/xmlfmt"
 	"github.com/skatkov/devtui/internal/input"
 	"github.com/skatkov/devtui/internal/ui"
@@ -54,33 +53,22 @@ Input can be a string argument or piped from stdin.`,
 			return err
 		}
 
-		if flagTUI {
-			common := &ui.CommonModel{
-				Width:  80,
-				Height: 80,
-			}
+		if xmlfmtTUI {
+			common := &ui.CommonModel{}
 
 			model := xml.NewXMLFormatterModel(common)
 			err = model.SetContent(string(data))
 			if err != nil {
 				return err
 			}
-			p := tea.NewProgram(model)
-			if _, err := p.Run(); err != nil {
-				return err
-			}
-			return nil
+			return runProgram(model)
 		}
 
 		result := xmlfmt.FormatXML(string(data),
 			xmlPrefix, xmlIndent, xmlNested)
 
 		_, err = fmt.Fprintln(cmd.OutOrStdout(), result)
-		if err != nil {
-			return err
-		}
-
-		return nil
+		return err
 	},
 }
 
@@ -88,6 +76,7 @@ var (
 	xmlPrefix string
 	xmlIndent string
 	xmlNested bool
+	xmlfmtTUI bool
 )
 
 func init() {
@@ -95,5 +84,5 @@ func init() {
 	xmlfmtCmd.Flags().StringVarP(&xmlPrefix, "prefix", "p", "", "Each element begins on a new line and this prefix")
 	xmlfmtCmd.Flags().StringVarP(&xmlIndent, "indent", "i", "  ", "Indent string for nested elements")
 	xmlfmtCmd.Flags().BoolVarP(&xmlNested, "nested", "n", false, "Nested tags in comments")
-	xmlfmtCmd.Flags().BoolVarP(&flagTUI, "tui", "t", false, "Show output in TUI")
+	xmlfmtCmd.Flags().BoolVarP(&xmlfmtTUI, "tui", "t", false, "Show output in TUI")
 }

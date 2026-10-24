@@ -10,34 +10,36 @@ import (
 	"github.com/tiagomelo/go-clipboard/clipboard"
 )
 
+// copyText and pasteText reach the system clipboard; tests replace them.
+var (
+	copyText  = func(text string) error { return clipboard.New().CopyText(text) }
+	pasteText = func() (string, error) { return clipboard.New().PasteText() }
+)
+
 // Copy copies text to the clipboard with enhanced error messages
 func Copy(text string) error {
-	c := clipboard.New()
-	err := c.CopyText(text)
+	err := copyText(text)
 	if err != nil {
-		return enhanceError(err, "copy")
+		return enhanceError(err, "copy", runtime.GOOS, os.Getenv("XDG_SESSION_TYPE"))
 	}
 	return nil
 }
 
 // Paste retrieves text from the clipboard with enhanced error messages
 func Paste() (string, error) {
-	c := clipboard.New()
-	text, err := c.PasteText()
+	text, err := pasteText()
 	if err != nil {
-		return "", enhanceError(err, "paste")
+		return "", enhanceError(err, "paste", runtime.GOOS, os.Getenv("XDG_SESSION_TYPE"))
 	}
 	return text, nil
 }
 
 // enhanceError adds helpful context to clipboard errors based on the OS and session type
-func enhanceError(originalErr error, operation string) error {
-	if runtime.GOOS != "linux" {
+func enhanceError(originalErr error, operation, goos, sessionType string) error {
+	if goos != "linux" {
 		// On non-Linux systems, return the original error
 		return fmt.Errorf("clipboard %s failed: %w", operation, originalErr)
 	}
-
-	sessionType := os.Getenv("XDG_SESSION_TYPE")
 
 	var helpMsg string
 	switch sessionType {

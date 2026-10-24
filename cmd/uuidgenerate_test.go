@@ -9,7 +9,10 @@ import (
 )
 
 func TestUUIDGenerateCmdDefault(t *testing.T) {
-	uuidgenerateVersion = 4
+	versionFlag := uuidgenerateCmd.Flags().Lookup("uuid-version")
+	if err := versionFlag.Value.Set(versionFlag.DefValue); err != nil {
+		t.Fatalf("reset uuid-version flag: %v", err)
+	}
 	uuidgenerateNamespace = ""
 
 	cmd := GetRootCmd()
