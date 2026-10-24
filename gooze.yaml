@@ -1,0 +1,18 @@
+# Mutation testing settings for gooze. Keys left out keep their defaults.
+# Reference: https://gooze.dev/docs/config/
+version: 1
+
+run:
+  parallel: 2                 # Mutation workers; CI runs two shards with two each.
+  mutation_timeout: 30        # Per-mutation timeout in seconds; the tests take a few.
+  fail_fast: gate             # Stop once a threshold below can no longer be met. CI stops pull requests at the first survivor.
+
+# Quality gates; failing one, gooze exits with code 3.
+threshold:
+  total: 85                   # Score of all mutants.
+  average: 90                 # Average of the per-file scores.
+  file: 85                    # Score every file must reach.
+  diff:                       # --diff runs, scored on the lines a change touches: every mutant must be killed.
+    total: 100
+    average: 100
+    file: 100
