@@ -16,6 +16,13 @@ import (
 
 const Title = "Cron Job Parser"
 
+// @see https://gist.github.com/Aterfax/401875eb3d45c9c114bbef69364dd045
+// @see https://regexr.com/4jp54
+var cronPattern = regexp.MustCompile(`^(((\d+,)+\d+|(\d+(\/|-|#)\d+(\/\d+)?)|\d+L?|\*(\/\d+)?|L(-\d+)?|\?|[A-Z]{3}(-[A-Z]{3})?) ?){5,7}$`)
+
+// displayOptions configure the descriptions shown to the user.
+var displayOptions = []cron.Option{cron.Use24HourTimeFormat(true)}
+
 type CronModel struct {
 	common         *ui.CommonModel
 	form           *huh.Form
@@ -28,60 +35,51 @@ func NewCronModel(common *ui.CommonModel) *CronModel {
 		cronExpression: "*/5 * * * *",
 	}
 
-	// @see https://gist.github.com/Aterfax/401875eb3d45c9c114bbef69364dd045
-	// @see https://regexr.com/4jp54
-	// TODO: Invalid "*/5 * * * *." format is being allowed. Fix it.
-	cronRegex := `^((((\d+,)+\d+|(\d+(\/|-|#)\d+)|\d+L?|\*(\/\d+)?|L(-\d+)?|\?|[A-Z]{3}(-[A-Z]{3})?) ?){5,7})|(@(annually|yearly|monthly|weekly|daily|hourly|reboot))|(@every (\d+(ns|us|µs|ms|s|m|h))+)$`
 	m.form = huh.NewForm(
 		huh.NewGroup(
 			huh.NewInput().
 				Title("Cron Expression").
 				Value(&m.cronExpression).
 				Placeholder("*/5 * * * *").
-				Validate(func(str string) error {
-					// First validate with regexp
-					matched, err := regexp.MatchString(cronRegex, str)
-					if err != nil {
-						return fmt.Errorf("validation error: %v", err)
-					}
-					if !matched {
-						return errors.New("invalid cron expression format")
-					}
-
-					// Then validate with cron descriptor
-					expr, err := cron.NewDescriptor()
-					if err != nil {
-						return fmt.Errorf("invalid cron expression: %v", err)
-					}
-					_, err = expr.ToDescription(str, cron.Locale_en)
-					if err != nil {
-						return fmt.Errorf("invalid cron expression: %v", err)
-					}
-					return nil
-				}).
-				DescriptionFunc(func() string {
-					expr, err := cron.NewDescriptor(
-						cron.Use24HourTimeFormat(true),
-						cron.DayOfWeekStartsAtOne(true),
-					)
-					if err != nil {
-						return ""
-					}
-
-					desc, err := expr.ToDescription(m.cronExpression, cron.Locale_en)
-					if err != nil {
-						return ""
-					}
-
-					valueStyle := lipgloss.NewStyle().
-						Foreground(lipgloss.Color("#87CEEB")).PaddingLeft(20)
-
-					return valueStyle.Render(desc)
-				}, &m.cronExpression),
+				Validate(validateCronExpression).
+				DescriptionFunc(m.description, &m.cronExpression),
 		),
 	).WithTheme(huh.ThemeFunc(huh.ThemeCharm)).WithShowHelp(false)
 
 	return m
+}
+
+func validateCronExpression(str string) error {
+	// First validate with regexp
+	if !cronPattern.MatchString(str) {
+		return errors.New("invalid cron expression format")
+	}
+
+	// Then validate with cron descriptor
+	if _, err := describeCron(str); err != nil {
+		return fmt.Errorf("invalid cron expression: %v", err)
+	}
+	return nil
+}
+
+func describeCron(expression string, options ...cron.Option) (string, error) {
+	expr, err := cron.NewDescriptor(options...)
+	if err != nil {
+		return "", err
+	}
+	return expr.ToDescription(expression, cron.Locale_en)
+}
+
+func (m *CronModel) description() string {
+	desc, err := describeCron(m.cronExpression, displayOptions...)
+	if err != nil {
+		return ""
+	}
+
+	valueStyle := lipgloss.NewStyle().
+		Foreground(lipgloss.Color("#87CEEB")).PaddingLeft(20)
+
+	return valueStyle.Render(desc)
 }
 
 func (m *CronModel) Init() tea.Cmd {
@@ -118,16 +116,7 @@ func (m *CronModel) View() tea.View {
 	s := m.common.Styles
 	switch m.form.State {
 	case huh.StateCompleted:
-		expr, err := cron.NewDescriptor(
-			cron.Use24HourTimeFormat(true),
-			cron.DayOfWeekStartsAtOne(true),
-		)
-		if err != nil {
-			return ui.AltScreenView(lipgloss.NewStyle().Padding(2).
-				Render(fmt.Sprintf("Error parsing cron expression: %v", err)))
-		}
-
-		desc, err := expr.ToDescription(m.cronExpression, cron.Locale_en)
+		desc, err := describeCron(m.cronExpression, displayOptions...)
 		if err != nil {
 			return ui.AltScreenView(lipgloss.NewStyle().Padding(2).
 				Render(fmt.Sprintf("Error parsing cron expression: %v", err)))

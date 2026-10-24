@@ -34,13 +34,8 @@ func NewNumberModel(common *ui.CommonModel) NumbersModel {
 	accessible, _ := strconv.ParseBool(os.Getenv("ACCESSIBLE"))
 
 	options := make([]huh.Option[numbers.Base], 0, len(numbers.Bases))
-	defaultBase := numbers.DefaultBase()
 	for _, base := range numbers.Bases {
-		option := huh.NewOption(base.Label, base)
-		if base.Base == defaultBase.Base {
-			option = option.Selected(true)
-		}
-		options = append(options, option)
+		options = append(options, huh.NewOption(base.Label, base))
 	}
 
 	m.form = huh.NewForm(
@@ -51,7 +46,7 @@ func NewNumberModel(common *ui.CommonModel) NumbersModel {
 				Title("Select Base").Value(&m.base),
 			huh.NewInput().
 				Key("input").
-				Placeholder(fmt.Sprintf("Enter a %s number", m.base.Label)).
+				PlaceholderFunc(func() string { return fmt.Sprintf("Enter a %s number", m.base.Label) }, &m.base).
 				Title("Enter a number").
 				Validate(func(s string) error {
 					if len(s) == 0 {
@@ -98,13 +93,11 @@ func (m NumbersModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	if f, ok := form.(*huh.Form); ok {
 		m.form = f
 
-		// If the form is completed, parse the input value
-		if m.form.State == huh.StateCompleted {
-			if base, ok := m.form.Get("base").(numbers.Base); ok {
-				result, err := numbers.Convert(m.form.GetString("input"), base.Base)
-				if err == nil {
-					m.result = result
-				}
+		// The input is only stored once it passed validation
+		if base, ok := m.form.Get("base").(numbers.Base); ok {
+			result, err := numbers.Convert(m.form.GetString("input"), base.Base)
+			if err == nil {
+				m.result = result
 			}
 		}
 
@@ -143,7 +136,7 @@ func (m NumbersModel) View() tea.View {
 			lipgloss.Top,
 			form,
 			lipgloss.PlaceVertical(
-				m.common.Height-lipgloss.Height(header)-lipgloss.Height(form)-2,
+				m.common.Height-(lipgloss.Height(header)+lipgloss.Height(form))-2,
 				lipgloss.Bottom,
 				m.form.Help().ShortHelpView(m.form.KeyBinds()),
 			),

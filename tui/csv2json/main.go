@@ -7,7 +7,6 @@ import (
 
 	tea "charm.land/bubbletea/v2"
 	"github.com/alecthomas/chroma/quick"
-	"github.com/mattn/go-runewidth"
 
 	"github.com/skatkov/devtui/internal/clipboard"
 	csv2jsonconv "github.com/skatkov/devtui/internal/csv2json"
@@ -48,17 +47,7 @@ func (m CSVJsonModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			return m, editor.OpenEditor(m.Content, "csv")
 		case "v":
 			content, err := clipboard.Paste()
-			if err != nil {
-				cmds = append(cmds, m.ShowErrorMessage(err.Error()))
-			} else {
-				err = m.SetContent(content)
-
-				if err != nil {
-					cmds = append(cmds, m.ShowErrorMessage(err.Error()))
-				} else {
-					cmds = append(cmds, m.ShowStatusMessage("Pasted. Press 'c' to copy result."))
-				}
-			}
+			cmds = append(cmds, m.paste(content, err))
 		}
 	case ui.StatusMessageTimeoutMsg:
 		m.State = ui.PagerStateBrowse
@@ -115,7 +104,18 @@ func (m *CSVJsonModel) SetContent(content string) error {
 	return nil
 }
 
-func (m CSVJsonModel) helpView() (s string) {
+func (m *CSVJsonModel) paste(content string, err error) tea.Cmd {
+	if err == nil {
+		err = m.SetContent(content)
+	}
+
+	if err != nil {
+		return m.ShowErrorMessage(err.Error())
+	}
+	return m.ShowStatusMessage("Pasted. Press 'c' to copy result.")
+}
+
+func (m CSVJsonModel) helpView() string {
 	col1 := []string{
 		"c              copy JSON",
 		"e              edit CSV",
@@ -123,30 +123,5 @@ func (m CSVJsonModel) helpView() (s string) {
 		"q/ctrl+c       quit",
 	}
 
-	s += "\n"
-	s += "k/↑      up                  " + col1[0] + "\n"
-	s += "j/↓      down                " + col1[1] + "\n"
-	s += "b/pgup   page up             " + col1[2] + "\n"
-	s += "f/pgdn   page down           " + col1[3] + "\n"
-	s += "u        ½ page up           " + "\n"
-	s += "d        ½ page down         "
-
-	if len(col1) > 5 {
-		s += col1[5]
-	}
-
-	s = ui.Indent(s, 2)
-
-	if m.Common.Width > 0 {
-		lines := strings.Split(s, "\n")
-		for i := range lines {
-			l := runewidth.StringWidth(lines[i])
-			n := max(m.Common.Width-l, 0)
-			lines[i] += strings.Repeat(" ", n)
-		}
-
-		s = strings.Join(lines, "\n")
-	}
-
-	return ui.HelpViewStyle(s)
+	return m.FormatHelpColumns(col1)
 }
