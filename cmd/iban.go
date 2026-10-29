@@ -40,13 +40,15 @@ Use the --formatted flag to output the IBAN in paper format with spaces.`,
 		}
 
 		// Format output based on flag
+		output := generatedIban
 		if ibanFormatted {
-			fmt.Println(iban.PaperFormat(generatedIban))
-		} else {
-			fmt.Println(generatedIban)
+			output = iban.PaperFormat(generatedIban)
 		}
-
-		return nil
+		if outputJSON {
+			return writeJSONValue(cmd.OutOrStdout(), output)
+		}
+		_, err = fmt.Fprintln(cmd.OutOrStdout(), output)
+		return err
 	},
 }
 

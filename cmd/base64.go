@@ -47,14 +47,20 @@ Input can be a string argument or piped from stdin.`,
 			if err != nil {
 				return err
 			}
-			fmt.Print(decoded)
-		} else {
-			// Encode to base64
-			encoded := base64.Encode(data)
-			fmt.Print(encoded)
+			if outputJSON {
+				return writeJSONValue(cmd.OutOrStdout(), decoded)
+			}
+			_, err = fmt.Fprint(cmd.OutOrStdout(), decoded)
+			return err
 		}
 
-		return nil
+		// Encode to base64
+		encoded := base64.Encode(data)
+		if outputJSON {
+			return writeJSONValue(cmd.OutOrStdout(), encoded)
+		}
+		_, err = fmt.Fprint(cmd.OutOrStdout(), encoded)
+		return err
 	},
 }
 

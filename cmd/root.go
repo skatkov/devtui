@@ -95,4 +95,5 @@ func GetRootCmd() *cobra.Command {
 func init() {
 	// fang.Execute automatically adds --version flag
 	// We configure it via fang.WithVersion() in Execute()
+	rootCmd.PersistentFlags().BoolVar(&outputJSON, "json", false, "output as JSON")
 }
