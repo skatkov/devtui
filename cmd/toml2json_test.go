@@ -2,8 +2,11 @@ package cmd
 
 import (
 	"bytes"
+	"errors"
 	"strings"
 	"testing"
+
+	"github.com/skatkov/devtui/tui/toml2json"
 )
 
 func TestToml2jsonCmd(t *testing.T) {
@@ -129,5 +132,46 @@ func TestToml2jsonCmdHelp(t *testing.T) {
 		if !strings.Contains(output, expected) {
 			t.Errorf("help output missing expected string %q", expected)
 		}
+	}
+}
+
+func TestToml2jsonCmdArgumentInput(t *testing.T) {
+	stdout, _, err := runDevtui(nil, "toml2json", "a = 1")
+	if err != nil {
+		t.Fatalf("toml2json failed: %v", err)
+	}
+
+	if want := "{\n  \"a\": 1\n}\n\n"; stdout.String() != want {
+		t.Fatalf("expected %q, got %q", want, stdout.String())
+	}
+}
+
+func TestToml2jsonCmdTUI(t *testing.T) {
+	errQuit := errors.New("quit")
+	started := stubTUIProgram(t, errQuit)
+
+	_, _, err := runDevtui(strings.NewReader("a = 1"), "toml2json", "--tui")
+	if !errors.Is(err, errQuit) {
+		t.Fatalf("expected the program error, got %v", err)
+	}
+
+	model, ok := (*started).(toml2json.TomlJsonModel)
+	if !ok {
+		t.Fatalf("expected a toml2json model, got %T", *started)
+	}
+	if want := "{\n  \"a\": 1\n}\n"; model.FormattedContent != want {
+		t.Fatalf("expected %q, got %q", want, model.FormattedContent)
+	}
+}
+
+func TestToml2jsonCmdTUIInvalidInput(t *testing.T) {
+	started := stubTUIProgram(t, nil)
+
+	_, _, err := runDevtui(strings.NewReader("a ="), "toml2json", "--tui")
+	if err == nil {
+		t.Fatal("expected an error for invalid TOML")
+	}
+	if *started != nil {
+		t.Fatal("expected no TUI to start")
 	}
 }

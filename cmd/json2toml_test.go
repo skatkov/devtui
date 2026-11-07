@@ -2,8 +2,12 @@ package cmd
 
 import (
 	"bytes"
+	"errors"
 	"strings"
 	"testing"
+
+	tea "charm.land/bubbletea/v2"
+	"github.com/skatkov/devtui/tui/json2toml"
 )
 
 func TestJson2tomlCmd(t *testing.T) {
@@ -202,5 +206,51 @@ func TestJson2tomlCmdChaining(t *testing.T) {
 
 	if strings.TrimSpace(output) == "" {
 		t.Error("json2toml command output is empty")
+	}
+}
+
+// stubTUIProgram replaces runProgram for the test and returns where the model
+// it receives is stored; the stub returns err.
+func stubTUIProgram(t *testing.T, err error) *tea.Model {
+	t.Helper()
+
+	original := runProgram
+	t.Cleanup(func() { runProgram = original })
+
+	var started tea.Model
+	runProgram = func(model tea.Model) error {
+		started = model
+		return err
+	}
+	return &started
+}
+
+func TestJson2tomlCmdTUI(t *testing.T) {
+	errQuit := errors.New("quit")
+	started := stubTUIProgram(t, errQuit)
+
+	_, _, err := runDevtui(strings.NewReader(`{"a": "b"}`), "json2toml", "--tui")
+	if !errors.Is(err, errQuit) {
+		t.Fatalf("expected the program error, got %v", err)
+	}
+
+	model, ok := (*started).(json2toml.JsonTomlModel)
+	if !ok {
+		t.Fatalf("expected a json2toml model, got %T", *started)
+	}
+	if want := "a = 'b'\n"; model.FormattedContent != want {
+		t.Fatalf("expected %q, got %q", want, model.FormattedContent)
+	}
+}
+
+func TestJson2tomlCmdTUIInvalidInput(t *testing.T) {
+	started := stubTUIProgram(t, nil)
+
+	_, _, err := runDevtui(strings.NewReader(`{"a":`), "json2toml", "--tui")
+	if err == nil {
+		t.Fatal("expected an error for invalid JSON")
+	}
+	if *started != nil {
+		t.Fatal("expected no TUI to start")
 	}
 }

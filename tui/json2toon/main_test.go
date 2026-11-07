@@ -1,10 +1,13 @@
 package json2toon
 
 import (
+	"errors"
 	"strings"
 	"testing"
 
+	tea "charm.land/bubbletea/v2"
 	"github.com/hannes-sistemica/toon"
+	"github.com/skatkov/devtui/internal/editor"
 	"github.com/skatkov/devtui/internal/ui"
 )
 
@@ -292,4 +295,198 @@ func TestModelOptions(t *testing.T) {
 	if !strings.Contains(model.FormattedContent, "#") {
 		t.Errorf("SetContent() with length marker should contain '#' in output")
 	}
+}
+
+func TestConvertUsesTwoSpaceIndent(t *testing.T) {
+	t.Parallel()
+
+	got, err := Convert(`{"user":{"id":1}}`)
+	if err != nil {
+		t.Fatalf("Convert() error = %v", err)
+	}
+	if got != "user:\n  id: 1" {
+		t.Errorf("expected two-space indent, got %q", got)
+	}
+}
+
+func TestConvertWithOptionsErrors(t *testing.T) {
+	t.Parallel()
+
+	tests := []struct {
+		name    string
+		input   string
+		wantErr string
+	}{
+		{"syntax error", `{"a" 1}`, "JSON syntax error at offset"},
+		{"empty input", ``, "JSON parsing error: EOF"},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+
+			_, err := ConvertWithOptions(tt.input, toon.EncodeOptions{})
+			if err == nil || !strings.Contains(err.Error(), tt.wantErr) {
+				t.Errorf("ConvertWithOptions(%q) error = %v, want %q", tt.input, err, tt.wantErr)
+			}
+		})
+	}
+}
+
+func TestIndentKeyTogglesIndent(t *testing.T) {
+	t.Parallel()
+
+	model := updateModel(t, newModel(), editor.EditorFinishedMsg{Content: `{"user":{"id":1}}`})
+
+	model = updateModel(t, model, textKeypress('i'))
+	if model.FormattedContent != "user:\n    id: 1" {
+		t.Errorf("expected four-space indent, got %q", model.FormattedContent)
+	}
+	if model.StatusMessage != "Indent: 4 spaces" {
+		t.Errorf("expected indent status, got %q", model.StatusMessage)
+	}
+
+	model = updateModel(t, model, textKeypress('i'))
+	if model.indent != 2 {
+		t.Errorf("expected indent 2 after second toggle, got %d", model.indent)
+	}
+}
+
+func TestLengthMarkerKeyTogglesMarker(t *testing.T) {
+	t.Parallel()
+
+	model := updateModel(t, newModel(), editor.EditorFinishedMsg{Content: `{"tags":["a"]}`})
+
+	model = updateModel(t, model, textKeypress('l'))
+	if model.FormattedContent != "tags[#1]: a" {
+		t.Errorf("expected length marker, got %q", model.FormattedContent)
+	}
+	if model.StatusMessage != "Length marker: on" {
+		t.Errorf("expected length marker status, got %q", model.StatusMessage)
+	}
+
+	model = updateModel(t, model, textKeypress('l'))
+	if model.FormattedContent != "tags[1]: a" {
+		t.Errorf("expected no length marker, got %q", model.FormattedContent)
+	}
+	if model.StatusMessage != "Length marker: off" {
+		t.Errorf("expected length marker status, got %q", model.StatusMessage)
+	}
+}
+
+func TestOptionKeysWithoutContentShowNoStatus(t *testing.T) {
+	t.Parallel()
+
+	for _, key := range []rune{'i', 'l'} {
+		model := updateModel(t, newModel(), textKeypress(key))
+		if model.State != ui.PagerStateBrowse {
+			t.Errorf("expected browse state after %q, got %v", key, model.State)
+		}
+	}
+}
+
+func TestOptionKeysWithInvalidContentShowError(t *testing.T) {
+	t.Parallel()
+
+	for _, key := range []rune{'i', 'l'} {
+		model := updateModel(t, newModel(), editor.EditorFinishedMsg{Content: `{`})
+		model = updateModel(t, model, ui.StatusMessageTimeoutMsg{})
+		if model.State != ui.PagerStateBrowse {
+			t.Fatalf("expected browse state after timeout, got %v", model.State)
+		}
+
+		model = updateModel(t, model, textKeypress(key))
+		if model.State != ui.PagerStateErrorMessage {
+			t.Errorf("expected error state after %q, got %v", key, model.State)
+		}
+		if !strings.HasPrefix(model.StatusMessage, "error converting JSON to TOON") {
+			t.Errorf("expected conversion error after %q, got %q", key, model.StatusMessage)
+		}
+	}
+}
+
+func TestEditorFinishedMsgSetsContent(t *testing.T) {
+	t.Parallel()
+
+	model := updateModel(t, newModel(), editor.EditorFinishedMsg{Content: `{"a":1}`})
+
+	if model.Viewport.GetContent() != "a: 1" {
+		t.Errorf("expected TOON in viewport, got %q", model.Viewport.GetContent())
+	}
+	if model.StatusMessage != "Pasted. Press 'c' to copy result." {
+		t.Errorf("expected paste status, got %q", model.StatusMessage)
+	}
+}
+
+func TestEditorFinishedMsgWithErrorShowsError(t *testing.T) {
+	t.Parallel()
+
+	model := updateModel(t, newModel(), editor.EditorFinishedMsg{Err: errors.New("editor failed"), Content: `{"a":1}`})
+
+	if model.Content != "" {
+		t.Errorf("expected content to stay empty, got %q", model.Content)
+	}
+	if model.State != ui.PagerStateErrorMessage || model.StatusMessage != "editor failed" {
+		t.Errorf("expected editor error, got state %v and %q", model.State, model.StatusMessage)
+	}
+}
+
+func TestHelpViewShowsCurrentOptions(t *testing.T) {
+	t.Parallel()
+
+	tests := []struct {
+		name         string
+		indent       int
+		lengthMarker string
+		want         []string
+	}{
+		{"defaults", 2, "", []string{"toggle indent (current: 2)", "toggle length marker (current: off)"}},
+		{"toggled", 4, "#", []string{"toggle indent (current: 4)", "toggle length marker (current: on)"}},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+
+			model := newModel()
+			model.indent = tt.indent
+			model.lengthMarker = tt.lengthMarker
+
+			help := model.helpView()
+			for _, want := range tt.want {
+				if !strings.Contains(help, want) {
+					t.Errorf("expected help to contain %q, got %q", want, help)
+				}
+			}
+		})
+	}
+}
+
+func TestViewShowsHelp(t *testing.T) {
+	t.Parallel()
+
+	model := updateModel(t, newModel(), tea.WindowSizeMsg{Width: 80, Height: 24})
+	if strings.Contains(model.View().Content, "copy TOON") {
+		t.Fatal("expected help to be hidden")
+	}
+
+	model = updateModel(t, model, textKeypress('?'))
+	if !strings.Contains(model.View().Content, "copy TOON") {
+		t.Errorf("expected help in view, got %q", model.View().Content)
+	}
+}
+
+func newModel() JsonToonModel {
+	return NewJsonToonModel(&ui.CommonModel{Width: 80, Height: 24})
+}
+
+func updateModel(t *testing.T, model JsonToonModel, msg tea.Msg) JsonToonModel {
+	t.Helper()
+
+	next, _ := model.Update(msg)
+	return next.(JsonToonModel)
+}
+
+func textKeypress(r rune) tea.KeyPressMsg {
+	return tea.KeyPressMsg(tea.Key{Code: r, Text: string(r)})
 }

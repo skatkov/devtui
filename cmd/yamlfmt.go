@@ -42,11 +42,7 @@ Input can be a string argument, piped from stdin, or read from a file.`,
 		}
 
 		_, err = fmt.Fprintln(cmd.OutOrStdout(), result)
-		if err != nil {
-			return err
-		}
-
-		return nil
+		return err
 	},
 }
 

@@ -32,12 +32,16 @@ var passwordCharacterSets = []passwordCharacterSet{
 	{id: "special", label: "Special (!@#$%^&*)", chars: "!@#$%^&*()_+-=[]{}|;:,.<>?"},
 }
 
+// runForm runs a form on the terminal; tests replace it to script the input.
+var runForm = (*huh.Form).Run
+
 func main() {
 	config := &PasswordConfig{
-		Length: 12, // default length
+		Length:   12, // default length
+		Continue: true,
 	}
 
-	for {
+	for config.Continue {
 		err := showInterface(config)
 		if err != nil {
 			fmt.Println("Error:", err)
@@ -63,7 +67,7 @@ func showInterface(config *PasswordConfig) error {
 	)
 
 	// Run the form
-	err := form.Run()
+	err := runForm(form)
 	if err != nil {
 		return err
 	}
@@ -93,12 +97,7 @@ func showInterface(config *PasswordConfig) error {
 			),
 		)
 
-		err = result.Run()
-		if err != nil {
-			return err
-		}
-
-		return nil
+		return runForm(result)
 	}
 
 	// Show error if no character set is selected
@@ -110,7 +109,7 @@ func showInterface(config *PasswordConfig) error {
 		),
 	)
 
-	return errorForm.Run()
+	return runForm(errorForm)
 }
 
 func characterSetOptions() []huh.Option[string] {
@@ -174,18 +173,22 @@ func ensureAllSetsIncluded(password []byte, selectedSets []passwordCharacterSet)
 		return errors.New("password length must be at least the number of character sets")
 	}
 
-	// For each selected character set, ensure at least one character is included
-	positions := make([]int, len(selectedSets))
+	// Put one character of each selected set at its own random position,
+	// shuffling the positions so that no set overwrites another.
+	positions := make([]int, len(password))
 	for i := range positions {
-		n, err := rand.Int(rand.Reader, big.NewInt(int64(len(password))))
-		if err != nil {
-			return err
-		}
-		positions[i] = int(n.Int64())
+		positions[i] = i
 	}
 
 	for i, set := range selectedSets {
-		n, err := rand.Int(rand.Reader, big.NewInt(int64(len(set.chars))))
+		n, err := rand.Int(rand.Reader, big.NewInt(int64(len(positions)-i)))
+		if err != nil {
+			return err
+		}
+		j := i + int(n.Int64())
+		positions[i], positions[j] = positions[j], positions[i]
+
+		n, err = rand.Int(rand.Reader, big.NewInt(int64(len(set.chars))))
 		if err != nil {
 			return err
 		}

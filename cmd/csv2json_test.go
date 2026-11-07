@@ -3,8 +3,10 @@ package cmd
 import (
 	"bytes"
 	"encoding/json"
+	"errors"
 	"strings"
 	"testing"
+	"testing/iotest"
 )
 
 func TestCSV2JSONCmd(t *testing.T) {
@@ -45,5 +47,41 @@ func TestCSV2JSONCmdNoInput(t *testing.T) {
 	err := cmd.Execute()
 	if err == nil {
 		t.Fatal("csv2json command should return error when no input provided")
+	}
+}
+
+func TestCSV2JSONCmdNoInputMessage(t *testing.T) {
+	_, _, err := runDevtui(strings.NewReader(""), "csv2json")
+	if err == nil || !strings.Contains(err.Error(), "no input provided") {
+		t.Fatalf("expected no input error, got %v", err)
+	}
+}
+
+func TestCSV2JSONCmdSingleByteInput(t *testing.T) {
+	stdout, _, err := runDevtui(strings.NewReader("a"), "csv2json")
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+	if want := "[]\n"; stdout.String() != want {
+		t.Fatalf("expected %q, got %q", want, stdout.String())
+	}
+}
+
+func TestCSV2JSONCmdArgumentInput(t *testing.T) {
+	stdout, _, err := runDevtui(strings.NewReader(""), "csv2json", "a\n1")
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+	if want := "[\n  {\n    \"a\": \"1\"\n  }\n]\n"; stdout.String() != want {
+		t.Fatalf("expected %q, got %q", want, stdout.String())
+	}
+}
+
+func TestCSV2JSONCmdReadError(t *testing.T) {
+	want := errors.New("read failed")
+
+	_, _, err := runDevtui(iotest.ErrReader(want), "csv2json")
+	if !errors.Is(err, want) {
+		t.Fatalf("expected %v, got %v", want, err)
 	}
 }

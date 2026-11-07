@@ -1,22 +1,10 @@
 package main
 
 import (
-	"fmt"
-	"log"
+	"github.com/skatkov/devtui/cmd"
+	"github.com/skatkov/devtui/docs/generator"
 )
 
 func main() {
-	fmt.Println("Generating documentation...")
-
-	// Generate CLI documentation
-	fmt.Println("Generating CLI documentation...")
-	GenerateCLIDocumentation()
-
-	// Generate TUI documentation
-	fmt.Println("Generating TUI documentation...")
-	if err := GenerateTUIDocumentation(); err != nil {
-		log.Fatalf("Failed to generate TUI documentation: %v", err)
-	}
-
-	fmt.Println("Documentation generation completed successfully!")
+	generator.Generate(cmd.GetRootCmd())
 }

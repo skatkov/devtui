@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"strings"
 
-	tea "charm.land/bubbletea/v2"
 	"github.com/skatkov/devtui/internal/cmderror"
 	"github.com/skatkov/devtui/internal/input"
 	"github.com/skatkov/devtui/internal/ui"
@@ -62,12 +61,9 @@ or piped from stdin.`,
 			return err
 		}
 
-		if flagTUI {
+		if gqlTUI {
 			// Initialize the TUI
-			common := &ui.CommonModel{
-				Width:  100, // Default width, will be adjusted by the TUI
-				Height: 30,  // Default height, will be adjusted by the TUI
-			}
+			common := &ui.CommonModel{}
 
 			model := graphqlquery.NewGraphQLQueryModel(common)
 			err := model.SetContent(string(data))
@@ -75,14 +71,7 @@ or piped from stdin.`,
 				return err
 			}
 
-			p := tea.NewProgram(
-				model,
-			)
-
-			if _, err := p.Run(); err != nil {
-				return err
-			}
-			return nil
+			return runProgram(model)
 		}
 
 		// Parse the GraphQL query
@@ -108,11 +97,6 @@ or piped from stdin.`,
 			opts = append(opts, formatter.WithComments())
 		}
 
-		// Include descriptions if requested
-		if !gqlWithDescriptions {
-			opts = append(opts, formatter.WithoutDescription())
-		}
-
 		// Format the query
 		var buf strings.Builder
 		f := formatter.NewFormatter(&buf, opts...)
@@ -121,18 +105,14 @@ or piped from stdin.`,
 
 		// Write the result to stdout
 		_, err = fmt.Fprintln(cmd.OutOrStdout(), result)
-		if err != nil {
-			return err
-		}
-
-		return nil
+		return err
 	},
 }
 
 var (
-	gqlIndentString     string
-	gqlWithComments     bool
-	gqlWithDescriptions bool
+	gqlIndentString string
+	gqlWithComments bool
+	gqlTUI          bool
 )
 
 func init() {
@@ -144,8 +124,9 @@ func init() {
 	gqlfmtCmd.Flags().BoolVarP(&gqlWithComments, "with-comments", "c", false,
 		"Include comments in the formatted output")
 
-	gqlfmtCmd.Flags().BoolVarP(&gqlWithDescriptions, "with-descriptions", "d", false,
+	// Query documents carry no descriptions, so this flag changes nothing; it stays for compatibility.
+	gqlfmtCmd.Flags().BoolP("with-descriptions", "d", false,
 		"Include descriptions in the formatted output (omitted by default)")
-	gqlfmtCmd.Flags().BoolVarP(&flagTUI, "tui", "t", false,
+	gqlfmtCmd.Flags().BoolVarP(&gqlTUI, "tui", "t", false,
 		"Open result in TUI")
 }

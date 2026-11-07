@@ -2,13 +2,11 @@
 package base64encoder
 
 import (
-	"bytes"
 	"fmt"
 	"strings"
 
 	"charm.land/bubbles/v2/viewport"
 	tea "charm.land/bubbletea/v2"
-	"github.com/mattn/go-runewidth"
 
 	"github.com/skatkov/devtui/internal/base64"
 	"github.com/skatkov/devtui/internal/clipboard"
@@ -50,15 +48,7 @@ func (m Base64Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			return m, editor.OpenEditor(m.Content, "txt")
 		case "v":
 			content, err := clipboard.Paste()
-			if err == nil {
-				err = m.SetContent(content)
-			}
-
-			if err != nil {
-				cmds = append(cmds, m.ShowErrorMessage(err.Error()))
-			} else {
-				cmds = append(cmds, m.ShowStatusMessage("Pasted and encoded. Press 'c' to copy result."))
-			}
+			cmds = append(cmds, m.paste(content, err))
 		}
 	case ui.StatusMessageTimeoutMsg:
 		m.State = ui.PagerStateBrowse
@@ -87,18 +77,15 @@ func (m Base64Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				viewport.WithWidth(msg.Width),
 				viewport.WithHeight(msg.Height-ui.StatusBarHeight),
 			)
-			m.Viewport.YPosition = 0
 			m.Ready = true
 		} else {
 			m.SetSize(msg.Width, msg.Height)
 		}
 
-		// Re-wrap content with new width if we have content
-		if m.Content != "" {
-			err := m.SetContent(m.Content)
-			if err != nil {
-				cmds = append(cmds, m.ShowErrorMessage(err.Error()))
-			}
+		// Re-wrap content with new width
+		err := m.SetContent(m.Content)
+		if err != nil {
+			cmds = append(cmds, m.ShowErrorMessage(err.Error()))
 		}
 	}
 
@@ -124,42 +111,42 @@ func (m Base64Model) View() tea.View {
 func (m *Base64Model) SetContent(content string) error {
 	m.Content = content
 
-	if content == "" {
-		m.FormattedContent = ""
-		m.Viewport.SetContent("")
-		return nil
-	}
-
 	// Encode to base64
 	result := base64.EncodeString(content)
 
 	// Wrap the base64 output to fit the screen width
 	// Use common width minus some padding for readability
-	wrapWidth := m.Common.Width - 4
-	if wrapWidth < 20 {
-		wrapWidth = 20 // Minimum width to ensure readability on very narrow screens
-	}
+	// Minimum width of 20 to ensure readability on very narrow screens
+	wrapWidth := max(m.Common.Width-4, 20)
 
 	// Hard wrap the base64 string at character boundaries
-	var wrappedResult strings.Builder
-	for i, char := range result {
-		if i > 0 && i%wrapWidth == 0 {
-			wrappedResult.WriteRune('\n')
-		}
-		wrappedResult.WriteRune(char)
+	var lines []string
+	rest := result
+	for len(rest) > wrapWidth {
+		lines = append(lines, rest[:wrapWidth])
+		rest = rest[wrapWidth:]
 	}
+	lines = append(lines, rest)
 
 	m.FormattedContent = result // Keep original unwrapped for copying
 
-	// Set content in viewport
-	var buf bytes.Buffer
-	buf.WriteString(wrappedResult.String())
-	m.Viewport.SetContent(buf.String())
+	m.Viewport.SetContent(strings.Join(lines, "\n"))
 
 	return nil
 }
 
-func (m Base64Model) helpView() (s string) {
+func (m *Base64Model) paste(content string, err error) tea.Cmd {
+	if err == nil {
+		err = m.SetContent(content)
+	}
+
+	if err != nil {
+		return m.ShowErrorMessage(err.Error())
+	}
+	return m.ShowStatusMessage("Pasted and encoded. Press 'c' to copy result.")
+}
+
+func (m Base64Model) helpView() string {
 	col1 := []string{
 		"c              copy base64",
 		"e              edit text",
@@ -167,30 +154,5 @@ func (m Base64Model) helpView() (s string) {
 		"q/ctrl+c       quit",
 	}
 
-	s += "\n"
-	s += "k/↑      up                  " + col1[0] + "\n"
-	s += "j/↓      down                " + col1[1] + "\n"
-	s += "b/pgup   page up             " + col1[2] + "\n"
-	s += "f/pgdn   page down           " + col1[3] + "\n"
-	s += "u        ½ page up           " + "\n"
-	s += "d        ½ page down         "
-
-	if len(col1) > 5 {
-		s += col1[5]
-	}
-
-	s = ui.Indent(s, 2)
-
-	if m.Common.Width > 0 {
-		lines := strings.Split(s, "\n")
-		for i := range lines {
-			l := runewidth.StringWidth(lines[i])
-			n := max(m.Common.Width-l, 0)
-			lines[i] += strings.Repeat(" ", n)
-		}
-
-		s = strings.Join(lines, "\n")
-	}
-
-	return ui.HelpViewStyle(s)
+	return m.FormatHelpColumns(col1)
 }

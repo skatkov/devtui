@@ -4,7 +4,6 @@ import (
 	"errors"
 	"fmt"
 
-	tea "charm.land/bubbletea/v2"
 	"github.com/skatkov/devtui/internal/cmderror"
 	"github.com/skatkov/devtui/internal/input"
 	"github.com/skatkov/devtui/internal/ui"
@@ -48,11 +47,8 @@ results in an interactive terminal interface.`,
 			return errors.New("no input provided. Pipe JSON input to this command")
 		}
 
-		if flagTUI {
-			common := &ui.CommonModel{
-				Width:  0,
-				Height: 0,
-			}
+		if json2tomlTUI {
+			common := &ui.CommonModel{}
 
 			model := json2toml.NewJsonTomlModel(common)
 			err = model.SetContent(string(data))
@@ -60,11 +56,7 @@ results in an interactive terminal interface.`,
 				return err
 			}
 
-			p := tea.NewProgram(model)
-			if _, err := p.Run(); err != nil {
-				return err
-			}
-			return nil
+			return runProgram(model)
 		}
 
 		inputStr := string(data)
@@ -74,15 +66,13 @@ results in an interactive terminal interface.`,
 		}
 
 		_, err = fmt.Fprintln(cmd.OutOrStdout(), result)
-		if err != nil {
-			return err
-		}
-
-		return nil
+		return err
 	},
 }
 
+var json2tomlTUI bool
+
 func init() {
 	rootCmd.AddCommand(json2tomlCmd)
-	json2tomlCmd.Flags().BoolVarP(&flagTUI, "tui", "t", false, "Show output in TUI")
+	json2tomlCmd.Flags().BoolVarP(&json2tomlTUI, "tui", "t", false, "Show output in TUI")
 }

@@ -7,7 +7,6 @@ import (
 
 	tea "charm.land/bubbletea/v2"
 	"github.com/alecthomas/chroma/quick"
-	"github.com/mattn/go-runewidth"
 
 	"github.com/skatkov/devtui/internal/clipboard"
 	"github.com/skatkov/devtui/internal/converter"
@@ -47,33 +46,12 @@ func (m JsonTomlModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		case "e":
 			return m, editor.OpenEditor(m.Content, "json")
 		case "v":
-			content, err := clipboard.Paste()
-			if err != nil {
-				cmds = append(cmds, m.ShowErrorMessage(err.Error()))
-			} else {
-				err = m.SetContent(content)
-
-				if err != nil {
-					cmds = append(cmds, m.ShowErrorMessage(err.Error()))
-				} else {
-					cmds = append(cmds, m.ShowStatusMessage("Pasted. Press 'c' to copy result."))
-				}
-			}
+			cmds = append(cmds, m.loadContent(clipboard.Paste()))
 		}
 	case ui.StatusMessageTimeoutMsg:
 		m.State = ui.PagerStateBrowse
 	case editor.EditorFinishedMsg:
-		if msg.Err != nil {
-			return m, m.ShowErrorMessage(msg.Err.Error())
-		} else {
-			err := m.SetContent(msg.Content)
-
-			if err != nil {
-				cmds = append(cmds, m.ShowErrorMessage(err.Error()))
-			} else {
-				cmds = append(cmds, m.ShowStatusMessage("Pasted. Press 'c' to copy result."))
-			}
-		}
+		cmds = append(cmds, m.loadContent(msg.Content, msg.Err))
 
 	case tea.WindowSizeMsg:
 		cmd = m.HandleWindowSizeMsg(msg)
@@ -83,6 +61,17 @@ func (m JsonTomlModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	cmds = append(cmds, cmd)
 
 	return m, tea.Batch(cmds...)
+}
+
+// loadContent shows content from the clipboard or editor, or the error that came with it.
+func (m *JsonTomlModel) loadContent(content string, err error) tea.Cmd {
+	if err == nil {
+		err = m.SetContent(content)
+	}
+	if err != nil {
+		return m.ShowErrorMessage(err.Error())
+	}
+	return m.ShowStatusMessage("Pasted. Press 'c' to copy result.")
 }
 
 func (m JsonTomlModel) View() tea.View {
@@ -115,7 +104,7 @@ func (m *JsonTomlModel) SetContent(content string) error {
 	return nil
 }
 
-func (m JsonTomlModel) helpView() (s string) {
+func (m JsonTomlModel) helpView() string {
 	col1 := []string{
 		"c              copy TOML",
 		"e              edit JSON",
@@ -123,32 +112,7 @@ func (m JsonTomlModel) helpView() (s string) {
 		"q/ctrl+c       quit",
 	}
 
-	s += "\n"
-	s += "k/↑      up                  " + col1[0] + "\n"
-	s += "j/↓      down                " + col1[1] + "\n"
-	s += "b/pgup   page up             " + col1[2] + "\n"
-	s += "f/pgdn   page down           " + col1[3] + "\n"
-	s += "u        ½ page up           " + "\n"
-	s += "d        ½ page down         "
-
-	if len(col1) > 5 {
-		s += col1[5]
-	}
-
-	s = ui.Indent(s, 2)
-
-	if m.Common.Width > 0 {
-		lines := strings.Split(s, "\n")
-		for i := range lines {
-			l := runewidth.StringWidth(lines[i])
-			n := max(m.Common.Width-l, 0)
-			lines[i] += strings.Repeat(" ", n)
-		}
-
-		s = strings.Join(lines, "\n")
-	}
-
-	return ui.HelpViewStyle(s)
+	return m.FormatHelpColumns(col1)
 }
 
 func Convert(jsonContent string) (string, error) {

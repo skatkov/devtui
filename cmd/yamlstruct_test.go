@@ -43,3 +43,14 @@ func TestYAMLStructCmdNoInput(t *testing.T) {
 		t.Fatal("yamlstruct command should return error when no input provided")
 	}
 }
+
+func TestYAMLStructCmdArgumentInput(t *testing.T) {
+	stdout, _, err := runDevtui(nil, "yamlstruct", "a: 1")
+	if err != nil {
+		t.Fatalf("yamlstruct failed: %v", err)
+	}
+
+	if want := "package main\n\ntype Root struct {\n\tA int `yaml:\"a\"`\n}\n\n"; stdout.String() != want {
+		t.Fatalf("expected %q, got %q", want, stdout.String())
+	}
+}

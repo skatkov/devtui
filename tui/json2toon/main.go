@@ -8,7 +8,6 @@ import (
 
 	tea "charm.land/bubbletea/v2"
 	"github.com/hannes-sistemica/toon"
-	"github.com/mattn/go-runewidth"
 	"github.com/skatkov/devtui/internal/clipboard"
 	"github.com/skatkov/devtui/internal/editor"
 	"github.com/skatkov/devtui/internal/ui"
@@ -50,12 +49,8 @@ func (m JsonToonModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		case "e":
 			return m, editor.OpenEditor(m.Content, "json")
 		case "i":
-			// Cycle through indent options: 2, 4
-			if m.indent == 2 {
-				m.indent = 4
-			} else {
-				m.indent = 2
-			}
+			// Toggle indent between 2 and 4
+			m.indent = 6 - m.indent
 			if m.Content != "" {
 				err := m.SetContent(m.Content)
 				if err != nil {
@@ -84,33 +79,12 @@ func (m JsonToonModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				}
 			}
 		case "v":
-			content, err := clipboard.Paste()
-			if err != nil {
-				cmds = append(cmds, m.ShowErrorMessage(err.Error()))
-			} else {
-				err = m.SetContent(content)
-
-				if err != nil {
-					cmds = append(cmds, m.ShowErrorMessage(err.Error()))
-				} else {
-					cmds = append(cmds, m.ShowStatusMessage("Pasted. Press 'c' to copy result."))
-				}
-			}
+			cmds = append(cmds, m.loadContent(clipboard.Paste()))
 		}
 	case ui.StatusMessageTimeoutMsg:
 		m.State = ui.PagerStateBrowse
 	case editor.EditorFinishedMsg:
-		if msg.Err != nil {
-			return m, m.ShowErrorMessage(msg.Err.Error())
-		} else {
-			err := m.SetContent(msg.Content)
-
-			if err != nil {
-				cmds = append(cmds, m.ShowErrorMessage(err.Error()))
-			} else {
-				cmds = append(cmds, m.ShowStatusMessage("Pasted. Press 'c' to copy result."))
-			}
-		}
+		cmds = append(cmds, m.loadContent(msg.Content, msg.Err))
 
 	case tea.WindowSizeMsg:
 		cmd = m.HandleWindowSizeMsg(msg)
@@ -120,6 +94,17 @@ func (m JsonToonModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	cmds = append(cmds, cmd)
 
 	return m, tea.Batch(cmds...)
+}
+
+// loadContent shows content from the clipboard or editor, or the error that came with it.
+func (m *JsonToonModel) loadContent(content string, err error) tea.Cmd {
+	if err == nil {
+		err = m.SetContent(content)
+	}
+	if err != nil {
+		return m.ShowErrorMessage(err.Error())
+	}
+	return m.ShowStatusMessage("Pasted. Press 'c' to copy result.")
 }
 
 func (m JsonToonModel) View() tea.View {
@@ -158,7 +143,7 @@ func (m *JsonToonModel) SetContent(content string) error {
 	return nil
 }
 
-func (m JsonToonModel) helpView() (s string) {
+func (m JsonToonModel) helpView() string {
 	lengthStatus := "off"
 	if m.lengthMarker != "" {
 		lengthStatus = "on"
@@ -173,37 +158,12 @@ func (m JsonToonModel) helpView() (s string) {
 		"q/ctrl+c       quit",
 	}
 
-	s += "\n"
-	s += "k/↑      up                  " + col1[0] + "\n"
-	s += "j/↓      down                " + col1[1] + "\n"
-	s += "b/pgup   page up             " + col1[2] + "\n"
-	s += "f/pgdn   page down           " + col1[3] + "\n"
-	s += "u        ½ page up           " + col1[4] + "\n"
-	s += "d        ½ page down         " + col1[5]
-
-	s = ui.Indent(s, 2)
-
-	if m.Common.Width > 0 {
-		lines := strings.Split(s, "\n")
-		for i := range lines {
-			l := runewidth.StringWidth(lines[i])
-			n := max(m.Common.Width-l, 0)
-			lines[i] += strings.Repeat(" ", n)
-		}
-
-		s = strings.Join(lines, "\n")
-	}
-
-	return ui.HelpViewStyle(s)
+	return m.FormatHelpColumns(col1)
 }
 
 func Convert(jsonContent string) (string, error) {
-	opts := toon.EncodeOptions{
-		Indent:       2,
-		Delimiter:    ",",
-		LengthMarker: "",
-	}
-	return ConvertWithOptions(jsonContent, opts)
+	// toon fills in its defaults: two-space indent and comma delimiter
+	return ConvertWithOptions(jsonContent, toon.EncodeOptions{})
 }
 
 func ConvertWithOptions(jsonContent string, opts toon.EncodeOptions) (string, error) {

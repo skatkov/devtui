@@ -8,7 +8,7 @@ import (
 
 // JSONToGoStruct converts JSON input into a Go struct definition.
 func JSONToGoStruct(input io.Reader) (string, error) {
-	generator := newGenerator()
+	generator := newGenerator("json")
 	if err := generator.ObserveJSONReader(input); err != nil {
 		return "", err
 	}
@@ -23,7 +23,7 @@ func JSONToGoStruct(input io.Reader) (string, error) {
 
 // YAMLToGoStruct converts YAML input into a Go struct definition.
 func YAMLToGoStruct(input io.Reader) (string, error) {
-	generator := newGenerator()
+	generator := newGenerator("yaml")
 	if err := generator.ObserveYAMLReader(input); err != nil {
 		return "", err
 	}
@@ -36,10 +36,10 @@ func YAMLToGoStruct(input io.Reader) (string, error) {
 	return string(bytes), nil
 }
 
-func newGenerator() *jsonstruct.Generator {
+func newGenerator(tagName string) *jsonstruct.Generator {
 	options := []jsonstruct.GeneratorOption{
 		jsonstruct.WithSkipUnparsableProperties(true),
-		jsonstruct.WithStructTagName("yaml"),
+		jsonstruct.WithStructTagName(tagName),
 		jsonstruct.WithGoFormat(true),
 		jsonstruct.WithOmitEmptyTags(jsonstruct.OmitEmptyTagsAuto),
 		jsonstruct.WithTypeName("Root"),

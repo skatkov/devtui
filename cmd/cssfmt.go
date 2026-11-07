@@ -1,11 +1,9 @@
 package cmd
 
 import (
-	"strings"
+	"bytes"
 
-	tea "charm.land/bubbletea/v2"
 	"github.com/client9/csstool"
-	"github.com/skatkov/devtui/internal/cmderror"
 	"github.com/skatkov/devtui/internal/input"
 	"github.com/skatkov/devtui/internal/ui"
 	"github.com/skatkov/devtui/tui/css"
@@ -50,30 +48,16 @@ custom spacing. Input can be a string argument or piped from stdin.`,
 				return err
 			}
 
-			common := &ui.CommonModel{
-				Width:  100, // Default width, will be adjusted by the TUI
-				Height: 30,  // Default height, will be adjusted by the TUI
-			}
+			common := &ui.CommonModel{}
 
 			model := css.NewCSSFormatterModel(common)
 			err = model.SetContent(string(data))
 			if err != nil {
 				return err
 			}
-			p := tea.NewProgram(
-				model,
-			)
-
-			if _, err := p.Run(); err != nil {
-				return err
-			}
-
-			return nil
+			return runProgram(model)
 		}
 
-		if flagTab {
-			flagIndent = 1
-		}
 		cssformat := csstool.NewCSSFormat(flagIndent, flagTab, nil)
 		cssformat.AlwaysSemicolon = flagSemicolon
 
@@ -82,13 +66,8 @@ custom spacing. Input can be a string argument or piped from stdin.`,
 			return err
 		}
 
-		inputStr := string(data)
-		err = cssformat.Format(strings.NewReader(inputStr), cmd.OutOrStdout())
-		if err != nil {
-			return cmderror.FormatParseError("cssfmt", inputStr, err)
-		}
-
-		return nil
+		// csstool reports neither parse nor write errors, so there is no parse error to explain.
+		return cssformat.Format(bytes.NewReader(data), cmd.OutOrStdout())
 	},
 }
 
