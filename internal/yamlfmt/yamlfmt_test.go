@@ -26,3 +26,17 @@ func TestFormatReturnsErrorForInvalidFormattedYAML(t *testing.T) {
 		t.Fatal("expected error for YAML that formats into invalid output")
 	}
 }
+
+func TestFormatKeepsCommentsAndKeyOrder(t *testing.T) {
+	t.Parallel()
+
+	formatted, err := Format("# keep\nz:   1 # why\na: 2\n")
+	if err != nil {
+		t.Fatalf("Format returned error: %v", err)
+	}
+
+	want := "# keep\nz: 1 # why\na: 2\n"
+	if formatted != want {
+		t.Fatalf("Format() = %q, want %q", formatted, want)
+	}
+}
