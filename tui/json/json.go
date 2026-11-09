@@ -150,15 +150,10 @@ func (m JsonModel) helpView() (s string) {
 }
 
 func FormatJSON(content string) string {
-	var data any
-	if err := json.Unmarshal([]byte(content), &data); err != nil {
-		return content
-	}
 	var buf bytes.Buffer
-	enc := json.NewEncoder(&buf)
-	enc.SetIndent("", "  ")
-	if err := enc.Encode(data); err != nil {
+	if err := json.Indent(&buf, []byte(content), "", "  "); err != nil {
 		return content
 	}
+	buf.WriteByte('\n')
 	return buf.String()
 }
