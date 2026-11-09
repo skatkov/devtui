@@ -7,6 +7,7 @@ import (
 	"errors"
 	"fmt"
 	"io"
+	"strings"
 
 	"github.com/clbanning/mxj/v2"
 	"github.com/pelletier/go-toml/v2"
@@ -65,10 +66,40 @@ func TOMLToJSON(tomlContent string) (string, error) {
 	return buf.String(), nil
 }
 
-func JSONToTOML(jsonContent string) (string, error) {
-	var v any
+// decodeJSONForTOML keeps integers as integers: TOML has separate integer and float types.
+func decodeJSONForTOML(content string) (any, error) {
+	decoder := json.NewDecoder(strings.NewReader(content))
+	decoder.UseNumber()
 
-	err := json.Unmarshal([]byte(jsonContent), &v)
+	var v any
+	if err := decoder.Decode(&v); err != nil {
+		return nil, err
+	}
+	return convertJSONNumbers(v), nil
+}
+
+func convertJSONNumbers(v any) any {
+	switch value := v.(type) {
+	case json.Number:
+		if i, err := value.Int64(); err == nil {
+			return i
+		}
+		f, _ := value.Float64()
+		return f
+	case map[string]any:
+		for key, item := range value {
+			value[key] = convertJSONNumbers(item)
+		}
+	case []any:
+		for i, item := range value {
+			value[i] = convertJSONNumbers(item)
+		}
+	}
+	return v
+}
+
+func JSONToTOML(jsonContent string) (string, error) {
+	v, err := decodeJSONForTOML(jsonContent)
 	if err != nil {
 		return "", fmt.Errorf("JSON parsing error: %w", err)
 	}
@@ -149,8 +180,8 @@ func YAMLToTOML(yamlContent string) (string, error) {
 		return "", err
 	}
 
-	var data any
-	if err := json.Unmarshal([]byte(jsonStr), &data); err != nil {
+	data, err := decodeJSONForTOML(jsonStr)
+	if err != nil {
 		return "", fmt.Errorf("JSON parsing error: %w", err)
 	}
 
