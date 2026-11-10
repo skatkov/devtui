@@ -1,9 +1,10 @@
 ---
 title: uuidgenerate
 parent: CLI
+description: "devtui uuidgenerate: generate a UUID from the command line. Usage, flags and examples for piping and scripts."
 ---
 
-## devtui uuidgenerate
+# devtui uuidgenerate
 
 Generate a UUID
 

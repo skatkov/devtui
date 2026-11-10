@@ -1,9 +1,10 @@
 ---
 title: csv2md
 parent: CLI
+description: "devtui csv2md: convert CSV to Markdown table format from the command line. Usage, flags and examples for piping and scripts."
 ---
 
-## devtui csv2md
+# devtui csv2md
 
 Convert CSV to Markdown table format
 

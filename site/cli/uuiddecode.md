@@ -1,9 +1,10 @@
 ---
 title: uuiddecode
 parent: CLI
+description: "devtui uuiddecode: decode a UUID into its components from the command line. Usage, flags and examples for piping and scripts."
 ---
 
-## devtui uuiddecode
+# devtui uuiddecode
 
 Decode a UUID into its components
 

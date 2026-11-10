@@ -1,6 +1,7 @@
 ---
 title: XML Formatter
 parent: TUI
+description: "XML Formatter in your terminal with DevTUI. A text formatting tool that prettifies and standardizes code or data format. Usage and key bindings."
 ---
 
 # XML Formatter

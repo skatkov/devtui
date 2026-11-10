@@ -1,9 +1,10 @@
 ---
 title: cssmin
 parent: CLI
+description: "devtui cssmin: minify CSS files by removing whitespace and unnecessary characters from the command line. Usage, flags and examples for piping and scripts."
 ---
 
-## devtui cssmin
+# devtui cssmin
 
 Minify CSS files by removing whitespace and unnecessary characters
 

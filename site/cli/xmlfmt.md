@@ -1,9 +1,10 @@
 ---
 title: xmlfmt
 parent: CLI
+description: "devtui xmlfmt: format and prettify XML files from the command line. Usage, flags and examples for piping and scripts."
 ---
 
-## devtui xmlfmt
+# devtui xmlfmt
 
 Format and prettify XML files
 

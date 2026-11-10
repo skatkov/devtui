@@ -1,6 +1,7 @@
 ---
 title: URL Extractor
 parent: TUI
+description: "URL Extractor in your terminal with DevTUI. An interactive TUI tool for text processing and manipulation. Usage and key bindings."
 ---
 
 # URL Extractor

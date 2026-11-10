@@ -1,6 +1,7 @@
 ---
 title: Markdown Renderer
 parent: TUI
+description: "Markdown Renderer in your terminal with DevTUI. A rendering tool that displays content in a formatted view. Usage and key bindings."
 ---
 
 # Markdown Renderer

@@ -1,6 +1,7 @@
 ---
 title: UUID Generator
 parent: TUI
+description: "UUID Generator in your terminal with DevTUI. A utility tool that generates new content based on specified parameters. Usage and key bindings."
 ---
 
 # UUID Generator

@@ -1,9 +1,10 @@
 ---
 title: cssfmt
 parent: CLI
+description: "devtui cssfmt: format and prettify CSS files from the command line. Usage, flags and examples for piping and scripts."
 ---
 
-## devtui cssfmt
+# devtui cssfmt
 
 Format and prettify CSS files
 

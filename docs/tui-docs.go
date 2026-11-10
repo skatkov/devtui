@@ -252,6 +252,7 @@ func generateIndexFile(sitePath string) error {
 	content := `---
 title: TUI
 nav_order: 4
+description: "DevTUI's interactive terminal tools: JSON, YAML, TOML, CSV and Markdown formatters, converters and viewers in one keyboard-driven menu."
 ---
 
 # TUI (Terminal User Interface)
@@ -283,9 +284,12 @@ Most TUI tools share these common key bindings:
 func generateModuleFile(sitePath string, module TUIModule) error {
 	var builder strings.Builder
 
+	description := fmt.Sprintf("%s in your terminal with DevTUI. %s Usage and key bindings.", module.Title, module.Description)
+
 	fmt.Fprintf(&builder, `---
 title: %s
 parent: TUI
+description: %q
 ---
 
 # %s
@@ -299,7 +303,7 @@ parent: TUI
 
 ## Key Bindings
 
-`, module.Title, module.Title)
+`, module.Title, description, module.Title)
 
 	if len(module.KeyBindings) > 0 {
 		builder.WriteString("| Key | Action |\n|-----|--------|\n")

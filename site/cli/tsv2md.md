@@ -1,9 +1,10 @@
 ---
 title: tsv2md
 parent: CLI
+description: "devtui tsv2md: convert TSV to Markdown table format from the command line. Usage, flags and examples for piping and scripts."
 ---
 
-## devtui tsv2md
+# devtui tsv2md
 
 Convert TSV to Markdown table format
 

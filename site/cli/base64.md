@@ -1,9 +1,10 @@
 ---
 title: base64
 parent: CLI
+description: "devtui base64: encode or decode base64 strings and files from the command line. Usage, flags and examples for piping and scripts."
 ---
 
-## devtui base64
+# devtui base64
 
 Encode or decode base64 strings and files
 

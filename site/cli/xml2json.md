@@ -1,9 +1,10 @@
 ---
 title: xml2json
 parent: CLI
+description: "devtui xml2json: convert XML to JSON format from the command line. Usage, flags and examples for piping and scripts."
 ---
 
-## devtui xml2json
+# devtui xml2json
 
 Convert XML to JSON format
 

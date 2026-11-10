@@ -1,9 +1,10 @@
 ---
 title: numbers
 parent: CLI
+description: "devtui numbers: convert numbers between bases from the command line. Usage, flags and examples for piping and scripts."
 ---
 
-## devtui numbers
+# devtui numbers
 
 Convert numbers between bases
 

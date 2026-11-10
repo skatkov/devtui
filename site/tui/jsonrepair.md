@@ -1,6 +1,7 @@
 ---
 title: JSON Repair
 parent: TUI
+description: "JSON Repair in your terminal with DevTUI. An interactive TUI tool for text processing and manipulation. Usage and key bindings."
 ---
 
 # JSON Repair

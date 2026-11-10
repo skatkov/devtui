@@ -1,9 +1,10 @@
 ---
 title: iban
 parent: CLI
+description: "devtui iban: generate test IBAN numbers from the command line. Usage, flags and examples for piping and scripts."
 ---
 
-## devtui iban
+# devtui iban
 
 Generate test IBAN numbers
 

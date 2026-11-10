@@ -1,9 +1,10 @@
 ---
 title: gqlquery
 parent: CLI
+description: "devtui gqlquery: format and prettify GraphQL queries from the command line. Usage, flags and examples for piping and scripts."
 ---
 
-## devtui gqlquery
+# devtui gqlquery
 
 Format and prettify GraphQL queries
 

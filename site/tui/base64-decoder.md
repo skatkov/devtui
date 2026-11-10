@@ -1,6 +1,7 @@
 ---
 title: Base64 Decoder
 parent: TUI
+description: "Base64 Decoder in your terminal with DevTUI. A decoding tool that transforms encoded content back to readable format. Usage and key bindings."
 ---
 
 # Base64 Decoder

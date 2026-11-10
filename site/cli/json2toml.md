@@ -1,9 +1,10 @@
 ---
 title: json2toml
 parent: CLI
+description: "devtui json2toml: convert JSON to TOML format from the command line. Usage, flags and examples for piping and scripts."
 ---
 
-## devtui json2toml
+# devtui json2toml
 
 Convert JSON to TOML format
 

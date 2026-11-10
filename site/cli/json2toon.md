@@ -1,9 +1,10 @@
 ---
 title: json2toon
 parent: CLI
+description: "devtui json2toon: convert JSON to TOON from the command line. Usage, flags and examples for piping and scripts."
 ---
 
-## devtui json2toon
+# devtui json2toon
 
 Convert JSON to TOON
 

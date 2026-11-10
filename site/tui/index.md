@@ -1,6 +1,7 @@
 ---
 title: TUI
 nav_order: 4
+description: "DevTUI's interactive terminal tools: JSON, YAML, TOML, CSV and Markdown formatters, converters and viewers in one keyboard-driven menu."
 ---
 
 # TUI (Terminal User Interface)

@@ -1,9 +1,10 @@
 ---
 title: toml2yaml
 parent: CLI
+description: "devtui toml2yaml: convert TOML to YAML format from the command line. Usage, flags and examples for piping and scripts."
 ---
 
-## devtui toml2yaml
+# devtui toml2yaml
 
 Convert TOML to YAML format
 

@@ -1,9 +1,10 @@
 ---
 title: csv2json
 parent: CLI
+description: "devtui csv2json: convert CSV to JSON from the command line. Usage, flags and examples for piping and scripts."
 ---
 
-## devtui csv2json
+# devtui csv2json
 
 Convert CSV to JSON
 

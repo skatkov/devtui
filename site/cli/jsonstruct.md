@@ -1,9 +1,10 @@
 ---
 title: jsonstruct
 parent: CLI
+description: "devtui jsonstruct: convert JSON to Go struct from the command line. Usage, flags and examples for piping and scripts."
 ---
 
-## devtui jsonstruct
+# devtui jsonstruct
 
 Convert JSON to Go struct
 

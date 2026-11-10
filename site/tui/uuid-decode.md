@@ -1,6 +1,7 @@
 ---
 title: UUID Decoder
 parent: TUI
+description: "UUID Decoder in your terminal with DevTUI. A decoding tool that transforms encoded content back to readable format. Usage and key bindings."
 ---
 
 # UUID Decoder

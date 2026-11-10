@@ -1,9 +1,10 @@
 ---
 title: yamlfmt
 parent: CLI
+description: "devtui yamlfmt: format and prettify YAML from the command line. Usage, flags and examples for piping and scripts."
 ---
 
-## devtui yamlfmt
+# devtui yamlfmt
 
 Format and prettify YAML
 

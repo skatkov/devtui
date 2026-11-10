@@ -1,6 +1,7 @@
 ---
 title: Number Base Converter
 parent: TUI
+description: "Number Base Converter in your terminal with DevTUI. A data conversion tool that transforms content between different formats. Usage and key bindings."
 ---
 
 # Number Base Converter

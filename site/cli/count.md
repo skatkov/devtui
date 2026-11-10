@@ -1,9 +1,10 @@
 ---
 title: count
 parent: CLI
+description: "devtui count: count characters, spaces, and words in text from the command line. Usage, flags and examples for piping and scripts."
 ---
 
-## devtui count
+# devtui count
 
 Count characters, spaces, and words in text
 

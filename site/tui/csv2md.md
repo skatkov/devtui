@@ -1,6 +1,7 @@
 ---
 title: CSV to Markdown Table Converter
 parent: TUI
+description: "CSV to Markdown Table Converter in your terminal with DevTUI. A data conversion tool that transforms content between different formats. Usage and key bindings."
 ---
 
 # CSV to Markdown Table Converter

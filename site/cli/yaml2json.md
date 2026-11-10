@@ -1,9 +1,10 @@
 ---
 title: yaml2json
 parent: CLI
+description: "devtui yaml2json: convert YAML to JSON format from the command line. Usage, flags and examples for piping and scripts."
 ---
 
-## devtui yaml2json
+# devtui yaml2json
 
 Convert YAML to JSON format
 

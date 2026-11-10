@@ -1,9 +1,10 @@
 ---
 title: jsonrepair
 parent: CLI
+description: "devtui jsonrepair: repair malformed JSON from the command line. Usage, flags and examples for piping and scripts."
 ---
 
-## devtui jsonrepair
+# devtui jsonrepair
 
 Repair malformed JSON
 

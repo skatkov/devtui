@@ -1,9 +1,10 @@
 ---
 title: tomlfmt
 parent: CLI
+description: "devtui tomlfmt: format and prettify TOML files from the command line. Usage, flags and examples for piping and scripts."
 ---
 
-## devtui tomlfmt
+# devtui tomlfmt
 
 Format and prettify TOML files
 

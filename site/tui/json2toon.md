@@ -1,6 +1,7 @@
 ---
 title: JSON to TOON Converter
 parent: TUI
+description: "JSON to TOON Converter in your terminal with DevTUI. A data conversion tool that transforms content between different formats. Usage and key bindings."
 ---
 
 # JSON to TOON Converter

@@ -1,6 +1,7 @@
 ---
 title: CSS Formatter
 parent: TUI
+description: "CSS Formatter in your terminal with DevTUI. A text formatting tool that prettifies and standardizes code or data format. Usage and key bindings."
 ---
 
 # CSS Formatter

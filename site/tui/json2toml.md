@@ -1,6 +1,7 @@
 ---
 title: JSON to TOML Converter
 parent: TUI
+description: "JSON to TOML Converter in your terminal with DevTUI. A data conversion tool that transforms content between different formats. Usage and key bindings."
 ---
 
 # JSON to TOML Converter

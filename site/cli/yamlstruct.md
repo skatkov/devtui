@@ -1,9 +1,10 @@
 ---
 title: yamlstruct
 parent: CLI
+description: "devtui yamlstruct: convert YAML to Go struct from the command line. Usage, flags and examples for piping and scripts."
 ---
 
-## devtui yamlstruct
+# devtui yamlstruct
 
 Convert YAML to Go struct
 

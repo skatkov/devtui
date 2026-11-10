@@ -1,9 +1,10 @@
 ---
 title: jsonfmt
 parent: CLI
+description: "devtui jsonfmt: format and prettify JSON from the command line. Usage, flags and examples for piping and scripts."
 ---
 
-## devtui jsonfmt
+# devtui jsonfmt
 
 Format and prettify JSON
 

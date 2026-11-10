@@ -1,9 +1,10 @@
 ---
 title: htmlfmt
 parent: CLI
+description: "devtui htmlfmt: format and prettify HTML from the command line. Usage, flags and examples for piping and scripts."
 ---
 
-## devtui htmlfmt
+# devtui htmlfmt
 
 Format and prettify HTML
 

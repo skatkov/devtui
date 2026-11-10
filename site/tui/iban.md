@@ -1,6 +1,7 @@
 ---
 title: IBAN Generator
 parent: TUI
+description: "IBAN Generator in your terminal with DevTUI. A utility tool that generates new content based on specified parameters. Usage and key bindings."
 ---
 
 # IBAN Generator

@@ -1,6 +1,7 @@
 ---
 title: YAML to Go Struct Converter
 parent: TUI
+description: "YAML to Go Struct Converter in your terminal with DevTUI. A data conversion tool that transforms content between different formats. Usage and key bindings."
 ---
 
 # YAML to Go Struct Converter

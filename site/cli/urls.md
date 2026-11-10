@@ -1,9 +1,10 @@
 ---
 title: urls
 parent: CLI
+description: "devtui urls: extract URLs from text, files, or stdin from the command line. Usage, flags and examples for piping and scripts."
 ---
 
-## devtui urls
+# devtui urls
 
 Extract URLs from text, files, or stdin
 

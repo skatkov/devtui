@@ -1,6 +1,7 @@
 ---
 title: Cron Job Parser
 parent: TUI
+description: "Cron Job Parser in your terminal with DevTUI. A parsing tool that analyzes and interprets structured content. Usage and key bindings."
 ---
 
 # Cron Job Parser
