@@ -1,0 +1,14 @@
+[
+  {
+    "claim": "No Windows binaries are built (goreleaser goos: darwin, linux)",
+    "paths": ["site/**/*.md", "site/**/*.html", "README.md"],
+    "must_not_match": ["(?i)\\bwindows\\b(?! subsystem)"],
+    "must_match": []
+  },
+  {
+    "claim": "DevTUI is free and open source; no paid plan",
+    "paths": ["site/**/*.md", "README.md"],
+    "must_not_match": ["(?i)\\$\\d+\\s*/\\s*(mo|month|year)", "(?i)pro plan", "(?i)free trial"],
+    "must_match": []
+  }
+]

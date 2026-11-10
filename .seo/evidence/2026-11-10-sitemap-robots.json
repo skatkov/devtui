@@ -1,0 +1,10 @@
+{
+  "action": "repair",
+  "target": ["https://devtui.com/sitemap.xml", "https://devtui.com/robots.txt"],
+  "rule": "no sitemap; robots.txt missing",
+  "before": {"sitemap.xml": 404, "robots.txt": 404, "gsc_known_urls": 20, "public_urls": 61, "checked": "2026-11-10 curl + seo_index"},
+  "after_local_build": {"sitemap.xml": "62 <loc>, 0 <lastmod>, valid XML, 404 excluded", "robots.txt": "User-agent: * / Allow: / / Sitemap: https://devtui.com/sitemap.xml", "robots_check": "PASS"},
+  "after_production": "pending deploy (merge to main triggers .github/workflows/jekyll-gh-pages.yml)",
+  "generator": "jekyll-sitemap 1.4.0 via site/Gemfile + site/_config.yml plugins",
+  "regression_guard": "health_diff.py runs every /seo with --sitemap https://devtui.com/sitemap.xml; a 404 there makes the panel unchecked and is a repair candidate"
+}

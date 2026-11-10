@@ -1,0 +1,164 @@
+{
+ "site": "sc-domain:devtui.com",
+ "window": [
+  "2026-10-10",
+  "2026-11-06"
+ ],
+ "prev_window": [
+  "2026-09-12",
+  "2026-10-09"
+ ],
+ "totals": {
+  "clicks": 5,
+  "impressions": 133,
+  "ctr": 0.0376,
+  "position": 7.9
+ },
+ "prev_totals": {
+  "clicks": 0,
+  "impressions": 0
+ },
+ "source": "seoskill seo_data dimensions=page",
+ "rows": [
+  {
+   "page": "https://devtui.com/",
+   "clicks": 4,
+   "impressions": 88,
+   "ctr": 0.0455,
+   "position": 6.26
+  },
+  {
+   "page": "https://devtui.com/cli/tsv2md.html",
+   "clicks": 1,
+   "impressions": 1,
+   "ctr": 1.0,
+   "position": 2.0
+  },
+  {
+   "page": "https://devtui.com/cli/",
+   "clicks": 0,
+   "impressions": 11,
+   "ctr": 0.0,
+   "position": 2.64
+  },
+  {
+   "page": "https://devtui.com/cli/cssfmt.html",
+   "clicks": 0,
+   "impressions": 3,
+   "ctr": 0.0,
+   "position": 4.0
+  },
+  {
+   "page": "https://devtui.com/cli/htmlfmt.html",
+   "clicks": 0,
+   "impressions": 3,
+   "ctr": 0.0,
+   "position": 8.0
+  },
+  {
+   "page": "https://devtui.com/cli/json2toml.html",
+   "clicks": 0,
+   "impressions": 3,
+   "ctr": 0.0,
+   "position": 5.0
+  },
+  {
+   "page": "https://devtui.com/cli/jsonfmt.html",
+   "clicks": 0,
+   "impressions": 1,
+   "ctr": 0.0,
+   "position": 8.0
+  },
+  {
+   "page": "https://devtui.com/cli/jsonstruct.html",
+   "clicks": 0,
+   "impressions": 3,
+   "ctr": 0.0,
+   "position": 9.0
+  },
+  {
+   "page": "https://devtui.com/cli/toml2yaml.html",
+   "clicks": 0,
+   "impressions": 2,
+   "ctr": 0.0,
+   "position": 2.0
+  },
+  {
+   "page": "https://devtui.com/cli/urls.html",
+   "clicks": 0,
+   "impressions": 3,
+   "ctr": 0.0,
+   "position": 6.0
+  },
+  {
+   "page": "https://devtui.com/cli/uuidgenerate.html",
+   "clicks": 0,
+   "impressions": 3,
+   "ctr": 0.0,
+   "position": 7.0
+  },
+  {
+   "page": "https://devtui.com/cli/yaml2toml.html",
+   "clicks": 0,
+   "impressions": 1,
+   "ctr": 0.0,
+   "position": 8.0
+  },
+  {
+   "page": "https://devtui.com/cli/yamlfmt.html",
+   "clicks": 0,
+   "impressions": 1,
+   "ctr": 0.0,
+   "position": 7.0
+  },
+  {
+   "page": "https://devtui.com/cli/yamlstruct.html",
+   "clicks": 0,
+   "impressions": 8,
+   "ctr": 0.0,
+   "position": 18.25
+  },
+  {
+   "page": "https://devtui.com/start.html",
+   "clicks": 0,
+   "impressions": 13,
+   "ctr": 0.0,
+   "position": 3.0
+  },
+  {
+   "page": "https://devtui.com/tui/html.html",
+   "clicks": 0,
+   "impressions": 1,
+   "ctr": 0.0,
+   "position": 1.0
+  },
+  {
+   "page": "https://devtui.com/tui/markdown.html",
+   "clicks": 0,
+   "impressions": 31,
+   "ctr": 0.0,
+   "position": 10.1
+  },
+  {
+   "page": "https://devtui.com/tui/toml.html",
+   "clicks": 0,
+   "impressions": 14,
+   "ctr": 0.0,
+   "position": 6.0
+  },
+  {
+   "page": "https://devtui.com/tui/tsv2md.html",
+   "clicks": 0,
+   "impressions": 1,
+   "ctr": 0.0,
+   "position": 7.0
+  },
+  {
+   "page": "https://devtui.com/tui/yamlstruct.html",
+   "clicks": 0,
+   "impressions": 1,
+   "ctr": 0.0,
+   "position": 9.0
+  }
+ ]
+}
