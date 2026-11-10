@@ -217,12 +217,34 @@ func generateTUIDocumentation(modules []TUIModule) error {
 	}
 
 	// Generate individual module files
+	current := map[string]bool{"index.md": true}
 	for _, module := range modules {
 		if err := generateModuleFile(sitePath, module); err != nil {
 			return err
 		}
+		current[module.Name+".md"] = true
 	}
 
+	return removeStaleModuleFiles(sitePath, current)
+}
+
+// removeStaleModuleFiles deletes generated pages for TUI modules that no longer exist,
+// so renamed modules don't leave duplicate pages behind.
+func removeStaleModuleFiles(sitePath string, current map[string]bool) error {
+	entries, err := os.ReadDir(sitePath)
+	if err != nil {
+		return err
+	}
+	for _, entry := range entries {
+		name := entry.Name()
+		if entry.IsDir() || !strings.HasSuffix(name, ".md") || current[name] {
+			continue
+		}
+		if err := os.Remove(filepath.Join(sitePath, name)); err != nil {
+			return err
+		}
+		fmt.Printf("Removed stale TUI page %s\n", name)
+	}
 	return nil
 }
 
