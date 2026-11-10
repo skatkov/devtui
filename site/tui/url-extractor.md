@@ -1,14 +1,14 @@
 ---
-title: 
+title: URL Extractor
 parent: TUI
 ---
 
-# 
+# URL Extractor
 
 ## Usage
 
 1. Run `devtui` to open the main menu
-2. Select "" from the list
+2. Select "URL Extractor" from the list
 3. Use the key bindings below to interact with the tool
 4. Press `q` or `Ctrl+C` to return to the main menu
 

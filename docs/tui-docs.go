@@ -83,7 +83,8 @@ func extractModuleInfo(modulePath, moduleName string) (*TUIModule, error) {
 		fileContent := string(content)
 
 		// Extract title
-		titleRegex := regexp.MustCompile(`const Title = "([^"]+)"`)
+		// Matches both `const Title = "..."` and `Title = "..."` inside a const block
+		titleRegex := regexp.MustCompile(`(?m)^\s*(?:const\s+)?Title\s*=\s*"([^"]+)"`)
 		if matches := titleRegex.FindStringSubmatch(fileContent); len(matches) > 1 {
 			if module == nil {
 				module = &TUIModule{
