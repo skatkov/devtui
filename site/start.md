@@ -1,9 +1,10 @@
 ---
 title: Getting started
 nav_order: 2
+description: "Install DevTUI on macOS or Linux with Homebrew or a GitHub release binary, plus the clipboard packages Linux needs on Wayland and X11."
 ---
 
-
+# Getting started
 
 ## Install
 {: #install}
