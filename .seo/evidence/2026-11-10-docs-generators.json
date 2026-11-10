@@ -1,0 +1,10 @@
+{
+  "action": "repair+consolidate",
+  "target": "docs/cli-docs.go, docs/tui-docs.go -> site/cli/*.md, site/tui/*.md; site/cli/index.md, site/start.md",
+  "before_production": {"checked": "2026-11-10 16:15 health_diff on https://devtui.com/sitemap.xml", "pages": 62, "violations": 38, "duplicate_meta_description": "62 pages share site.description", "h1_count_violations": 33, "duplicate_titles": 3, "orphans": ["https://devtui.com/tui/url-extractor.html"]},
+  "after_local_build": {"pages": 59, "violations": 0, "meta_description_len": "109-~150 on docs pages; homepage 259 (untouched)", "orphans": 0},
+  "removed_urls": ["https://devtui.com/tui/csvjson.html", "https://devtui.com/tui/jsontoml.html", "https://devtui.com/tui/tomljson.html"],
+  "removed_urls_note": "exact duplicates of /tui/csv2json.html, /tui/json2toml.html, /tui/toml2json.html; 0 GSC impressions in 28d; not in GSC known URLs; backlinks unchecked; no 301 possible on GitHub Pages without a plugin, so they will 404",
+  "regression_guard": "removeStaleModuleFiles() in docs/tui-docs.go; daily health_diff duplicate-title / duplicate-meta-description / h1-count rules",
+  "checks": {"go build ./...": "ok", "go vet ./docs/": "ok", "golangci-lint ./docs/...": "0 issues", "go test ./cmd/": "142 passed"}
+}

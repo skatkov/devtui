@@ -18,8 +18,7 @@ Derived from code on 2026-11-10. Re-derive whenever `.goreleaser.yaml`, `cmd/`, 
 ## Code vs site disagreements
 
 - `site/start.md` doesn't list the FreeBSD install that the README lists. Low risk; it's an omission, not a contradiction.
-- `site/tui/` has docs for 3 TUI modules that no longer exist under those names (csvjson, jsontoml, tomljson). They duplicate csv2json, json2toml and toml2json.
-- The `tui/password` module has no docs page. `site/tui/url-extractor.md` has an empty title.
+- Resolved 2026-11-10: the stale TUI pages (csvjson, jsontoml, tomljson) were removed and url-extractor got its title. `tui/password` isn't registered in the TUI menu, so it has no docs page on purpose.
 
 ## HIGH-RISK
 

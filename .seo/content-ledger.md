@@ -47,9 +47,9 @@
 
 | Rank | Candidate | Proposed type | Target keyword | Vol | Bucket (E/M/H · src) | Intent | Data angle | Score | Notes / angle |
 |---|---|---|---|---|---|---|---|---|---|
-| 1 | Doc generators: unique meta description + H1 per page; delete 3 stale TUI duplicates (csvjson, jsontoml, tomljson); title for url-extractor; docs page for tui/password | repair/consolidate | n/a | | | | none | | docs/cli-docs.go, docs/tui-docs.go; 61 pages share one description, 32 lack H1 |
-| 2 | Homepage title tag ~250 chars (site.description) | refresh | tui dev / devtui | | | nav | none | | 88 impr pos 6.3, 4 clicks |
-| 3 | /tui/markdown.html close on "tui markdown renderer" | refresh | tui markdown renderer | | | info | none | | 31 impr, pos 10.1 |
+| 1 | Homepage title tag (~250 chars) and meta description (259 chars, site.description) ~250 chars (site.description) | refresh | tui dev / devtui | | | nav | none | | 88 impr pos 6.3, 4 clicks |
+| 2 | /tui/markdown.html close on "tui markdown renderer" | refresh | tui markdown renderer | | | info | none | | 31 impr, pos 10.1 |
+| 3 | Docs page titles are short ("base64 \| DevTUI", ~15 chars) and say nothing about the job | refresh | e.g. "base64 decode cli" | | | info | none | | title is also the just-the-docs nav label; needs a separate SEO title field or a layout override |
 
 <!-- Score = sum of winnability + traffic-potential + conversion-intent + strategic-value + data-angle + (6 - effort), each 1-5. See references/opportunity-research.md Step C. -->
 <!-- Data angle: the specific first-party number or public-data combine this piece would carry, per references/proprietary-data.md. "None found" is a legitimate entry — an angle nobody can name isn't one. -->
@@ -83,3 +83,4 @@
 | date | action | target | type | lane | what changed | commit |
 |---|---|---|---|---|---|---|
 | 2026-11-10 | repair | https://devtui.com/sitemap.xml, https://devtui.com/robots.txt | technical | technical | Added jekyll-sitemap (62 URLs, no lastmod) and robots.txt with Sitemap line; both were 404. Pre-state: GSC knew 20 of 61 URLs. | uncommitted |
+| 2026-11-10 | repair+consolidate | https://devtui.com/cli/*, https://devtui.com/tui/*, /start.html | technical | technical | Generators (docs/cli-docs.go, docs/tui-docs.go) now emit a unique description per page and an H1 on CLI pages; TUI title regex handles const blocks (url-extractor titled, de-orphaned); stale TUI pages auto-removed (deleted /tui/csvjson.html, /tui/jsontoml.html, /tui/tomljson.html, no 301: GitHub Pages; 0 GSC impressions); H1 + description on /cli/ and /start.html, description on /tui/. Pre-state: 38 violations live (62 shared descriptions, 33 h1-count, 3 dup titles, 1 orphan). | uncommitted |
