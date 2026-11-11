@@ -7,7 +7,8 @@ import (
 	"errors"
 	"fmt"
 	"io"
-	"strings"
+	"math"
+	"time"
 
 	"github.com/clbanning/mxj/v2"
 	"github.com/pelletier/go-toml/v2"
@@ -68,31 +69,66 @@ func TOMLToJSON(tomlContent string) (string, error) {
 
 // decodeJSONForTOML keeps integers as integers: TOML has separate integer and float types.
 func decodeJSONForTOML(content string) (any, error) {
-	decoder := json.NewDecoder(strings.NewReader(content))
+	// Unmarshal checks the whole input, so trailing data is still rejected.
+	var raw json.RawMessage
+	if err := json.Unmarshal([]byte(content), &raw); err != nil {
+		return nil, err
+	}
+
+	decoder := json.NewDecoder(bytes.NewReader(raw))
 	decoder.UseNumber()
 
 	var v any
 	if err := decoder.Decode(&v); err != nil {
 		return nil, err
 	}
-	return convertJSONNumbers(v), nil
+	return convertJSONNumbers(v)
 }
 
-func convertJSONNumbers(v any) any {
+func convertJSONNumbers(v any) (any, error) {
 	switch value := v.(type) {
 	case json.Number:
 		if i, err := value.Int64(); err == nil {
-			return i
+			return i, nil
 		}
-		f, _ := value.Float64()
-		return f
+		return value.Float64()
 	case map[string]any:
 		for key, item := range value {
-			value[key] = convertJSONNumbers(item)
+			converted, err := convertJSONNumbers(item)
+			if err != nil {
+				return nil, err
+			}
+			value[key] = converted
 		}
 	case []any:
 		for i, item := range value {
-			value[i] = convertJSONNumbers(item)
+			converted, err := convertJSONNumbers(item)
+			if err != nil {
+				return nil, err
+			}
+			value[i] = converted
+		}
+	}
+	return v, nil
+}
+
+// yamlValuesForTOML keeps the numeric types YAML decoded and turns the rest
+// into what the JSON round trip used to give.
+func yamlValuesForTOML(v any) any {
+	switch value := v.(type) {
+	case time.Time:
+		return value.Format(time.RFC3339Nano)
+	case uint64:
+		if value > math.MaxInt64 {
+			return float64(value)
+		}
+	case map[string]any:
+		for key, item := range value {
+			value[key] = yamlValuesForTOML(item)
+		}
+	case []any:
+		for i, item := range value {
+			value[i] = yamlValuesForTOML(item)
 		}
 	}
 	return v
@@ -175,19 +211,19 @@ func JSONToXML(jsonContent string) (string, error) {
 }
 
 func YAMLToTOML(yamlContent string) (string, error) {
-	jsonStr, err := YAMLToJSON(yamlContent)
-	if err != nil {
-		return "", err
+	var data any
+	if err := yaml.Unmarshal([]byte(yamlContent), &data); err != nil {
+		return "", fmt.Errorf("YAML parsing error: %w", err)
 	}
 
-	data, err := decodeJSONForTOML(jsonStr)
-	if err != nil {
-		return "", fmt.Errorf("JSON parsing error: %w", err)
+	// Reject what YAMLToJSON rejects (non-string keys, NaN, Inf).
+	if _, err := json.Marshal(data); err != nil {
+		return "", fmt.Errorf("JSON encoding error: %w", err)
 	}
 
 	var buf bytes.Buffer
 	encoder := toml.NewEncoder(&buf)
-	if err := encoder.Encode(data); err != nil {
+	if err := encoder.Encode(yamlValuesForTOML(data)); err != nil {
 		return "", fmt.Errorf("TOML encoding error: %w", err)
 	}
 
