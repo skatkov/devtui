@@ -154,6 +154,6 @@ func FormatJSON(content string) string {
 	if err := json.Indent(&buf, []byte(content), "", "  "); err != nil {
 		return content
 	}
-	buf.WriteByte('\n')
-	return buf.String()
+	// json.Indent keeps trailing whitespace; end with exactly one newline.
+	return strings.TrimRight(buf.String(), " \t\r\n") + "\n"
 }
