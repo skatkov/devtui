@@ -18,12 +18,25 @@ func TestFormatValidYAML(t *testing.T) {
 	}
 }
 
-func TestFormatReturnsErrorForInvalidFormattedYAML(t *testing.T) {
+func TestFormatKeepsDistinctNumericKeys(t *testing.T) {
 	t.Parallel()
 
-	_, err := Format("0: \n0.:")
-	if err == nil {
-		t.Fatal("expected error for YAML that formats into invalid output")
+	formatted, err := Format("0: \n0.:")
+	if err != nil {
+		t.Fatalf("Format returned error: %v", err)
+	}
+
+	want := "0:\n0.:\n"
+	if formatted != want {
+		t.Fatalf("Format() = %q, want %q", formatted, want)
+	}
+}
+
+func TestFormatReturnsErrorForDuplicateKeys(t *testing.T) {
+	t.Parallel()
+
+	if _, err := Format("a: 1\na: 2\n"); err == nil {
+		t.Fatal("expected error for duplicate mapping keys")
 	}
 }
 
