@@ -1,5 +1,7 @@
 ---
-title: Home
+title: DevTUI
+description: Format JSON, YAML and TOML, convert CSV to Markdown, decode Base64 and generate UUIDs in one terminal app. Free, offline TUI and CLI for macOS and Linux.
+last_modified_at: 2026-11-12
 nav_exclude: true
 permalink: /
 layout: minimal

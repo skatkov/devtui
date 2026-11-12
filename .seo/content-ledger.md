@@ -27,6 +27,7 @@
 | Slug / URL | Published | Indexed? (state · checked) | Read @28d (clicks · impr · pos) | Read @56d (clicks · impr · pos) | Site-wide same window (clicks · impr) | Best lever (recover/CTR/rank · est. clicks) | State | Note / next action |
 |---|---|---|---|---|---|---|---|---|
 | https://devtui.com/sitemap.xml (site-wide repair) | 2026-11-10 | pending deploy | | | 5 · 133 (2026-10-10..11-06) | discovery · 41 URLs unknown to Google | unmeasured | Read GSC known-URL count at 21d: was 20 of 61 |
+| https://devtui.com/ (title + description boost) | 2026-11-12 | indexed (homepage) | | | 7 · 217 (2026-10-13..11-09) | CTR · pre 5.7% at pos 5.8 | unmeasured | Read CTR at 28d after deploy; deploy pending push of main |
 
 <!-- Two clocks. Index status: check ~3 days after deploy, on anything published in the last 30 days not yet confirmed indexed. Performance: measure any piece live 21+ days and not measured in the last 30. -->
 <!-- Indexed? holds the coverage state verbatim (e.g. "Submitted and indexed", "Crawled - currently not indexed", "URL is unknown to Google", "noindex") plus the date checked. Each state has a different fix — see references/gsc.md §3a. -->
@@ -47,8 +48,8 @@
 
 | Rank | Candidate | Proposed type | Target keyword | Vol | Bucket (E/M/H · src) | Intent | Data angle | Score | Notes / angle |
 |---|---|---|---|---|---|---|---|---|---|
-| 1 | Homepage title tag (~250 chars) and meta description (259 chars, site.description) ~250 chars (site.description) | refresh | tui dev / devtui | | | nav | none | | 88 impr pos 6.3, 4 clicks |
-| 2 | /tui/markdown.html close on "tui markdown renderer" | refresh | tui markdown renderer | | | info | none | | 31 impr, pos 10.1 |
+| 1 | /tui/markdown.html close on "tui markdown renderer" | refresh | tui markdown renderer | | | info | none | 19 | 36 impr pos 9.6 (2026-11-12); query pos 5.4, 0 clicks |
+| 2 | Offpage brief: awesome-tuis / Terminal Trove listings | offpage-brief | — | | | nav | none | 17 | backlinks never measured; link-health vital has no authority source |
 | 3 | Docs page titles are short ("base64 \| DevTUI", ~15 chars) and say nothing about the job | refresh | e.g. "base64 decode cli" | | | info | none | | title is also the just-the-docs nav label; needs a separate SEO title field or a layout override |
 
 <!-- Score = sum of winnability + traffic-potential + conversion-intent + strategic-value + data-angle + (6 - effort), each 1-5. See references/opportunity-research.md Step C. -->
@@ -83,4 +84,5 @@
 | date | action | target | type | lane | what changed | commit |
 |---|---|---|---|---|---|---|
 | 2026-11-10 | repair | https://devtui.com/sitemap.xml, https://devtui.com/robots.txt | technical | technical | Added jekyll-sitemap (62 URLs, no lastmod) and robots.txt with Sitemap line; both were 404. Pre-state: GSC knew 20 of 61 URLs. | uncommitted |
-| 2026-11-10 | repair+consolidate | https://devtui.com/cli/*, https://devtui.com/tui/*, /start.html | technical | technical | Generators (docs/cli-docs.go, docs/tui-docs.go) now emit a unique description per page and an H1 on CLI pages; TUI title regex handles const blocks (url-extractor titled, de-orphaned); stale TUI pages auto-removed (deleted /tui/csvjson.html, /tui/jsontoml.html, /tui/tomljson.html, no 301: GitHub Pages; 0 GSC impressions); H1 + description on /cli/ and /start.html, description on /tui/. Pre-state: 38 violations live (62 shared descriptions, 33 h1-count, 3 dup titles, 1 orphan). | uncommitted |
+| 2026-11-10 | repair+consolidate | https://devtui.com/cli/*, https://devtui.com/tui/*, /start.html | technical | technical | Generators (docs/cli-docs.go, docs/tui-docs.go) now emit a unique description per page and an H1 on CLI pages; TUI title regex handles const blocks (url-extractor titled, de-orphaned); stale TUI pages auto-removed (deleted /tui/csvjson.html, /tui/jsontoml.html, /tui/tomljson.html, no 301: GitHub Pages; 0 GSC impressions); H1 + description on /cli/ and /start.html, description on /tui/. Pre-state: 38 violations live (62 shared descriptions, 33 h1-count, 3 dup titles, 1 orphan). | 21cae3f (local, not pushed as of 2026-11-12) |
+| 2026-11-12 | refresh | https://devtui.com/ | boost (CTR) | editorial | Title "Home \| DevTUI" → "DevTUI \| Developer Tools for the Terminal (TUI + CLI)" (53 ch) via page title = site title + new `site.tagline`; own meta description (153 ch, was site.description at 259 ch, cut in SERP); last_modified_at 2026-11-12 (sitemap lastmod + JSON-LD dateModified). Pre-state: 6 clicks / 106 impr / CTR 5.7% / pos 5.8 (2026-10-13..11-09); "tui dev" 2/13 pos 1.5. | uncommitted |

@@ -56,8 +56,9 @@
   },
   "bing": {
     "api_key_env": null,
-    "site_url": null,
-    "_comment": "Optional. api_key_env names the environment variable holding the Bing Webmaster API key; never store the key itself. The AI Performance report is UI-only \u2014 no API. Record Bing as a separate panel, never summed with Google."
+    "site_url": "https://devtui.com/",
+    "_comment": "Optional. api_key_env names the environment variable holding the Bing Webmaster API key; never store the key itself. The AI Performance report is UI-only \u2014 no API. Record Bing as a separate panel, never summed with Google.",
+    "connected_via": "seo CLI, key in system keychain (2026-11-10); the seoskill MCP server needs a restart to see it. Fallback: `seo data --source bing --site https://devtui.com/`"
   },
   "openseo": {
     "project_id": null,
@@ -159,7 +160,7 @@
   },
   "tools_detected": {
     "gsc": true,
-    "bing_webmaster": false,
+    "bing_webmaster": true,
     "dfs": false,
     "openseo": false,
     "answer_engine_data": false,

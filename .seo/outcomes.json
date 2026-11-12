@@ -1,0 +1,23 @@
+{
+  "generated": "2026-11-12",
+  "ledger": ".seo/content-ledger.md",
+  "gsc_dir": ".seo/gsc",
+  "pulls": 2,
+  "notes": [
+    "1 dated ledger row(s) had no recognisable action"
+  ],
+  "rows": [
+    {
+      "date": "2026-11-10",
+      "action": "repair",
+      "type": null,
+      "target": "https://devtui.com/sitemap.xml",
+      "verdict": "too-new",
+      "before": null,
+      "after": null,
+      "control_change": null,
+      "excess": null,
+      "note": "no pull dated 2026-12-08 or later"
+    }
+  ]
+}
