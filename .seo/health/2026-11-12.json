@@ -1,6 +1,6 @@
 {
   "base_url": "https://devtui.com",
-  "generated": "2026-11-12T21:24:49+00:00",
+  "generated": "2026-11-12T21:37:06+00:00",
   "link_check": {
     "broken": 0,
     "redirecting": 0,
@@ -8,56 +8,56 @@
   },
   "pages": {
     "https://devtui.com/": {
-      "body_text": "Home | DevTUI Skip to main content Search DevTUI A Swiss-army app for developers All-in-one terminal toolkit that consolidates everyday developer utilities into a unified TUI and CLI interfaces. Install See docs Why DevTUI? Unified experience \u2013 Replace scattered tools with a single app that brings together everything you need in your development workflow. Privacy-focused \u2013 Everything runs locally, no data ever leaves your computer. Your code and information stay completely private. Offline support \u2013 No internet? No problem. DevTUI works perfectly offline, so you can keep coding anywhere, anytime. Built for the terminal \u2013 No need to reach for your mouse or browser. Stay in your terminal where you\u2019re most productive. Install See docs Support You\u2019re financial support will help keep this project maintained for everyone. Companies will get their logo and link featured on a website as a thank you. Become a sponsor Built by Stanislav (Stas) Katkov",
-      "body_words": 150,
+      "body_text": "DevTUI | Developer Tools for the Terminal (TUI + CLI) Skip to main content Search DevTUI A Swiss-army app for developers All-in-one terminal toolkit that consolidates everyday developer utilities into a unified TUI and CLI interfaces. Install See docs Why DevTUI? Unified experience \u2013 Replace scattered tools with a single app that brings together everything you need in your development workflow. Privacy-focused \u2013 Everything runs locally, no data ever leaves your computer. Your code and information stay completely private. Offline support \u2013 No internet? No problem. DevTUI works perfectly offline, so you can keep coding anywhere, anytime. Built for the terminal \u2013 No need to reach for your mouse or browser. Stay in your terminal where you\u2019re most productive. Install See docs Support You\u2019re financial support will help keep this project maintained for everyone. Companies will get their logo and link featured on a website as a thank you. Become a sponsor Built by Stanislav (Stas) Katkov",
+      "body_words": 157,
       "broken_internal_links": [],
       "canonical": "https://devtui.com/",
-      "content_hash": "5a50f3b00913077872a0fce0a4c1719de28cd7e4",
+      "content_hash": "0f05be6d9529a28f0465f5b2e651d8595c2d0787",
       "date_modified": null,
       "date_published": null,
       "final_url": "https://devtui.com/",
       "h1_count": 1,
-      "html_bytes": 10811,
+      "html_bytes": 10588,
       "html_lang": "en-US",
-      "inbound_link_count": 61,
+      "inbound_link_count": 58,
       "internal_link_count": 4,
       "jsonld_types": [
         "WebSite"
       ],
-      "meta_description": "All-in-one terminal toolkit designed for developers. It consolidates your everyday utilities into a single, unified TUI (Text User Interface) and CLI (Command Line Interface). No more juggling multiple tools \u2014 everything you need is now just one command away.",
+      "meta_description": "Format JSON, YAML and TOML, convert CSV to Markdown, decode Base64 and generate UUIDs in one terminal app. Free, offline TUI and CLI for macOS and Linux.",
       "noindex": false,
       "redirect_hops": 0,
       "redirecting_internal_links": [],
-      "sitemap_lastmod": null,
+      "sitemap_lastmod": "2026-11-12T00:00:00+00:00",
       "status": 200,
-      "title": "Home | DevTUILinkMenuExpand(external link)DocumentSearchCopyCopied",
-      "ttfb_ms": 145
+      "title": "DevTUI | Developer Tools for the Terminal (TUI + CLI)LinkMenuExpand(external link)DocumentSearchCopyCopied",
+      "ttfb_ms": 26
     },
     "https://devtui.com/cli/": {
-      "body_text": "CLI | DevTUI Skip to main content DevTUI This site uses Just the Docs, a documentation theme for Jekyll. Search DevTUI Autocompletion Add following lines to ~/.bashrc if your using bash: eval \"devtui completion bash\" In case of of zsh add this to ~/.zshrc: eval \"devtui completion zsh\" In case of of fish shell add this to ~/.config/fish/config.fish: eval \"devtui completion fish\" Table of contents base64 count cssfmt cssmin csv2json csv2md gqlquery htmlfmt iban json2toml json2toon json2xml json2yaml jsonfmt jsonrepair jsonstruct numbers toml2json toml2yaml tomlfmt tsv2md urls uuiddecode uuidgenerate xml2json xmlfmt yaml2json yaml2toml yamlfmt yamlstruct",
-      "body_words": 95,
+      "body_text": "CLI | DevTUI Skip to main content DevTUI This site uses Just the Docs, a documentation theme for Jekyll. Search DevTUI CLI (Command Line Interface) Every DevTUI tool is also a CLI command that reads from arguments or stdin and writes to stdout, so it fits into pipes and scripts. Pick a command from the menu for its usage, flags and examples. Autocompletion Add following lines to ~/.bashrc if your using bash: eval \"devtui completion bash\" In case of of zsh add this to ~/.zshrc: eval \"devtui completion zsh\" In case of of fish shell add this to ~/.config/fish/config.fish: eval \"devtui completion fish\" Table of contents base64 count cssfmt cssmin csv2json csv2md gqlquery htmlfmt iban json2toml json2toon json2xml json2yaml jsonfmt jsonrepair jsonstruct numbers toml2json toml2yaml tomlfmt tsv2md urls uuiddecode uuidgenerate xml2json xmlfmt yaml2json yaml2toml yamlfmt yamlstruct",
+      "body_words": 136,
       "broken_internal_links": [],
       "canonical": "https://devtui.com/cli/",
-      "content_hash": "86803cf396baa484322effdb1d71507747a444de",
+      "content_hash": "976affa5c2b5b8645ce25f1918a8f8396c8e942c",
       "date_modified": null,
       "date_published": null,
       "final_url": "https://devtui.com/cli/",
-      "h1_count": 0,
-      "html_bytes": 18223,
+      "h1_count": 1,
+      "html_bytes": 18157,
       "html_lang": "en-US",
-      "inbound_link_count": 61,
-      "internal_link_count": 91,
+      "inbound_link_count": 58,
+      "internal_link_count": 89,
       "jsonld_types": [
         "WebPage"
       ],
-      "meta_description": "All-in-one terminal toolkit designed for developers. It consolidates your everyday utilities into a single, unified TUI (Text User Interface) and CLI (Command Line Interface). No more juggling multiple tools \u2014 everything you need is now just one command away.",
+      "meta_description": "DevTUI CLI reference: 30 commands to format, convert and inspect JSON, YAML, TOML, CSV, XML, base64 and UUIDs from your shell, built for pipes and scripts.",
       "noindex": false,
       "redirect_hops": 0,
       "redirecting_internal_links": [],
       "sitemap_lastmod": null,
       "status": 200,
       "title": "CLI | DevTUILinkMenuExpand(external link)DocumentSearchCopyCopied",
-      "ttfb_ms": 144
+      "ttfb_ms": 166
     },
     "https://devtui.com/cli/base64.html": {
       "body_text": "base64 | DevTUI Skip to main content DevTUI This site uses Just the Docs, a documentation theme for Jekyll. Search DevTUI devtui base64 Encode or decode base64 strings and files Synopsis Encode or decode base64 strings and files. By default, input is encoded to base64. Use the \u2013decode flag to decode base64 input. Input can be a string argument or piped from stdin. devtui base64 [string or file] [flags] Examples # Encode a string devtui base64 \"hello world\" # Decode a base64 string devtui base64 \"aGVsbG8gd29ybGQ=\" --decode devtui base64 \"aGVsbG8gd29ybGQ=\" -d # Output to file devtui base64 \"hello world\" > encoded.txt devtui base64 \"aGVsbG8gd29ybGQ=\" --decode > decoded.txt # Pipe input from other commands echo -n \"hello world\" | devtui base64 echo -n \"aGVsbG8gd29ybGQ=\" | devtui base64 --decode cat file.txt | devtui base64 # Chain with other commands cat file.txt | devtui base64 | devtui base64 --decode Options -d, --decode decode base64 input instead of encoding -h, --help help for base64",
@@ -68,22 +68,22 @@
       "date_modified": null,
       "date_published": null,
       "final_url": "https://devtui.com/cli/base64.html",
-      "h1_count": 0,
-      "html_bytes": 19239,
+      "h1_count": 1,
+      "html_bytes": 18625,
       "html_lang": "en-US",
-      "inbound_link_count": 60,
-      "internal_link_count": 62,
+      "inbound_link_count": 57,
+      "internal_link_count": 60,
       "jsonld_types": [
         "WebPage"
       ],
-      "meta_description": "All-in-one terminal toolkit designed for developers. It consolidates your everyday utilities into a single, unified TUI (Text User Interface) and CLI (Command Line Interface). No more juggling multiple tools \u2014 everything you need is now just one command away.",
+      "meta_description": "devtui base64: encode or decode base64 strings and files from the command line. Usage, flags and examples for piping and scripts.",
       "noindex": false,
       "redirect_hops": 0,
       "redirecting_internal_links": [],
       "sitemap_lastmod": null,
       "status": 200,
       "title": "base64 | DevTUILinkMenuExpand(external link)DocumentSearchCopyCopied",
-      "ttfb_ms": 179
+      "ttfb_ms": 178
     },
     "https://devtui.com/cli/count.html": {
       "body_text": "count | DevTUI Skip to main content DevTUI This site uses Just the Docs, a documentation theme for Jekyll. Search DevTUI devtui count Count characters, spaces, and words in text Synopsis Count characters, spaces, and words in text input. Provides detailed statistics including character count, space count, and word count in a formatted table. Input can be a string argument or piped from stdin. devtui count [string or file] [flags] Examples # Count text from a string devtui count \"test me please\" devtui count \"hello world\" # Count text from stdin echo \"hello world\" | devtui count cat document.txt | devtui count # Count text from file devtui count < document.txt cat README.md | devtui count # Output to file devtui count \"sample text\" > stats.txt # Chain with other commands curl -s https://example.com | devtui count cat article.txt | devtui count Options -h, --help help for count",
@@ -94,22 +94,22 @@
       "date_modified": null,
       "date_published": null,
       "final_url": "https://devtui.com/cli/count.html",
-      "h1_count": 0,
-      "html_bytes": 18623,
+      "h1_count": 1,
+      "html_bytes": 18012,
       "html_lang": "en-US",
-      "inbound_link_count": 60,
-      "internal_link_count": 62,
+      "inbound_link_count": 57,
+      "internal_link_count": 60,
       "jsonld_types": [
         "WebPage"
       ],
-      "meta_description": "All-in-one terminal toolkit designed for developers. It consolidates your everyday utilities into a single, unified TUI (Text User Interface) and CLI (Command Line Interface). No more juggling multiple tools \u2014 everything you need is now just one command away.",
+      "meta_description": "devtui count: count characters, spaces, and words in text from the command line. Usage, flags and examples for piping and scripts.",
       "noindex": false,
       "redirect_hops": 0,
       "redirecting_internal_links": [],
       "sitemap_lastmod": null,
       "status": 200,
       "title": "count | DevTUILinkMenuExpand(external link)DocumentSearchCopyCopied",
-      "ttfb_ms": 164
+      "ttfb_ms": 149
     },
     "https://devtui.com/cli/cssfmt.html": {
       "body_text": "cssfmt | DevTUI Skip to main content DevTUI This site uses Just the Docs, a documentation theme for Jekyll. Search DevTUI devtui cssfmt Format and prettify CSS files Synopsis Format and prettify CSS files with customizable indentation and formatting options. By default, uses 2-space indentation. Use \u2013tab for tab indentation or \u2013indent to specify custom spacing. Input can be a string argument or piped from stdin. devtui cssfmt [string or file] [flags] Examples # Format CSS from stdin devtui cssfmt < styles.css cat minified.css | devtui cssfmt # Format CSS string argument devtui cssfmt 'body{margin:0;padding:0}' # Use tab indentation devtui cssfmt --tab < styles.css devtui cssfmt -t < styles.css # Use custom indent spacing devtui cssfmt --indent 4 < styles.css devtui cssfmt -i 4 < styles.css # Output to file devtui cssfmt < input.css > formatted.css # Show results in interactive TUI devtui cssfmt --tui < styles.css # Chain with other commands curl -s https://example.com/styles.css | devtui cssfmt Options -h, --help help for cssfmt -i, --indent int spaces for indentation (default 2) --semicolon always end rule with semicolon, even if not needed (default true) -t, --tab use tabs for indentation --tui present result in a TUI",
@@ -120,22 +120,22 @@
       "date_modified": null,
       "date_published": null,
       "final_url": "https://devtui.com/cli/cssfmt.html",
-      "h1_count": 0,
-      "html_bytes": 19080,
+      "h1_count": 1,
+      "html_bytes": 18430,
       "html_lang": "en-US",
-      "inbound_link_count": 60,
-      "internal_link_count": 62,
+      "inbound_link_count": 57,
+      "internal_link_count": 60,
       "jsonld_types": [
         "WebPage"
       ],
-      "meta_description": "All-in-one terminal toolkit designed for developers. It consolidates your everyday utilities into a single, unified TUI (Text User Interface) and CLI (Command Line Interface). No more juggling multiple tools \u2014 everything you need is now just one command away.",
+      "meta_description": "devtui cssfmt: format and prettify CSS files from the command line. Usage, flags and examples for piping and scripts.",
       "noindex": false,
       "redirect_hops": 0,
       "redirecting_internal_links": [],
       "sitemap_lastmod": null,
       "status": 200,
       "title": "cssfmt | DevTUILinkMenuExpand(external link)DocumentSearchCopyCopied",
-      "ttfb_ms": 154
+      "ttfb_ms": 145
     },
     "https://devtui.com/cli/cssmin.html": {
       "body_text": "cssmin | DevTUI Skip to main content DevTUI This site uses Just the Docs, a documentation theme for Jekyll. Search DevTUI devtui cssmin Minify CSS files by removing whitespace and unnecessary characters Synopsis Minify CSS files by removing whitespace, line breaks, and unnecessary characters. This reduces file size for production use while maintaining CSS functionality. Input can be a string argument or piped from stdin. devtui cssmin [string or file] [flags] Examples # Minify CSS from stdin devtui cssmin < styles.css cat source.css | devtui cssmin # Minify CSS string argument devtui cssmin 'body { margin: 0; padding: 0; }' # Output to file devtui cssmin < input.css > minified.css cat styles.css | devtui cssmin > styles.min.css # Chain with other commands curl -s https://example.com/styles.css | devtui cssmin devtui cssfmt < messy.css | devtui cssmin Options -h, --help help for cssmin",
@@ -146,22 +146,22 @@
       "date_modified": null,
       "date_published": null,
       "final_url": "https://devtui.com/cli/cssmin.html",
-      "h1_count": 0,
-      "html_bytes": 18538,
+      "h1_count": 1,
+      "html_bytes": 17999,
       "html_lang": "en-US",
-      "inbound_link_count": 60,
-      "internal_link_count": 62,
+      "inbound_link_count": 57,
+      "internal_link_count": 60,
       "jsonld_types": [
         "WebPage"
       ],
-      "meta_description": "All-in-one terminal toolkit designed for developers. It consolidates your everyday utilities into a single, unified TUI (Text User Interface) and CLI (Command Line Interface). No more juggling multiple tools \u2014 everything you need is now just one command away.",
+      "meta_description": "devtui cssmin: minify CSS files by removing whitespace and unnecessary characters from the command line. Usage, flags and examples for piping and scripts.",
       "noindex": false,
       "redirect_hops": 0,
       "redirecting_internal_links": [],
       "sitemap_lastmod": null,
       "status": 200,
       "title": "cssmin | DevTUILinkMenuExpand(external link)DocumentSearchCopyCopied",
-      "ttfb_ms": 166
+      "ttfb_ms": 159
     },
     "https://devtui.com/cli/csv2json.html": {
       "body_text": "csv2json | DevTUI Skip to main content DevTUI This site uses Just the Docs, a documentation theme for Jekyll. Search DevTUI devtui csv2json Convert CSV to JSON Synopsis Convert CSV into formatted JSON. Input can be a string argument or piped from stdin. devtui csv2json [string or file] [flags] Examples # Convert CSV from stdin devtui csv2json < data.csv cat data.csv | devtui csv2json # Convert CSV string argument devtui csv2json 'name,age\\nAlice,30' # Output to file devtui csv2json < input.csv > output.json Options -h, --help help for csv2json",
@@ -172,22 +172,22 @@
       "date_modified": null,
       "date_published": null,
       "final_url": "https://devtui.com/cli/csv2json.html",
-      "h1_count": 0,
-      "html_bytes": 18124,
+      "h1_count": 1,
+      "html_bytes": 17450,
       "html_lang": "en-US",
-      "inbound_link_count": 60,
-      "internal_link_count": 62,
+      "inbound_link_count": 57,
+      "internal_link_count": 60,
       "jsonld_types": [
         "WebPage"
       ],
-      "meta_description": "All-in-one terminal toolkit designed for developers. It consolidates your everyday utilities into a single, unified TUI (Text User Interface) and CLI (Command Line Interface). No more juggling multiple tools \u2014 everything you need is now just one command away.",
+      "meta_description": "devtui csv2json: convert CSV to JSON from the command line. Usage, flags and examples for piping and scripts.",
       "noindex": false,
       "redirect_hops": 0,
       "redirecting_internal_links": [],
       "sitemap_lastmod": null,
       "status": 200,
       "title": "csv2json | DevTUILinkMenuExpand(external link)DocumentSearchCopyCopied",
-      "ttfb_ms": 140
+      "ttfb_ms": 141
     },
     "https://devtui.com/cli/csv2md.html": {
       "body_text": "csv2md | DevTUI Skip to main content DevTUI This site uses Just the Docs, a documentation theme for Jekyll. Search DevTUI devtui csv2md Convert CSV to Markdown table format Synopsis Convert CSV to Markdown table format for documentation. Input can be piped from stdin or read from a file. Use \u2013align to align column widths and \u2013header to add a main heading (h1) to the output. devtui csv2md [string or file] [flags] Examples # Convert CSV from stdin devtui csv2md < example.csv cat data.csv | devtui csv2md # Output to file devtui csv2md < input.csv > output.md cat data.csv | devtui csv2md > table.md # Add main header to output devtui csv2md --header \"User Data\" < users.csv devtui csv2md -t \"Sales Report\" < sales.csv # Align column widths for better readability devtui csv2md --align < data.csv devtui csv2md -a < data.csv # Combine options devtui csv2md --header \"Results\" --align < data.csv devtui csv2md -t \"Results\" -a < data.csv Options -a, --align align columns width -t, --header string add main header (h1) to result -h, --help help for csv2md",
@@ -198,22 +198,22 @@
       "date_modified": null,
       "date_published": null,
       "final_url": "https://devtui.com/cli/csv2md.html",
-      "h1_count": 0,
-      "html_bytes": 19003,
+      "h1_count": 1,
+      "html_bytes": 18374,
       "html_lang": "en-US",
-      "inbound_link_count": 60,
-      "internal_link_count": 62,
+      "inbound_link_count": 57,
+      "internal_link_count": 60,
       "jsonld_types": [
         "WebPage"
       ],
-      "meta_description": "All-in-one terminal toolkit designed for developers. It consolidates your everyday utilities into a single, unified TUI (Text User Interface) and CLI (Command Line Interface). No more juggling multiple tools \u2014 everything you need is now just one command away.",
+      "meta_description": "devtui csv2md: convert CSV to Markdown table format from the command line. Usage, flags and examples for piping and scripts.",
       "noindex": false,
       "redirect_hops": 0,
       "redirecting_internal_links": [],
       "sitemap_lastmod": null,
       "status": 200,
       "title": "csv2md | DevTUILinkMenuExpand(external link)DocumentSearchCopyCopied",
-      "ttfb_ms": 128
+      "ttfb_ms": 139
     },
     "https://devtui.com/cli/gqlquery.html": {
       "body_text": "gqlquery | DevTUI Skip to main content DevTUI This site uses Just the Docs, a documentation theme for Jekyll. Search DevTUI devtui gqlquery Format and prettify GraphQL queries Synopsis Format and prettify GraphQL queries for better readability. By default, uses 2-space indentation and omits descriptions. Use flags to customize indentation, include comments, or include descriptions. Input can be a string argument or piped from stdin. devtui gqlquery [string or file] [flags] Examples # Format GraphQL query from stdin devtui gqlquery < query.graphql cat query.graphql | devtui gqlquery # Format GraphQL string argument devtui gqlquery 'query { user(id: 1) { name email } }' # Output to file devtui gqlquery < input.graphql > formatted.graphql cat query.graphql | devtui gqlquery > pretty.graphql # Custom indentation (4 spaces) devtui gqlquery --indent \" \" < query.graphql devtui gqlquery -i \" \" < query.graphql # Include comments in output devtui gqlquery --with-comments < query.graphql devtui gqlquery -c < query.graphql # Include descriptions in output devtui gqlquery --with-descriptions < query.graphql devtui gqlquery -d < query.graphql # Combine formatting options devtui gqlquery -i \" \" -c -d < query.graphql # Show results in interactive TUI devtui gqlquery --tui < query.graphql devtui gqlquery -t < query.graphql # Chain with other commands curl -s https://api.example.com/schema.graphql | devtui gqlquery Options -h, --help help for gqlquery -i, --indent string Indent string for nested elements (default is 2 spaces) (default \" \") -t, --tui Open result in TUI -c, --with-comments Include comments in the formatted output -d, --with-descriptions Include descriptions in the formatted output (omitted by default)",
@@ -224,22 +224,22 @@
       "date_modified": null,
       "date_published": null,
       "final_url": "https://devtui.com/cli/gqlquery.html",
-      "h1_count": 0,
-      "html_bytes": 19938,
+      "h1_count": 1,
+      "html_bytes": 19312,
       "html_lang": "en-US",
-      "inbound_link_count": 60,
-      "internal_link_count": 62,
+      "inbound_link_count": 57,
+      "internal_link_count": 60,
       "jsonld_types": [
         "WebPage"
       ],
-      "meta_description": "All-in-one terminal toolkit designed for developers. It consolidates your everyday utilities into a single, unified TUI (Text User Interface) and CLI (Command Line Interface). No more juggling multiple tools \u2014 everything you need is now just one command away.",
+      "meta_description": "devtui gqlquery: format and prettify GraphQL queries from the command line. Usage, flags and examples for piping and scripts.",
       "noindex": false,
       "redirect_hops": 0,
       "redirecting_internal_links": [],
       "sitemap_lastmod": null,
       "status": 200,
       "title": "gqlquery | DevTUILinkMenuExpand(external link)DocumentSearchCopyCopied",
-      "ttfb_ms": 145
+      "ttfb_ms": 141
     },
     "https://devtui.com/cli/htmlfmt.html": {
       "body_text": "htmlfmt | DevTUI Skip to main content DevTUI This site uses Just the Docs, a documentation theme for Jekyll. Search DevTUI devtui htmlfmt Format and prettify HTML Synopsis Format and prettify HTML input with consistent indentation. Input can be a string argument, piped from stdin, or read from a file. devtui htmlfmt [string or file] [flags] Examples # Format HTML from stdin devtui htmlfmt < page.html cat page.html | devtui htmlfmt # Format HTML string argument devtui htmlfmt '<div><span>hello</span></div>' # Output to file devtui htmlfmt < input.html > formatted.html Options -h, --help help for htmlfmt",
@@ -250,22 +250,22 @@
       "date_modified": null,
       "date_published": null,
       "final_url": "https://devtui.com/cli/htmlfmt.html",
-      "h1_count": 0,
-      "html_bytes": 18191,
+      "h1_count": 1,
+      "html_bytes": 17529,
       "html_lang": "en-US",
-      "inbound_link_count": 60,
-      "internal_link_count": 62,
+      "inbound_link_count": 57,
+      "internal_link_count": 60,
       "jsonld_types": [
         "WebPage"
       ],
-      "meta_description": "All-in-one terminal toolkit designed for developers. It consolidates your everyday utilities into a single, unified TUI (Text User Interface) and CLI (Command Line Interface). No more juggling multiple tools \u2014 everything you need is now just one command away.",
+      "meta_description": "devtui htmlfmt: format and prettify HTML from the command line. Usage, flags and examples for piping and scripts.",
       "noindex": false,
       "redirect_hops": 0,
       "redirecting_internal_links": [],
       "sitemap_lastmod": null,
       "status": 200,
       "title": "htmlfmt | DevTUILinkMenuExpand(external link)DocumentSearchCopyCopied",
-      "ttfb_ms": 162
+      "ttfb_ms": 138
     },
     "https://devtui.com/cli/iban.html": {
       "body_text": "iban | DevTUI Skip to main content DevTUI This site uses Just the Docs, a documentation theme for Jekyll. Search DevTUI devtui iban Generate test IBAN numbers Synopsis Generate test IBAN numbers for a given country code using the banking library. The country code is required and should be a valid ISO 3166-1 alpha-2 country code. Use the \u2013formatted flag to output the IBAN in paper format with spaces. devtui iban <country-code> [flags] Examples # Generate IBAN for Great Britain devtui iban GB # Generate formatted IBAN for Germany devtui iban DE --format devtui iban DE -f # Generate IBAN for France devtui iban FR Options -f, --format output IBAN in paper format with spaces -h, --help help for iban",
@@ -276,22 +276,22 @@
       "date_modified": null,
       "date_published": null,
       "final_url": "https://devtui.com/cli/iban.html",
-      "h1_count": 0,
-      "html_bytes": 18169,
+      "h1_count": 1,
+      "html_bytes": 17504,
       "html_lang": "en-US",
-      "inbound_link_count": 60,
-      "internal_link_count": 62,
+      "inbound_link_count": 57,
+      "internal_link_count": 60,
       "jsonld_types": [
         "WebPage"
       ],
-      "meta_description": "All-in-one terminal toolkit designed for developers. It consolidates your everyday utilities into a single, unified TUI (Text User Interface) and CLI (Command Line Interface). No more juggling multiple tools \u2014 everything you need is now just one command away.",
+      "meta_description": "devtui iban: generate test IBAN numbers from the command line. Usage, flags and examples for piping and scripts.",
       "noindex": false,
       "redirect_hops": 0,
       "redirecting_internal_links": [],
       "sitemap_lastmod": null,
       "status": 200,
       "title": "iban | DevTUILinkMenuExpand(external link)DocumentSearchCopyCopied",
-      "ttfb_ms": 177
+      "ttfb_ms": 188
     },
     "https://devtui.com/cli/json2toml.html": {
       "body_text": "json2toml | DevTUI Skip to main content DevTUI This site uses Just the Docs, a documentation theme for Jekyll. Search DevTUI devtui json2toml Convert JSON to TOML format Synopsis Convert JSON to TOML format. Input can be a string argument or piped from stdin. JSON numbers are preserved as integers when appropriate (not converted to floats). Use \u2013tui flag to view results in an interactive terminal interface. devtui json2toml [string or file] [flags] Examples # Convert JSON from stdin devtui json2toml < config.json cat app.json | devtui json2toml # Convert JSON string argument devtui json2toml '{\"name\": \"myapp\", \"version\": \"1.0.0\"}' # Output to file devtui json2toml < input.json > output.toml cat config.json | devtui json2toml > config.toml # Show results in interactive TUI devtui json2toml --tui < config.json devtui json2toml -t < config.json # Chain with other commands curl -s https://api.example.com/config | devtui json2toml Options -h, --help help for json2toml -t, --tui Show output in TUI",
@@ -302,22 +302,22 @@
       "date_modified": null,
       "date_published": null,
       "final_url": "https://devtui.com/cli/json2toml.html",
-      "h1_count": 0,
-      "html_bytes": 18783,
+      "h1_count": 1,
+      "html_bytes": 18136,
       "html_lang": "en-US",
-      "inbound_link_count": 60,
-      "internal_link_count": 62,
+      "inbound_link_count": 57,
+      "internal_link_count": 60,
       "jsonld_types": [
         "WebPage"
       ],
-      "meta_description": "All-in-one terminal toolkit designed for developers. It consolidates your everyday utilities into a single, unified TUI (Text User Interface) and CLI (Command Line Interface). No more juggling multiple tools \u2014 everything you need is now just one command away.",
+      "meta_description": "devtui json2toml: convert JSON to TOML format from the command line. Usage, flags and examples for piping and scripts.",
       "noindex": false,
       "redirect_hops": 0,
       "redirecting_internal_links": [],
       "sitemap_lastmod": null,
       "status": 200,
       "title": "json2toml | DevTUILinkMenuExpand(external link)DocumentSearchCopyCopied",
-      "ttfb_ms": 160
+      "ttfb_ms": 150
     },
     "https://devtui.com/cli/json2toon.html": {
       "body_text": "json2toon | DevTUI Skip to main content DevTUI This site uses Just the Docs, a documentation theme for Jekyll. Search DevTUI devtui json2toon Convert JSON to TOON Synopsis Convert JSON to TOON - a compact, human-readable format designed for passing structured data to Large Language Models with significantly reduced token usage (typically 30-60% fewer tokens than JSON). devtui json2toon [flags] Examples devtui json2toon < example.json # Convert with defaults devtui json2toon -i 4 < example.json # Use 4-space indent devtui json2toon -l '#' < example.json # Add length marker prefix cat example.json | devtui json2toon > output.toon # Pipe and save to file Options -h, --help help for json2toon -i, --indent int Number of spaces per indentation level (default 2) -l, --length-marker string Optional marker to prefix array lengths (e.g., '#')",
@@ -328,22 +328,22 @@
       "date_modified": null,
       "date_published": null,
       "final_url": "https://devtui.com/cli/json2toon.html",
-      "h1_count": 0,
-      "html_bytes": 18564,
+      "h1_count": 1,
+      "html_bytes": 17896,
       "html_lang": "en-US",
-      "inbound_link_count": 60,
-      "internal_link_count": 62,
+      "inbound_link_count": 57,
+      "internal_link_count": 60,
       "jsonld_types": [
         "WebPage"
       ],
-      "meta_description": "All-in-one terminal toolkit designed for developers. It consolidates your everyday utilities into a single, unified TUI (Text User Interface) and CLI (Command Line Interface). No more juggling multiple tools \u2014 everything you need is now just one command away.",
+      "meta_description": "devtui json2toon: convert JSON to TOON from the command line. Usage, flags and examples for piping and scripts.",
       "noindex": false,
       "redirect_hops": 0,
       "redirecting_internal_links": [],
       "sitemap_lastmod": null,
       "status": 200,
       "title": "json2toon | DevTUILinkMenuExpand(external link)DocumentSearchCopyCopied",
-      "ttfb_ms": 164
+      "ttfb_ms": 167
     },
     "https://devtui.com/cli/json2xml.html": {
       "body_text": "json2xml | DevTUI Skip to main content DevTUI This site uses Just the Docs, a documentation theme for Jekyll. Search DevTUI devtui json2xml Convert JSON to XML format Synopsis Convert JSON to XML format. Input can be a string argument or piped from stdin. devtui json2xml [string or file] [flags] Examples # Convert JSON from stdin devtui json2xml < data.json cat feed.json | devtui json2xml # Convert JSON string argument devtui json2xml '{\"item\": \"value\"}' # Output to file devtui json2xml < input.json > output.xml # Chain with other commands curl -s https://api.example.com/data.json | devtui json2xml Options -h, --help help for json2xml",
@@ -354,15 +354,15 @@
       "date_modified": null,
       "date_published": null,
       "final_url": "https://devtui.com/cli/json2xml.html",
-      "h1_count": 0,
-      "html_bytes": 18268,
+      "h1_count": 1,
+      "html_bytes": 17615,
       "html_lang": "en-US",
-      "inbound_link_count": 60,
-      "internal_link_count": 62,
+      "inbound_link_count": 57,
+      "internal_link_count": 60,
       "jsonld_types": [
         "WebPage"
       ],
-      "meta_description": "All-in-one terminal toolkit designed for developers. It consolidates your everyday utilities into a single, unified TUI (Text User Interface) and CLI (Command Line Interface). No more juggling multiple tools \u2014 everything you need is now just one command away.",
+      "meta_description": "devtui json2xml: convert JSON to XML format from the command line. Usage, flags and examples for piping and scripts.",
       "noindex": false,
       "redirect_hops": 0,
       "redirecting_internal_links": [],
@@ -380,22 +380,22 @@
       "date_modified": null,
       "date_published": null,
       "final_url": "https://devtui.com/cli/json2yaml.html",
-      "h1_count": 0,
-      "html_bytes": 18315,
+      "h1_count": 1,
+      "html_bytes": 17668,
       "html_lang": "en-US",
-      "inbound_link_count": 60,
-      "internal_link_count": 62,
+      "inbound_link_count": 57,
+      "internal_link_count": 60,
       "jsonld_types": [
         "WebPage"
       ],
-      "meta_description": "All-in-one terminal toolkit designed for developers. It consolidates your everyday utilities into a single, unified TUI (Text User Interface) and CLI (Command Line Interface). No more juggling multiple tools \u2014 everything you need is now just one command away.",
+      "meta_description": "devtui json2yaml: convert JSON to YAML format from the command line. Usage, flags and examples for piping and scripts.",
       "noindex": false,
       "redirect_hops": 0,
       "redirecting_internal_links": [],
       "sitemap_lastmod": null,
       "status": 200,
       "title": "json2yaml | DevTUILinkMenuExpand(external link)DocumentSearchCopyCopied",
-      "ttfb_ms": 167
+      "ttfb_ms": 157
     },
     "https://devtui.com/cli/jsonfmt.html": {
       "body_text": "jsonfmt | DevTUI Skip to main content DevTUI This site uses Just the Docs, a documentation theme for Jekyll. Search DevTUI devtui jsonfmt Format and prettify JSON Synopsis Format and prettify JSON input with proper indentation and syntax highlighting. Input can be a string argument, piped from stdin, or read from a file. The output is always valid, properly indented JSON. devtui jsonfmt [string or file] [flags] Examples # Format JSON from stdin devtui jsonfmt < example.json echo '{\"name\":\"John\",\"age\":30}' | devtui jsonfmt # Format JSON string argument devtui jsonfmt '{\"name\":\"John\",\"age\":30}' # Output to file devtui jsonfmt < input.json > formatted.json cat compact.json | devtui jsonfmt > pretty.json # Chain with other commands curl -s https://api.example.com/data | devtui jsonfmt devtui jsonrepair < broken.json | devtui jsonfmt Options -h, --help help for jsonfmt",
@@ -406,22 +406,22 @@
       "date_modified": null,
       "date_published": null,
       "final_url": "https://devtui.com/cli/jsonfmt.html",
-      "h1_count": 0,
-      "html_bytes": 18562,
+      "h1_count": 1,
+      "html_bytes": 17900,
       "html_lang": "en-US",
-      "inbound_link_count": 60,
-      "internal_link_count": 62,
+      "inbound_link_count": 57,
+      "internal_link_count": 60,
       "jsonld_types": [
         "WebPage"
       ],
-      "meta_description": "All-in-one terminal toolkit designed for developers. It consolidates your everyday utilities into a single, unified TUI (Text User Interface) and CLI (Command Line Interface). No more juggling multiple tools \u2014 everything you need is now just one command away.",
+      "meta_description": "devtui jsonfmt: format and prettify JSON from the command line. Usage, flags and examples for piping and scripts.",
       "noindex": false,
       "redirect_hops": 0,
       "redirecting_internal_links": [],
       "sitemap_lastmod": null,
       "status": 200,
       "title": "jsonfmt | DevTUILinkMenuExpand(external link)DocumentSearchCopyCopied",
-      "ttfb_ms": 143
+      "ttfb_ms": 132
     },
     "https://devtui.com/cli/jsonrepair.html": {
       "body_text": "jsonrepair | DevTUI Skip to main content DevTUI This site uses Just the Docs, a documentation theme for Jekyll. Search DevTUI devtui jsonrepair Repair malformed JSON Synopsis Repair malformed JSON, particularly useful for fixing JSON output from LLMs. This tool can fix various JSON issues including: Single quotes instead of double quotes Unclosed arrays and objects Mixed quotes Uppercase TRUE/FALSE/Null values Trailing commas JSON wrapped in markdown code blocks And many more LLM-specific JSON issues devtui jsonrepair [flags] Examples # Repair JSON from stdin echo \"{'key': 'value'}\" | devtui jsonrepair # Repair JSON from file devtui jsonrepair < broken.json # Output to file devtui jsonrepair < broken.json > fixed.json # Chain with other commands cat llm-output.txt | devtui jsonrepair | devtui jsonfmt Options -h, --help help for jsonrepair",
@@ -432,22 +432,22 @@
       "date_modified": null,
       "date_published": null,
       "final_url": "https://devtui.com/cli/jsonrepair.html",
-      "h1_count": 0,
-      "html_bytes": 18561,
+      "h1_count": 1,
+      "html_bytes": 17899,
       "html_lang": "en-US",
-      "inbound_link_count": 60,
-      "internal_link_count": 62,
+      "inbound_link_count": 57,
+      "internal_link_count": 60,
       "jsonld_types": [
         "WebPage"
       ],
-      "meta_description": "All-in-one terminal toolkit designed for developers. It consolidates your everyday utilities into a single, unified TUI (Text User Interface) and CLI (Command Line Interface). No more juggling multiple tools \u2014 everything you need is now just one command away.",
+      "meta_description": "devtui jsonrepair: repair malformed JSON from the command line. Usage, flags and examples for piping and scripts.",
       "noindex": false,
       "redirect_hops": 0,
       "redirecting_internal_links": [],
       "sitemap_lastmod": null,
       "status": 200,
       "title": "jsonrepair | DevTUILinkMenuExpand(external link)DocumentSearchCopyCopied",
-      "ttfb_ms": 136
+      "ttfb_ms": 141
     },
     "https://devtui.com/cli/jsonstruct.html": {
       "body_text": "jsonstruct | DevTUI Skip to main content DevTUI This site uses Just the Docs, a documentation theme for Jekyll. Search DevTUI devtui jsonstruct Convert JSON to Go struct Synopsis Convert JSON input into a Go struct definition. Input can be a string argument or piped from stdin. devtui jsonstruct [string or file] [flags] Examples # Convert JSON from stdin devtui jsonstruct < data.json cat data.json | devtui jsonstruct # Convert JSON string argument devtui jsonstruct '{\"name\":\"Alice\",\"age\":30}' # Output to file devtui jsonstruct < input.json > struct.go Options -h, --help help for jsonstruct",
@@ -458,22 +458,22 @@
       "date_modified": null,
       "date_published": null,
       "final_url": "https://devtui.com/cli/jsonstruct.html",
-      "h1_count": 0,
-      "html_bytes": 18209,
+      "h1_count": 1,
+      "html_bytes": 17559,
       "html_lang": "en-US",
-      "inbound_link_count": 60,
-      "internal_link_count": 62,
+      "inbound_link_count": 57,
+      "internal_link_count": 60,
       "jsonld_types": [
         "WebPage"
       ],
-      "meta_description": "All-in-one terminal toolkit designed for developers. It consolidates your everyday utilities into a single, unified TUI (Text User Interface) and CLI (Command Line Interface). No more juggling multiple tools \u2014 everything you need is now just one command away.",
+      "meta_description": "devtui jsonstruct: convert JSON to Go struct from the command line. Usage, flags and examples for piping and scripts.",
       "noindex": false,
       "redirect_hops": 0,
       "redirecting_internal_links": [],
       "sitemap_lastmod": null,
       "status": 200,
       "title": "jsonstruct | DevTUILinkMenuExpand(external link)DocumentSearchCopyCopied",
-      "ttfb_ms": 144
+      "ttfb_ms": 135
     },
     "https://devtui.com/cli/numbers.html": {
       "body_text": "numbers | DevTUI Skip to main content DevTUI This site uses Just the Docs, a documentation theme for Jekyll. Search DevTUI devtui numbers Convert numbers between bases Synopsis Convert numbers between binary, octal, decimal, and hexadecimal. Input can be a number argument or piped from stdin. devtui numbers [number] [flags] Examples # Convert a decimal number devtui numbers 42 # Convert a binary number devtui numbers --base 2 101010 # Convert from stdin echo \"ff\" | devtui numbers --base 16 # Output as JSON devtui numbers --json 42 Options -b, --base int input number base (2, 8, 10, 16) (default 10) -h, --help help for numbers --json output conversions as JSON",
@@ -484,22 +484,22 @@
       "date_modified": null,
       "date_published": null,
       "final_url": "https://devtui.com/cli/numbers.html",
-      "h1_count": 0,
-      "html_bytes": 18312,
+      "h1_count": 1,
+      "html_bytes": 17665,
       "html_lang": "en-US",
-      "inbound_link_count": 60,
-      "internal_link_count": 62,
+      "inbound_link_count": 57,
+      "internal_link_count": 60,
       "jsonld_types": [
         "WebPage"
       ],
-      "meta_description": "All-in-one terminal toolkit designed for developers. It consolidates your everyday utilities into a single, unified TUI (Text User Interface) and CLI (Command Line Interface). No more juggling multiple tools \u2014 everything you need is now just one command away.",
+      "meta_description": "devtui numbers: convert numbers between bases from the command line. Usage, flags and examples for piping and scripts.",
       "noindex": false,
       "redirect_hops": 0,
       "redirecting_internal_links": [],
       "sitemap_lastmod": null,
       "status": 200,
       "title": "numbers | DevTUILinkMenuExpand(external link)DocumentSearchCopyCopied",
-      "ttfb_ms": 170
+      "ttfb_ms": 140
     },
     "https://devtui.com/cli/toml2json.html": {
       "body_text": "toml2json | DevTUI Skip to main content DevTUI This site uses Just the Docs, a documentation theme for Jekyll. Search DevTUI devtui toml2json Convert TOML to JSON format Synopsis Convert TOML to JSON format. Input can be a string argument or piped from stdin. Use \u2013tui flag to view results in an interactive terminal interface. devtui toml2json [string or file] [flags] Examples # Convert TOML from stdin devtui toml2json < config.toml cat app.toml | devtui toml2json # Convert TOML string argument devtui toml2json '[package]\\nname = \"myapp\"' # Output to file devtui toml2json < input.toml > output.json cat config.toml | devtui toml2json > data.json # Show results in interactive TUI devtui toml2json --tui < config.toml devtui toml2json -t < config.toml # Chain with other commands curl -s https://example.com/config.toml | devtui toml2json Options -h, --help help for toml2json -t, --tui Show output in TUI",
@@ -510,22 +510,22 @@
       "date_modified": null,
       "date_published": null,
       "final_url": "https://devtui.com/cli/toml2json.html",
-      "h1_count": 0,
-      "html_bytes": 18687,
+      "h1_count": 1,
+      "html_bytes": 18040,
       "html_lang": "en-US",
-      "inbound_link_count": 60,
-      "internal_link_count": 62,
+      "inbound_link_count": 57,
+      "internal_link_count": 60,
       "jsonld_types": [
         "WebPage"
       ],
-      "meta_description": "All-in-one terminal toolkit designed for developers. It consolidates your everyday utilities into a single, unified TUI (Text User Interface) and CLI (Command Line Interface). No more juggling multiple tools \u2014 everything you need is now just one command away.",
+      "meta_description": "devtui toml2json: convert TOML to JSON format from the command line. Usage, flags and examples for piping and scripts.",
       "noindex": false,
       "redirect_hops": 0,
       "redirecting_internal_links": [],
       "sitemap_lastmod": null,
       "status": 200,
       "title": "toml2json | DevTUILinkMenuExpand(external link)DocumentSearchCopyCopied",
-      "ttfb_ms": 144
+      "ttfb_ms": 135
     },
     "https://devtui.com/cli/toml2yaml.html": {
       "body_text": "toml2yaml | DevTUI Skip to main content DevTUI This site uses Just the Docs, a documentation theme for Jekyll. Search DevTUI devtui toml2yaml Convert TOML to YAML format Synopsis Convert TOML to YAML format. Input can be a string argument or piped from stdin. devtui toml2yaml [string or file] [flags] Examples # Convert TOML from stdin devtui toml2yaml < config.toml cat app.toml | devtui toml2yaml # Convert TOML string argument devtui toml2yaml 'name = \"myapp\"\\nversion = \"1.0.0\"' # Output to file devtui toml2yaml < input.toml > output.yaml # Chain with other commands curl -s https://api.example.com/config.toml | devtui toml2yaml Options -h, --help help for toml2yaml",
@@ -536,22 +536,22 @@
       "date_modified": null,
       "date_published": null,
       "final_url": "https://devtui.com/cli/toml2yaml.html",
-      "h1_count": 0,
-      "html_bytes": 18316,
+      "h1_count": 1,
+      "html_bytes": 17669,
       "html_lang": "en-US",
-      "inbound_link_count": 60,
-      "internal_link_count": 62,
+      "inbound_link_count": 57,
+      "internal_link_count": 60,
       "jsonld_types": [
         "WebPage"
       ],
-      "meta_description": "All-in-one terminal toolkit designed for developers. It consolidates your everyday utilities into a single, unified TUI (Text User Interface) and CLI (Command Line Interface). No more juggling multiple tools \u2014 everything you need is now just one command away.",
+      "meta_description": "devtui toml2yaml: convert TOML to YAML format from the command line. Usage, flags and examples for piping and scripts.",
       "noindex": false,
       "redirect_hops": 0,
       "redirecting_internal_links": [],
       "sitemap_lastmod": null,
       "status": 200,
       "title": "toml2yaml | DevTUILinkMenuExpand(external link)DocumentSearchCopyCopied",
-      "ttfb_ms": 137
+      "ttfb_ms": 142
     },
     "https://devtui.com/cli/tomlfmt.html": {
       "body_text": "tomlfmt | DevTUI Skip to main content DevTUI This site uses Just the Docs, a documentation theme for Jekyll. Search DevTUI devtui tomlfmt Format and prettify TOML files Synopsis Format and prettify TOML files with proper indentation. Input can be a string argument or piped from stdin. Use \u2013tui flag to view results in an interactive terminal interface. devtui tomlfmt [string or file] [flags] Examples # Format TOML from stdin devtui tomlfmt < config.toml cat app.toml | devtui tomlfmt # Format TOML string argument devtui tomlfmt '[package]\\nname = \"myapp\"' # Output to file devtui tomlfmt < input.toml > formatted.toml cat config.toml | devtui tomlfmt > pretty.toml # Show results in interactive TUI devtui tomlfmt --tui < config.toml devtui tomlfmt -t < config.toml # Chain with other commands curl -s https://example.com/config.toml | devtui tomlfmt Options -h, --help help for tomlfmt -t, --tui Show output in TUI",
@@ -562,22 +562,22 @@
       "date_modified": null,
       "date_published": null,
       "final_url": "https://devtui.com/cli/tomlfmt.html",
-      "h1_count": 0,
-      "html_bytes": 18662,
+      "h1_count": 1,
+      "html_bytes": 18018,
       "html_lang": "en-US",
-      "inbound_link_count": 60,
-      "internal_link_count": 62,
+      "inbound_link_count": 57,
+      "internal_link_count": 60,
       "jsonld_types": [
         "WebPage"
       ],
-      "meta_description": "All-in-one terminal toolkit designed for developers. It consolidates your everyday utilities into a single, unified TUI (Text User Interface) and CLI (Command Line Interface). No more juggling multiple tools \u2014 everything you need is now just one command away.",
+      "meta_description": "devtui tomlfmt: format and prettify TOML files from the command line. Usage, flags and examples for piping and scripts.",
       "noindex": false,
       "redirect_hops": 0,
       "redirecting_internal_links": [],
       "sitemap_lastmod": null,
       "status": 200,
       "title": "tomlfmt | DevTUILinkMenuExpand(external link)DocumentSearchCopyCopied",
-      "ttfb_ms": 145
+      "ttfb_ms": 140
     },
     "https://devtui.com/cli/tsv2md.html": {
       "body_text": "tsv2md | DevTUI Skip to main content DevTUI This site uses Just the Docs, a documentation theme for Jekyll. Search DevTUI devtui tsv2md Convert TSV to Markdown table format Synopsis Convert TSV to Markdown table format for documentation. Input can be piped from stdin or read from a file. Use \u2013align to align column widths and \u2013header to add a main heading (h1) to the output. devtui tsv2md [string or file] [flags] Examples # Convert TSV from stdin devtui tsv2md < example.tsv cat data.tsv | devtui tsv2md # Output to file devtui tsv2md < input.tsv > output.md cat data.tsv | devtui tsv2md > table.md # Add main header to output devtui tsv2md --header \"User Data\" < users.tsv devtui tsv2md -t \"Sales Report\" < sales.tsv # Align column widths for better readability devtui tsv2md --align < data.tsv devtui tsv2md -a < data.tsv # Combine options devtui tsv2md --header \"Results\" --align < data.tsv devtui tsv2md -t \"Results\" -a < data.tsv Options -a, --align align columns width -t, --header string add main header (h1) to result -h, --help help for tsv2md",
@@ -588,22 +588,22 @@
       "date_modified": null,
       "date_published": null,
       "final_url": "https://devtui.com/cli/tsv2md.html",
-      "h1_count": 0,
-      "html_bytes": 19007,
+      "h1_count": 1,
+      "html_bytes": 18378,
       "html_lang": "en-US",
-      "inbound_link_count": 60,
-      "internal_link_count": 62,
+      "inbound_link_count": 57,
+      "internal_link_count": 60,
       "jsonld_types": [
         "WebPage"
       ],
-      "meta_description": "All-in-one terminal toolkit designed for developers. It consolidates your everyday utilities into a single, unified TUI (Text User Interface) and CLI (Command Line Interface). No more juggling multiple tools \u2014 everything you need is now just one command away.",
+      "meta_description": "devtui tsv2md: convert TSV to Markdown table format from the command line. Usage, flags and examples for piping and scripts.",
       "noindex": false,
       "redirect_hops": 0,
       "redirecting_internal_links": [],
       "sitemap_lastmod": null,
       "status": 200,
       "title": "tsv2md | DevTUILinkMenuExpand(external link)DocumentSearchCopyCopied",
-      "ttfb_ms": 147
+      "ttfb_ms": 149
     },
     "https://devtui.com/cli/urls.html": {
       "body_text": "urls | DevTUI Skip to main content DevTUI This site uses Just the Docs, a documentation theme for Jekyll. Search DevTUI devtui urls Extract URLs from text, files, or stdin Synopsis Extract URLs from text, files, or stdin. By default, uses relaxed mode which finds URLs without requiring a scheme. Use the \u2013strict flag to only find URLs with valid schemes (http, https, ftp, etc.). Input can be a string argument or piped from stdin. devtui urls [string or file] [flags] Examples # Extract URLs from a string devtui urls \"Visit https://google.com and http://example.com\" # Extract URLs in strict mode (requires valid schemes) devtui urls \"Visit google.com and https://example.com\" --strict # Extract URLs from stdin cat file.html | devtui urls echo \"Check out google.com\" | devtui urls # Chain with other commands curl -s https://example.com | devtui urls cat file.txt | devtui urls > extracted_urls.txt Options -h, --help help for urls -s, --strict use strict mode (require valid URL schemes)",
@@ -614,22 +614,22 @@
       "date_modified": null,
       "date_published": null,
       "final_url": "https://devtui.com/cli/urls.html",
-      "h1_count": 0,
-      "html_bytes": 18672,
+      "h1_count": 1,
+      "html_bytes": 18046,
       "html_lang": "en-US",
-      "inbound_link_count": 60,
-      "internal_link_count": 62,
+      "inbound_link_count": 57,
+      "internal_link_count": 60,
       "jsonld_types": [
         "WebPage"
       ],
-      "meta_description": "All-in-one terminal toolkit designed for developers. It consolidates your everyday utilities into a single, unified TUI (Text User Interface) and CLI (Command Line Interface). No more juggling multiple tools \u2014 everything you need is now just one command away.",
+      "meta_description": "devtui urls: extract URLs from text, files, or stdin from the command line. Usage, flags and examples for piping and scripts.",
       "noindex": false,
       "redirect_hops": 0,
       "redirecting_internal_links": [],
       "sitemap_lastmod": null,
       "status": 200,
       "title": "urls | DevTUILinkMenuExpand(external link)DocumentSearchCopyCopied",
-      "ttfb_ms": 131
+      "ttfb_ms": 147
     },
     "https://devtui.com/cli/uuiddecode.html": {
       "body_text": "uuiddecode | DevTUI Skip to main content DevTUI This site uses Just the Docs, a documentation theme for Jekyll. Search DevTUI devtui uuiddecode Decode a UUID into its components Synopsis Decode a UUID and show its components, including version and variant. Input can be provided as an argument or piped from stdin. devtui uuiddecode [uuid] [flags] Examples # Decode a UUID argument devtui uuiddecode 4326ff5f-774d-4506-a18c-4bc50c761863 # Decode a UUID from stdin echo \"4326ff5f-774d-4506-a18c-4bc50c761863\" | devtui uuiddecode # Output as JSON devtui uuiddecode --json 4326ff5f-774d-4506-a18c-4bc50c761863 Options -h, --help help for uuiddecode --json output decoded fields as JSON",
@@ -640,22 +640,22 @@
       "date_modified": null,
       "date_published": null,
       "final_url": "https://devtui.com/cli/uuiddecode.html",
-      "h1_count": 0,
-      "html_bytes": 18295,
+      "h1_count": 1,
+      "html_bytes": 17669,
       "html_lang": "en-US",
-      "inbound_link_count": 60,
-      "internal_link_count": 62,
+      "inbound_link_count": 57,
+      "internal_link_count": 60,
       "jsonld_types": [
         "WebPage"
       ],
-      "meta_description": "All-in-one terminal toolkit designed for developers. It consolidates your everyday utilities into a single, unified TUI (Text User Interface) and CLI (Command Line Interface). No more juggling multiple tools \u2014 everything you need is now just one command away.",
+      "meta_description": "devtui uuiddecode: decode a UUID into its components from the command line. Usage, flags and examples for piping and scripts.",
       "noindex": false,
       "redirect_hops": 0,
       "redirecting_internal_links": [],
       "sitemap_lastmod": null,
       "status": 200,
       "title": "uuiddecode | DevTUILinkMenuExpand(external link)DocumentSearchCopyCopied",
-      "ttfb_ms": 158
+      "ttfb_ms": 139
     },
     "https://devtui.com/cli/uuidgenerate.html": {
       "body_text": "uuidgenerate | DevTUI Skip to main content DevTUI This site uses Just the Docs, a documentation theme for Jekyll. Search DevTUI devtui uuidgenerate Generate a UUID Synopsis Generate a UUID of a specified version. By default, generates a version 4 UUID. Versions 3 and 5 accept a namespace value. devtui uuidgenerate [flags] Examples # Generate a default UUID (v4) devtui uuidgenerate # Generate a UUID v7 devtui uuidgenerate --uuid-version 7 # Generate a UUID v3 with namespace devtui uuidgenerate --uuid-version 3 --namespace example.com Options -h, --help help for uuidgenerate -n, --namespace string namespace for UUID v3/v5 generation -v, --uuid-version int UUID version to generate (1-7) (default 4)",
@@ -666,22 +666,22 @@
       "date_modified": null,
       "date_published": null,
       "final_url": "https://devtui.com/cli/uuidgenerate.html",
-      "h1_count": 0,
-      "html_bytes": 18340,
+      "h1_count": 1,
+      "html_bytes": 17666,
       "html_lang": "en-US",
-      "inbound_link_count": 60,
-      "internal_link_count": 62,
+      "inbound_link_count": 57,
+      "internal_link_count": 60,
       "jsonld_types": [
         "WebPage"
       ],
-      "meta_description": "All-in-one terminal toolkit designed for developers. It consolidates your everyday utilities into a single, unified TUI (Text User Interface) and CLI (Command Line Interface). No more juggling multiple tools \u2014 everything you need is now just one command away.",
+      "meta_description": "devtui uuidgenerate: generate a UUID from the command line. Usage, flags and examples for piping and scripts.",
       "noindex": false,
       "redirect_hops": 0,
       "redirecting_internal_links": [],
       "sitemap_lastmod": null,
       "status": 200,
       "title": "uuidgenerate | DevTUILinkMenuExpand(external link)DocumentSearchCopyCopied",
-      "ttfb_ms": 143
+      "ttfb_ms": 135
     },
     "https://devtui.com/cli/xml2json.html": {
       "body_text": "xml2json | DevTUI Skip to main content DevTUI This site uses Just the Docs, a documentation theme for Jekyll. Search DevTUI devtui xml2json Convert XML to JSON format Synopsis Convert XML to JSON format. Input can be a string argument or piped from stdin. devtui xml2json [string or file] [flags] Examples # Convert XML from stdin devtui xml2json < data.xml cat feed.xml | devtui xml2json # Convert XML string argument devtui xml2json '<root><item>value</item></root>' # Output to file devtui xml2json < input.xml > output.json # Chain with other commands curl -s https://api.example.com/data.xml | devtui xml2json Options -h, --help help for xml2json",
@@ -692,22 +692,22 @@
       "date_modified": null,
       "date_published": null,
       "final_url": "https://devtui.com/cli/xml2json.html",
-      "h1_count": 0,
-      "html_bytes": 18301,
+      "h1_count": 1,
+      "html_bytes": 17648,
       "html_lang": "en-US",
-      "inbound_link_count": 60,
-      "internal_link_count": 62,
+      "inbound_link_count": 57,
+      "internal_link_count": 60,
       "jsonld_types": [
         "WebPage"
       ],
-      "meta_description": "All-in-one terminal toolkit designed for developers. It consolidates your everyday utilities into a single, unified TUI (Text User Interface) and CLI (Command Line Interface). No more juggling multiple tools \u2014 everything you need is now just one command away.",
+      "meta_description": "devtui xml2json: convert XML to JSON format from the command line. Usage, flags and examples for piping and scripts.",
       "noindex": false,
       "redirect_hops": 0,
       "redirecting_internal_links": [],
       "sitemap_lastmod": null,
       "status": 200,
       "title": "xml2json | DevTUILinkMenuExpand(external link)DocumentSearchCopyCopied",
-      "ttfb_ms": 150
+      "ttfb_ms": 132
     },
     "https://devtui.com/cli/xmlfmt.html": {
       "body_text": "xmlfmt | DevTUI Skip to main content DevTUI This site uses Just the Docs, a documentation theme for Jekyll. Search DevTUI devtui xmlfmt Format and prettify XML files Synopsis Format and prettify XML files with customizable indentation and formatting options. By default, uses 2-space indentation. Customize with \u2013indent, \u2013prefix, and \u2013nested flags. Input can be a string argument or piped from stdin. devtui xmlfmt [string or file] [flags] Examples # Format XML from stdin devtui xmlfmt < document.xml cat unformatted.xml | devtui xmlfmt # Format XML string argument devtui xmlfmt '<root><item>value</item></root>' # Output to file devtui xmlfmt < input.xml > formatted.xml cat document.xml | devtui xmlfmt > pretty.xml # Custom indentation devtui xmlfmt --indent \" \" < document.xml devtui xmlfmt -i \"\\t\" < document.xml # Add prefix to each line devtui xmlfmt --prefix \" \" < document.xml devtui xmlfmt -p \" \" < document.xml # Handle nested tags in comments devtui xmlfmt --nested < document.xml devtui xmlfmt -n < document.xml # Show results in interactive TUI devtui xmlfmt --tui < document.xml devtui xmlfmt -t < document.xml # Chain with other commands curl -s https://example.com/feed.xml | devtui xmlfmt Options -h, --help help for xmlfmt -i, --indent string Indent string for nested elements (default \" \") -n, --nested Nested tags in comments -p, --prefix string Each element begins on a new line and this prefix -t, --tui Show output in TUI",
@@ -718,22 +718,22 @@
       "date_modified": null,
       "date_published": null,
       "final_url": "https://devtui.com/cli/xmlfmt.html",
-      "h1_count": 0,
-      "html_bytes": 19619,
+      "h1_count": 1,
+      "html_bytes": 18969,
       "html_lang": "en-US",
-      "inbound_link_count": 60,
-      "internal_link_count": 62,
+      "inbound_link_count": 57,
+      "internal_link_count": 60,
       "jsonld_types": [
         "WebPage"
       ],
-      "meta_description": "All-in-one terminal toolkit designed for developers. It consolidates your everyday utilities into a single, unified TUI (Text User Interface) and CLI (Command Line Interface). No more juggling multiple tools \u2014 everything you need is now just one command away.",
+      "meta_description": "devtui xmlfmt: format and prettify XML files from the command line. Usage, flags and examples for piping and scripts.",
       "noindex": false,
       "redirect_hops": 0,
       "redirecting_internal_links": [],
       "sitemap_lastmod": null,
       "status": 200,
       "title": "xmlfmt | DevTUILinkMenuExpand(external link)DocumentSearchCopyCopied",
-      "ttfb_ms": 147
+      "ttfb_ms": 137
     },
     "https://devtui.com/cli/yaml2json.html": {
       "body_text": "yaml2json | DevTUI Skip to main content DevTUI This site uses Just the Docs, a documentation theme for Jekyll. Search DevTUI devtui yaml2json Convert YAML to JSON format Synopsis Convert YAML to JSON format. Input can be a string argument or piped from stdin. devtui yaml2json [string or file] [flags] Examples # Convert YAML from stdin devtui yaml2json < config.yaml cat app.yaml | devtui yaml2json # Convert YAML string argument devtui yaml2json 'name: myapp\\nversion: 1.0.0' # Output to file devtui yaml2json < input.yaml > output.json # Chain with other commands curl -s https://api.example.com/config.yaml | devtui yaml2json Options -h, --help help for yaml2json",
@@ -744,22 +744,22 @@
       "date_modified": null,
       "date_published": null,
       "final_url": "https://devtui.com/cli/yaml2json.html",
-      "h1_count": 0,
-      "html_bytes": 18310,
+      "h1_count": 1,
+      "html_bytes": 17663,
       "html_lang": "en-US",
-      "inbound_link_count": 60,
-      "internal_link_count": 62,
+      "inbound_link_count": 57,
+      "internal_link_count": 60,
       "jsonld_types": [
         "WebPage"
       ],
-      "meta_description": "All-in-one terminal toolkit designed for developers. It consolidates your everyday utilities into a single, unified TUI (Text User Interface) and CLI (Command Line Interface). No more juggling multiple tools \u2014 everything you need is now just one command away.",
+      "meta_description": "devtui yaml2json: convert YAML to JSON format from the command line. Usage, flags and examples for piping and scripts.",
       "noindex": false,
       "redirect_hops": 0,
       "redirecting_internal_links": [],
       "sitemap_lastmod": null,
       "status": 200,
       "title": "yaml2json | DevTUILinkMenuExpand(external link)DocumentSearchCopyCopied",
-      "ttfb_ms": 126
+      "ttfb_ms": 127
     },
     "https://devtui.com/cli/yaml2toml.html": {
       "body_text": "yaml2toml | DevTUI Skip to main content DevTUI This site uses Just the Docs, a documentation theme for Jekyll. Search DevTUI devtui yaml2toml Convert YAML to TOML format Synopsis Convert YAML to TOML format. Input can be a string argument or piped from stdin. devtui yaml2toml [string or file] [flags] Examples # Convert YAML from stdin devtui yaml2toml < config.yaml cat app.yaml | devtui yaml2toml # Convert YAML string argument devtui yaml2toml 'name: myapp\\nversion: 1.0.0' # Output to file devtui yaml2toml < input.yaml > output.toml # Chain with other commands curl -s https://api.example.com/config.yaml | devtui yaml2toml Options -h, --help help for yaml2toml",
@@ -770,22 +770,22 @@
       "date_modified": null,
       "date_published": null,
       "final_url": "https://devtui.com/cli/yaml2toml.html",
-      "h1_count": 0,
-      "html_bytes": 18310,
+      "h1_count": 1,
+      "html_bytes": 17663,
       "html_lang": "en-US",
-      "inbound_link_count": 60,
-      "internal_link_count": 62,
+      "inbound_link_count": 57,
+      "internal_link_count": 60,
       "jsonld_types": [
         "WebPage"
       ],
-      "meta_description": "All-in-one terminal toolkit designed for developers. It consolidates your everyday utilities into a single, unified TUI (Text User Interface) and CLI (Command Line Interface). No more juggling multiple tools \u2014 everything you need is now just one command away.",
+      "meta_description": "devtui yaml2toml: convert YAML to TOML format from the command line. Usage, flags and examples for piping and scripts.",
       "noindex": false,
       "redirect_hops": 0,
       "redirecting_internal_links": [],
       "sitemap_lastmod": null,
       "status": 200,
       "title": "yaml2toml | DevTUILinkMenuExpand(external link)DocumentSearchCopyCopied",
-      "ttfb_ms": 134
+      "ttfb_ms": 145
     },
     "https://devtui.com/cli/yamlfmt.html": {
       "body_text": "yamlfmt | DevTUI Skip to main content DevTUI This site uses Just the Docs, a documentation theme for Jekyll. Search DevTUI devtui yamlfmt Format and prettify YAML Synopsis Format and prettify YAML input with proper indentation. Input can be a string argument, piped from stdin, or read from a file. devtui yamlfmt [string or file] [flags] Examples # Format YAML from stdin devtui yamlfmt < config.yaml cat config.yaml | devtui yamlfmt # Format YAML string argument devtui yamlfmt 'name: myapp\\nversion: 1.0.0' # Output to file devtui yamlfmt < input.yaml > formatted.yaml Options -h, --help help for yamlfmt",
@@ -796,22 +796,22 @@
       "date_modified": null,
       "date_published": null,
       "final_url": "https://devtui.com/cli/yamlfmt.html",
-      "h1_count": 0,
-      "html_bytes": 18169,
+      "h1_count": 1,
+      "html_bytes": 17507,
       "html_lang": "en-US",
-      "inbound_link_count": 60,
-      "internal_link_count": 62,
+      "inbound_link_count": 57,
+      "internal_link_count": 60,
       "jsonld_types": [
         "WebPage"
       ],
-      "meta_description": "All-in-one terminal toolkit designed for developers. It consolidates your everyday utilities into a single, unified TUI (Text User Interface) and CLI (Command Line Interface). No more juggling multiple tools \u2014 everything you need is now just one command away.",
+      "meta_description": "devtui yamlfmt: format and prettify YAML from the command line. Usage, flags and examples for piping and scripts.",
       "noindex": false,
       "redirect_hops": 0,
       "redirecting_internal_links": [],
       "sitemap_lastmod": null,
       "status": 200,
       "title": "yamlfmt | DevTUILinkMenuExpand(external link)DocumentSearchCopyCopied",
-      "ttfb_ms": 194
+      "ttfb_ms": 136
     },
     "https://devtui.com/cli/yamlstruct.html": {
       "body_text": "yamlstruct | DevTUI Skip to main content DevTUI This site uses Just the Docs, a documentation theme for Jekyll. Search DevTUI devtui yamlstruct Convert YAML to Go struct Synopsis Convert YAML input into a Go struct definition. Input can be a string argument or piped from stdin. devtui yamlstruct [string or file] [flags] Examples # Convert YAML from stdin devtui yamlstruct < config.yaml cat config.yaml | devtui yamlstruct # Convert YAML string argument devtui yamlstruct 'name: Alice\\nage: 30' # Output to file devtui yamlstruct < input.yaml > struct.go Options -h, --help help for yamlstruct",
@@ -822,74 +822,74 @@
       "date_modified": null,
       "date_published": null,
       "final_url": "https://devtui.com/cli/yamlstruct.html",
-      "h1_count": 0,
-      "html_bytes": 18208,
+      "h1_count": 1,
+      "html_bytes": 17558,
       "html_lang": "en-US",
-      "inbound_link_count": 60,
-      "internal_link_count": 62,
+      "inbound_link_count": 57,
+      "internal_link_count": 60,
       "jsonld_types": [
         "WebPage"
       ],
-      "meta_description": "All-in-one terminal toolkit designed for developers. It consolidates your everyday utilities into a single, unified TUI (Text User Interface) and CLI (Command Line Interface). No more juggling multiple tools \u2014 everything you need is now just one command away.",
+      "meta_description": "devtui yamlstruct: convert YAML to Go struct from the command line. Usage, flags and examples for piping and scripts.",
       "noindex": false,
       "redirect_hops": 0,
       "redirecting_internal_links": [],
       "sitemap_lastmod": null,
       "status": 200,
       "title": "yamlstruct | DevTUILinkMenuExpand(external link)DocumentSearchCopyCopied",
-      "ttfb_ms": 177
+      "ttfb_ms": 136
     },
     "https://devtui.com/start.html": {
-      "body_text": "Getting started | DevTUI Skip to main content DevTUI This site uses Just the Docs, a documentation theme for Jekyll. Search DevTUI Install Homebrew brew install skatkov/tap/devtui Download Executable Or download executable from GitHub Releases Requirements macOS Works out of the box Linux Wayland requires: wl-clipboard X11 requires: xclip or xsel To check your session type: echo $XDG_SESSION_TYPE # Output: wayland or x11",
-      "body_words": 63,
+      "body_text": "Getting started | DevTUI Skip to main content DevTUI This site uses Just the Docs, a documentation theme for Jekyll. Search DevTUI Getting started Install Homebrew brew install skatkov/tap/devtui Download Executable Or download executable from GitHub Releases Requirements macOS Works out of the box Linux Wayland requires: wl-clipboard X11 requires: xclip or xsel To check your session type: echo $XDG_SESSION_TYPE # Output: wayland or x11",
+      "body_words": 65,
       "broken_internal_links": [],
       "canonical": "https://devtui.com/start.html",
-      "content_hash": "3c909429804d8ba2aa85783f471821b645fb943c",
+      "content_hash": "5e5f294499ee40debd3a71895130c2d862dfbe3e",
       "date_modified": null,
       "date_published": null,
       "final_url": "https://devtui.com/start.html",
-      "h1_count": 0,
-      "html_bytes": 17898,
+      "h1_count": 1,
+      "html_bytes": 17520,
       "html_lang": "en-US",
-      "inbound_link_count": 60,
-      "internal_link_count": 61,
+      "inbound_link_count": 57,
+      "internal_link_count": 59,
       "jsonld_types": [
         "WebPage"
       ],
-      "meta_description": "All-in-one terminal toolkit designed for developers. It consolidates your everyday utilities into a single, unified TUI (Text User Interface) and CLI (Command Line Interface). No more juggling multiple tools \u2014 everything you need is now just one command away.",
+      "meta_description": "Install DevTUI on macOS or Linux with Homebrew or a GitHub release binary, plus the clipboard packages Linux needs on Wayland and X11.",
       "noindex": false,
       "redirect_hops": 0,
       "redirecting_internal_links": [],
       "sitemap_lastmod": null,
       "status": 200,
       "title": "Getting started | DevTUILinkMenuExpand(external link)DocumentSearchCopyCopied",
-      "ttfb_ms": 149
+      "ttfb_ms": 154
     },
     "https://devtui.com/tui/": {
-      "body_text": "TUI | DevTUI Skip to main content DevTUI This site uses Just the Docs, a documentation theme for Jekyll. Search DevTUI TUI (Terminal User Interface) Getting Started To access the TUI interface, simply run: devtui This will open the main menu where you can select any of the available tools using arrow keys and Enter. Common Key Bindings Most TUI tools share these common key bindings: q/Ctrl+C - Quit and return to main menu ? - Toggle help view c - Copy output to clipboard v - Paste content from clipboard e - Edit content in external editor \u2191/k - Navigate up \u2193/j - Navigate down Table of contents Base64 Decoder Base64 Encoder CSS Formatter CSV to JSON Converter CSV to JSON Converter CSV to Markdown Table Converter Cron Job Parser GraphQL Query Formatter HTML Formatter IBAN Generator JSON Formatter JSON Repair JSON to Go Struct Converter JSON to TOML Converter JSON to TOML Converter JSON to TOON Converter Markdown Renderer Number Base Converter TOML Formatter TOML to JSON Converter TOML to JSON Converter TSV to Markdown Table Converter UUID Decoder UUID Generator XML Formatter YAML Formatter YAML to Go Struct Converter",
-      "body_words": 192,
+      "body_text": "TUI | DevTUI Skip to main content DevTUI This site uses Just the Docs, a documentation theme for Jekyll. Search DevTUI TUI (Terminal User Interface) Getting Started To access the TUI interface, simply run: devtui This will open the main menu where you can select any of the available tools using arrow keys and Enter. Common Key Bindings Most TUI tools share these common key bindings: q/Ctrl+C - Quit and return to main menu ? - Toggle help view c - Copy output to clipboard v - Paste content from clipboard e - Edit content in external editor \u2191/k - Navigate up \u2193/j - Navigate down Table of contents Base64 Decoder Base64 Encoder CSS Formatter CSV to JSON Converter CSV to Markdown Table Converter Cron Job Parser GraphQL Query Formatter HTML Formatter IBAN Generator JSON Formatter JSON Repair JSON to Go Struct Converter JSON to TOML Converter JSON to TOON Converter Markdown Renderer Number Base Converter TOML Formatter TOML to JSON Converter TSV to Markdown Table Converter URL Extractor UUID Decoder UUID Generator XML Formatter YAML Formatter YAML to Go Struct Converter",
+      "body_words": 182,
       "broken_internal_links": [],
       "canonical": "https://devtui.com/tui/",
-      "content_hash": "86f2eb3166745c4d9ae34a4ad277313e43e224ae",
+      "content_hash": "aca52a28a01a4f9f0a40bdec12b23e80e8562111",
       "date_modified": null,
       "date_published": null,
       "final_url": "https://devtui.com/tui/",
       "h1_count": 1,
-      "html_bytes": 18964,
+      "html_bytes": 18238,
       "html_lang": "en-US",
-      "inbound_link_count": 60,
-      "internal_link_count": 88,
+      "inbound_link_count": 57,
+      "internal_link_count": 84,
       "jsonld_types": [
         "WebPage"
       ],
-      "meta_description": "All-in-one terminal toolkit designed for developers. It consolidates your everyday utilities into a single, unified TUI (Text User Interface) and CLI (Command Line Interface). No more juggling multiple tools \u2014 everything you need is now just one command away.",
+      "meta_description": "DevTUI\u2019s interactive terminal tools: JSON, YAML, TOML, CSV and Markdown formatters, converters and viewers in one keyboard-driven menu.",
       "noindex": false,
       "redirect_hops": 0,
       "redirecting_internal_links": [],
       "sitemap_lastmod": null,
       "status": 200,
       "title": "TUI | DevTUILinkMenuExpand(external link)DocumentSearchCopyCopied",
-      "ttfb_ms": 175
+      "ttfb_ms": 168
     },
     "https://devtui.com/tui/base64-decoder.html": {
       "body_text": "Base64 Decoder | DevTUI Skip to main content DevTUI This site uses Just the Docs, a documentation theme for Jekyll. Search DevTUI Base64 Decoder Usage Run devtui to open the main menu Select \u201cBase64 Decoder\u201d from the list Use the key bindings below to interact with the tool Press q or Ctrl+C to return to the main menu Key Bindings Key Action c copy text e edit base64 v paste base64 to decode q/ctrl+c quit",
@@ -901,21 +901,21 @@
       "date_published": null,
       "final_url": "https://devtui.com/tui/base64-decoder.html",
       "h1_count": 1,
-      "html_bytes": 17978,
+      "html_bytes": 17400,
       "html_lang": "en-US",
-      "inbound_link_count": 60,
-      "internal_link_count": 62,
+      "inbound_link_count": 57,
+      "internal_link_count": 60,
       "jsonld_types": [
         "WebPage"
       ],
-      "meta_description": "All-in-one terminal toolkit designed for developers. It consolidates your everyday utilities into a single, unified TUI (Text User Interface) and CLI (Command Line Interface). No more juggling multiple tools \u2014 everything you need is now just one command away.",
+      "meta_description": "Base64 Decoder in your terminal with DevTUI. A decoding tool that transforms encoded content back to readable format. Usage and key bindings.",
       "noindex": false,
       "redirect_hops": 0,
       "redirecting_internal_links": [],
       "sitemap_lastmod": null,
       "status": 200,
       "title": "Base64 Decoder | DevTUILinkMenuExpand(external link)DocumentSearchCopyCopied",
-      "ttfb_ms": 240
+      "ttfb_ms": 152
     },
     "https://devtui.com/tui/base64-encoder.html": {
       "body_text": "Base64 Encoder | DevTUI Skip to main content DevTUI This site uses Just the Docs, a documentation theme for Jekyll. Search DevTUI Base64 Encoder Usage Run devtui to open the main menu Select \u201cBase64 Encoder\u201d from the list Use the key bindings below to interact with the tool Press q or Ctrl+C to return to the main menu Key Bindings Key Action c copy base64 e edit text v paste text to encode q/ctrl+c quit",
@@ -927,21 +927,21 @@
       "date_published": null,
       "final_url": "https://devtui.com/tui/base64-encoder.html",
       "h1_count": 1,
-      "html_bytes": 17976,
+      "html_bytes": 17356,
       "html_lang": "en-US",
-      "inbound_link_count": 60,
-      "internal_link_count": 62,
+      "inbound_link_count": 57,
+      "internal_link_count": 60,
       "jsonld_types": [
         "WebPage"
       ],
-      "meta_description": "All-in-one terminal toolkit designed for developers. It consolidates your everyday utilities into a single, unified TUI (Text User Interface) and CLI (Command Line Interface). No more juggling multiple tools \u2014 everything you need is now just one command away.",
+      "meta_description": "Base64 Encoder in your terminal with DevTUI. An encoding tool that transforms text into encoded format. Usage and key bindings.",
       "noindex": false,
       "redirect_hops": 0,
       "redirecting_internal_links": [],
       "sitemap_lastmod": null,
       "status": 200,
       "title": "Base64 Encoder | DevTUILinkMenuExpand(external link)DocumentSearchCopyCopied",
-      "ttfb_ms": 163
+      "ttfb_ms": 159
     },
     "https://devtui.com/tui/cron.html": {
       "body_text": "Cron Job Parser | DevTUI Skip to main content DevTUI This site uses Just the Docs, a documentation theme for Jekyll. Search DevTUI Cron Job Parser Usage Run devtui to open the main menu Select \u201cCron Job Parser\u201d from the list Use the key bindings below to interact with the tool Press q or Ctrl+C to return to the main menu Key Bindings Standard key bindings apply (see main TUI documentation).",
@@ -953,21 +953,21 @@
       "date_published": null,
       "final_url": "https://devtui.com/tui/cron.html",
       "h1_count": 1,
-      "html_bytes": 17482,
+      "html_bytes": 16880,
       "html_lang": "en-US",
-      "inbound_link_count": 60,
-      "internal_link_count": 62,
+      "inbound_link_count": 57,
+      "internal_link_count": 60,
       "jsonld_types": [
         "WebPage"
       ],
-      "meta_description": "All-in-one terminal toolkit designed for developers. It consolidates your everyday utilities into a single, unified TUI (Text User Interface) and CLI (Command Line Interface). No more juggling multiple tools \u2014 everything you need is now just one command away.",
+      "meta_description": "Cron Job Parser in your terminal with DevTUI. A parsing tool that analyzes and interprets structured content. Usage and key bindings.",
       "noindex": false,
       "redirect_hops": 0,
       "redirecting_internal_links": [],
       "sitemap_lastmod": null,
       "status": 200,
       "title": "Cron Job Parser | DevTUILinkMenuExpand(external link)DocumentSearchCopyCopied",
-      "ttfb_ms": 164
+      "ttfb_ms": 162
     },
     "https://devtui.com/tui/css.html": {
       "body_text": "CSS Formatter | DevTUI Skip to main content DevTUI This site uses Just the Docs, a documentation theme for Jekyll. Search DevTUI CSS Formatter Usage Run devtui to open the main menu Select \u201cCSS Formatter\u201d from the list Use the key bindings below to interact with the tool Press q or Ctrl+C to return to the main menu Key Bindings Key Action c copy formatted CSS e edit CSS v paste CSS to format q/ctrl+c quit",
@@ -979,21 +979,21 @@
       "date_published": null,
       "final_url": "https://devtui.com/tui/css.html",
       "h1_count": 1,
-      "html_bytes": 17921,
+      "html_bytes": 17352,
       "html_lang": "en-US",
-      "inbound_link_count": 60,
-      "internal_link_count": 62,
+      "inbound_link_count": 57,
+      "internal_link_count": 60,
       "jsonld_types": [
         "WebPage"
       ],
-      "meta_description": "All-in-one terminal toolkit designed for developers. It consolidates your everyday utilities into a single, unified TUI (Text User Interface) and CLI (Command Line Interface). No more juggling multiple tools \u2014 everything you need is now just one command away.",
+      "meta_description": "CSS Formatter in your terminal with DevTUI. A text formatting tool that prettifies and standardizes code or data format. Usage and key bindings.",
       "noindex": false,
       "redirect_hops": 0,
       "redirecting_internal_links": [],
       "sitemap_lastmod": null,
       "status": 200,
       "title": "CSS Formatter | DevTUILinkMenuExpand(external link)DocumentSearchCopyCopied",
-      "ttfb_ms": 178
+      "ttfb_ms": 142
     },
     "https://devtui.com/tui/csv2json.html": {
       "body_text": "CSV to JSON Converter | DevTUI Skip to main content DevTUI This site uses Just the Docs, a documentation theme for Jekyll. Search DevTUI CSV to JSON Converter Usage Run devtui to open the main menu Select \u201cCSV to JSON Converter\u201d from the list Use the key bindings below to interact with the tool Press q or Ctrl+C to return to the main menu Key Bindings Key Action c copy JSON e edit CSV v paste CSV to convert q/ctrl+c quit",
@@ -1005,21 +1005,21 @@
       "date_published": null,
       "final_url": "https://devtui.com/tui/csv2json.html",
       "h1_count": 1,
-      "html_bytes": 18061,
+      "html_bytes": 17507,
       "html_lang": "en-US",
-      "inbound_link_count": 60,
-      "internal_link_count": 62,
+      "inbound_link_count": 57,
+      "internal_link_count": 60,
       "jsonld_types": [
         "WebPage"
       ],
-      "meta_description": "All-in-one terminal toolkit designed for developers. It consolidates your everyday utilities into a single, unified TUI (Text User Interface) and CLI (Command Line Interface). No more juggling multiple tools \u2014 everything you need is now just one command away.",
+      "meta_description": "CSV to JSON Converter in your terminal with DevTUI. A data conversion tool that transforms content between different formats. Usage and key bindings.",
       "noindex": false,
       "redirect_hops": 0,
       "redirecting_internal_links": [],
       "sitemap_lastmod": null,
       "status": 200,
       "title": "CSV to JSON Converter | DevTUILinkMenuExpand(external link)DocumentSearchCopyCopied",
-      "ttfb_ms": 186
+      "ttfb_ms": 152
     },
     "https://devtui.com/tui/csv2md.html": {
       "body_text": "CSV to Markdown Table Converter | DevTUI Skip to main content DevTUI This site uses Just the Docs, a documentation theme for Jekyll. Search DevTUI CSV to Markdown Table Converter Usage Run devtui to open the main menu Select \u201cCSV to Markdown Table Converter\u201d from the list Use the key bindings below to interact with the tool Press q or Ctrl+C to return to the main menu Key Bindings Key Action c copy markdown e edit v paste to convert a toggle column alignment q/ctrl+c quit",
@@ -1031,47 +1031,21 @@
       "date_published": null,
       "final_url": "https://devtui.com/tui/csv2md.html",
       "h1_count": 1,
-      "html_bytes": 18322,
+      "html_bytes": 17798,
       "html_lang": "en-US",
-      "inbound_link_count": 60,
-      "internal_link_count": 62,
+      "inbound_link_count": 57,
+      "internal_link_count": 60,
       "jsonld_types": [
         "WebPage"
       ],
-      "meta_description": "All-in-one terminal toolkit designed for developers. It consolidates your everyday utilities into a single, unified TUI (Text User Interface) and CLI (Command Line Interface). No more juggling multiple tools \u2014 everything you need is now just one command away.",
+      "meta_description": "CSV to Markdown Table Converter in your terminal with DevTUI. A data conversion tool that transforms content between different formats. Usage and key bindings.",
       "noindex": false,
       "redirect_hops": 0,
       "redirecting_internal_links": [],
       "sitemap_lastmod": null,
       "status": 200,
       "title": "CSV to Markdown Table Converter | DevTUILinkMenuExpand(external link)DocumentSearchCopyCopied",
-      "ttfb_ms": 165
-    },
-    "https://devtui.com/tui/csvjson.html": {
-      "body_text": "CSV to JSON Converter | DevTUI Skip to main content DevTUI This site uses Just the Docs, a documentation theme for Jekyll. Search DevTUI CSV to JSON Converter Usage Run devtui to open the main menu Select \u201cCSV to JSON Converter\u201d from the list Use the key bindings below to interact with the tool Press q or Ctrl+C to return to the main menu Key Bindings Key Action c copy JSON e edit CSV v paste CSV to convert q/ctrl+c quit",
-      "body_words": 81,
-      "broken_internal_links": [],
-      "canonical": "https://devtui.com/tui/csvjson.html",
-      "content_hash": "5caa298bba784a76bde2ea0575ac797c3f109d74",
-      "date_modified": null,
-      "date_published": null,
-      "final_url": "https://devtui.com/tui/csvjson.html",
-      "h1_count": 1,
-      "html_bytes": 18057,
-      "html_lang": "en-US",
-      "inbound_link_count": 60,
-      "internal_link_count": 62,
-      "jsonld_types": [
-        "WebPage"
-      ],
-      "meta_description": "All-in-one terminal toolkit designed for developers. It consolidates your everyday utilities into a single, unified TUI (Text User Interface) and CLI (Command Line Interface). No more juggling multiple tools \u2014 everything you need is now just one command away.",
-      "noindex": false,
-      "redirect_hops": 0,
-      "redirecting_internal_links": [],
-      "sitemap_lastmod": null,
-      "status": 200,
-      "title": "CSV to JSON Converter | DevTUILinkMenuExpand(external link)DocumentSearchCopyCopied",
-      "ttfb_ms": 171
+      "ttfb_ms": 161
     },
     "https://devtui.com/tui/graphql-query.html": {
       "body_text": "GraphQL Query Formatter | DevTUI Skip to main content DevTUI This site uses Just the Docs, a documentation theme for Jekyll. Search DevTUI GraphQL Query Formatter Usage Run devtui to open the main menu Select \u201cGraphQL Query Formatter\u201d from the list Use the key bindings below to interact with the tool Press q or Ctrl+C to return to the main menu Key Bindings Key Action c copy formatted GraphQL e edit unformatted GraphQL v paste unformatted GraphQL q/ctrl+c quit",
@@ -1083,21 +1057,21 @@
       "date_published": null,
       "final_url": "https://devtui.com/tui/graphql-query.html",
       "h1_count": 1,
-      "html_bytes": 18147,
+      "html_bytes": 17608,
       "html_lang": "en-US",
-      "inbound_link_count": 60,
-      "internal_link_count": 62,
+      "inbound_link_count": 57,
+      "internal_link_count": 60,
       "jsonld_types": [
         "WebPage"
       ],
-      "meta_description": "All-in-one terminal toolkit designed for developers. It consolidates your everyday utilities into a single, unified TUI (Text User Interface) and CLI (Command Line Interface). No more juggling multiple tools \u2014 everything you need is now just one command away.",
+      "meta_description": "GraphQL Query Formatter in your terminal with DevTUI. A text formatting tool that prettifies and standardizes code or data format. Usage and key bindings.",
       "noindex": false,
       "redirect_hops": 0,
       "redirecting_internal_links": [],
       "sitemap_lastmod": null,
       "status": 200,
       "title": "GraphQL Query Formatter | DevTUILinkMenuExpand(external link)DocumentSearchCopyCopied",
-      "ttfb_ms": 150
+      "ttfb_ms": 160
     },
     "https://devtui.com/tui/html.html": {
       "body_text": "HTML Formatter | DevTUI Skip to main content DevTUI This site uses Just the Docs, a documentation theme for Jekyll. Search DevTUI HTML Formatter Usage Run devtui to open the main menu Select \u201cHTML Formatter\u201d from the list Use the key bindings below to interact with the tool Press q or Ctrl+C to return to the main menu Key Bindings Key Action c copy formatted HTML e edit HTML v paste HTML to format q/ctrl+c quit",
@@ -1109,21 +1083,21 @@
       "date_published": null,
       "final_url": "https://devtui.com/tui/html.html",
       "h1_count": 1,
-      "html_bytes": 17944,
+      "html_bytes": 17378,
       "html_lang": "en-US",
-      "inbound_link_count": 60,
-      "internal_link_count": 62,
+      "inbound_link_count": 57,
+      "internal_link_count": 60,
       "jsonld_types": [
         "WebPage"
       ],
-      "meta_description": "All-in-one terminal toolkit designed for developers. It consolidates your everyday utilities into a single, unified TUI (Text User Interface) and CLI (Command Line Interface). No more juggling multiple tools \u2014 everything you need is now just one command away.",
+      "meta_description": "HTML Formatter in your terminal with DevTUI. A text formatting tool that prettifies and standardizes code or data format. Usage and key bindings.",
       "noindex": false,
       "redirect_hops": 0,
       "redirecting_internal_links": [],
       "sitemap_lastmod": null,
       "status": 200,
       "title": "HTML Formatter | DevTUILinkMenuExpand(external link)DocumentSearchCopyCopied",
-      "ttfb_ms": 130
+      "ttfb_ms": 160
     },
     "https://devtui.com/tui/iban.html": {
       "body_text": "IBAN Generator | DevTUI Skip to main content DevTUI This site uses Just the Docs, a documentation theme for Jekyll. Search DevTUI IBAN Generator Usage Run devtui to open the main menu Select \u201cIBAN Generator\u201d from the list Use the key bindings below to interact with the tool Press q or Ctrl+C to return to the main menu Key Bindings Standard key bindings apply (see main TUI documentation).",
@@ -1135,21 +1109,21 @@
       "date_published": null,
       "final_url": "https://devtui.com/tui/iban.html",
       "h1_count": 1,
-      "html_bytes": 17470,
+      "html_bytes": 16888,
       "html_lang": "en-US",
-      "inbound_link_count": 60,
-      "internal_link_count": 62,
+      "inbound_link_count": 57,
+      "internal_link_count": 60,
       "jsonld_types": [
         "WebPage"
       ],
-      "meta_description": "All-in-one terminal toolkit designed for developers. It consolidates your everyday utilities into a single, unified TUI (Text User Interface) and CLI (Command Line Interface). No more juggling multiple tools \u2014 everything you need is now just one command away.",
+      "meta_description": "IBAN Generator in your terminal with DevTUI. A utility tool that generates new content based on specified parameters. Usage and key bindings.",
       "noindex": false,
       "redirect_hops": 0,
       "redirecting_internal_links": [],
       "sitemap_lastmod": null,
       "status": 200,
       "title": "IBAN Generator | DevTUILinkMenuExpand(external link)DocumentSearchCopyCopied",
-      "ttfb_ms": 174
+      "ttfb_ms": 153
     },
     "https://devtui.com/tui/json.html": {
       "body_text": "JSON Formatter | DevTUI Skip to main content DevTUI This site uses Just the Docs, a documentation theme for Jekyll. Search DevTUI JSON Formatter Usage Run devtui to open the main menu Select \u201cJSON Formatter\u201d from the list Use the key bindings below to interact with the tool Press q or Ctrl+C to return to the main menu Key Bindings Key Action c copy formatted JSON e edit unformatted JSON v paste unformatted JSON q/ctrl+c quit",
@@ -1161,21 +1135,21 @@
       "date_published": null,
       "final_url": "https://devtui.com/tui/json.html",
       "h1_count": 1,
-      "html_bytes": 17962,
+      "html_bytes": 17396,
       "html_lang": "en-US",
-      "inbound_link_count": 60,
-      "internal_link_count": 62,
+      "inbound_link_count": 57,
+      "internal_link_count": 60,
       "jsonld_types": [
         "WebPage"
       ],
-      "meta_description": "All-in-one terminal toolkit designed for developers. It consolidates your everyday utilities into a single, unified TUI (Text User Interface) and CLI (Command Line Interface). No more juggling multiple tools \u2014 everything you need is now just one command away.",
+      "meta_description": "JSON Formatter in your terminal with DevTUI. A text formatting tool that prettifies and standardizes code or data format. Usage and key bindings.",
       "noindex": false,
       "redirect_hops": 0,
       "redirecting_internal_links": [],
       "sitemap_lastmod": null,
       "status": 200,
       "title": "JSON Formatter | DevTUILinkMenuExpand(external link)DocumentSearchCopyCopied",
-      "ttfb_ms": 155
+      "ttfb_ms": 156
     },
     "https://devtui.com/tui/json2toml.html": {
       "body_text": "JSON to TOML Converter | DevTUI Skip to main content DevTUI This site uses Just the Docs, a documentation theme for Jekyll. Search DevTUI JSON to TOML Converter Usage Run devtui to open the main menu Select \u201cJSON to TOML Converter\u201d from the list Use the key bindings below to interact with the tool Press q or Ctrl+C to return to the main menu Key Bindings Key Action c copy TOML e edit JSON v paste JSON to convert q/ctrl+c quit",
@@ -1187,21 +1161,21 @@
       "date_published": null,
       "final_url": "https://devtui.com/tui/json2toml.html",
       "h1_count": 1,
-      "html_bytes": 18087,
+      "html_bytes": 17536,
       "html_lang": "en-US",
-      "inbound_link_count": 60,
-      "internal_link_count": 62,
+      "inbound_link_count": 57,
+      "internal_link_count": 60,
       "jsonld_types": [
         "WebPage"
       ],
-      "meta_description": "All-in-one terminal toolkit designed for developers. It consolidates your everyday utilities into a single, unified TUI (Text User Interface) and CLI (Command Line Interface). No more juggling multiple tools \u2014 everything you need is now just one command away.",
+      "meta_description": "JSON to TOML Converter in your terminal with DevTUI. A data conversion tool that transforms content between different formats. Usage and key bindings.",
       "noindex": false,
       "redirect_hops": 0,
       "redirecting_internal_links": [],
       "sitemap_lastmod": null,
       "status": 200,
       "title": "JSON to TOML Converter | DevTUILinkMenuExpand(external link)DocumentSearchCopyCopied",
-      "ttfb_ms": 147
+      "ttfb_ms": 149
     },
     "https://devtui.com/tui/json2toon.html": {
       "body_text": "JSON to TOON Converter | DevTUI Skip to main content DevTUI This site uses Just the Docs, a documentation theme for Jekyll. Search DevTUI JSON to TOON Converter Usage Run devtui to open the main menu Select \u201cJSON to TOON Converter\u201d from the list Use the key bindings below to interact with the tool Press q or Ctrl+C to return to the main menu Key Bindings Key Action c copy TOON e edit JSON v paste JSON to convert i toggle indent (current: %d) l toggle length marker (current: %s) q/ctrl+c quit",
@@ -1213,21 +1187,21 @@
       "date_published": null,
       "final_url": "https://devtui.com/tui/json2toon.html",
       "h1_count": 1,
-      "html_bytes": 18328,
+      "html_bytes": 17777,
       "html_lang": "en-US",
-      "inbound_link_count": 60,
-      "internal_link_count": 62,
+      "inbound_link_count": 57,
+      "internal_link_count": 60,
       "jsonld_types": [
         "WebPage"
       ],
-      "meta_description": "All-in-one terminal toolkit designed for developers. It consolidates your everyday utilities into a single, unified TUI (Text User Interface) and CLI (Command Line Interface). No more juggling multiple tools \u2014 everything you need is now just one command away.",
+      "meta_description": "JSON to TOON Converter in your terminal with DevTUI. A data conversion tool that transforms content between different formats. Usage and key bindings.",
       "noindex": false,
       "redirect_hops": 0,
       "redirecting_internal_links": [],
       "sitemap_lastmod": null,
       "status": 200,
       "title": "JSON to TOON Converter | DevTUILinkMenuExpand(external link)DocumentSearchCopyCopied",
-      "ttfb_ms": 145
+      "ttfb_ms": 146
     },
     "https://devtui.com/tui/jsonrepair.html": {
       "body_text": "JSON Repair | DevTUI Skip to main content DevTUI This site uses Just the Docs, a documentation theme for Jekyll. Search DevTUI JSON Repair Usage Run devtui to open the main menu Select \u201cJSON Repair\u201d from the list Use the key bindings below to interact with the tool Press q or Ctrl+C to return to the main menu Key Bindings Key Action c copy repaired JSON e edit broken JSON v paste broken JSON to repair q/ctrl+c quit",
@@ -1239,21 +1213,21 @@
       "date_published": null,
       "final_url": "https://devtui.com/tui/jsonrepair.html",
       "h1_count": 1,
-      "html_bytes": 17937,
+      "html_bytes": 17317,
       "html_lang": "en-US",
-      "inbound_link_count": 60,
-      "internal_link_count": 62,
+      "inbound_link_count": 57,
+      "internal_link_count": 60,
       "jsonld_types": [
         "WebPage"
       ],
-      "meta_description": "All-in-one terminal toolkit designed for developers. It consolidates your everyday utilities into a single, unified TUI (Text User Interface) and CLI (Command Line Interface). No more juggling multiple tools \u2014 everything you need is now just one command away.",
+      "meta_description": "JSON Repair in your terminal with DevTUI. An interactive TUI tool for text processing and manipulation. Usage and key bindings.",
       "noindex": false,
       "redirect_hops": 0,
       "redirecting_internal_links": [],
       "sitemap_lastmod": null,
       "status": 200,
       "title": "JSON Repair | DevTUILinkMenuExpand(external link)DocumentSearchCopyCopied",
-      "ttfb_ms": 148
+      "ttfb_ms": 139
     },
     "https://devtui.com/tui/jsonstruct.html": {
       "body_text": "JSON to Go Struct Converter | DevTUI Skip to main content DevTUI This site uses Just the Docs, a documentation theme for Jekyll. Search DevTUI JSON to Go Struct Converter Usage Run devtui to open the main menu Select \u201cJSON to Go Struct Converter\u201d from the list Use the key bindings below to interact with the tool Press q or Ctrl+C to return to the main menu Key Bindings Key Action c copy Go struct e edit JSON v paste JSON to convert q/ctrl+c quit",
@@ -1265,47 +1239,21 @@
       "date_published": null,
       "final_url": "https://devtui.com/tui/jsonstruct.html",
       "h1_count": 1,
-      "html_bytes": 18176,
+      "html_bytes": 17640,
       "html_lang": "en-US",
-      "inbound_link_count": 60,
-      "internal_link_count": 62,
+      "inbound_link_count": 57,
+      "internal_link_count": 60,
       "jsonld_types": [
         "WebPage"
       ],
-      "meta_description": "All-in-one terminal toolkit designed for developers. It consolidates your everyday utilities into a single, unified TUI (Text User Interface) and CLI (Command Line Interface). No more juggling multiple tools \u2014 everything you need is now just one command away.",
+      "meta_description": "JSON to Go Struct Converter in your terminal with DevTUI. A data conversion tool that transforms content between different formats. Usage and key bindings.",
       "noindex": false,
       "redirect_hops": 0,
       "redirecting_internal_links": [],
       "sitemap_lastmod": null,
       "status": 200,
       "title": "JSON to Go Struct Converter | DevTUILinkMenuExpand(external link)DocumentSearchCopyCopied",
-      "ttfb_ms": 169
-    },
-    "https://devtui.com/tui/jsontoml.html": {
-      "body_text": "JSON to TOML Converter | DevTUI Skip to main content DevTUI This site uses Just the Docs, a documentation theme for Jekyll. Search DevTUI JSON to TOML Converter Usage Run devtui to open the main menu Select \u201cJSON to TOML Converter\u201d from the list Use the key bindings below to interact with the tool Press q or Ctrl+C to return to the main menu Key Bindings Key Action c copy TOML e edit JSON v paste JSON to convert q/ctrl+c quit",
-      "body_words": 81,
-      "broken_internal_links": [],
-      "canonical": "https://devtui.com/tui/jsontoml.html",
-      "content_hash": "dc78bff3f2f554aeedcd951f780437966134239b",
-      "date_modified": null,
-      "date_published": null,
-      "final_url": "https://devtui.com/tui/jsontoml.html",
-      "h1_count": 1,
-      "html_bytes": 18083,
-      "html_lang": "en-US",
-      "inbound_link_count": 60,
-      "internal_link_count": 62,
-      "jsonld_types": [
-        "WebPage"
-      ],
-      "meta_description": "All-in-one terminal toolkit designed for developers. It consolidates your everyday utilities into a single, unified TUI (Text User Interface) and CLI (Command Line Interface). No more juggling multiple tools \u2014 everything you need is now just one command away.",
-      "noindex": false,
-      "redirect_hops": 0,
-      "redirecting_internal_links": [],
-      "sitemap_lastmod": null,
-      "status": 200,
-      "title": "JSON to TOML Converter | DevTUILinkMenuExpand(external link)DocumentSearchCopyCopied",
-      "ttfb_ms": 143
+      "ttfb_ms": 146
     },
     "https://devtui.com/tui/markdown.html": {
       "body_text": "Markdown Renderer | DevTUI Skip to main content DevTUI This site uses Just the Docs, a documentation theme for Jekyll. Search DevTUI Markdown Renderer Usage Run devtui to open the main menu Select \u201cMarkdown Renderer\u201d from the list Use the key bindings below to interact with the tool Press q or Ctrl+C to return to the main menu Key Bindings Key Action c copy rendered markdown e edit markdown v paste markdown q/ctrl+c quit esc return to menu",
@@ -1317,21 +1265,21 @@
       "date_published": null,
       "final_url": "https://devtui.com/tui/markdown.html",
       "h1_count": 1,
-      "html_bytes": 18119,
+      "html_bytes": 17511,
       "html_lang": "en-US",
-      "inbound_link_count": 60,
-      "internal_link_count": 62,
+      "inbound_link_count": 57,
+      "internal_link_count": 60,
       "jsonld_types": [
         "WebPage"
       ],
-      "meta_description": "All-in-one terminal toolkit designed for developers. It consolidates your everyday utilities into a single, unified TUI (Text User Interface) and CLI (Command Line Interface). No more juggling multiple tools \u2014 everything you need is now just one command away.",
+      "meta_description": "Markdown Renderer in your terminal with DevTUI. A rendering tool that displays content in a formatted view. Usage and key bindings.",
       "noindex": false,
       "redirect_hops": 0,
       "redirecting_internal_links": [],
       "sitemap_lastmod": null,
       "status": 200,
       "title": "Markdown Renderer | DevTUILinkMenuExpand(external link)DocumentSearchCopyCopied",
-      "ttfb_ms": 161
+      "ttfb_ms": 146
     },
     "https://devtui.com/tui/numbers.html": {
       "body_text": "Number Base Converter | DevTUI Skip to main content DevTUI This site uses Just the Docs, a documentation theme for Jekyll. Search DevTUI Number Base Converter Usage Run devtui to open the main menu Select \u201cNumber Base Converter\u201d from the list Use the key bindings below to interact with the tool Press q or Ctrl+C to return to the main menu Key Bindings Standard key bindings apply (see main TUI documentation).",
@@ -1343,14 +1291,14 @@
       "date_published": null,
       "final_url": "https://devtui.com/tui/numbers.html",
       "h1_count": 1,
-      "html_bytes": 17594,
+      "html_bytes": 17040,
       "html_lang": "en-US",
-      "inbound_link_count": 60,
-      "internal_link_count": 62,
+      "inbound_link_count": 57,
+      "internal_link_count": 60,
       "jsonld_types": [
         "WebPage"
       ],
-      "meta_description": "All-in-one terminal toolkit designed for developers. It consolidates your everyday utilities into a single, unified TUI (Text User Interface) and CLI (Command Line Interface). No more juggling multiple tools \u2014 everything you need is now just one command away.",
+      "meta_description": "Number Base Converter in your terminal with DevTUI. A data conversion tool that transforms content between different formats. Usage and key bindings.",
       "noindex": false,
       "redirect_hops": 0,
       "redirecting_internal_links": [],
@@ -1369,21 +1317,21 @@
       "date_published": null,
       "final_url": "https://devtui.com/tui/toml.html",
       "h1_count": 1,
-      "html_bytes": 17948,
+      "html_bytes": 17382,
       "html_lang": "en-US",
-      "inbound_link_count": 60,
-      "internal_link_count": 62,
+      "inbound_link_count": 57,
+      "internal_link_count": 60,
       "jsonld_types": [
         "WebPage"
       ],
-      "meta_description": "All-in-one terminal toolkit designed for developers. It consolidates your everyday utilities into a single, unified TUI (Text User Interface) and CLI (Command Line Interface). No more juggling multiple tools \u2014 everything you need is now just one command away.",
+      "meta_description": "TOML Formatter in your terminal with DevTUI. A text formatting tool that prettifies and standardizes code or data format. Usage and key bindings.",
       "noindex": false,
       "redirect_hops": 0,
       "redirecting_internal_links": [],
       "sitemap_lastmod": null,
       "status": 200,
       "title": "TOML Formatter | DevTUILinkMenuExpand(external link)DocumentSearchCopyCopied",
-      "ttfb_ms": 137
+      "ttfb_ms": 136
     },
     "https://devtui.com/tui/toml2json.html": {
       "body_text": "TOML to JSON Converter | DevTUI Skip to main content DevTUI This site uses Just the Docs, a documentation theme for Jekyll. Search DevTUI TOML to JSON Converter Usage Run devtui to open the main menu Select \u201cTOML to JSON Converter\u201d from the list Use the key bindings below to interact with the tool Press q or Ctrl+C to return to the main menu Key Bindings Key Action c copy JSON e edit TOML v paste TOML to convert q/ctrl+c quit",
@@ -1395,47 +1343,21 @@
       "date_published": null,
       "final_url": "https://devtui.com/tui/toml2json.html",
       "h1_count": 1,
-      "html_bytes": 18087,
+      "html_bytes": 17536,
       "html_lang": "en-US",
-      "inbound_link_count": 60,
-      "internal_link_count": 62,
+      "inbound_link_count": 57,
+      "internal_link_count": 60,
       "jsonld_types": [
         "WebPage"
       ],
-      "meta_description": "All-in-one terminal toolkit designed for developers. It consolidates your everyday utilities into a single, unified TUI (Text User Interface) and CLI (Command Line Interface). No more juggling multiple tools \u2014 everything you need is now just one command away.",
+      "meta_description": "TOML to JSON Converter in your terminal with DevTUI. A data conversion tool that transforms content between different formats. Usage and key bindings.",
       "noindex": false,
       "redirect_hops": 0,
       "redirecting_internal_links": [],
       "sitemap_lastmod": null,
       "status": 200,
       "title": "TOML to JSON Converter | DevTUILinkMenuExpand(external link)DocumentSearchCopyCopied",
-      "ttfb_ms": 142
-    },
-    "https://devtui.com/tui/tomljson.html": {
-      "body_text": "TOML to JSON Converter | DevTUI Skip to main content DevTUI This site uses Just the Docs, a documentation theme for Jekyll. Search DevTUI TOML to JSON Converter Usage Run devtui to open the main menu Select \u201cTOML to JSON Converter\u201d from the list Use the key bindings below to interact with the tool Press q or Ctrl+C to return to the main menu Key Bindings Key Action c copy JSON e edit TOML v paste TOML to convert q/ctrl+c quit",
-      "body_words": 81,
-      "broken_internal_links": [],
-      "canonical": "https://devtui.com/tui/tomljson.html",
-      "content_hash": "203f960c5f1935047e54202cf3354a3d7e68b7d7",
-      "date_modified": null,
-      "date_published": null,
-      "final_url": "https://devtui.com/tui/tomljson.html",
-      "h1_count": 1,
-      "html_bytes": 18083,
-      "html_lang": "en-US",
-      "inbound_link_count": 60,
-      "internal_link_count": 62,
-      "jsonld_types": [
-        "WebPage"
-      ],
-      "meta_description": "All-in-one terminal toolkit designed for developers. It consolidates your everyday utilities into a single, unified TUI (Text User Interface) and CLI (Command Line Interface). No more juggling multiple tools \u2014 everything you need is now just one command away.",
-      "noindex": false,
-      "redirect_hops": 0,
-      "redirecting_internal_links": [],
-      "sitemap_lastmod": null,
-      "status": 200,
-      "title": "TOML to JSON Converter | DevTUILinkMenuExpand(external link)DocumentSearchCopyCopied",
-      "ttfb_ms": 143
+      "ttfb_ms": 155
     },
     "https://devtui.com/tui/tsv2md.html": {
       "body_text": "TSV to Markdown Table Converter | DevTUI Skip to main content DevTUI This site uses Just the Docs, a documentation theme for Jekyll. Search DevTUI TSV to Markdown Table Converter Usage Run devtui to open the main menu Select \u201cTSV to Markdown Table Converter\u201d from the list Use the key bindings below to interact with the tool Press q or Ctrl+C to return to the main menu Key Bindings Key Action c copy markdown e edit v paste to convert a toggle column alignment q/ctrl+c quit",
@@ -1447,47 +1369,47 @@
       "date_published": null,
       "final_url": "https://devtui.com/tui/tsv2md.html",
       "h1_count": 1,
-      "html_bytes": 18326,
+      "html_bytes": 17802,
       "html_lang": "en-US",
-      "inbound_link_count": 60,
-      "internal_link_count": 62,
+      "inbound_link_count": 57,
+      "internal_link_count": 60,
       "jsonld_types": [
         "WebPage"
       ],
-      "meta_description": "All-in-one terminal toolkit designed for developers. It consolidates your everyday utilities into a single, unified TUI (Text User Interface) and CLI (Command Line Interface). No more juggling multiple tools \u2014 everything you need is now just one command away.",
+      "meta_description": "TSV to Markdown Table Converter in your terminal with DevTUI. A data conversion tool that transforms content between different formats. Usage and key bindings.",
       "noindex": false,
       "redirect_hops": 0,
       "redirecting_internal_links": [],
       "sitemap_lastmod": null,
       "status": 200,
       "title": "TSV to Markdown Table Converter | DevTUILinkMenuExpand(external link)DocumentSearchCopyCopied",
-      "ttfb_ms": 142
+      "ttfb_ms": 141
     },
     "https://devtui.com/tui/url-extractor.html": {
-      "body_text": "DevTUI | All-in-one terminal toolkit designed for developers. It consolidates your everyday utilities into a single, unified TUI (Text User Interface) and CLI (Command Line Interface). No more juggling multiple tools \u2014 everything you need is now just one command away. Skip to main content DevTUI This site uses Just the Docs, a documentation theme for Jekyll. Search DevTUI # Usage Run devtui to open the main menu Select \u201c\u201d from the list Use the key bindings below to interact with the tool Press q or Ctrl+C to return to the main menu Key Bindings Key Action c copy URLs e edit text v paste text to extract s toggle mode (current: %s) q/ctrl+c quit",
-      "body_words": 115,
+      "body_text": "URL Extractor | DevTUI Skip to main content DevTUI This site uses Just the Docs, a documentation theme for Jekyll. Search DevTUI URL Extractor Usage Run devtui to open the main menu Select \u201cURL Extractor\u201d from the list Use the key bindings below to interact with the tool Press q or Ctrl+C to return to the main menu Key Bindings Key Action c copy URLs e edit text v paste text to extract s toggle mode (current: %s) q/ctrl+c quit",
+      "body_words": 80,
       "broken_internal_links": [],
       "canonical": "https://devtui.com/tui/url-extractor.html",
-      "content_hash": "453f1aa056650f7e5519c0df473debe2ef00d15b",
+      "content_hash": "f4727a6906ff0355a222b8e6114c8371a345442a",
       "date_modified": null,
       "date_published": null,
       "final_url": "https://devtui.com/tui/url-extractor.html",
-      "h1_count": 0,
-      "html_bytes": 16913,
+      "h1_count": 1,
+      "html_bytes": 17460,
       "html_lang": "en-US",
-      "inbound_link_count": 0,
-      "internal_link_count": 61,
+      "inbound_link_count": 57,
+      "internal_link_count": 60,
       "jsonld_types": [
         "WebPage"
       ],
-      "meta_description": "All-in-one terminal toolkit designed for developers. It consolidates your everyday utilities into a single, unified TUI (Text User Interface) and CLI (Command Line Interface). No more juggling multiple tools \u2014 everything you need is now just one command away.",
+      "meta_description": "URL Extractor in your terminal with DevTUI. An interactive TUI tool for text processing and manipulation. Usage and key bindings.",
       "noindex": false,
       "redirect_hops": 0,
       "redirecting_internal_links": [],
       "sitemap_lastmod": null,
       "status": 200,
-      "title": "DevTUI | All-in-one terminal toolkit designed for developers. It consolidates your everyday utilities into a single, unified TUI (Text User Interface) and CLI (Command Line Interface). No more juggling multiple tools \u2014 everything you need is now just one command away.LinkMenuExpand(external link)DocumentSearchCopyCopied",
-      "ttfb_ms": 140
+      "title": "URL Extractor | DevTUILinkMenuExpand(external link)DocumentSearchCopyCopied",
+      "ttfb_ms": 165
     },
     "https://devtui.com/tui/uuid-decode.html": {
       "body_text": "UUID Decoder | DevTUI Skip to main content DevTUI This site uses Just the Docs, a documentation theme for Jekyll. Search DevTUI UUID Decoder Usage Run devtui to open the main menu Select \u201cUUID Decoder\u201d from the list Use the key bindings below to interact with the tool Press q or Ctrl+C to return to the main menu Key Bindings Standard key bindings apply (see main TUI documentation).",
@@ -1499,21 +1421,21 @@
       "date_published": null,
       "final_url": "https://devtui.com/tui/uuid-decode.html",
       "h1_count": 1,
-      "html_bytes": 17466,
+      "html_bytes": 16882,
       "html_lang": "en-US",
-      "inbound_link_count": 60,
-      "internal_link_count": 62,
+      "inbound_link_count": 57,
+      "internal_link_count": 60,
       "jsonld_types": [
         "WebPage"
       ],
-      "meta_description": "All-in-one terminal toolkit designed for developers. It consolidates your everyday utilities into a single, unified TUI (Text User Interface) and CLI (Command Line Interface). No more juggling multiple tools \u2014 everything you need is now just one command away.",
+      "meta_description": "UUID Decoder in your terminal with DevTUI. A decoding tool that transforms encoded content back to readable format. Usage and key bindings.",
       "noindex": false,
       "redirect_hops": 0,
       "redirecting_internal_links": [],
       "sitemap_lastmod": null,
       "status": 200,
       "title": "UUID Decoder | DevTUILinkMenuExpand(external link)DocumentSearchCopyCopied",
-      "ttfb_ms": 135
+      "ttfb_ms": 151
     },
     "https://devtui.com/tui/uuid-generate.html": {
       "body_text": "UUID Generator | DevTUI Skip to main content DevTUI This site uses Just the Docs, a documentation theme for Jekyll. Search DevTUI UUID Generator Usage Run devtui to open the main menu Select \u201cUUID Generator\u201d from the list Use the key bindings below to interact with the tool Press q or Ctrl+C to return to the main menu Key Bindings Standard key bindings apply (see main TUI documentation).",
@@ -1525,21 +1447,21 @@
       "date_published": null,
       "final_url": "https://devtui.com/tui/uuid-generate.html",
       "h1_count": 1,
-      "html_bytes": 17506,
+      "html_bytes": 16928,
       "html_lang": "en-US",
-      "inbound_link_count": 60,
-      "internal_link_count": 62,
+      "inbound_link_count": 57,
+      "internal_link_count": 60,
       "jsonld_types": [
         "WebPage"
       ],
-      "meta_description": "All-in-one terminal toolkit designed for developers. It consolidates your everyday utilities into a single, unified TUI (Text User Interface) and CLI (Command Line Interface). No more juggling multiple tools \u2014 everything you need is now just one command away.",
+      "meta_description": "UUID Generator in your terminal with DevTUI. A utility tool that generates new content based on specified parameters. Usage and key bindings.",
       "noindex": false,
       "redirect_hops": 0,
       "redirecting_internal_links": [],
       "sitemap_lastmod": null,
       "status": 200,
       "title": "UUID Generator | DevTUILinkMenuExpand(external link)DocumentSearchCopyCopied",
-      "ttfb_ms": 144
+      "ttfb_ms": 125
     },
     "https://devtui.com/tui/xml.html": {
       "body_text": "XML Formatter | DevTUI Skip to main content DevTUI This site uses Just the Docs, a documentation theme for Jekyll. Search DevTUI XML Formatter Usage Run devtui to open the main menu Select \u201cXML Formatter\u201d from the list Use the key bindings below to interact with the tool Press q or Ctrl+C to return to the main menu Key Bindings Key Action c copy formatted XML e edit XML v paste XML to format q/ctrl+c quit",
@@ -1551,21 +1473,21 @@
       "date_published": null,
       "final_url": "https://devtui.com/tui/xml.html",
       "h1_count": 1,
-      "html_bytes": 17925,
+      "html_bytes": 17356,
       "html_lang": "en-US",
-      "inbound_link_count": 60,
-      "internal_link_count": 62,
+      "inbound_link_count": 57,
+      "internal_link_count": 60,
       "jsonld_types": [
         "WebPage"
       ],
-      "meta_description": "All-in-one terminal toolkit designed for developers. It consolidates your everyday utilities into a single, unified TUI (Text User Interface) and CLI (Command Line Interface). No more juggling multiple tools \u2014 everything you need is now just one command away.",
+      "meta_description": "XML Formatter in your terminal with DevTUI. A text formatting tool that prettifies and standardizes code or data format. Usage and key bindings.",
       "noindex": false,
       "redirect_hops": 0,
       "redirecting_internal_links": [],
       "sitemap_lastmod": null,
       "status": 200,
       "title": "XML Formatter | DevTUILinkMenuExpand(external link)DocumentSearchCopyCopied",
-      "ttfb_ms": 140
+      "ttfb_ms": 146
     },
     "https://devtui.com/tui/yaml.html": {
       "body_text": "YAML Formatter | DevTUI Skip to main content DevTUI This site uses Just the Docs, a documentation theme for Jekyll. Search DevTUI YAML Formatter Usage Run devtui to open the main menu Select \u201cYAML Formatter\u201d from the list Use the key bindings below to interact with the tool Press q or Ctrl+C to return to the main menu Key Bindings Key Action c copy formatted YAML e edit unformatted YAML v paste unformatted YAML q/ctrl+c quit",
@@ -1577,21 +1499,21 @@
       "date_published": null,
       "final_url": "https://devtui.com/tui/yaml.html",
       "h1_count": 1,
-      "html_bytes": 17962,
+      "html_bytes": 17396,
       "html_lang": "en-US",
-      "inbound_link_count": 60,
-      "internal_link_count": 62,
+      "inbound_link_count": 57,
+      "internal_link_count": 60,
       "jsonld_types": [
         "WebPage"
       ],
-      "meta_description": "All-in-one terminal toolkit designed for developers. It consolidates your everyday utilities into a single, unified TUI (Text User Interface) and CLI (Command Line Interface). No more juggling multiple tools \u2014 everything you need is now just one command away.",
+      "meta_description": "YAML Formatter in your terminal with DevTUI. A text formatting tool that prettifies and standardizes code or data format. Usage and key bindings.",
       "noindex": false,
       "redirect_hops": 0,
       "redirecting_internal_links": [],
       "sitemap_lastmod": null,
       "status": 200,
       "title": "YAML Formatter | DevTUILinkMenuExpand(external link)DocumentSearchCopyCopied",
-      "ttfb_ms": 158
+      "ttfb_ms": 125
     },
     "https://devtui.com/tui/yamlstruct.html": {
       "body_text": "YAML to Go Struct Converter | DevTUI Skip to main content DevTUI This site uses Just the Docs, a documentation theme for Jekyll. Search DevTUI YAML to Go Struct Converter Usage Run devtui to open the main menu Select \u201cYAML to Go Struct Converter\u201d from the list Use the key bindings below to interact with the tool Press q or Ctrl+C to return to the main menu Key Bindings Key Action c copy Go struct e edit JSON v paste JSON to convert q/ctrl+c quit",
@@ -1603,21 +1525,21 @@
       "date_published": null,
       "final_url": "https://devtui.com/tui/yamlstruct.html",
       "h1_count": 1,
-      "html_bytes": 18176,
+      "html_bytes": 17640,
       "html_lang": "en-US",
-      "inbound_link_count": 60,
-      "internal_link_count": 62,
+      "inbound_link_count": 57,
+      "internal_link_count": 60,
       "jsonld_types": [
         "WebPage"
       ],
-      "meta_description": "All-in-one terminal toolkit designed for developers. It consolidates your everyday utilities into a single, unified TUI (Text User Interface) and CLI (Command Line Interface). No more juggling multiple tools \u2014 everything you need is now just one command away.",
+      "meta_description": "YAML to Go Struct Converter in your terminal with DevTUI. A data conversion tool that transforms content between different formats. Usage and key bindings.",
       "noindex": false,
       "redirect_hops": 0,
       "redirecting_internal_links": [],
       "sitemap_lastmod": null,
       "status": 200,
       "title": "YAML to Go Struct Converter | DevTUILinkMenuExpand(external link)DocumentSearchCopyCopied",
-      "ttfb_ms": 188
+      "ttfb_ms": 140
     }
   }
 }
