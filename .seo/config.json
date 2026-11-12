@@ -173,7 +173,8 @@
     "community_search": false,
     "social_posting": false,
     "browser": true,
-    "git": true
+    "git": true,
+    "umami": true
   },
   "tools_declined": [],
   "cache": {
@@ -283,5 +284,18 @@
     "window_days": 14
   },
   "_comment_tools_detected": "Filled every run by the detection table in references/setup.md. true means the capability answered a real call. Drives the connections report; tools_declined silences an entry.",
-  "version": "2.2"
+  "version": "2.2",
+  "ai_referrals": {
+    "_comment": "measure.md 6b. Pull referrers from the Umami API (config.umami) for the last 28 days every run (free). Count chatgpt.com, perplexity.ai, copilot.microsoft.com, gemini.google.com, claude.ai. Activations not measured: no Umami events configured.",
+    "source": "umami-api",
+    "cadence_days": 1,
+    "last_read": "2026-11-12"
+  },
+  "umami": {
+    "_comment": "Umami API (self-hosted). Key lives in the env var only, never in the repo. Bearer auth. The key can read every site on this instance; only website_id is used. Referrers: GET {host}/api/websites/{website_id}/metrics?startAt=<ms>&endAt=<ms>&type=referrer (y = visitors). Totals: GET .../stats. Note the Umami UI's 'last 30 days' covers 31 calendar days including today.",
+    "host": "https://umami.skatkov.com",
+    "website_id": "0e412c77-afa0-4a4b-ac98-501d9b7162ad",
+    "api_key_env": "UMAMI_API_KEY",
+    "connected": "2026-11-12"
+  }
 }
