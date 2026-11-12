@@ -41,20 +41,18 @@ Input can be a string argument or piped from stdin.`,
 		}
 
 		// Perform encoding or decoding
+		var result string
 		if base64Decode {
-			// Decode base64
-			decoded, err := base64.DecodeToString(string(data))
+			result, err = base64.DecodeToString(string(data))
 			if err != nil {
 				return err
 			}
-			fmt.Print(decoded)
 		} else {
-			// Encode to base64
-			encoded := base64.Encode(data)
-			fmt.Print(encoded)
+			result = base64.Encode(data)
 		}
 
-		return nil
+		_, err = fmt.Fprint(cmd.OutOrStdout(), result)
+		return err
 	},
 }
 

@@ -39,14 +39,12 @@ Use the --formatted flag to output the IBAN in paper format with spaces.`,
 			return fmt.Errorf("failed to generate IBAN for country code '%s': %v", countryCode, err)
 		}
 
-		// Format output based on flag
 		if ibanFormatted {
-			fmt.Println(iban.PaperFormat(generatedIban))
-		} else {
-			fmt.Println(generatedIban)
+			generatedIban = iban.PaperFormat(generatedIban)
 		}
 
-		return nil
+		_, err = fmt.Fprintln(cmd.OutOrStdout(), generatedIban)
+		return err
 	},
 }
 

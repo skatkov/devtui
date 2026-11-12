@@ -1,4 +1,4 @@
-package main
+package generator
 
 import (
 	"fmt"
@@ -6,7 +6,7 @@ import (
 	"os"
 	"path/filepath"
 	"regexp"
-	"sort"
+	"slices"
 	"strings"
 )
 
@@ -23,13 +23,8 @@ type KeyBinding struct {
 	Description string
 }
 
-func extractTUIModules() ([]TUIModule, error) {
+func extractTUIModules(tuiDir string) ([]TUIModule, error) {
 	var modules []TUIModule
-
-	tuiDir := "tui"
-	if _, err := os.Stat("tui"); os.IsNotExist(err) {
-		tuiDir = "../tui"
-	}
 
 	entries, err := os.ReadDir(tuiDir)
 	if err != nil {
@@ -54,8 +49,8 @@ func extractTUIModules() ([]TUIModule, error) {
 	}
 
 	// Sort modules alphabetically by title
-	sort.Slice(modules, func(i, j int) bool {
-		return modules[i].Title < modules[j].Title
+	slices.SortFunc(modules, func(a, b TUIModule) int {
+		return strings.Compare(a.Title, b.Title)
 	})
 
 	return modules, nil
@@ -84,7 +79,7 @@ func extractModuleInfo(modulePath, moduleName string) (*TUIModule, error) {
 
 		// Extract title
 		titleRegex := regexp.MustCompile(`const Title = "([^"]+)"`)
-		if matches := titleRegex.FindStringSubmatch(fileContent); len(matches) > 1 {
+		if matches := titleRegex.FindStringSubmatch(fileContent); matches != nil {
 			if module == nil {
 				module = &TUIModule{
 					Name:     moduleName,
@@ -126,36 +121,30 @@ func extractKeyBindings(content string) []KeyBinding {
 	var bindings []KeyBinding
 
 	// Look for col1 array definitions in helpView functions
-	col1Regex := regexp.MustCompile(`col1\s*:=\s*\[\]string\{([^}]+)\}`)
-	matches := col1Regex.FindStringSubmatch(content)
-	if len(matches) < 2 {
-		return bindings
-	}
-
-	col1Content := matches[1]
+	col1Regex := regexp.MustCompile(`col1\s*:=\s*\[\]string\{[^}]+\}`)
+	col1Content := col1Regex.FindString(content)
 
 	// Extract individual string entries like "c              copy text"
 	entryRegex := regexp.MustCompile(`"([^"]+)"`)
 	entryMatches := entryRegex.FindAllStringSubmatch(col1Content, -1)
 
 	for _, match := range entryMatches {
-		if len(match) >= 2 {
-			entry := strings.TrimSpace(match[1])
+		entry := strings.TrimSpace(match[1])
 
-			// Split on multiple spaces to separate key from description
-			parts := regexp.MustCompile(`\s{2,}`).Split(entry, 2)
-			if len(parts) == 2 {
-				key := strings.TrimSpace(parts[0])
-				desc := strings.TrimSpace(parts[1])
+		// Split on multiple spaces to separate key from description
+		separator := regexp.MustCompile(`\s{2,}`).FindStringIndex(entry)
+		if separator == nil {
+			continue
+		}
+		key := entry[:separator[0]]
+		desc := entry[separator[1]:]
 
-				// Skip navigation keys and empty descriptions
-				if len(desc) > 3 && !strings.Contains(key, "↑") && !strings.Contains(key, "↓") && key != "k" && key != "j" {
-					bindings = append(bindings, KeyBinding{
-						Key:         key,
-						Description: desc,
-					})
-				}
-			}
+		// Skip navigation keys and empty descriptions
+		if len(desc) > 3 && !strings.Contains(key, "↑") && !strings.Contains(key, "↓") && key != "k" && key != "j" {
+			bindings = append(bindings, KeyBinding{
+				Key:         key,
+				Description: desc,
+			})
 		}
 	}
 
@@ -199,12 +188,7 @@ func generateDescriptionFromTitle(title string) string {
 	return "An interactive TUI tool for text processing and manipulation."
 }
 
-func generateTUIDocumentation(modules []TUIModule) error {
-	sitePath := "site/tui"
-	if _, err := os.Stat("site"); os.IsNotExist(err) {
-		sitePath = "../site/tui"
-	}
-
+func generateTUIDocumentation(modules []TUIModule, sitePath string) error {
 	// Create tui directory if it doesn't exist
 	if err := os.MkdirAll(sitePath, 0o755); err != nil {
 		return err
@@ -293,8 +277,9 @@ parent: TUI
 	return os.WriteFile(filepath.Join(sitePath, filename), []byte(builder.String()), 0o644)
 }
 
-func GenerateTUIDocumentation() error {
-	modules, err := extractTUIModules()
+// GenerateTUIDocumentation writes a page per TUI module found in tuiDir into sitePath.
+func GenerateTUIDocumentation(tuiDir, sitePath string) error {
+	modules, err := extractTUIModules(tuiDir)
 	if err != nil {
 		return fmt.Errorf("failed to extract TUI modules: %w", err)
 	}
@@ -304,7 +289,7 @@ func GenerateTUIDocumentation() error {
 		return nil
 	}
 
-	if err := generateTUIDocumentation(modules); err != nil {
+	if err := generateTUIDocumentation(modules, sitePath); err != nil {
 		return fmt.Errorf("failed to generate TUI documentation: %w", err)
 	}
 

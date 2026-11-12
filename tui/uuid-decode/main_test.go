@@ -2,11 +2,18 @@ package uuiddecode
 
 import (
 	"reflect"
+	"strings"
 	"testing"
 
+	tea "charm.land/bubbletea/v2"
+	"charm.land/huh/v2"
+	"charm.land/lipgloss/v2"
 	"github.com/google/uuid"
+	"github.com/skatkov/devtui/internal/ui"
 	"github.com/skatkov/devtui/internal/uuidutil"
 )
+
+const sampleUUID = "4326ff5f-774d-4506-a18c-4bc50c761863"
 
 func TestExtractUUIDData(t *testing.T) {
 	// Test cases
@@ -84,4 +91,118 @@ func TestExtractUUIDData(t *testing.T) {
 			}
 		})
 	}
+}
+
+func TestUUIDDecodeViewFillsWindow(t *testing.T) {
+	t.Parallel()
+
+	model := newTestModel(30)
+	view := model.View()
+	if !view.AltScreen {
+		t.Fatal("expected alt screen view")
+	}
+	if height := lipgloss.Height(view.Content); height != 30 {
+		t.Fatalf("expected view height 30, got %d", height)
+	}
+	if !strings.Contains(view.Content, lipgloss.NewStyle().Bold(true).Render(Title)) {
+		t.Fatalf("expected bold title, got %q", view.Content)
+	}
+
+	lines := strings.Split(view.Content, "\n")
+	if strings.TrimSpace(lines[2]) != "" {
+		t.Fatalf("expected blank line above the form, got %q", lines[2])
+	}
+	if indent := lipgloss.Width(lines[3][:strings.Index(lines[3], "┃")]); indent != 2 {
+		t.Fatalf("expected form indent 2, got %d in %q", indent, lines[3])
+	}
+	if count := strings.Count(view.Content, "submit"); count != 1 {
+		t.Fatalf("expected help to be shown once, got %d", count)
+	}
+}
+
+func TestUUIDDecodeShowsDecodedFields(t *testing.T) {
+	t.Parallel()
+
+	model := submitUUID(newTestModel(24), sampleUUID)
+	if model.form.State != huh.StateCompleted {
+		t.Fatalf("expected form to complete, got state %v", model.form.State)
+	}
+
+	view := model.View()
+	if !view.AltScreen {
+		t.Fatal("expected alt screen view")
+	}
+	content := view.Content
+	for _, want := range []string{"Standard String Format", sampleUUID, "Version", "4"} {
+		if !strings.Contains(content, want) {
+			t.Fatalf("expected view to contain %q, got %q", want, content)
+		}
+	}
+	if width := lipgloss.Width(strings.TrimSpace(strings.Split(content, "\n")[1])); width != 100 {
+		t.Fatalf("expected table width 100, got %d", width)
+	}
+}
+
+func TestUUIDDecodeRejectsInvalidUUID(t *testing.T) {
+	t.Parallel()
+
+	model := submitUUID(newTestModel(24), "not-a-uuid")
+	if model.form.State != huh.StateNormal {
+		t.Fatalf("expected form to stay open, got state %v", model.form.State)
+	}
+}
+
+func TestUUIDDecodeKeys(t *testing.T) {
+	t.Parallel()
+
+	model := newTestModel(24)
+
+	_, cmd := model.Update(codeKeypress(tea.KeyEscape))
+	if msg, ok := cmd().(ui.ReturnToListMsg); !ok || msg.Common != model.common {
+		t.Fatalf("expected ReturnToListMsg, got %#v", msg)
+	}
+	_, cmd = model.Update(tea.KeyPressMsg(tea.Key{Code: 'q', Text: "q"}))
+	if _, ok := cmd().(tea.QuitMsg); !ok {
+		t.Fatal("expected quit command")
+	}
+}
+
+func newTestModel(height int) *UUIDDecode {
+	common := &ui.CommonModel{Width: 80, Height: 24, Styles: ui.NewStyle()}
+	model := NewUUIDDecodeModel(common)
+	model.Update(model.Init()())
+	model.Update(tea.WindowSizeMsg{Width: 80, Height: height})
+	return model
+}
+
+func submitUUID(model *UUIDDecode, value string) *UUIDDecode {
+	for _, r := range value {
+		model.Update(tea.KeyPressMsg(tea.Key{Code: r, Text: string(r)}))
+	}
+	return updateModel(model, codeKeypress(tea.KeyEnter)).(*UUIDDecode)
+}
+
+func updateModel(model tea.Model, msg tea.Msg) tea.Model {
+	nextModel, cmd := model.Update(msg)
+	return batchUpdate(nextModel, cmd)
+}
+
+func batchUpdate(model tea.Model, cmd tea.Cmd) tea.Model {
+	if cmd == nil {
+		return model
+	}
+
+	msg := cmd()
+	nextModel, nextCmd := model.Update(msg)
+	if nextCmd == nil {
+		return nextModel
+	}
+
+	msg = nextCmd()
+	nextModel, _ = nextModel.Update(msg)
+	return nextModel
+}
+
+func codeKeypress(code rune) tea.KeyPressMsg {
+	return tea.KeyPressMsg(tea.Key{Code: code})
 }

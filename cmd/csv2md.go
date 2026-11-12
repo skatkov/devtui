@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"encoding/csv"
+	"fmt"
 	"strings"
 
 	"github.com/skatkov/devtui/internal/cmderror"
@@ -53,7 +54,11 @@ and --header to add a main heading (h1) to the output.`,
 			return cmderror.FormatParseError("csv2md", inputStr, err)
 		}
 
-		csv2md.Print(csv2md.Convert(csv2mdHeader, records, csv2mdAlignColumns))
+		for _, row := range csv2md.Convert(csv2mdHeader, records, csv2mdAlignColumns) {
+			if _, err := fmt.Fprintln(cmd.OutOrStdout(), row); err != nil {
+				return err
+			}
+		}
 
 		return nil
 	},

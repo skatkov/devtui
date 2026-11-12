@@ -120,7 +120,8 @@ func TestJson2toonCmdHelp(t *testing.T) {
 
 	expectedStrings := []string{
 		"Convert JSON to TOON",
-		"--indent",
+		"--indent int",
+		"(default 2)",
 		"--length-marker",
 	}
 
@@ -128,5 +129,23 @@ func TestJson2toonCmdHelp(t *testing.T) {
 		if !strings.Contains(output, expected) {
 			t.Errorf("help output missing expected string %q", expected)
 		}
+	}
+}
+
+func TestJson2toonCmdArgumentInput(t *testing.T) {
+	stdout, _, err := runDevtui(nil, "json2toon", `{"a":{"b":1}}`)
+	if err != nil {
+		t.Fatalf("json2toon failed: %v", err)
+	}
+
+	if want := "a:\n  b: 1"; stdout.String() != want {
+		t.Fatalf("expected %q, got %q", want, stdout.String())
+	}
+}
+
+func TestJson2toonCmdZeroIndent(t *testing.T) {
+	_, _, err := runDevtui(strings.NewReader(`{"a":1}`), "json2toon", "--indent", "0")
+	if err != nil {
+		t.Fatalf("expected --indent 0 to be accepted, got %v", err)
 	}
 }

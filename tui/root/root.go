@@ -14,7 +14,7 @@ type RootModel struct {
 // RootScreen creates the root model using the default renderer.
 // This is used for local terminal execution.
 func RootScreen() RootModel {
-	common := ui.CommonModel{LastSelectedItem: 0}
+	common := ui.CommonModel{}
 	common.Styles = ui.NewStyle()
 
 	listModel := newListModel(&common)
@@ -28,9 +28,8 @@ func RootScreen() RootModel {
 // RootScreenWithSize creates the root model with an initial window size.
 func RootScreenWithSize(width, height int) RootModel {
 	common := ui.CommonModel{
-		LastSelectedItem: 0,
-		Width:            width,
-		Height:           height,
+		Width:  width,
+		Height: height,
 	}
 	common.Styles = ui.NewStyle()
 

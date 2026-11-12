@@ -57,11 +57,10 @@ Input can be a string argument or piped from stdin.`,
 
 		// Output results
 		if len(uniqueURLs) > 0 {
-			fmt.Print(strings.Join(uniqueURLs, "\n"))
-			fmt.Print("\n")
+			_, err = fmt.Fprintln(cmd.OutOrStdout(), strings.Join(uniqueURLs, "\n"))
 		}
 
-		return nil
+		return err
 	},
 }
 

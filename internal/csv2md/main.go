@@ -7,19 +7,16 @@ import (
 
 // Convert formats data from file or stdin as markdown
 func Convert(header string, records [][]string, aligned bool) []string {
-	// Preallocate result slice to reduce allocations
-	// Size estimate: header (if exists) + empty line + records + separator line
-	resultSize := len(records) + 1 // +1 for the separator after header row
-	if len(header) > 0 {
-		resultSize += 2 // Add 2 for header title and blank line
-	}
-	result := make([]string, 0, resultSize)
+	var result []string
 
 	// add h1 if passed
 	header = strings.Trim(header, "\t\r\n ")
 	if len(header) != 0 {
-		result = append(result, "# "+header)
-		result = append(result, "")
+		result = append(result, "# "+header, "")
+	}
+
+	if len(records) == 0 {
+		return result
 	}
 
 	// if user wants aligned columns width then we
@@ -27,44 +24,44 @@ func Convert(header string, records [][]string, aligned bool) []string {
 	widths := make(map[int]int)
 	if aligned {
 		for _, row := range records {
-			for col_idx, col := range row {
-				length := len(col)
-				if len(widths) == 0 || widths[col_idx] < length {
-					widths[col_idx] = length
-				}
+			for colIdx, col := range row {
+				widths[colIdx] = max(widths[colIdx], len(col))
 			}
 		}
 	}
 
-	// build markdown table
-	for row_idx, row := range records {
-		// table content
-		var builder strings.Builder
-		builder.WriteString("| ")
-		for col_idx, col := range row {
-			if aligned {
-				fmt.Fprintf(&builder, "%-*s | ", widths[col_idx], col)
-			} else {
-				builder.WriteString(col + " | ")
-			}
-		}
-		result = append(result, builder.String())
-
-		// content separator only after first row (header)
-		if row_idx == 0 {
-			var sepBuilder strings.Builder
-			sepBuilder.WriteString("| ")
-			for col_idx := range row {
-				if !aligned || widths[col_idx] < 3 {
-					sepBuilder.WriteString("--- | ")
-				} else {
-					sepBuilder.WriteString(strings.Repeat("-", widths[col_idx]) + " | ")
-				}
-			}
-			result = append(result, sepBuilder.String())
-		}
+	// content separator only after first row (header)
+	result = append(result, tableRow(records[0], widths, aligned), separatorRow(records[0], widths, aligned))
+	for _, row := range records[1:] {
+		result = append(result, tableRow(row, widths, aligned))
 	}
 	return result
+}
+
+func tableRow(row []string, widths map[int]int, aligned bool) string {
+	var builder strings.Builder
+	builder.WriteString("| ")
+	for colIdx, col := range row {
+		if aligned {
+			fmt.Fprintf(&builder, "%-*s | ", widths[colIdx], col)
+		} else {
+			builder.WriteString(col + " | ")
+		}
+	}
+	return builder.String()
+}
+
+func separatorRow(row []string, widths map[int]int, aligned bool) string {
+	var builder strings.Builder
+	builder.WriteString("| ")
+	for colIdx := range row {
+		if aligned {
+			builder.WriteString(strings.Repeat("-", max(widths[colIdx], 3)) + " | ")
+		} else {
+			builder.WriteString("--- | ")
+		}
+	}
+	return builder.String()
 }
 
 func Print(data []string) {

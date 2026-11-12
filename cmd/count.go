@@ -52,10 +52,7 @@ in a formatted table. Input can be a string argument or piped from stdin.`,
 			Row("Characters", strconv.Itoa(stats.Characters)).
 			Row("Spaces", strconv.Itoa(stats.Spaces)).
 			Row("Words", strconv.Itoa(stats.Words)))
-		if err != nil {
-			return err
-		}
-		return nil
+		return err
 	},
 }
 

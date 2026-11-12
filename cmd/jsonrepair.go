@@ -54,11 +54,7 @@ This tool can fix various JSON issues including:
 		}
 
 		_, err = fmt.Fprintln(cmd.OutOrStdout(), result)
-		if err != nil {
-			return err
-		}
-
-		return nil
+		return err
 	},
 }
 

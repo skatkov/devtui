@@ -17,6 +17,8 @@ import (
 
 const Title = "IBAN Generator"
 
+type submittedMsg struct{}
+
 type IBANGenerate struct {
 	common        *ui.CommonModel
 	form          *huh.Form
@@ -125,7 +127,7 @@ func getCountryOptions() []huh.Option[string] {
 		{"GP", "Guadeloupe"},
 		{"MQ", "Martinique"},
 		{"RE", "Reunion"},
-		{"FP", "French Polynesia"},
+		{"PF", "French Polynesia"},
 		{"TF", "French Southern Territories"},
 		{"YT", "Mayotte"},
 		{"NC", "New Caledonia"},
@@ -157,6 +159,7 @@ func NewIBANGenerateModel(common *ui.CommonModel) *IBANGenerate {
 				Value(&m.countryCode),
 		),
 	).WithTheme(huh.ThemeFunc(huh.ThemeCharm)).WithAccessible(accessible).WithShowHelp(false)
+	m.form.SubmitCmd = func() tea.Msg { return submittedMsg{} }
 
 	return &m
 }
@@ -167,6 +170,12 @@ func (m *IBANGenerate) Init() tea.Cmd {
 
 func (m *IBANGenerate) View() tea.View {
 	s := m.common.Styles
+	header := s.Title.Render(lipgloss.JoinHorizontal(lipgloss.Left,
+		ui.AppTitle,
+		" :: ",
+		lipgloss.NewStyle().Bold(true).Render(Title),
+	))
+
 	switch m.form.State {
 	case huh.StateCompleted:
 		var rows [][]string
@@ -194,29 +203,18 @@ func (m *IBANGenerate) View() tea.View {
 			Width(100).
 			Rows(rows...)
 
-		header := s.Title.Render(lipgloss.JoinHorizontal(lipgloss.Left,
-			Title,
-			" :: ",
-			lipgloss.NewStyle().Bold(true).Render(Title),
-		))
-
 		results := lipgloss.NewStyle().Margin(1, 0).Render(tableOutput.String())
 		body := lipgloss.JoinVertical(lipgloss.Top, results)
 
 		return ui.AltScreenView(s.Base.Render(header + "\n" + body))
 	default:
-		header := s.Title.Render(lipgloss.JoinHorizontal(lipgloss.Left,
-			Title,
-			" :: ",
-			lipgloss.NewStyle().Bold(true).Render(Title),
-		))
 		v := strings.TrimSuffix(m.form.View(), "\n\n")
 		form := lipgloss.NewStyle().Margin(1, 0).Render(v)
 		body := lipgloss.JoinVertical(
 			lipgloss.Top,
 			form,
 			lipgloss.PlaceVertical(
-				m.common.Height-lipgloss.Height(header)-lipgloss.Height(form)-2,
+				m.common.Height-lipgloss.Height(header+"\n"+form)-2,
 				lipgloss.Bottom,
 				m.form.Help().ShortHelpView(m.form.KeyBinds()),
 			),
@@ -242,15 +240,14 @@ func (m *IBANGenerate) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				}
 			}
 		}
+	case submittedMsg:
+		m.generateIBAN()
+		return m, nil
 	}
 
 	form, cmd := m.form.Update(msg)
 	if f, ok := form.(*huh.Form); ok {
 		m.form = f
-
-		if m.form.State == huh.StateCompleted {
-			m.generateIBAN()
-		}
 	}
 	return m, cmd
 }

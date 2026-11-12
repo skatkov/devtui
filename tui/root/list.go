@@ -1,12 +1,13 @@
 package root
 
 import (
+	"cmp"
 	"encoding/json"
 	"fmt"
 	"io"
 	"os"
 	"path/filepath"
-	"sort"
+	"slices"
 	"strings"
 
 	"charm.land/bubbles/v2/list"
@@ -53,8 +54,8 @@ type listModel struct {
 var (
 	itemStyle         = lipgloss.NewStyle().PaddingLeft(4)
 	selectedItemStyle = lipgloss.NewStyle().PaddingLeft(2).Foreground(lipgloss.Color("170"))
-	paginationStyle   = list.DefaultStyles(true).PaginationStyle.PaddingLeft(4)
-	helpStyle         = list.DefaultStyles(true).HelpStyle.PaddingLeft(2).PaddingBottom(1)
+	paginationStyle   = lipgloss.NewStyle().PaddingLeft(4)
+	helpStyle         = lipgloss.NewStyle().Padding(1, 0, 1, 2)
 )
 
 type MenuOption struct {
@@ -87,10 +88,8 @@ func (d itemDelegate) Render(w io.Writer, m list.Model, index int, listItem list
 		}
 	}
 
-	_, err := fmt.Fprint(w, fn(str))
-	if err != nil {
-		fmt.Println("Error rendering item:", err)
-	}
+	// The list renders into a strings.Builder, which never fails.
+	_, _ = fmt.Fprint(w, fn(str))
 }
 
 func getMenuOptions(common *ui.CommonModel) []MenuOption {
@@ -238,10 +237,7 @@ func newListModel(common *ui.CommonModel) *listModel {
 		menuOptions[i].usageCount = stats[menuOptions[i].id]
 	}
 
-	// Sort items by usage count (descending)
-	sort.Slice(menuOptions, func(i, j int) bool {
-		return menuOptions[i].usageCount > menuOptions[j].usageCount
-	})
+	sortByUsage(menuOptions)
 
 	// Convert to list.Item interface for bubbles/list
 	listItems := make([]list.Item, len(menuOptions))
@@ -300,7 +296,9 @@ func (m *listModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 					m.err = fmt.Sprintf("Failed to save usage stats: %v", err)
 				}
 				newScreen := i.model()
-				return newScreen, newScreen.Init()
+				// The new screen only sees the window size on the next resize, so send it now.
+				size := tea.WindowSizeMsg{Width: m.common.Width, Height: m.common.Height}
+				return newScreen, tea.Batch(newScreen.Init(), func() tea.Msg { return size })
 			}
 		}
 	}
@@ -317,11 +315,16 @@ func (m listModel) View() tea.View {
 	return ui.AltScreenView(m.list.View())
 }
 
-func (m *listModel) RefreshOrder() {
-	// Re-sort items by usage count
-	sort.Slice(m.items, func(i, j int) bool {
-		return m.items[i].usageCount > m.items[j].usageCount
+// sortByUsage sorts the most used tools first and keeps the menu order among
+// tools used equally often.
+func sortByUsage(options []MenuOption) {
+	slices.SortStableFunc(options, func(a, b MenuOption) int {
+		return cmp.Compare(b.usageCount, a.usageCount)
 	})
+}
+
+func (m *listModel) RefreshOrder() {
+	sortByUsage(m.items)
 
 	// Convert MenuOptions to list.Items
 	items := make([]list.Item, len(m.items))

@@ -114,19 +114,29 @@ func JSONToXML(jsonContent string) (string, error) {
 		return "", fmt.Errorf("XML encoding error: %w", err)
 	}
 
-	if len(bytes.TrimSpace(xmlBytes)) == 0 {
+	hasElement, err := xmlHasElement(xmlBytes)
+	if err != nil {
+		return "", fmt.Errorf("XML encoding error: %w", err)
+	}
+	if !hasElement {
 		return "", errors.New("XML encoding error: empty XML output")
 	}
 
-	decoder := xml.NewDecoder(bytes.NewReader(xmlBytes))
+	return string(xmlBytes), nil
+}
+
+// xmlHasElement reports whether data is well-formed XML with at least one element.
+func xmlHasElement(data []byte) (bool, error) {
+	decoder := xml.NewDecoder(bytes.NewReader(data))
 	seenStart := false
-	for {
+	// Each token consumes at least one byte, so EOF comes within len(data)+1 reads.
+	for range len(data) + 1 {
 		tok, err := decoder.Token()
+		if err == io.EOF {
+			return seenStart, nil
+		}
 		if err != nil {
-			if err == io.EOF {
-				break
-			}
-			return "", fmt.Errorf("XML encoding error: %w", err)
+			return false, err
 		}
 
 		if _, ok := tok.(xml.StartElement); ok {
@@ -134,13 +144,7 @@ func JSONToXML(jsonContent string) (string, error) {
 		}
 	}
 
-	if !seenStart {
-		return "", errors.New("XML encoding error: empty XML output")
-	}
-
-	var buf bytes.Buffer
-	buf.Write(xmlBytes)
-	return buf.String(), nil
+	return seenStart, errors.New("xml token limit exceeded")
 }
 
 func YAMLToTOML(yamlContent string) (string, error) {
