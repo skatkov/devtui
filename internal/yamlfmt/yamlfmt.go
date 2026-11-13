@@ -7,16 +7,16 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
-// Format formats YAML content with standard indentation.
+// Format formats YAML content with standard indentation, keeping comments and key order.
 func Format(content string) (string, error) {
-	var data any
-	if err := yaml.Unmarshal([]byte(content), &data); err != nil {
+	var node yaml.Node
+	if err := yaml.Unmarshal([]byte(content), &node); err != nil {
 		return "", err
 	}
 
 	var buf bytes.Buffer
 	encoder := yaml.NewEncoder(&buf)
-	if err := encoder.Encode(data); err != nil {
+	if err := encoder.Encode(&node); err != nil {
 		return "", err
 	}
 	if err := encoder.Close(); err != nil {
