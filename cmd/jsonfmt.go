@@ -54,7 +54,7 @@ The output is always valid, properly indented JSON.`,
 
 		result := json.FormatJSON(string(data))
 
-		_, err = fmt.Fprintln(cmd.OutOrStdout(), result)
+		_, err = fmt.Fprint(cmd.OutOrStdout(), result)
 		if err != nil {
 			return err
 		}
