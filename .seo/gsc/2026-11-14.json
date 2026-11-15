@@ -1,0 +1,31 @@
+{
+  "site": "sc-domain:devtui.com",
+  "window": ["2026-10-14", "2026-11-10"],
+  "prev_window": ["2026-09-16", "2026-10-13"],
+  "totals": {"clicks": 8, "impressions": 174, "ctr": 0.046, "position": 7.1},
+  "prev_totals": {"clicks": 0, "impressions": 0},
+  "source": "seoskill seo_report totals; seo_data dimensions=page detail=full",
+  "limits": "Page dimensions total 233 impressions, versus 174 property-level impressions; retain both scopes without summing or substituting.",
+  "rows": [
+    {"page":"https://devtui.com/","clicks":7,"impressions":121,"ctr":0.05785123966942149,"position":5.553719008264463},
+    {"page":"https://devtui.com/cli/tsv2md.html","clicks":1,"impressions":1,"ctr":1,"position":2},
+    {"page":"https://devtui.com/cli/","clicks":0,"impressions":11,"ctr":0,"position":2.6363636363636367},
+    {"page":"https://devtui.com/cli/cssfmt.html","clicks":0,"impressions":3,"ctr":0,"position":4},
+    {"page":"https://devtui.com/cli/htmlfmt.html","clicks":0,"impressions":3,"ctr":0,"position":8},
+    {"page":"https://devtui.com/cli/json2toml.html","clicks":0,"impressions":3,"ctr":0,"position":5},
+    {"page":"https://devtui.com/cli/jsonfmt.html","clicks":0,"impressions":1,"ctr":0,"position":8},
+    {"page":"https://devtui.com/cli/jsonstruct.html","clicks":0,"impressions":3,"ctr":0,"position":9},
+    {"page":"https://devtui.com/cli/toml2yaml.html","clicks":0,"impressions":2,"ctr":0,"position":2},
+    {"page":"https://devtui.com/cli/urls.html","clicks":0,"impressions":3,"ctr":0,"position":6},
+    {"page":"https://devtui.com/cli/uuidgenerate.html","clicks":0,"impressions":3,"ctr":0,"position":7},
+    {"page":"https://devtui.com/cli/yaml2toml.html","clicks":0,"impressions":1,"ctr":0,"position":8},
+    {"page":"https://devtui.com/cli/yamlfmt.html","clicks":0,"impressions":2,"ctr":0,"position":8},
+    {"page":"https://devtui.com/cli/yamlstruct.html","clicks":0,"impressions":8,"ctr":0,"position":18.25},
+    {"page":"https://devtui.com/start.html","clicks":0,"impressions":13,"ctr":0,"position":3},
+    {"page":"https://devtui.com/tui/html.html","clicks":0,"impressions":1,"ctr":0,"position":1},
+    {"page":"https://devtui.com/tui/markdown.html","clicks":0,"impressions":36,"ctr":0,"position":9.555555555555555},
+    {"page":"https://devtui.com/tui/toml.html","clicks":0,"impressions":14,"ctr":0,"position":6},
+    {"page":"https://devtui.com/tui/tsv2md.html","clicks":0,"impressions":1,"ctr":0,"position":7},
+    {"page":"https://devtui.com/tui/yamlstruct.html","clicks":0,"impressions":3,"ctr":0,"position":8.333333333333332}
+  ]
+}

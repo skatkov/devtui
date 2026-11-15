@@ -1,0 +1,41 @@
+{
+  "checked": "2026-11-14",
+  "finding": "OPP-01",
+  "source_url": "https://github.com/rothgar/awesome-tuis#development",
+  "readme_url": "https://raw.githubusercontent.com/rothgar/awesome-tuis/main/README.md",
+  "readme_sha256": "1bf8fc7ef6cbde179b69fc23b27984a883a4c4c5763ec80343e61aef4fbf7ed0",
+  "before": {"devtui_entry_present": false},
+  "requested_entry": "- [DevTUI](https://github.com/skatkov/devtui) An interactive developer toolkit with formatters, converters, and CLI subcommands for pipes and scripts.",
+  "insert_after": "DevProjex",
+  "insert_before": "differ",
+  "contribution_template": "https://github.com/rothgar/awesome-tuis/blob/main/.github/pull_request_template.md",
+  "requirements": [
+    "Repos need to be at least 6 months old",
+    "Applications should be unique",
+    "Interfaces should be unique. Please don't submit wrappers (e.g. fzf)",
+    "Interfaces should be interactive or re-draw output. Output formatters are not considered TUIs"
+  ],
+  "project": {
+    "url": "https://github.com/skatkov/devtui",
+    "created_at": "2025-02-08T12:35:53Z",
+    "archived": false,
+    "disabled": false,
+    "pushed_at": "2026-11-12T21:51:47Z"
+  },
+  "prior_submission_search": {
+    "query": "repo:rothgar/awesome-tuis devtui in:title,body",
+    "total_count": 0,
+    "limits": "Only matching indexed issue/PR titles and bodies; differently named submissions may be missed"
+  },
+  "source_checks": ["cmd/root.go:22-28", "tui/root/list.go", "README.md", ".seo/brand.md", ".seo/truth.md"],
+  "verification": {
+    "minimum_age": "pass",
+    "native_interactive_interface": "pass-source-inspection-only",
+    "uniqueness": "maintainer-editorial-review-required",
+    "citation_impact": "unchecked",
+    "fresh_runtime_test": "not-run",
+    "external_write": false
+  },
+  "after": {"status": "brief-drafted-not-submitted", "placement_confirmed": false},
+  "paid_calls": 0
+}

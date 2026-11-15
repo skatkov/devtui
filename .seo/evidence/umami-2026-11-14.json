@@ -1,0 +1,16 @@
+{
+  "site": "https://devtui.com",
+  "window": ["2026-10-17T20:10:42.219345+00:00", "2026-11-14T20:10:42.219345+00:00"],
+  "source": "umami-api",
+  "stats": {
+    "pageviews": 256, "visitors": 206, "visits": 209, "bounces": 189, "totaltime": 2155,
+    "comparison": {"pageviews": 246, "visitors": 132, "visits": 140, "bounces": 128, "totaltime": 5104}
+  },
+  "metrics": [
+    {"x":"google.com","y":20},{"x":"duckduckgo.com","y":14},{"x":"aocr.org","y":14},
+    {"x":"bing.com","y":3},{"x":"github.com","y":3},{"x":"cn.bing.com","y":2},
+    {"x":"gemini.google.com","y":1},{"x":"buildinpublic.com","y":1}
+  ],
+  "ai_referrals": {"visitors":1,"referrers":["gemini.google.com"],"activations":null},
+  "limits": "Visitors, not sessions; activations not instrumented. Do not add to Search Console clicks."
+}

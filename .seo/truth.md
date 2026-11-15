@@ -4,10 +4,10 @@ Derived from code on 2026-11-10. Re-derive whenever `.goreleaser.yaml`, `cmd/`, 
 
 | Claim | Value | Source | Read |
 |---|---|---|---|
-| Price | Free, MIT licence | LICENSE | 2026-11-10 |
-| Platforms with release binaries | macOS (darwin) and Linux | .goreleaser.yaml `goos` | 2026-11-10 |
+| Price | Free, MIT licence | LICENSE | 2026-11-14 |
+| Platforms with release binaries | macOS (darwin) and Linux | .goreleaser.yaml `goos` | 2026-11-14 |
 | Windows binaries | **no** | .goreleaser.yaml `goos` (no windows) | 2026-11-10 |
-| Install: Homebrew | `brew install skatkov/tap/devtui` | README.md, site/start.md | 2026-11-10 |
+| Install: Homebrew | `brew install skatkov/tap/devtui` | site/start.md | 2026-11-14 |
 | Install: FreeBSD ports | `pkg install devtui` (community-maintained) | README.md (missing from site/start.md) | 2026-11-10 |
 | Install: GitHub Releases | yes | README.md, site/start.md | 2026-11-10 |
 | CLI subcommands | 31 (base64 … yamlstruct, plus version and completion) | cmd/*.go | 2026-11-10 |
