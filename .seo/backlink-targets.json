@@ -1,0 +1,22 @@
+{
+  "generated_at": "2026-11-14",
+  "source": "Direct upstream README, contribution template, repository API and limited GitHub issue/PR search; no paid competitor backlink sweep",
+  "limits": "Authority, backlinks and citation impact unmeasured; not a Recipe F dataset.",
+  "directories": [
+    {
+      "domain": "github.com",
+      "name": "rothgar/awesome-tuis",
+      "url": "https://github.com/rothgar/awesome-tuis#development",
+      "url_to_submit": "https://github.com/rothgar/awesome-tuis/compare",
+      "dr": null,
+      "competitor_uses": [],
+      "tier": 2,
+      "finding": "OPP-01",
+      "status": "drafted-not-submitted",
+      "brief": ".seo/briefs/awesome-tuis.md",
+      "last_verified": "2026-11-14"
+    }
+  ],
+  "listicles": [],
+  "guest_posts": []
+}

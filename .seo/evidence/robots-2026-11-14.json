@@ -1,0 +1,621 @@
+{
+  "site": "https://devtui.com",
+  "path_tested": "/",
+  "robots_source": "https://devtui.com/robots.txt",
+  "robots_status": 200,
+  "robots_present": true,
+  "agents": [
+    {
+      "agent": "OAI-SearchBot",
+      "vendor": "OpenAI",
+      "kind": "retrieval",
+      "purpose": "powers ChatGPT search results",
+      "allowed": true,
+      "matched_rule": "Allow: /",
+      "matched_user_agent": "*"
+    },
+    {
+      "agent": "ChatGPT-User",
+      "vendor": "OpenAI",
+      "kind": "user",
+      "purpose": "user-triggered page fetch",
+      "allowed": true,
+      "matched_rule": "Allow: /",
+      "matched_user_agent": "*"
+    },
+    {
+      "agent": "GPTBot",
+      "vendor": "OpenAI",
+      "kind": "training",
+      "purpose": "training crawler",
+      "allowed": true,
+      "matched_rule": "Allow: /",
+      "matched_user_agent": "*"
+    },
+    {
+      "agent": "ClaudeBot",
+      "vendor": "Anthropic",
+      "kind": "retrieval",
+      "purpose": "crawler",
+      "allowed": true,
+      "matched_rule": "Allow: /",
+      "matched_user_agent": "*"
+    },
+    {
+      "agent": "Claude-SearchBot",
+      "vendor": "Anthropic",
+      "kind": "retrieval",
+      "purpose": "search indexing",
+      "allowed": true,
+      "matched_rule": "Allow: /",
+      "matched_user_agent": "*"
+    },
+    {
+      "agent": "Claude-User",
+      "vendor": "Anthropic",
+      "kind": "user",
+      "purpose": "user-triggered page fetch",
+      "allowed": true,
+      "matched_rule": "Allow: /",
+      "matched_user_agent": "*"
+    },
+    {
+      "agent": "anthropic-ai",
+      "vendor": "Anthropic",
+      "kind": "training",
+      "purpose": "older agent name, still seen",
+      "allowed": true,
+      "matched_rule": "Allow: /",
+      "matched_user_agent": "*"
+    },
+    {
+      "agent": "Googlebot",
+      "vendor": "Google",
+      "kind": "retrieval",
+      "purpose": "the index AI Overviews and AI Mode draw from",
+      "allowed": true,
+      "matched_rule": "Allow: /",
+      "matched_user_agent": "*"
+    },
+    {
+      "agent": "Google-Extended",
+      "vendor": "Google",
+      "kind": "training",
+      "purpose": "Gemini training and grounding. does NOT gate AI Overviews",
+      "allowed": true,
+      "matched_rule": "Allow: /",
+      "matched_user_agent": "*"
+    },
+    {
+      "agent": "GoogleOther",
+      "vendor": "Google",
+      "kind": "training",
+      "purpose": "misc Google crawling",
+      "allowed": true,
+      "matched_rule": "Allow: /",
+      "matched_user_agent": "*"
+    },
+    {
+      "agent": "PerplexityBot",
+      "vendor": "Perplexity",
+      "kind": "retrieval",
+      "purpose": "indexing",
+      "allowed": true,
+      "matched_rule": "Allow: /",
+      "matched_user_agent": "*"
+    },
+    {
+      "agent": "Perplexity-User",
+      "vendor": "Perplexity",
+      "kind": "user",
+      "purpose": "user-triggered page fetch",
+      "allowed": true,
+      "matched_rule": "Allow: /",
+      "matched_user_agent": "*"
+    },
+    {
+      "agent": "bingbot",
+      "vendor": "Microsoft",
+      "kind": "retrieval",
+      "purpose": "the index Copilot draws from",
+      "allowed": true,
+      "matched_rule": "Allow: /",
+      "matched_user_agent": "*"
+    },
+    {
+      "agent": "Applebot",
+      "vendor": "Apple",
+      "kind": "retrieval",
+      "purpose": "Siri and Spotlight suggestions",
+      "allowed": true,
+      "matched_rule": "Allow: /",
+      "matched_user_agent": "*"
+    },
+    {
+      "agent": "Applebot-Extended",
+      "vendor": "Apple",
+      "kind": "training",
+      "purpose": "training opt-out control",
+      "allowed": true,
+      "matched_rule": "Allow: /",
+      "matched_user_agent": "*"
+    },
+    {
+      "agent": "CCBot",
+      "vendor": "CommonCrawl",
+      "kind": "training",
+      "purpose": "feeds many downstream datasets. broad, delayed effects",
+      "allowed": true,
+      "matched_rule": "Allow: /",
+      "matched_user_agent": "*"
+    },
+    {
+      "agent": "Amazonbot",
+      "vendor": "Amazon",
+      "kind": "retrieval",
+      "purpose": "Alexa and Amazon surfaces",
+      "allowed": true,
+      "matched_rule": "Allow: /",
+      "matched_user_agent": "*"
+    },
+    {
+      "agent": "meta-externalagent",
+      "vendor": "Meta",
+      "kind": "training",
+      "purpose": "Meta AI training",
+      "allowed": true,
+      "matched_rule": "Allow: /",
+      "matched_user_agent": "*"
+    },
+    {
+      "agent": "Bytespider",
+      "vendor": "ByteDance",
+      "kind": "training",
+      "purpose": "ByteDance crawler",
+      "allowed": true,
+      "matched_rule": "Allow: /",
+      "matched_user_agent": "*"
+    },
+    {
+      "agent": "cohere-ai",
+      "vendor": "Cohere",
+      "kind": "training",
+      "purpose": "Cohere crawler",
+      "allowed": true,
+      "matched_rule": "Allow: /",
+      "matched_user_agent": "*"
+    },
+    {
+      "agent": "Diffbot",
+      "vendor": "Diffbot",
+      "kind": "training",
+      "purpose": "knowledge graph extraction",
+      "allowed": true,
+      "matched_rule": "Allow: /",
+      "matched_user_agent": "*"
+    },
+    {
+      "agent": "omgilibot",
+      "vendor": "Webz.io",
+      "kind": "training",
+      "purpose": "web data collection",
+      "allowed": true,
+      "matched_rule": "Allow: /",
+      "matched_user_agent": "*"
+    },
+    {
+      "agent": "YouBot",
+      "vendor": "You.com",
+      "kind": "retrieval",
+      "purpose": "You.com search",
+      "allowed": true,
+      "matched_rule": "Allow: /",
+      "matched_user_agent": "*"
+    },
+    {
+      "agent": "AI2Bot",
+      "vendor": "AI2",
+      "kind": "training",
+      "purpose": "Allen Institute crawler",
+      "allowed": true,
+      "matched_rule": "Allow: /",
+      "matched_user_agent": "*"
+    },
+    {
+      "agent": "Timpibot",
+      "vendor": "Timpi",
+      "kind": "training",
+      "purpose": "decentralised index",
+      "allowed": true,
+      "matched_rule": "Allow: /",
+      "matched_user_agent": "*"
+    }
+  ],
+  "llms_txt": {
+    "llms.txt": {
+      "present": true,
+      "status": 200,
+      "bytes": 3482,
+      "read_truncated": false,
+      "has_title": true,
+      "title": "DevTUI",
+      "has_summary": true,
+      "sections": [
+        "Guides",
+        "CLI",
+        "TUI"
+      ],
+      "links": [
+        {
+          "title": "DevTUI",
+          "url": "https://devtui.com/index.md",
+          "description": null,
+          "status": 200
+        },
+        {
+          "title": "Getting started",
+          "url": "https://devtui.com/start.md",
+          "description": null,
+          "status": 200
+        },
+        {
+          "title": "CLI",
+          "url": "https://devtui.com/cli/index.md",
+          "description": null,
+          "status": 200
+        },
+        {
+          "title": "TUI",
+          "url": "https://devtui.com/tui/index.md",
+          "description": null,
+          "status": 200
+        },
+        {
+          "title": "base64",
+          "url": "https://devtui.com/cli/base64.md",
+          "description": null,
+          "status": 200
+        },
+        {
+          "title": "count",
+          "url": "https://devtui.com/cli/count.md",
+          "description": null,
+          "status": 200
+        },
+        {
+          "title": "cssfmt",
+          "url": "https://devtui.com/cli/cssfmt.md",
+          "description": null,
+          "status": 200
+        },
+        {
+          "title": "cssmin",
+          "url": "https://devtui.com/cli/cssmin.md",
+          "description": null,
+          "status": 200
+        },
+        {
+          "title": "csv2json",
+          "url": "https://devtui.com/cli/csv2json.md",
+          "description": null,
+          "status": 200
+        },
+        {
+          "title": "csv2md",
+          "url": "https://devtui.com/cli/csv2md.md",
+          "description": null,
+          "status": 200
+        },
+        {
+          "title": "gqlquery",
+          "url": "https://devtui.com/cli/gqlquery.md",
+          "description": null,
+          "status": 200
+        },
+        {
+          "title": "htmlfmt",
+          "url": "https://devtui.com/cli/htmlfmt.md",
+          "description": null,
+          "status": 200
+        },
+        {
+          "title": "iban",
+          "url": "https://devtui.com/cli/iban.md",
+          "description": null,
+          "status": 200
+        },
+        {
+          "title": "json2toml",
+          "url": "https://devtui.com/cli/json2toml.md",
+          "description": null,
+          "status": 200
+        },
+        {
+          "title": "json2toon",
+          "url": "https://devtui.com/cli/json2toon.md",
+          "description": null,
+          "status": 200
+        },
+        {
+          "title": "json2xml",
+          "url": "https://devtui.com/cli/json2xml.md",
+          "description": null,
+          "status": 200
+        },
+        {
+          "title": "json2yaml",
+          "url": "https://devtui.com/cli/json2yaml.md",
+          "description": null,
+          "status": 200
+        },
+        {
+          "title": "jsonfmt",
+          "url": "https://devtui.com/cli/jsonfmt.md",
+          "description": null,
+          "status": 200
+        },
+        {
+          "title": "jsonrepair",
+          "url": "https://devtui.com/cli/jsonrepair.md",
+          "description": null,
+          "status": 200
+        },
+        {
+          "title": "jsonstruct",
+          "url": "https://devtui.com/cli/jsonstruct.md",
+          "description": null,
+          "status": 200
+        },
+        {
+          "title": "numbers",
+          "url": "https://devtui.com/cli/numbers.md",
+          "description": null
+        },
+        {
+          "title": "toml2json",
+          "url": "https://devtui.com/cli/toml2json.md",
+          "description": null
+        },
+        {
+          "title": "toml2yaml",
+          "url": "https://devtui.com/cli/toml2yaml.md",
+          "description": null
+        },
+        {
+          "title": "tomlfmt",
+          "url": "https://devtui.com/cli/tomlfmt.md",
+          "description": null
+        },
+        {
+          "title": "tsv2md",
+          "url": "https://devtui.com/cli/tsv2md.md",
+          "description": null
+        },
+        {
+          "title": "urls",
+          "url": "https://devtui.com/cli/urls.md",
+          "description": null
+        },
+        {
+          "title": "uuiddecode",
+          "url": "https://devtui.com/cli/uuiddecode.md",
+          "description": null
+        },
+        {
+          "title": "uuidgenerate",
+          "url": "https://devtui.com/cli/uuidgenerate.md",
+          "description": null
+        },
+        {
+          "title": "xml2json",
+          "url": "https://devtui.com/cli/xml2json.md",
+          "description": null
+        },
+        {
+          "title": "xmlfmt",
+          "url": "https://devtui.com/cli/xmlfmt.md",
+          "description": null
+        },
+        {
+          "title": "yaml2json",
+          "url": "https://devtui.com/cli/yaml2json.md",
+          "description": null
+        },
+        {
+          "title": "yaml2toml",
+          "url": "https://devtui.com/cli/yaml2toml.md",
+          "description": null
+        },
+        {
+          "title": "yamlfmt",
+          "url": "https://devtui.com/cli/yamlfmt.md",
+          "description": null
+        },
+        {
+          "title": "yamlstruct",
+          "url": "https://devtui.com/cli/yamlstruct.md",
+          "description": null
+        },
+        {
+          "title": "Base64 Decoder",
+          "url": "https://devtui.com/tui/base64-decoder.md",
+          "description": null
+        },
+        {
+          "title": "Base64 Encoder",
+          "url": "https://devtui.com/tui/base64-encoder.md",
+          "description": null
+        },
+        {
+          "title": "Cron Job Parser",
+          "url": "https://devtui.com/tui/cron.md",
+          "description": null
+        },
+        {
+          "title": "CSS Formatter",
+          "url": "https://devtui.com/tui/css.md",
+          "description": null
+        },
+        {
+          "title": "CSV to JSON Converter",
+          "url": "https://devtui.com/tui/csv2json.md",
+          "description": null
+        },
+        {
+          "title": "CSV to Markdown Table Converter",
+          "url": "https://devtui.com/tui/csv2md.md",
+          "description": null
+        },
+        {
+          "title": "GraphQL Query Formatter",
+          "url": "https://devtui.com/tui/graphql-query.md",
+          "description": null
+        },
+        {
+          "title": "HTML Formatter",
+          "url": "https://devtui.com/tui/html.md",
+          "description": null
+        },
+        {
+          "title": "IBAN Generator",
+          "url": "https://devtui.com/tui/iban.md",
+          "description": null
+        },
+        {
+          "title": "JSON Formatter",
+          "url": "https://devtui.com/tui/json.md",
+          "description": null
+        },
+        {
+          "title": "JSON Repair",
+          "url": "https://devtui.com/tui/jsonrepair.md",
+          "description": null
+        },
+        {
+          "title": "JSON to Go Struct Converter",
+          "url": "https://devtui.com/tui/jsonstruct.md",
+          "description": null
+        },
+        {
+          "title": "JSON to TOML Converter",
+          "url": "https://devtui.com/tui/json2toml.md",
+          "description": null
+        },
+        {
+          "title": "JSON to TOON Converter",
+          "url": "https://devtui.com/tui/json2toon.md",
+          "description": null
+        },
+        {
+          "title": "Markdown Renderer",
+          "url": "https://devtui.com/tui/markdown.md",
+          "description": null
+        },
+        {
+          "title": "Number Base Converter",
+          "url": "https://devtui.com/tui/numbers.md",
+          "description": null
+        },
+        {
+          "title": "TOML Formatter",
+          "url": "https://devtui.com/tui/toml.md",
+          "description": null
+        },
+        {
+          "title": "TOML to JSON Converter",
+          "url": "https://devtui.com/tui/toml2json.md",
+          "description": null
+        },
+        {
+          "title": "TSV to Markdown Table Converter",
+          "url": "https://devtui.com/tui/tsv2md.md",
+          "description": null
+        },
+        {
+          "title": "URL Extractor",
+          "url": "https://devtui.com/tui/url-extractor.md",
+          "description": null
+        },
+        {
+          "title": "UUID Decoder",
+          "url": "https://devtui.com/tui/uuid-decode.md",
+          "description": null
+        },
+        {
+          "title": "UUID Generator",
+          "url": "https://devtui.com/tui/uuid-generate.md",
+          "description": null
+        },
+        {
+          "title": "XML Formatter",
+          "url": "https://devtui.com/tui/xml.md",
+          "description": null
+        },
+        {
+          "title": "YAML Formatter",
+          "url": "https://devtui.com/tui/yaml.md",
+          "description": null
+        },
+        {
+          "title": "YAML to Go Struct Converter",
+          "url": "https://devtui.com/tui/yamlstruct.md",
+          "description": null
+        }
+      ],
+      "links_without_description": 59,
+      "issues": [
+        "59 of 59 links carry no description, which is the part that tells a reader what the page covers",
+        "20 of 20 checked link(s) are not in the sitemap, so the two files disagree about what matters."
+      ],
+      "link_check": {
+        "checked": 20,
+        "total": 59,
+        "dead": [],
+        "offsite": [],
+        "sitemap_urls_read": 59,
+        "sitemap_same_host": 59,
+        "sitemap_notes": [],
+        "absent_from_sitemap": [
+          "https://devtui.com/index.md",
+          "https://devtui.com/start.md",
+          "https://devtui.com/cli/index.md",
+          "https://devtui.com/tui/index.md",
+          "https://devtui.com/cli/base64.md",
+          "https://devtui.com/cli/count.md",
+          "https://devtui.com/cli/cssfmt.md",
+          "https://devtui.com/cli/cssmin.md",
+          "https://devtui.com/cli/csv2json.md",
+          "https://devtui.com/cli/csv2md.md",
+          "https://devtui.com/cli/gqlquery.md",
+          "https://devtui.com/cli/htmlfmt.md",
+          "https://devtui.com/cli/iban.md",
+          "https://devtui.com/cli/json2toml.md",
+          "https://devtui.com/cli/json2toon.md",
+          "https://devtui.com/cli/json2xml.md",
+          "https://devtui.com/cli/json2yaml.md",
+          "https://devtui.com/cli/jsonfmt.md",
+          "https://devtui.com/cli/jsonrepair.md",
+          "https://devtui.com/cli/jsonstruct.md"
+        ],
+        "sitemap_comparison_unknown": null
+      }
+    },
+    "llms-full.txt": {
+      "present": false,
+      "status": 404,
+      "bytes": 0,
+      "read_truncated": false
+    }
+  },
+  "notes": [
+    "llms.txt findings are low priority. No major answer engine has publicly committed to consuming it. Fix dead links because they are cheap to fix, not because the file is a lever.",
+    "robots.txt is not the only place access is denied. Check CDN bot rules, WAF rules, X-Robots-Tag headers and rate limiting. If logs show zero hits from an agent this report says is allowed, the block is somewhere else."
+  ],
+  "unrecognised_user_agents": [],
+  "summary": {
+    "retrieval_blocked": [],
+    "user_triggered_blocked": [],
+    "training_blocked": [],
+    "verdict": "PASS"
+  }
+}

@@ -1,5 +1,5 @@
 {
-  "generated": "2026-11-12",
+  "generated": "2026-11-14",
   "ledger": ".seo/content-ledger.md",
   "gsc_dir": ".seo/gsc",
   "pulls": 2,
@@ -18,6 +18,18 @@
       "control_change": null,
       "excess": null,
       "note": "no pull dated 2026-12-08 or later"
+    },
+    {
+      "date": "2026-11-12",
+      "action": "refresh",
+      "type": null,
+      "target": "https://devtui.com/",
+      "verdict": "too-new",
+      "before": null,
+      "after": null,
+      "control_change": null,
+      "excess": null,
+      "note": "no pull dated 2026-12-10 or later"
     }
   ]
 }
