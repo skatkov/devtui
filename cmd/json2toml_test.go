@@ -46,9 +46,9 @@ func TestJson2tomlCmd(t *testing.T) {
 			name:  "JSON number handling - integers stay integers",
 			input: `{"count": 42, "negative": -10, "large": 9007199254740991}`,
 			checkOutput: func(output string) bool {
-				return strings.Contains(output, "count = 42") &&
-					strings.Contains(output, "negative = -10") &&
-					strings.Contains(output, "large = 9007199254740991")
+				return strings.Contains(output, "count = 42\n") &&
+					strings.Contains(output, "negative = -10\n") &&
+					strings.Contains(output, "large = 9007199254740991\n")
 			},
 			description: "Should preserve JSON integers as integers, not convert to floats",
 		},
