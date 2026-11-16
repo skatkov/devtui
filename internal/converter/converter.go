@@ -82,33 +82,6 @@ func decodeJSONForTOML(content string) (any, error) {
 	if err := decoder.Decode(&v); err != nil {
 		return nil, err
 	}
-	return convertJSONNumbers(v)
-}
-
-func convertJSONNumbers(v any) (any, error) {
-	switch value := v.(type) {
-	case json.Number:
-		if i, err := value.Int64(); err == nil {
-			return i, nil
-		}
-		return value.Float64()
-	case map[string]any:
-		for key, item := range value {
-			converted, err := convertJSONNumbers(item)
-			if err != nil {
-				return nil, err
-			}
-			value[key] = converted
-		}
-	case []any:
-		for i, item := range value {
-			converted, err := convertJSONNumbers(item)
-			if err != nil {
-				return nil, err
-			}
-			value[i] = converted
-		}
-	}
 	return v, nil
 }
 
@@ -142,6 +115,7 @@ func JSONToTOML(jsonContent string) (string, error) {
 
 	var buf bytes.Buffer
 	encoder := toml.NewEncoder(&buf)
+	encoder.SetMarshalJSONNumbers(true)
 	err = encoder.Encode(v)
 	if err != nil {
 		return "", fmt.Errorf("TOML encoding error: %w", err)

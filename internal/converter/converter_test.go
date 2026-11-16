@@ -61,3 +61,20 @@ func TestYAMLToTOMLKeepsNumericTypes(t *testing.T) {
 		t.Errorf("YAMLToTOML() = %q, want int = 1 and float = 1.0", got)
 	}
 }
+
+func TestTOMLKeepsLargeIntegers(t *testing.T) {
+	t.Parallel()
+
+	// 9007199254740993 is not exactly representable as float64.
+	const want = "id = 9007199254740993\n"
+
+	got, err := JSONToTOML(`{"id":9007199254740993}`)
+	if err != nil || got != want {
+		t.Errorf("JSONToTOML() = %q, %v; want %q", got, err, want)
+	}
+
+	got, err = YAMLToTOML("id: 9007199254740993\n")
+	if err != nil || got != want {
+		t.Errorf("YAMLToTOML() = %q, %v; want %q", got, err, want)
+	}
+}
