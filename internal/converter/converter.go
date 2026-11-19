@@ -150,6 +150,8 @@ func JSONToXML(jsonContent string) (string, error) {
 		return "", fmt.Errorf("JSON parsing error: %w", err)
 	}
 
+	// mxj writes values as-is unless escaping is on, so "A & B" gave invalid XML.
+	mxj.XMLEscapeChars(true)
 	xmlBytes, err := mv.XmlIndent("", "  ")
 	if err != nil {
 		return "", fmt.Errorf("XML encoding error: %w", err)
