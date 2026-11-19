@@ -39,15 +39,14 @@ func YAMLToJSON(yamlContent string) (string, error) {
 }
 
 func JSONToYAML(jsonContent string) (string, error) {
-	var data any
-
-	if err := json.Unmarshal([]byte(jsonContent), &data); err != nil {
+	data, err := decodeJSONNumbers(jsonContent)
+	if err != nil {
 		return "", fmt.Errorf("JSON parsing error: %w", err)
 	}
 
 	var buf bytes.Buffer
 	encoder := yaml.NewEncoder(&buf)
-	if err := encoder.Encode(data); err != nil {
+	if err := encoder.Encode(yamlNumbers(data)); err != nil {
 		return "", fmt.Errorf("YAML encoding error: %w", err)
 	}
 
@@ -73,8 +72,9 @@ func TOMLToJSON(tomlContent string) (string, error) {
 	return buf.String(), nil
 }
 
-// decodeJSONForTOML keeps integers as integers: TOML has separate integer and float types.
-func decodeJSONForTOML(content string) (any, error) {
+// decodeJSONNumbers decodes JSON with numbers kept as json.Number, so integers
+// stay integers (encoding/json would make every number a float64).
+func decodeJSONNumbers(content string) (any, error) {
 	// Unmarshal checks the whole input, so trailing data is still rejected.
 	var raw json.RawMessage
 	if err := json.Unmarshal([]byte(content), &raw); err != nil {
@@ -89,6 +89,28 @@ func decodeJSONForTOML(content string) (any, error) {
 		return nil, err
 	}
 	return v, nil
+}
+
+// yamlNumbers turns json.Number into int64, or float64 when it is not an
+// integer that fits, so YAML gets 1700000000000 rather than 1.7e+12.
+func yamlNumbers(v any) any {
+	switch value := v.(type) {
+	case json.Number:
+		if i, err := value.Int64(); err == nil {
+			return i
+		}
+		f, _ := value.Float64()
+		return f
+	case map[string]any:
+		for key, item := range value {
+			value[key] = yamlNumbers(item)
+		}
+	case []any:
+		for i, item := range value {
+			value[i] = yamlNumbers(item)
+		}
+	}
+	return v
 }
 
 // yamlValuesForTOML keeps the numeric types YAML decoded and turns the rest
@@ -114,7 +136,7 @@ func yamlValuesForTOML(v any) any {
 }
 
 func JSONToTOML(jsonContent string) (string, error) {
-	v, err := decodeJSONForTOML(jsonContent)
+	v, err := decodeJSONNumbers(jsonContent)
 	if err != nil {
 		return "", fmt.Errorf("JSON parsing error: %w", err)
 	}
@@ -151,6 +173,8 @@ func XMLToJSON(xmlContent string) (string, error) {
 }
 
 func JSONToXML(jsonContent string) (string, error) {
+	// Keep numbers as written; as float64, 1700000000000 is written as 1.7e+12.
+	mxj.JsonUseNumber = true
 	mv, err := mxj.NewMapJson([]byte(jsonContent))
 	if err != nil {
 		return "", fmt.Errorf("JSON parsing error: %w", err)

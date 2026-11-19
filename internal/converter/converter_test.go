@@ -28,6 +28,23 @@ func TestJSONToXMLEscapesText(t *testing.T) {
 	}
 }
 
+func TestConvertersKeepLargeIntegers(t *testing.T) {
+	t.Parallel()
+
+	for name, convert := range map[string]func(string) (string, error){
+		"JSONToYAML": JSONToYAML,
+		"JSONToXML":  JSONToXML,
+	} {
+		out, err := convert(`{"ts":1700000000000}`)
+		if err != nil {
+			t.Fatalf("%s() error = %v", name, err)
+		}
+		if !strings.Contains(out, "1700000000000") {
+			t.Errorf("%s() = %q, want 1700000000000", name, out)
+		}
+	}
+}
+
 func TestJSONToTOMLTopLevelArrayReturnsError(t *testing.T) {
 	t.Parallel()
 
