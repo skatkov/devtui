@@ -250,7 +250,7 @@ func tomlValuesForYAML(v any) (any, error) {
 				text += "e" + exponent
 			}
 		}
-		return yaml.Node{Kind: yaml.ScalarNode, Tag: "!!float", Value: text}, nil
+		return &yaml.Node{Kind: yaml.ScalarNode, Tag: "!!float", Value: text}, nil
 	case map[string]any:
 		for key, item := range value {
 			if value[key], err = tomlValuesForYAML(item); err != nil {
