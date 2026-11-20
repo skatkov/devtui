@@ -6,6 +6,7 @@ Outside-in demand signals, cumulative. The measure step appends here; select rea
 
 | seen | kind | source | url | quote | engagement | seed | status |
 |---|---|---|---|---|---|---|---|
+| 2026-11-20 | complained | Hacker News, Show HN: Shine | https://news.ycombinator.com/item?id=49649351 | “Most of the time, the output still looks more like Markdown syntax than a formatted document.” | 1 point, 2 comments at lookup | markdown renderer terminal | watch — evidence for existing owner, not a new page |
 
 ## Seeds
 

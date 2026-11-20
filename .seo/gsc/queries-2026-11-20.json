@@ -1,0 +1,21 @@
+{
+  "site":"sc-domain:devtui.com",
+  "window":["2026-10-20","2026-11-16"],
+  "prev_window":["2026-09-22","2026-10-19"],
+  "source":"seoskill seo_data dimensions=query,page detail=full",
+  "limits":"Rare queries suppressed. All returned rows had zero previous clicks and no previous position; previous query impressions not returned.",
+  "rows":[
+    {"query":"tui dev","page":"https://devtui.com/","clicks":2,"impressions":19,"ctr":0.10526315789473684,"position":1.3157894736842106},
+    {"query":"de tui","page":"https://devtui.com/","clicks":0,"impressions":1,"ctr":0,"position":5},
+    {"query":"detui","page":"https://devtui.com/","clicks":0,"impressions":5,"ctr":0,"position":6.6},
+    {"query":"dev tu","page":"https://devtui.com/","clicks":0,"impressions":1,"ctr":0,"position":6},
+    {"query":"devi tui","page":"https://devtui.com/","clicks":0,"impressions":4,"ctr":0,"position":5},
+    {"query":"devtu","page":"https://devtui.com/","clicks":0,"impressions":2,"ctr":0,"position":3.5},
+    {"query":"markdown tui","page":"https://devtui.com/tui/markdown.html","clicks":0,"impressions":1,"ctr":0,"position":40},
+    {"query":"mdtui","page":"https://devtui.com/tui/markdown.html","clicks":0,"impressions":1,"ctr":0,"position":9},
+    {"query":"swiftui markdown renderer","page":"https://devtui.com/tui/markdown.html","clicks":0,"impressions":1,"ctr":0,"position":37},
+    {"query":"tui development","page":"https://devtui.com/","clicks":0,"impressions":1,"ctr":0,"position":5},
+    {"query":"tui markdown reader","page":"https://devtui.com/tui/markdown.html","clicks":0,"impressions":1,"ctr":0,"position":8},
+    {"query":"tui markdown renderer","page":"https://devtui.com/tui/markdown.html","clicks":0,"impressions":9,"ctr":0,"position":5.111111111111111}
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "site": "https://devtui.com",
+  "source": "umami-api",
+  "window": ["2026-10-23T13:43:31.387942+00:00", "2026-11-20T13:43:31.387942+00:00"],
+  "stats": {"pageviews":287,"visitors":206,"visits":213,"bounces":187,"totaltime":2529},
+  "ai_referrals": {"visitors":1,"referrers":["gemini.google.com"],"activations":null},
+  "unclassified_referrers": [{"host":"aocr.org","visitors":14}],
+  "limits": "Visitors, not sessions; activations are not instrumented. Do not add to Search Console clicks."
+}

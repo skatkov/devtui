@@ -1,8 +1,8 @@
 {
-  "generated": "2026-11-14",
+  "generated": "2026-11-20",
   "ledger": ".seo/content-ledger.md",
   "gsc_dir": ".seo/gsc",
-  "pulls": 2,
+  "pulls": 4,
   "notes": [
     "1 dated ledger row(s) had no recognisable action"
   ],
@@ -30,6 +30,18 @@
       "control_change": null,
       "excess": null,
       "note": "no pull dated 2026-12-10 or later"
+    },
+    {
+      "date": "2026-11-14",
+      "action": "offpage-brief",
+      "type": null,
+      "target": "https://github.com/rothgar/awesome-tuis#development",
+      "verdict": "too-new",
+      "before": null,
+      "after": null,
+      "control_change": null,
+      "excess": null,
+      "note": "no pull dated 2026-12-12 or later"
     }
   ]
 }

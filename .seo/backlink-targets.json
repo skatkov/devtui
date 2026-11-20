@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-11-14",
-  "source": "Direct upstream README, contribution template, repository API and limited GitHub issue/PR search; no paid competitor backlink sweep",
+  "generated_at": "2026-11-20",
+  "source": "Direct upstream directory inventories and submission instructions; no paid competitor backlink sweep",
   "limits": "Authority, backlinks and citation impact unmeasured; not a Recipe F dataset.",
   "directories": [
     {
@@ -15,6 +15,19 @@
       "status": "drafted-not-submitted",
       "brief": ".seo/briefs/awesome-tuis.md",
       "last_verified": "2026-11-14"
+    },
+    {
+      "domain": "terminaltrove.com",
+      "name": "Terminal Trove",
+      "url": "https://terminaltrove.com/list/",
+      "url_to_submit": "https://terminaltrove.com/submit/",
+      "dr": null,
+      "competitor_uses": [],
+      "tier": 2,
+      "finding": "OPP-02",
+      "status": "drafted-not-submitted",
+      "brief": ".seo/briefs/terminal-trove.md",
+      "last_verified": "2026-11-20"
     }
   ],
   "listicles": [],

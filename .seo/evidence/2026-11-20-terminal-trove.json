@@ -1,0 +1,21 @@
+{
+  "checked": "2026-11-20",
+  "finding": "OPP-02",
+  "directory_check": {
+    "list": "https://terminaltrove.com/list/",
+    "sitemap": "https://terminaltrove.com/sitemap-0.xml",
+    "sitemap_index": "https://terminaltrove.com/sitemap-index.xml",
+    "sitemap_urls": 3739,
+    "pattern": "dev[-_\\s]?tui|skatkov",
+    "list_matches": 0,
+    "sitemap_matches": 0,
+    "guessed_listing_http_status": 404,
+    "limits": "Public sources only; no visibility into pending submissions."
+  },
+  "submission_form": "https://terminaltrove.com/submit/",
+  "preview": {"url":"https://devtui.com/assets/img/devtui.png","status":200,"type":"image/png","width":1000,"height":800},
+  "release": {"url":"https://api.github.com/repos/skatkov/devtui/releases/latest","tag":"v0.35.0","binary_platforms":["darwin","linux"]},
+  "formula": {"url":"https://raw.githubusercontent.com/skatkov/homebrew-tap/master/devtui.rb","status":200,"version":"0.35.0","platform_blocks":["on_macos","on_linux"]},
+  "status": "drafted-not-submitted",
+  "citation_and_backlink_impact": null
+}

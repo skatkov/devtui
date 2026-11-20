@@ -15,5 +15,7 @@ Created 2026-11-14 for the selected off-page action. No programmatic-page resear
 - [ ] Human submits the one-line Development entry using `.seo/briefs/awesome-tuis.md`.
 - [ ] Record submission URL/date and recheck after 14 days.
 - [ ] Confirm inclusion, or record maintainers' decision without implying a backlink/citation outcome.
+- [x] Verify Terminal Trove public listing absence and draft the free submission.
+- [ ] Human submits using `.seo/briefs/terminal-trove.md`; record the date or receipt and recheck after 14 days.
 
 External submission is not approved by checking off the draft. Only a human submits. No page creation, outreach batch, paid placement or deployment is part of this phase.
