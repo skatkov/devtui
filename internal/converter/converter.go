@@ -8,6 +8,8 @@ import (
 	"fmt"
 	"io"
 	"math"
+	"strconv"
+	"strings"
 	"time"
 
 	"github.com/clbanning/mxj/v2"
@@ -211,10 +213,56 @@ func YAMLToTOML(yamlContent string) (string, error) {
 }
 
 func TOMLToYAML(tomlContent string) (string, error) {
-	jsonStr, err := TOMLToJSON(tomlContent)
-	if err != nil {
-		return "", err
+	var data any
+	if err := toml.Unmarshal([]byte(tomlContent), &data); err != nil {
+		return "", fmt.Errorf("TOML parsing error: %w", err)
 	}
 
-	return JSONToYAML(jsonStr)
+	data, err := tomlValuesForYAML(data)
+	if err != nil {
+		return "", fmt.Errorf("YAML encoding error: %w", err)
+	}
+
+	out, err := yaml.Marshal(data)
+	if err != nil {
+		return "", fmt.Errorf("YAML encoding error: %w", err)
+	}
+	return string(out), nil
+}
+
+func tomlValuesForYAML(v any) (any, error) {
+	var err error
+	switch value := v.(type) {
+	case time.Time:
+		// Keep offset date-times as strings, just like the local date/time types.
+		text, err := value.MarshalText()
+		return string(text), err
+	case float64:
+		if math.IsInf(value, 0) || math.IsNaN(value) {
+			return nil, fmt.Errorf("non-finite number: %v", value)
+		}
+		text := strconv.FormatFloat(value, 'g', -1, 64)
+		mantissa, exponent, hasExponent := strings.Cut(text, "e")
+		// A decimal point keeps whole-valued floats and exponent notation numeric in YAML readers.
+		if !strings.Contains(mantissa, ".") {
+			text = mantissa + ".0"
+			if hasExponent {
+				text += "e" + exponent
+			}
+		}
+		return yaml.Node{Kind: yaml.ScalarNode, Tag: "!!float", Value: text}, nil
+	case map[string]any:
+		for key, item := range value {
+			if value[key], err = tomlValuesForYAML(item); err != nil {
+				return nil, err
+			}
+		}
+	case []any:
+		for i, item := range value {
+			if value[i], err = tomlValuesForYAML(item); err != nil {
+				return nil, err
+			}
+		}
+	}
+	return v, nil
 }
