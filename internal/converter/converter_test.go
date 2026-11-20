@@ -3,6 +3,8 @@ package converter
 import (
 	"strings"
 	"testing"
+
+	"gopkg.in/yaml.v3"
 )
 
 func TestJSONToXMLInvalidElementName(t *testing.T) {
@@ -42,6 +44,41 @@ func TestConvertersKeepLargeIntegers(t *testing.T) {
 		if !strings.Contains(out, "1700000000000") {
 			t.Errorf("%s() = %q, want 1700000000000", name, out)
 		}
+	}
+}
+
+func TestConvertersRejectOutOfRangeNumbers(t *testing.T) {
+	t.Parallel()
+
+	for name, convert := range map[string]func(string) (string, error){
+		"JSONToYAML": JSONToYAML,
+		"JSONToXML":  JSONToXML,
+	} {
+		for _, input := range []string{`{"value":1e400}`, `{"a":{"b":[1,-1e400]}}`, `[[1e400]]`} {
+			if out, err := convert(input); err == nil {
+				t.Errorf("%s(%q) = %q, want error", name, input, out)
+			}
+		}
+	}
+}
+
+func TestTOMLToYAMLKeepsNumericTypes(t *testing.T) {
+	t.Parallel()
+
+	out, err := TOMLToYAML("ratio = 1000000.0\nid = 9007199254740993\n")
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	var got map[string]any
+	if err := yaml.Unmarshal([]byte(out), &got); err != nil {
+		t.Fatal(err)
+	}
+	if ratio, ok := got["ratio"].(float64); !ok || ratio != 1000000 {
+		t.Errorf("ratio = %#v, want float64 1000000 (output %q)", got["ratio"], out)
+	}
+	if id, ok := got["id"].(int); !ok || id != 9007199254740993 {
+		t.Errorf("id = %#v, want int 9007199254740993 (output %q)", got["id"], out)
 	}
 }
 
