@@ -3,6 +3,8 @@ package converter
 import (
 	"strings"
 	"testing"
+
+	"gopkg.in/yaml.v3"
 )
 
 func TestJSONToXMLInvalidElementName(t *testing.T) {
@@ -76,5 +78,46 @@ func TestTOMLKeepsLargeIntegers(t *testing.T) {
 	got, err = YAMLToTOML("id: 9007199254740993\n")
 	if err != nil || got != want {
 		t.Errorf("YAMLToTOML() = %q, %v; want %q", got, err, want)
+	}
+}
+
+func TestTOMLToYAMLKeepsScalarTypes(t *testing.T) {
+	t.Parallel()
+
+	out, err := TOMLToYAML("values = [9007199254740993, 1000000.0, 1.0, 2026-11-20, 2026-11-20T12:00:00Z]")
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	var decoded struct {
+		Values []yaml.Node
+	}
+	if err := yaml.Unmarshal([]byte(out), &decoded); err != nil {
+		t.Fatal(err)
+	}
+	want := []struct{ tag, value string }{
+		{"!!int", "9007199254740993"},
+		{"!!float", "1.0e+06"},
+		{"!!float", "1.0"},
+		{"!!str", "2026-11-20"},
+		{"!!str", "2026-11-20T12:00:00Z"},
+	}
+	if len(decoded.Values) != len(want) {
+		t.Fatalf("TOMLToYAML() = %q, want %d values", out, len(want))
+	}
+	for i, node := range decoded.Values {
+		if node.ShortTag() != want[i].tag || node.Value != want[i].value {
+			t.Errorf("value %d = %s %q, want %s %q", i, node.ShortTag(), node.Value, want[i].tag, want[i].value)
+		}
+	}
+}
+
+func TestTOMLToYAMLRejectsNonFiniteNumbers(t *testing.T) {
+	t.Parallel()
+
+	for _, input := range []string{"value = inf", "values = [nan]"} {
+		if out, err := TOMLToYAML(input); err == nil {
+			t.Errorf("TOMLToYAML(%q) = %q, want error", input, out)
+		}
 	}
 }
