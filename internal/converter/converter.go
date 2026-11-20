@@ -15,6 +15,12 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
+// mxj writes values as-is unless escaping is on, so "A & B" gave invalid XML.
+// Set once here: the setter writes a package global that XmlIndent reads.
+func init() {
+	mxj.XMLEscapeChars(true)
+}
+
 func YAMLToJSON(yamlContent string) (string, error) {
 	var data any
 

@@ -14,6 +14,20 @@ func TestJSONToXMLInvalidElementName(t *testing.T) {
 	}
 }
 
+func TestJSONToXMLEscapesText(t *testing.T) {
+	t.Parallel()
+
+	out, err := JSONToXML(`{"name":"A & B","title":"<t>"}`)
+	if err != nil {
+		t.Fatalf("JSONToXML() error = %v", err)
+	}
+	for _, want := range []string{"<name>A &amp; B</name>", "<title>&lt;t&gt;</title>"} {
+		if !strings.Contains(out, want) {
+			t.Errorf("JSONToXML() = %q, want it to contain %q", out, want)
+		}
+	}
+}
+
 func TestJSONToTOMLTopLevelArrayReturnsError(t *testing.T) {
 	t.Parallel()
 
