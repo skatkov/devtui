@@ -39,9 +39,17 @@ func YAMLToJSON(yamlContent string) (string, error) {
 }
 
 func JSONToYAML(jsonContent string) (string, error) {
-	var data any
+	data, err := decodeJSONNumbers(jsonContent)
+	if err != nil {
+		return "", fmt.Errorf("JSON parsing error: %w", err)
+	}
 
-	if err := json.Unmarshal([]byte(jsonContent), &data); err != nil {
+	return encodeYAML(data)
+}
+
+func encodeYAML(data any) (string, error) {
+	data, err := mapNumbers(data, yamlNumber)
+	if err != nil {
 		return "", fmt.Errorf("JSON parsing error: %w", err)
 	}
 
@@ -73,8 +81,9 @@ func TOMLToJSON(tomlContent string) (string, error) {
 	return buf.String(), nil
 }
 
-// decodeJSONForTOML keeps integers as integers: TOML has separate integer and float types.
-func decodeJSONForTOML(content string) (any, error) {
+// decodeJSONNumbers decodes JSON with numbers kept as json.Number, so integers
+// stay integers (encoding/json would make every number a float64).
+func decodeJSONNumbers(content string) (any, error) {
 	// Unmarshal checks the whole input, so trailing data is still rejected.
 	var raw json.RawMessage
 	if err := json.Unmarshal([]byte(content), &raw); err != nil {
@@ -89,6 +98,72 @@ func decodeJSONForTOML(content string) (any, error) {
 		return nil, err
 	}
 	return v, nil
+}
+
+// mapNumbers replaces every json.Number in v, nested ones included, with fn's result.
+func mapNumbers(v any, fn func(json.Number) (any, error)) (any, error) {
+	switch value := v.(type) {
+	case json.Number:
+		return fn(value)
+	case map[string]any:
+		for key, item := range value {
+			n, err := mapNumbers(item, fn)
+			if err != nil {
+				return nil, err
+			}
+			value[key] = n
+		}
+	case []any:
+		for i, item := range value {
+			n, err := mapNumbers(item, fn)
+			if err != nil {
+				return nil, err
+			}
+			value[i] = n
+		}
+	}
+	return v, nil
+}
+
+// yamlNumber keeps integers as int64, so YAML gets 1700000000000 rather than 1.7e+12.
+func yamlNumber(n json.Number) (any, error) {
+	if i, err := n.Int64(); err == nil {
+		return i, nil
+	}
+	return n.Float64()
+}
+
+// xmlNumber keeps the number as written, but rejects one out of float64 range
+// (such as 1e400) as encoding/json does.
+func xmlNumber(n json.Number) (any, error) {
+	if _, err := n.Float64(); err != nil {
+		return nil, err
+	}
+	return n, nil
+}
+
+// keepTOMLFloats turns numbers back into floats where TOML had a float,
+// since the JSON round trip writes 1000000.0 as 1000000.
+func keepTOMLFloats(v, typed any) any {
+	switch value := v.(type) {
+	case json.Number:
+		if f, ok := typed.(float64); ok {
+			return f
+		}
+	case map[string]any:
+		typedMap, _ := typed.(map[string]any)
+		for key, item := range value {
+			value[key] = keepTOMLFloats(item, typedMap[key])
+		}
+	case []any:
+		typedSlice, _ := typed.([]any)
+		for i, item := range value {
+			if i < len(typedSlice) {
+				value[i] = keepTOMLFloats(item, typedSlice[i])
+			}
+		}
+	}
+	return v
 }
 
 // yamlValuesForTOML keeps the numeric types YAML decoded and turns the rest
@@ -114,7 +189,7 @@ func yamlValuesForTOML(v any) any {
 }
 
 func JSONToTOML(jsonContent string) (string, error) {
-	v, err := decodeJSONForTOML(jsonContent)
+	v, err := decodeJSONNumbers(jsonContent)
 	if err != nil {
 		return "", fmt.Errorf("JSON parsing error: %w", err)
 	}
@@ -151,9 +226,25 @@ func XMLToJSON(xmlContent string) (string, error) {
 }
 
 func JSONToXML(jsonContent string) (string, error) {
-	mv, err := mxj.NewMapJson([]byte(jsonContent))
+	// Keep numbers as written; as float64, 1700000000000 is written as 1.7e+12.
+	data, err := decodeJSONNumbers(jsonContent)
 	if err != nil {
 		return "", fmt.Errorf("JSON parsing error: %w", err)
+	}
+	data, err = mapNumbers(data, xmlNumber)
+	if err != nil {
+		return "", fmt.Errorf("JSON parsing error: %w", err)
+	}
+
+	var mv mxj.Map
+	switch value := data.(type) {
+	case map[string]any:
+		mv = value
+	case []any:
+		// Same root key mxj.NewMapJson gives a top-level array.
+		mv = mxj.Map{"object": value}
+	default:
+		return "", errors.New("JSON parsing error: expected an object or array")
 	}
 
 	xmlBytes, err := mv.XmlIndent("", "  ")
@@ -217,10 +308,20 @@ func YAMLToTOML(yamlContent string) (string, error) {
 }
 
 func TOMLToYAML(tomlContent string) (string, error) {
+	var typed any
+	if err := toml.Unmarshal([]byte(tomlContent), &typed); err != nil {
+		return "", fmt.Errorf("TOML parsing error: %w", err)
+	}
+
 	jsonStr, err := TOMLToJSON(tomlContent)
 	if err != nil {
 		return "", err
 	}
 
-	return JSONToYAML(jsonStr)
+	data, err := decodeJSONNumbers(jsonStr)
+	if err != nil {
+		return "", fmt.Errorf("JSON parsing error: %w", err)
+	}
+
+	return encodeYAML(keepTOMLFloats(data, typed))
 }
